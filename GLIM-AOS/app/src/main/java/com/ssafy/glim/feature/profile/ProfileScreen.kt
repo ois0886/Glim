@@ -1,3 +1,4 @@
+// ProfileScreen.kt
 package com.ssafy.glim.feature.profile
 
 import androidx.compose.foundation.background
@@ -16,9 +17,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.feature.profile.component.ProfileHeader
-import com.ssafy.glim.feature.profile.component.RecentArticlesSection
 import com.ssafy.glim.feature.profile.component.SettingsSection
 import com.ssafy.glim.feature.profile.component.StatisticsSection
+import com.ssafy.glim.feature.profile.component.UploadGlimCardListSection
 import com.ssafy.glim.feature.profile.component.WithdrawalButton
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -37,6 +38,7 @@ internal fun ProfileRoute(
             is ProfileSideEffect.ShowToast -> {
                 // TODO: Toast 표시
             }
+
             is ProfileSideEffect.ShowError -> {
                 // TODO: 에러 표시
             }
@@ -45,14 +47,15 @@ internal fun ProfileRoute(
 
     ProfileScreen(
         state = state,
-        onEditProfileClick = viewModel::onEditProfileClicked,
-        onViewAllRecentArticlesClick = viewModel::onViewAllRecentArticlesClicked,
-        onPersonalInfoClick = viewModel::onPersonalInfoClicked,
-        onAccountSettingsClick = viewModel::onAccountSettingsClicked,
-        onNotificationSettingsClick = viewModel::onNotificationSettingsClicked,
+        navigateToEditProfile = viewModel::navigateToEditProfile,
+        navigateToGlimUploadList = viewModel::navigateToGlimUploadList,
+        navigateToGlimLikedList = viewModel::navigateToGlimLikedList,
+        navigateToPersonalInfo = viewModel::navigateToPersonalInfo,
+        navigateToAccountSettings = viewModel::navigateToAccountSettings,
+        navigateToNotificationSettings = viewModel::navigateToNotificationSettings,
         onLogOutClick = viewModel::onLogOutClick,
         onWithdrawalClick = viewModel::onWithdrawalClick,
-        onArticleLikeClick = viewModel::onArticleLikeClicked,
+        onGlimLikeToggle = viewModel::onGlimLikeToggle,
         modifier = Modifier.padding(padding)
     )
 }
@@ -60,14 +63,15 @@ internal fun ProfileRoute(
 @Composable
 private fun ProfileScreen(
     state: ProfileUiState,
-    onEditProfileClick: () -> Unit,
-    onViewAllRecentArticlesClick: () -> Unit,
-    onPersonalInfoClick: () -> Unit,
-    onAccountSettingsClick: () -> Unit,
-    onNotificationSettingsClick: () -> Unit,
+    navigateToEditProfile: () -> Unit,
+    navigateToGlimUploadList: () -> Unit,
+    navigateToGlimLikedList: () -> Unit,
+    navigateToPersonalInfo: () -> Unit,
+    navigateToAccountSettings: () -> Unit,
+    navigateToNotificationSettings: () -> Unit,
     onLogOutClick: () -> Unit,
     onWithdrawalClick: () -> Unit,
-    onArticleLikeClick: (String) -> Unit,
+    onGlimLikeToggle: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -81,30 +85,32 @@ private fun ProfileScreen(
             ProfileHeader(
                 profileImageUrl = state.profileImageUrl,
                 userName = state.userName,
-                onEditClick = onEditProfileClick
+                navigateToEditProfile = navigateToEditProfile
             )
         }
 
         item {
             StatisticsSection(
-                publishedCount = state.publishedArticleCount,
-                likedCount = state.likedArticleCount
+                navigateToGlimUploadList = navigateToGlimUploadList,
+                navigateToGlimLikedList = navigateToGlimLikedList,
+                publishedGlimCount = state.publishedGlimCount,
+                likedGlimCount = state.likedGlimCount
             )
         }
 
         item {
-            RecentArticlesSection(
-                articles = state.recentArticles,
-                onViewAllClick = onViewAllRecentArticlesClick,
-                onArticleLikeClick = onArticleLikeClick
+            UploadGlimCardListSection(
+                glimCards = state.glimShortCards,
+                navigateToGlimUploadList = navigateToGlimUploadList,
+                onGlimLikeToggle = onGlimLikeToggle
             )
         }
 
         item {
             SettingsSection(
-                onPersonalInfoClick = onPersonalInfoClick,
-                onAccountSettingsClick = onAccountSettingsClick,
-                onNotificationSettingsClick = onNotificationSettingsClick,
+                navigateToPersonalInfo = navigateToPersonalInfo,
+                navigateToAccountSettings = navigateToAccountSettings,
+                navigateToNotificationSettings = navigateToNotificationSettings,
                 onLogOutClick = onLogOutClick
             )
         }
@@ -121,18 +127,18 @@ private fun PreviewProfileScreen() {
     val mockState = ProfileUiState(
         profileImageUrl = null,
         userName = "박성준",
-        publishedArticleCount = 24,
-        likedArticleCount = 8,
+        publishedGlimCount = 24,
+        likedGlimCount = 8,
         isLoading = false,
-        recentArticles = listOf(
-            RecentArticle(
+        glimShortCards = listOf(
+            GlimShortCard(
                 id = "1",
                 title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
                 timestamp = "P.51",
                 likeCount = 1247,
                 isLiked = false
             ),
-            RecentArticle(
+            GlimShortCard(
                 id = "2",
                 title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
                 timestamp = "P.51",
@@ -145,41 +151,43 @@ private fun PreviewProfileScreen() {
     MaterialTheme {
         ProfileScreen(
             state = mockState,
-            onEditProfileClick = {},
-            onViewAllRecentArticlesClick = {},
-            onPersonalInfoClick = {},
-            onAccountSettingsClick = {},
-            onNotificationSettingsClick = {},
+            navigateToEditProfile = {},
+            navigateToGlimUploadList = {},
+            navigateToGlimLikedList = {},
+            navigateToPersonalInfo = {},
+            navigateToAccountSettings = {},
+            navigateToNotificationSettings = {},
             onLogOutClick = {},
             onWithdrawalClick = {},
-            onArticleLikeClick = {}
+            onGlimLikeToggle = {}
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewEmptyArticles() {
+private fun PreviewEmptyGlimCards() {
     val mockState = ProfileUiState(
         profileImageUrl = null,
         userName = "박성준",
-        publishedArticleCount = 0,
-        likedArticleCount = 0,
+        publishedGlimCount = 0,
+        likedGlimCount = 0,
         isLoading = false,
-        recentArticles = emptyList()
+        glimShortCards = emptyList()
     )
 
     MaterialTheme {
         ProfileScreen(
             state = mockState,
-            onEditProfileClick = {},
-            onViewAllRecentArticlesClick = {},
-            onPersonalInfoClick = {},
-            onAccountSettingsClick = {},
-            onNotificationSettingsClick = {},
+            navigateToEditProfile = {},
+            navigateToGlimUploadList = {},
+            navigateToGlimLikedList = {},
+            navigateToPersonalInfo = {},
+            navigateToAccountSettings = {},
+            navigateToNotificationSettings = {},
             onLogOutClick = {},
             onWithdrawalClick = {},
-            onArticleLikeClick = {}
+            onGlimLikeToggle = {}
         )
     }
 }
@@ -190,23 +198,24 @@ private fun PreviewLoadingState() {
     val mockState = ProfileUiState(
         profileImageUrl = null,
         userName = "",
-        publishedArticleCount = 0,
-        likedArticleCount = 0,
+        publishedGlimCount = 0,
+        likedGlimCount = 0,
         isLoading = true,
-        recentArticles = emptyList()
+        glimShortCards = emptyList()
     )
 
     MaterialTheme {
         ProfileScreen(
             state = mockState,
-            onEditProfileClick = {},
-            onViewAllRecentArticlesClick = {},
-            onPersonalInfoClick = {},
-            onAccountSettingsClick = {},
-            onNotificationSettingsClick = {},
+            navigateToEditProfile = {},
+            navigateToGlimUploadList = {},
+            navigateToGlimLikedList = {},
+            navigateToPersonalInfo = {},
+            navigateToAccountSettings = {},
+            navigateToNotificationSettings = {},
             onLogOutClick = {},
             onWithdrawalClick = {},
-            onArticleLikeClick = {}
+            onGlimLikeToggle = {}
         )
     }
 }
