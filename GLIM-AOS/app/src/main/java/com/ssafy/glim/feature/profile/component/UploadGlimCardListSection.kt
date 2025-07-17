@@ -1,3 +1,4 @@
+// UploadGlimCardListSection.kt
 package com.ssafy.glim.feature.profile.component
 
 import androidx.compose.foundation.clickable
@@ -24,13 +25,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
-import com.ssafy.glim.feature.profile.RecentArticle
+import com.ssafy.glim.feature.profile.GlimShortCard
 
 @Composable
-internal fun RecentArticlesSection(
-    articles: List<RecentArticle>,
-    onViewAllClick: () -> Unit,
-    onArticleLikeClick: (String) -> Unit,
+internal fun UploadGlimCardListSection(
+    glimCards: List<GlimShortCard>,
+    navigateToGlimUploadList: () -> Unit,
+    onGlimLikeToggle: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -47,7 +48,7 @@ internal fun RecentArticlesSection(
             )
 
             Row(
-                modifier = Modifier.clickable { onViewAllClick() },
+                modifier = Modifier.clickable { navigateToGlimUploadList() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -63,10 +64,13 @@ internal fun RecentArticlesSection(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(articles) { article ->
-                ArticleCard(
-                    article = article,
-                    onLikeClick = { onArticleLikeClick(article.id) }
+            items(
+                items = glimCards,
+                key = { glimCard -> glimCard.id }
+            ) { glimCard ->
+                GlimShortCardContent(
+                    glimCard = glimCard,
+                    onLikeToggle = { onGlimLikeToggle(glimCard.id) }
                 )
             }
         }
@@ -75,23 +79,23 @@ internal fun RecentArticlesSection(
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewRecentArticlesSection() {
-    val mockArticles = listOf(
-        RecentArticle(
+private fun PreviewUploadGlimCardListSection() {
+    val mockGlimCards = listOf(
+        GlimShortCard(
             id = "1",
             title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
             timestamp = "P.51",
             likeCount = 1247,
             isLiked = false
         ),
-        RecentArticle(
+        GlimShortCard(
             id = "2",
             title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
             timestamp = "P.51",
             likeCount = 856,
             isLiked = true
         ),
-        RecentArticle(
+        GlimShortCard(
             id = "3",
             title = "새로운 시작은 언제나 두렵지만, 그래도 나아가야 한다.",
             timestamp = "P.42",
@@ -101,10 +105,10 @@ private fun PreviewRecentArticlesSection() {
     )
 
     MaterialTheme {
-        RecentArticlesSection(
-            articles = mockArticles,
-            onViewAllClick = {},
-            onArticleLikeClick = {}
+        UploadGlimCardListSection(
+            glimCards = mockGlimCards,
+            navigateToGlimUploadList = {},
+            onGlimLikeToggle = {}
         )
     }
 }

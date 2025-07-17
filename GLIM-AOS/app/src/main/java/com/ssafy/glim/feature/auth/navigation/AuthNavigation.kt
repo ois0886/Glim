@@ -1,4 +1,4 @@
-package com.example.glim.feature.auth.navigation
+package com.ssafy.glim.feature.auth.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
