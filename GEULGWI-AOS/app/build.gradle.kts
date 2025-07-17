@@ -60,13 +60,15 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.material3)
 
+    implementation(libs.accompanist.systemuicontroller)
+
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
 
     // ML Kit Text Recognition
     implementation(libs.play.services.mlkit.text.recognition)
-    implementation("com.google.mlkit:text-recognition-korean:16.0.1")
+    implementation(libs.text.recognition.korean)
 
     // Orbit MVI
     implementation(libs.orbit.core)
@@ -94,4 +96,11 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
     testImplementation(kotlin("test"))
+
+    // Retrofit + Okhttp + Gson
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.gson)
 }
