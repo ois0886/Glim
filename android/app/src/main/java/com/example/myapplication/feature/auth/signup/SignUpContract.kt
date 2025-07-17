@@ -14,20 +14,25 @@ data class SignUpUiState(
     val codeError: String? = null,
     val passwordError: String? = null,
     val confirmPasswordError: String? = null,
+    val nameError: String? = null,
+    val birthYearError: String? = null,
 ) {
     val isStepValid: Boolean
         get() =
             when (currentStep) {
-                SignUpStep.Email -> email.isNotBlank()
-                SignUpStep.Code -> code.isNotBlank()
-                SignUpStep.Password -> password.isNotBlank() && confirmPassword.isNotBlank()
-                SignUpStep.Profile -> name.isNotBlank() && birthYear.isNotBlank() && gender != null
+                SignUpStep.Email -> email.isNotBlank() && emailError == null
+                SignUpStep.Code -> code.isNotBlank() && codeError == null
+                SignUpStep.Password ->
+                    password.isNotBlank() && confirmPassword.isNotBlank() &&
+                            passwordError == null && confirmPasswordError == null
+
+                SignUpStep.Profile ->
+                    name.isNotBlank() && birthYear.isNotBlank() && gender != null &&
+                            nameError == null && birthYearError == null
             }
 }
 
 sealed interface SignUpSideEffect {
-    object NavigateToMain : SignUpSideEffect
-
     data class ShowToast(val message: String) : SignUpSideEffect
 }
 

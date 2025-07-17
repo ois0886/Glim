@@ -1,127 +1,207 @@
 package com.example.myapplication
 
 import app.cash.turbine.test
-import com.example.myapplication.feature.auth.signup.SignUpSideEffect
+import com.example.myapplication.core.navigation.Navigator
+import com.example.myapplication.core.navigation.Route
 import com.example.myapplication.feature.auth.signup.SignUpStep
 import com.example.myapplication.feature.auth.signup.SignUpViewModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertIs
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class SignUpViewModelTest {
-    @Test
-    fun `이메일 입력 시 상태 반영`() =
-        runTest {
-            val viewModel = SignUpViewModel()
+    private class FakeNavigator : Navigator {
+        var navigateBackCalled = false
 
-            viewModel.container.stateFlow.test {
+        override suspend fun navigate(
+            route: Route,
+            saveState: Boolean,
+            launchSingleTop: Boolean,
+        ) {}
+
+        override suspend fun navigateBack() {
+            navigateBackCalled = true
+        }
+    }
+
+    @Test
+    fun `이메일 변경 시 상태 반영`() =
+        runTest {
+            val vm = SignUpViewModel(FakeNavigator())
+
+            vm.container.stateFlow.test {
+                val initial = awaitItem()
+                assertEquals("", initial.email)
+                assertNull(initial.emailError)
+
+                vm.onEmailChanged("invalid")
+                val invalidState = awaitItem()
+                assertEquals("invalid", invalidState.email)
+                assertEquals("유효한 이메일을 입력해주세요.", invalidState.emailError)
+
+                vm.onEmailChanged("user@example.com")
+                val validState = awaitItem()
+                assertEquals("user@example.com", validState.email)
+                assertNull(validState.emailError)
+
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `코드 필터링 및 유효성 검사`() =
+        runTest {
+            val vm = SignUpViewModel(FakeNavigator())
+
+            vm.container.stateFlow.test {
                 awaitItem() // initial
+                vm.onEmailChanged("a@a.com")
+                awaitItem() // email set
+                vm.onNextStep()
+                val codeStep = awaitItem()
+                assertEquals(SignUpStep.Code, codeStep.currentStep)
 
-                viewModel.onEmailChanged("test@example.com")
+                vm.onCodeChanged("12ab34cd56")
+                val filtered = awaitItem()
+                assertEquals("123456", filtered.code)
+                assertNull(filtered.codeError)
 
-                val state = awaitItem()
-                assertEquals("test@example.com", state.email)
-                assertEquals(null, state.emailError)
+                vm.onCodeChanged("123")
+                val shortCode = awaitItem()
+                assertEquals("123", shortCode.code)
+                assertEquals("6자리 숫자를 입력해주세요.", shortCode.codeError)
+
+                cancelAndIgnoreRemainingEvents()
             }
         }
 
     @Test
-    fun `비밀번호 입력 시 상태 반영`() =
+    fun `비밀번호 및 확인 불일치 처리`() =
         runTest {
-            val viewModel = SignUpViewModel()
+            val vm = SignUpViewModel(FakeNavigator())
 
-            viewModel.container.stateFlow.test {
+            vm.container.stateFlow.test {
+                awaitItem()
+                // move to Password step
+                vm.onEmailChanged("a@a.com")
+                awaitItem()
+                vm.onNextStep()
+                awaitItem()
+                vm.onCodeChanged("123456")
+                awaitItem()
+                vm.onNextStep()
+                val passwordStep = awaitItem()
+                assertEquals(SignUpStep.Password, passwordStep.currentStep)
+
+                vm.onPasswordChanged("short")
+                val pwErr = awaitItem()
+                assertTrue(pwErr.passwordError!!.contains("8~16자"))
+
+                vm.onConfirmPasswordChanged("diff")
+                val confirmErr = awaitItem()
+                assertEquals("비밀번호가 일치하지 않습니다.", confirmErr.confirmPasswordError)
+
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `단계별 이동 동작 확인`() =
+        runTest {
+            val vm = SignUpViewModel(FakeNavigator())
+
+            vm.container.stateFlow.test {
+                val initial = awaitItem()
+                assertEquals(SignUpStep.Email, initial.currentStep)
+
+                vm.onNextStep()
+                val stillEmail = awaitItem()
+                assertEquals(SignUpStep.Email, stillEmail.currentStep)
+
+                vm.onEmailChanged("a@a.com")
+                awaitItem()
+                vm.onNextStep()
+                val toCode = awaitItem()
+                assertEquals(SignUpStep.Code, toCode.currentStep)
+
+                vm.onNextStep()
+                val stillCode = awaitItem()
+                assertEquals(SignUpStep.Code, stillCode.currentStep)
+
+                vm.onCodeChanged("123456")
+                awaitItem()
+                vm.onNextStep()
+                val toPassword = awaitItem()
+                assertEquals(SignUpStep.Password, toPassword.currentStep)
+
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `전체 회원가입 완료 흐름`() =
+        runTest {
+            val vm = SignUpViewModel(FakeNavigator())
+
+            vm.container.stateFlow.test {
+                // consume initial state
                 awaitItem()
 
-                viewModel.onPasswordChanged("Pass123!")
+                // Email → Code
+                vm.onEmailChanged("a@a.com")
+                awaitItem() // email updated
+                vm.onNextStep()
+                val codeState = awaitItem()
+                assertEquals(SignUpStep.Code, codeState.currentStep)
 
-                val state = awaitItem()
-                assertEquals("Pass123!", state.password)
-                assertEquals(null, state.passwordError)
+                // Code → Password
+                vm.onCodeChanged("111111")
+                awaitItem() // code updated
+                vm.onNextStep()
+                val passwordState = awaitItem()
+                assertEquals(SignUpStep.Password, passwordState.currentStep)
+
+                // Password → Profile
+                vm.onPasswordChanged("Aa1!aaaa")
+                awaitItem() // password updated
+                vm.onConfirmPasswordChanged("Aa1!aaaa")
+                awaitItem() // confirm password updated
+                vm.onNextStep()
+                val profileState = awaitItem()
+                assertEquals(SignUpStep.Profile, profileState.currentStep)
+
+                // fill profile fields
+                vm.onNameChanged("홍길동")
+                awaitItem() // name updated
+                vm.onBirthYearChanged("1990")
+                awaitItem() // birth year updated
+                vm.onGenderSelected("M")
+                val genderState = awaitItem()
+                assertEquals("M", genderState.gender)
+
+                // final next (no more events)
+                vm.onNextStep()
+                expectNoEvents()
+
+                cancelAndIgnoreRemainingEvents()
             }
         }
 
     @Test
-    fun `이메일 미입력 상태에서 다음 단계 시 에러 메시지`() =
+    fun `초기 단계에서 뒤로가기 호출`() =
         runTest {
-            val viewModel = SignUpViewModel()
+            val navigator = FakeNavigator()
+            val vm = SignUpViewModel(navigator)
 
-            viewModel.container.stateFlow.test {
+            vm.container.stateFlow.test {
                 awaitItem()
-                viewModel.onNextStep()
-                val state = awaitItem()
-                assertEquals("이메일을 입력해주세요.", state.emailError)
+                vm.onBackStep()
+                // no new state emitted, just check navigator
+                cancelAndIgnoreRemainingEvents()
             }
 
-            viewModel.container.sideEffectFlow.test {
-                val effect = awaitItem()
-                assertIs<SignUpSideEffect.ShowToast>(effect)
-                assertEquals("이메일을 입력해주세요.", effect.message)
-            }
-        }
-
-    @Test
-    fun `이메일 입력 후 onNextStep 호출 시 단계 이동`() =
-        runTest {
-            val viewModel = SignUpViewModel()
-
-            viewModel.onEmailChanged("test@example.com")
-
-            viewModel.container.stateFlow.test {
-                awaitItem()
-                viewModel.onNextStep()
-                val state = awaitItem()
-                assertEquals(SignUpStep.Code, state.currentStep)
-            }
-        }
-
-    @Test
-    fun `비밀번호 불일치 시 에러 발생`() =
-        runTest {
-            val viewModel = SignUpViewModel()
-
-            viewModel.onEmailChanged("test@example.com")
-            viewModel.onCodeChanged("123456")
-            viewModel.onPasswordChanged("password123")
-            viewModel.onConfirmPasswordChanged("different123")
-
-            // 이 시점의 currentStep은 Email이므로, 아무리 호출해도 Password 검증이 안 됨
-            viewModel.onNextStep() // → Email 단계 → Code 단계
-            viewModel.onNextStep() // → Code 단계 → Password 단계
-            viewModel.onNextStep() // → 이제 Password 단계 → 여기서 검사됨
-
-            viewModel.container.sideEffectFlow.test {
-                val sideEffect = awaitItem()
-                assertEquals(SignUpSideEffect.ShowToast("비밀번호가 일치하지 않습니다."), sideEffect)
-            }
-        }
-
-    @Test
-    fun `모든 입력 후 최종 단계에서 메인으로 이동`() =
-        runTest {
-            val viewModel = SignUpViewModel()
-
-            // simulate 완료 단계까지 이동
-            viewModel.onEmailChanged("a@a.com")
-            viewModel.onNextStep()
-            viewModel.onCodeChanged("1234")
-            viewModel.onNextStep()
-            viewModel.onPasswordChanged("A1@aaaaa")
-            viewModel.onConfirmPasswordChanged("A1@aaaaa")
-            viewModel.onNextStep()
-
-            viewModel.container.stateFlow.test {
-                repeat(7) { awaitItem() } // consume all intermediate states
-                viewModel.onNextStep()
-
-                val loadingState = awaitItem()
-                assertEquals(true, loadingState.isLoading)
-            }
-
-            viewModel.container.sideEffectFlow.test {
-                val effect = awaitItem()
-                assertIs<SignUpSideEffect.NavigateToMain>(effect)
-            }
+            assertTrue(navigator.navigateBackCalled)
         }
 }

@@ -14,16 +14,19 @@ class NavigatorImpl
 
         override suspend fun navigate(
             route: Route,
-            saveState: Boolean, launchSingleTop: Boolean,
+            saveState: Boolean,
+            launchSingleTop: Boolean,
         ) {
-            channel.send(InternalRoute.Navigate(
+            channel.send(
+                InternalRoute.Navigate(
                     route = route,
                     saveState = saveState,
-                    launchSingleTop = launchSingleTop,),
+                    launchSingleTop = launchSingleTop,
+                ),
             )
         }
 
-        override suspend fun navigateBack() { channel.send(InternalRoute.NavigateBack)
-
+        override suspend fun navigateBack() {
+            channel.send(InternalRoute.NavigateBack)
         }
     }

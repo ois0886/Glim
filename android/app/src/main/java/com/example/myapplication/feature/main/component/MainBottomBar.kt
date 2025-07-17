@@ -52,8 +52,11 @@ internal fun MainBottomBar(
     if (currentTab != MainTab.POST) {
         Box(modifier = Modifier.background(backgroundColor)) {
             Column {
-                if (currentTab != MainTab.REELS && currentTab != MainTab.POST) {
-                    HorizontalDivider(color = MaterialTheme.colorScheme.outline, thickness = (0.2).dp)
+                if (currentTab != MainTab.REELS) {
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.outline,
+                        thickness = (0.2).dp,
+                    )
                 }
                 AnimatedVisibility(
                     visible = visible,

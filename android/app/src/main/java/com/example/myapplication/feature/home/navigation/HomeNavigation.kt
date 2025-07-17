@@ -14,10 +14,12 @@ fun NavController.navigateToHome(navOptions: NavOptions) {
 
 fun NavGraphBuilder.homeNavGraph(
     padding: PaddingValues,
+    popBackStack: () -> Unit,
 ) {
     composable<BottomTabRoute.Home> {
         HomeRoute(
             padding = padding,
+            popBackStack = popBackStack,
         )
     }
 }

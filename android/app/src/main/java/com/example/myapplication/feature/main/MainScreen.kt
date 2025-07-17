@@ -46,8 +46,12 @@ internal fun MainScreen(navigator: MainNavController = rememberMainNavController
             exitTransition = { ExitTransition.None },
             modifier = Modifier.fillMaxSize(),
         ) {
+            authNavGraph(
+                padding = innerPadding,
+            )
             homeNavGraph(
                 padding = innerPadding,
+                popBackStack = navigator::popBackStack,
             )
             postNavGraph(
                 padding = innerPadding,
@@ -64,9 +68,6 @@ internal fun MainScreen(navigator: MainNavController = rememberMainNavController
             reelsNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,
-            )
-            authNavGraph(
-                padding = innerPadding,
             )
         }
     }

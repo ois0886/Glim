@@ -17,9 +17,6 @@ fun NavGraphBuilder.libraryNavGraph(
     popBackStack: () -> Unit,
 ) {
     composable<BottomTabRoute.Library> {
-        LibraryRoute(
-            padding = padding,
-            popBackStack = popBackStack,
-        )
+        LibraryRoute(padding, popBackStack)
     }
 }
