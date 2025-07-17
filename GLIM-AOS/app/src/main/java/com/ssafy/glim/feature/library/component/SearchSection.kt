@@ -24,24 +24,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
-import com.ssafy.glim.feature.library.SearchItem
-import com.ssafy.glim.feature.library.searchItemDummyData
+import com.ssafy.glim.core.domain.model.SearchItem
 
 @Composable
 fun PopularSearchSection(
-    onClick: (String) -> Unit
+    queries: List<SearchItem>,
+    onClick: (String) -> Unit,
 ) {
     SearchWordListSection(
-        "인기 검색어", searchItemDummyData, false, onClick
+        "인기 검색어", queries, false, {}, onClick
     )
 }
 
 @Composable
 fun RecentSearchSection(
-    onClick: (String) -> Unit
+    queries: List<SearchItem>,
+    onClick: (String) -> Unit,
+    onDeleteClick: (SearchItem) -> Unit
 ) {
     SearchWordListSection(
-        "최근 검색 모록", searchItemDummyData, true, onClick
+        "최근 검색 모록", queries, true, onDeleteClick, onClick
     )
 }
 
@@ -50,7 +52,9 @@ private fun SearchWordListSection(
     title: String,
     searchWordList: List<SearchItem> = emptyList(),
     isRecentSearch: Boolean = false,
+    onDeleteClick: (SearchItem) -> Unit = {},
     onClick: (String) -> Unit,
+
 ) {
     Column(
         modifier = Modifier.padding(horizontal = 20.dp),
@@ -74,6 +78,7 @@ private fun SearchWordListSection(
                     onItemClick = {
                         onClick(item.text)
                     },
+                    onDeleteClick = onDeleteClick
                 )
             }
         }
@@ -86,6 +91,7 @@ fun SearchItemRow(
     item: SearchItem,
     isRecentSearch: Boolean,
     onItemClick: () -> Unit,
+    onDeleteClick: (SearchItem) -> Unit,
 ) {
     Row(
         modifier =
@@ -96,7 +102,7 @@ fun SearchItemRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if(!isRecentSearch) {
+        if (!isRecentSearch) {
             Text(
                 text = item.rankStatus.symbol,
                 style = MaterialTheme.typography.labelSmall,
@@ -132,7 +138,12 @@ fun SearchItemRow(
         )
 
         if (isRecentSearch) {
-            Icon(painter = painterResource(R.drawable.ic_cancel), contentDescription = null)
+            Icon(
+                painter = painterResource(R.drawable.ic_cancel),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    onDeleteClick(item)
+                })
         }
     }
     Spacer(Modifier.height(8.dp))

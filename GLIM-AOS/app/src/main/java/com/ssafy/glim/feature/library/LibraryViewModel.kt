@@ -1,6 +1,203 @@
 package com.ssafy.glim.feature.library
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.core.domain.model.SearchItem
+import com.ssafy.glim.core.domain.usecase.book.SearchBooksUseCase
+import com.ssafy.glim.core.domain.usecase.quote.SearchQuotesUseCase
+import com.ssafy.glim.core.domain.usecase.search.DeleteRecentSearchQueryUseCase
+import com.ssafy.glim.core.domain.usecase.search.GetPopularSearchQueriesUseCase
+import com.ssafy.glim.core.domain.usecase.search.GetRecentSearchQueriesUseCase
+import com.ssafy.glim.core.domain.usecase.search.SaveRecentSearchQueryUseCase
+import com.ssafy.glim.feature.library.component.SearchTab
+import dagger.hilt.android.lifecycle.HiltViewModel
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.viewmodel.container
+import javax.inject.Inject
 
-class LibraryViewModel: ViewModel() {
+@HiltViewModel
+class LibraryViewModel @Inject constructor(
+    private val searchBooksUseCase: SearchBooksUseCase,
+    private val searchQuotesUseCase: SearchQuotesUseCase,
+    private val getPopularSearchQueriesUseCase: GetPopularSearchQueriesUseCase,
+    private val getRecentSearchQueriesUseCase: GetRecentSearchQueriesUseCase,
+    private val saveRecentSearchQueryUseCase: SaveRecentSearchQueryUseCase,
+    private val deleteRecentSearchQueryUseCase: DeleteRecentSearchQueryUseCase
+) : ViewModel(), ContainerHost<LibraryState, LibrarySideEffect> {
+
+    override val container: Container<LibraryState, LibrarySideEffect> = container(LibraryState())
+
+    init {
+        initialize()
+    }
+
+    private fun initialize() = intent {
+        loadPopularSearchItems()
+        loadRecentSearchItems()
+    }
+
+    // 뒤로가기 처리
+    fun onBackPressed() = intent {
+        when (state.searchMode) {
+            SearchMode.RECENT -> {
+                reduce {
+                    state.copy(
+                        searchMode = SearchMode.POPULAR,
+                        searchQuery = ""
+                    )
+                }
+            }
+            SearchMode.RESULT -> {
+                reduce {
+                    state.copy(
+                        searchMode = SearchMode.RECENT,
+                        searchQuery = "",
+                    )
+                }
+            }
+            SearchMode.POPULAR -> {
+                postSideEffect(LibrarySideEffect.NavigateBack)
+            }
+        }
+    }
+
+    // 검색어 입력 처리
+    fun onSearchQueryChanged(query: String) = intent {
+        reduce { state.copy(searchQuery = query) }
+    }
+
+    // 검색 실행
+    fun onSearchExecuted() = intent {
+        val query = state.searchQuery.trim()
+        if (query.isNotEmpty()) {
+            performSearch(query)
+            reduce {
+                state.copy(
+                    searchMode = SearchMode.RESULT,
+                )
+            }
+            saveRecentSearchQueryUseCase(query, "도서명").collect {
+                postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
+            }
+        }
+    }
+
+    // 인기 검색어 항목 클릭
+    fun onPopularSearchItemClicked(query: String) = intent {
+        reduce { state.copy(searchQuery = query) }
+        performSearch(query)
+        reduce {
+            state.copy(
+                searchMode = SearchMode.RESULT,
+            )
+        }
+        saveRecentSearchQueryUseCase(query, "도서명").collect {
+            postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
+        }
+    }
+
+    // 최근 검색어 항목 클릭
+    fun onRecentSearchItemClicked(query: String) = intent {
+        reduce { state.copy(searchQuery = query) }
+        performSearch(query)
+        reduce {
+            state.copy(
+                searchMode = SearchMode.RESULT,
+            )
+        }
+        saveRecentSearchQueryUseCase(query, "도서명").collect {
+            postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
+        }
+    }
+
+    // 최근 검색어 삭제
+    fun onRecentSearchItemDelete(searchItem: SearchItem) = intent {
+        deleteRecentSearchQueryUseCase(searchItem.text).collect {
+            reduce {
+                state.copy(
+                    recentSearchItems = state.recentSearchItems.filter { it.text != searchItem.text },
+                    error = null
+                )
+            }
+        }
+        loadRecentSearchItems()
+        postSideEffect(LibrarySideEffect.ShowToast("검색어가 삭제되었습니다."))
+    }
+
+    // 책 아이템 클릭
+    fun onBookClicked(Book: Book) = intent {
+    }
+
+    // 글귀 아이템 클릭
+    fun onQuoteClicked(Quote: Quote) = intent {
+    }
+
+    // 인기 검색어 로드
+    private fun loadPopularSearchItems() = intent {
+        reduce { state.copy(isLoading = true) }
+        getPopularSearchQueriesUseCase().collect { items ->
+            reduce {
+                state.copy(
+                    popularSearchItems = items,
+                    isLoading = false,
+                    error = null
+                )
+            }
+        }
+    }
+
+    // 최근 검색어 로드
+    private fun loadRecentSearchItems() = intent {
+        getRecentSearchQueriesUseCase().collect { items ->
+            reduce {
+                state.copy(
+                    recentSearchItems = items,
+                    error = null
+                )
+            }
+        }
+    }
+
+    // 검색 수행
+    private fun performSearch(query: String) = intent {
+        reduce { state.copy(isLoading = true) }
+        try {
+            // 책 검색
+            searchBooksUseCase(query).collect { books ->
+                reduce {
+                    state.copy(
+                        searchBooks = books,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+            }
+
+            // 글귀 검색
+            searchQuotesUseCase(query).collect { quotes ->
+                reduce {
+                    state.copy(
+                        searchQuotes = quotes,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            reduce {
+                state.copy(
+                    isLoading = false,
+                    error = "검색 중 오류가 발생했습니다."
+                )
+            }
+            postSideEffect(LibrarySideEffect.ShowToast("검색 중 오류가 발생했습니다."))
+        }
+    }
+
+    fun updateSearchMode(searchMode: SearchMode) = intent {
+        reduce { state.copy(searchMode = searchMode) }
+    }
 }

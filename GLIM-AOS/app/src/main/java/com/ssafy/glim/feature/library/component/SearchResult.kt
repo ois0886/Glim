@@ -39,69 +39,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
+import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.model.Quote
 
 enum class SearchTab(val displayName: String) {
     BOOKS("도서"),
     QUOTES("글귀")
 }
 
-data class BookItem(
-    val title: String,
-    val author: String,
-    val publisher: String,
-    val year: String,
-    val description: String,
-    val bookImgUrl: String = ""
-)
-
-data class QuoteItem(
-    val quote: String,
-    val bookTitle: String,
-    val page: String,
-    val likes: Int
-)
-
 @Composable
 fun SearchResultSection(
     searchQuery: String,
+    bookList: List<Book>,
+    quoteList: List<Quote>,
     modifier: Modifier = Modifier,
-    onBookClick: (BookItem) -> Unit = {},
-    onQuoteClick: (QuoteItem) -> Unit = {}
+    onBookClick: (Book) -> Unit = {},
+    onQuoteClick: (Quote) -> Unit = {}
 ) {
     var selectedTab by remember { mutableStateOf(SearchTab.BOOKS) }
-
-    // 더미 데이터
-    val bookList = listOf(
-        BookItem(
-            title = "희랍어 시간",
-            author = "한강",
-            publisher = "문학동네",
-            year = "2011",
-            description = "시간이 흘러도 변하지 않는 것들에 대한 이야기. 언어와 기억, 상실과 치유에 관한 깊이 있는 소설.",
-        ),
-        BookItem(
-            title = "채식주의자",
-            author = "한강",
-            publisher = "창비",
-            year = "2007",
-            description = "맨부커상 수상작. 여성의 내면과 사회의 폭력성을 예리하게 그려낸 대표작.",
-        )
-    )
-
-    val quoteList = listOf(
-        QuoteItem(
-            quote = "이젠 더이상 두 글자도 않아. 왜지. 왜 나는 이렇게 말라가는 거지.",
-            bookTitle = "채식주의자",
-            page = "P.51",
-            likes = 1247
-        ),
-        QuoteItem(
-            quote = "이젠 더이상 두 글자도 않아. 왜지. 왜 나는 이렇게 말라가는 거지.",
-            bookTitle = "채식주의자",
-            page = "P.51",
-            likes = 1247
-        ),
-    )
 
     Column(
         modifier = modifier
@@ -177,8 +132,8 @@ fun SearchResultSection(
 
 @Composable
 private fun BookListContent(
-    books: List<BookItem>,
-    onBookClick: (BookItem) -> Unit
+    books: List<Book>,
+    onBookClick: (Book) -> Unit
 ) {
     if(books.isEmpty()) {
         NoSearchResult(
@@ -193,7 +148,7 @@ private fun BookListContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(books) { book ->
-            BookItemCard(
+            BookCard(
                 book = book,
                 onClick = { onBookClick(book) }
             )
@@ -203,8 +158,8 @@ private fun BookListContent(
 
 @Composable
 private fun QuoteListContent(
-    quotes: List<QuoteItem>,
-    onQuoteClick: (QuoteItem) -> Unit
+    quotes: List<Quote>,
+    onQuoteClick: (Quote) -> Unit
 ) {
     if(quotes.isEmpty()) {
         NoSearchResult(
@@ -219,7 +174,7 @@ private fun QuoteListContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(quotes) { quote ->
-            QuoteItemCard(
+            QuoteCard(
                 quote = quote,
                 onClick = { onQuoteClick(quote) }
             )
@@ -228,8 +183,8 @@ private fun QuoteListContent(
 }
 
 @Composable
-private fun BookItemCard(
-    book: BookItem,
+private fun BookCard(
+    book: Book,
     onClick: () -> Unit
 ) {
     Card(
@@ -275,7 +230,7 @@ private fun BookItemCard(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "${book.author} • ${book.publisher} • ${book.year}",
+                    text = "${book.author} • ${book.publisher} • ${book.publicationDate}",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
@@ -294,8 +249,8 @@ private fun BookItemCard(
 }
 
 @Composable
-private fun QuoteItemCard(
-    quote: QuoteItem,
+private fun QuoteCard(
+    quote: Quote,
     onClick: () -> Unit
 ) {
     Card(
@@ -309,7 +264,7 @@ private fun QuoteItemCard(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "\"${quote.quote}\"",
+                text = "\"${quote.text}\"",
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black,
                 lineHeight = 24.sp
