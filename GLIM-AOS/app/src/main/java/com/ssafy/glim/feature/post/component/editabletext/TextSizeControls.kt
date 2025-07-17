@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 
@@ -28,7 +29,7 @@ fun TextSizeControls(
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_image),
-                contentDescription = "텍스트 크기 줄이기",
+                contentDescription = stringResource(R.string.text_size_down),
                 tint = Color.White,
                 modifier = Modifier.size(16.dp),
             )
@@ -40,7 +41,7 @@ fun TextSizeControls(
         ) {
             Icon(
                 painter = painterResource(R.drawable.icon_post),
-                contentDescription = "텍스트 크기 키우기",
+                contentDescription = stringResource(R.string.text_size_down),
                 tint = Color.White,
                 modifier = Modifier.size(16.dp),
             )

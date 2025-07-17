@@ -2,14 +2,14 @@ package com.ssafy.glim.core.data.repository.fake
 
 import com.ssafy.glim.core.domain.model.Glim
 import com.ssafy.glim.core.domain.model.GlimInput
-import com.ssafy.glim.core.domain.repository.FakeGlimRepository
+import com.ssafy.glim.core.domain.repository.GlimRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class FakeGlimRepositoryImpl
     @Inject
-    constructor() : FakeGlimRepository {
+    constructor() : GlimRepository {
         private val glimDummyData = mutableListOf<Glim>()
 
         init {
