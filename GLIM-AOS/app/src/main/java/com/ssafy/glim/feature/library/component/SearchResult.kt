@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -137,7 +138,7 @@ private fun BookListContent(
 ) {
     if(books.isEmpty()) {
         NoSearchResult(
-            message = "검색 결과가 없습니다.",
+            message = stringResource(R.string.no_search_result),
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -163,7 +164,7 @@ private fun QuoteListContent(
 ) {
     if(quotes.isEmpty()) {
         NoSearchResult(
-            message = "검색 결과가 없습니다.",
+            message = stringResource(R.string.no_search_result),
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -307,7 +308,7 @@ private fun QuoteCard(
 @Composable
 fun NoSearchResult(
     modifier: Modifier = Modifier,
-    message: String = "검색 결과가 없습니다."
+    message: String
 ) {
     Box(
         modifier = modifier.fillMaxSize(),

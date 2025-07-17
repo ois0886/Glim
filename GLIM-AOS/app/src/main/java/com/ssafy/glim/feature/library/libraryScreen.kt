@@ -27,6 +27,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -65,7 +66,7 @@ fun LibraryRoute(
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp),
             ) {
                 Text(
-                    text = "도서 검색",
+                    text = stringResource(R.string.search_book_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
@@ -74,7 +75,7 @@ fun LibraryRoute(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = "글귀, 책제목, 작가이름으로 찾아보세요",
+                    text = stringResource(R.string.search_description),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray,
                 )
@@ -88,7 +89,7 @@ fun LibraryRoute(
             onValueChange = viewModel::onSearchQueryChanged,
             placeholder = {
                 Text(
-                    text = "도서명, 작가, 글귀 검색어를 입력해 주세요.",
+                    text = stringResource(R.string.search_hint_description),
                     style = MaterialTheme.typography.labelLarge,
                     color = Color.Gray,
                 )

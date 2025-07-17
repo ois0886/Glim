@@ -4,6 +4,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.ssafy.glim.R
 
 @Composable
 fun ExitConfirmDialog(
@@ -18,14 +20,14 @@ fun ExitConfirmDialog(
             TextButton(
                 onClick = onConfirmExit,
             ) {
-                Text("나가기")
+                Text(stringResource(R.string.exit))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onCancelExit,
             ) {
-                Text("취소")
+                Text(stringResource(R.string.cancel))
             }
         },
     )

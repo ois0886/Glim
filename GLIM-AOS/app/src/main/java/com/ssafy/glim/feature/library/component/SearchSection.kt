@@ -16,13 +16,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
@@ -34,7 +34,7 @@ fun PopularSearchSection(
     onClick: (String) -> Unit,
 ) {
     SearchWordListSection(
-        "인기 검색어", queries, onClick
+        stringResource(R.string.popular_search_query), queries, onClick
     )
 }
 
@@ -45,7 +45,9 @@ fun RecentSearchSection(
     onDeleteClick: (SearchItem) -> Unit
 ) {
     LazyRow(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(queries) { item ->

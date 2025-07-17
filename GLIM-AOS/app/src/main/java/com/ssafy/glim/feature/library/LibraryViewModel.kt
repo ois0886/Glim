@@ -54,7 +54,7 @@ class LibraryViewModel @Inject constructor(
             SearchMode.RESULT -> {
                 reduce {
                     state.copy(
-                        searchMode = SearchMode.RECENxT,
+                        searchMode = SearchMode.RECENT,
                         searchQuery = "",
                         currentQuery = ""
                     )

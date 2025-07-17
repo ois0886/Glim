@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 
@@ -43,13 +44,13 @@ fun ActionButtons(
         ActionButton(
             onClick = onTextExtractionClick,
             iconRes = R.drawable.ic_recognize,
-            contentDescription = "텍스트 인식",
+            contentDescription = stringResource(R.string.recognize_text),
         )
 
         ActionButton(
             onClick = onBackgroundImageButtonClick,
             iconRes = R.drawable.ic_image,
-            contentDescription = "배경 이미지",
+            contentDescription = stringResource(R.string.background_image),
         )
 
         ActionButton(

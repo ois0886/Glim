@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 
@@ -28,7 +29,7 @@ fun TextStyleControls(
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_title),
-                contentDescription = "굵게",
+                contentDescription = stringResource(R.string.bold),
                 tint = if (isBold) Color.Yellow else Color.White,
                 modifier = Modifier.size(16.dp),
             )
@@ -40,7 +41,7 @@ fun TextStyleControls(
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_more),
-                contentDescription = "기울이기",
+                contentDescription = stringResource(R.string.italic),
                 tint = if (isItalic) Color.Yellow else Color.White,
                 modifier = Modifier.size(16.dp),
             )

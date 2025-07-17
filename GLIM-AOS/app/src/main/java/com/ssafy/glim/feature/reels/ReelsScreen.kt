@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -156,7 +157,6 @@ fun GlimItem(
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
-            placeholder = painterResource(R.drawable.example_glim_2),
             error = painterResource(R.drawable.example_glim_2),
         )
 
@@ -164,7 +164,7 @@ fun GlimItem(
             modifier = Modifier.align(Alignment.BottomEnd),
             author = glim.bookAuthor,
             bookName = glim.bookTitle,
-            pageInfo = glim.pageInfo.ifEmpty { "p.51" },
+            pageInfo = glim.pageInfo,
         )
 
         Column(
@@ -179,7 +179,7 @@ fun GlimItem(
             IconButton(onClick = onCaptureClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_download),
-                    contentDescription = "다운로드",
+                    contentDescription = stringResource(R.string.download),
                 )
             }
 
@@ -198,7 +198,7 @@ fun GlimItem(
                                     R.drawable.ic_favorite
                                 },
                             ),
-                        contentDescription = "좋아요",
+                        contentDescription = stringResource(R.string.like),
                         tint = if (glim.isLike) Color.Red else Color.White,
                     )
                 }
@@ -212,14 +212,14 @@ fun GlimItem(
             IconButton(onClick = onShareClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_share),
-                    contentDescription = "공유",
+                    contentDescription = stringResource(R.string.share),
                 )
             }
 
             IconButton(onClick = onMoreClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_more),
-                    contentDescription = "더보기",
+                    contentDescription = stringResource(R.string.more),
                 )
             }
         }
