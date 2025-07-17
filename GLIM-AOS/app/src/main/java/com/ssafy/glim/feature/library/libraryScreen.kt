@@ -1,22 +1,18 @@
 package com.ssafy.glim.feature.library
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -26,24 +22,50 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
+import com.ssafy.glim.feature.library.component.PopularSearchSection
+import com.ssafy.glim.feature.library.component.RecentSearchSection
+import com.ssafy.glim.feature.library.component.SearchResultSection
+
+enum class SearchMode {
+    POPULAR,
+    RECENT,
+    RESULT
+}
 
 @Composable
 fun LibraryRoute(
     padding: PaddingValues,
     popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
-    onSearchQueryChange: (String) -> Unit = {},
-    onAuthorClick: (String) -> Unit = {},
-    onBookClick: (String) -> Unit = {},
 ) {
     var searchQuery by remember { mutableStateOf("") }
+    var searchMode by remember { mutableStateOf(SearchMode.POPULAR) }
+    val focusManager = LocalFocusManager.current
+
+    // 뒤로가기 처리
+    BackHandler(enabled = searchMode != SearchMode.POPULAR) {
+        when(searchMode) {
+            SearchMode.RECENT -> {
+                focusManager.clearFocus()
+                searchMode = SearchMode.POPULAR
+            }
+            SearchMode.RESULT -> {
+                searchQuery = ""
+                searchMode = SearchMode.RECENT
+            }
+            SearchMode.POPULAR -> Unit
+        }
+
+    }
 
     Column(
         modifier =
@@ -52,24 +74,29 @@ fun LibraryRoute(
                 .background(Color.White)
                 .padding(padding),
     ) {
-        // 헤더
-        Column(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp),
-        ) {
-            Text(
-                text = "도서 검색",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-            )
+        // 헤더 - 인기 검색어 모드일 때만 표시
+        if (searchMode == SearchMode.POPULAR) {
+            Column(
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp),
+            ) {
+                Text(
+                    text = "도서 검색",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                )
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                text = "글귀, 책제목, 작가이름으로 찾아보세요",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
-            )
+                Text(
+                    text = "글귀, 책제목, 작가이름으로 찾아보세요",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray,
+                )
+            }
+        } else {
+            // 최근 검색어 모드일 때 상단 여백 추가
+            Spacer(modifier = Modifier.height(20.dp))
         }
 
         // 검색창
@@ -77,7 +104,6 @@ fun LibraryRoute(
             value = searchQuery,
             onValueChange = {
                 searchQuery = it
-                onSearchQueryChange(it)
             },
             placeholder = {
                 Text(
@@ -89,7 +115,13 @@ fun LibraryRoute(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 8.dp),
+                    .padding(horizontal = 20.dp, vertical = 8.dp)
+                    .onFocusChanged { focusState ->
+                        // 포커스를 받으면 최근 검색어 모드로 변경
+                        if (focusState.isFocused && searchMode == SearchMode.POPULAR) {
+                            searchMode = SearchMode.RECENT
+                        }
+                    },
             shape = RoundedCornerShape(8.dp),
             colors =
                 OutlinedTextFieldDefaults.colors(
@@ -99,132 +131,42 @@ fun LibraryRoute(
                     unfocusedContainerColor = Color.White,
                 ),
             singleLine = true,
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // 인기 검색어 섹션
-//        PopularSearchSection(onAuthorClick, onBookClick)
-        RecentSearchSection(onAuthorClick, onBookClick)
-    }
-}
-
-@Composable
-private fun PopularSearchSection(
-    onAuthorClick: (String) -> Unit,
-    onBookClick: (String) -> Unit,
-) {
-    SearchWordListSection("인기 검색어", false, onAuthorClick, onBookClick)
-}
-
-@Composable
-private fun RecentSearchSection(
-    onAuthorClick: (String) -> Unit,
-    onBookClick: (String) -> Unit,
-) {
-    SearchWordListSection("최근 검색 모록", true, onAuthorClick, onBookClick)
-}
-
-@Composable
-private fun SearchWordListSection(
-    title: String,
-    isDeleteAble: Boolean = false,
-    onAuthorClick: (String) -> Unit,
-    onBookClick: (String) -> Unit,
-) {
-    Column(
-        modifier = Modifier.padding(horizontal = 20.dp),
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 검색어 목록
-        val popularSearches =
-            listOf(
-                SearchItem("희랍어 시간", "책제목"),
-                SearchItem("한강", "작가"),
-                SearchItem("박성준", "작가"),
-                SearchItem("박승준", "작가"),
-                SearchItem("폴리노", "글귀"),
-                SearchItem("잠오도", "글귀"),
-                SearchItem("한강", "작가"),
+            suffix = {
+                Icon(painter = painterResource(R.drawable.ic_search), contentDescription = null)
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    // 검색어 입력 후 엔터키를 누르면 검색 실행
+                    searchMode = SearchMode.RESULT
+                }
             )
+        )
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-        ) {
-            items(popularSearches) { item ->
-                SearchItemRow(
-                    item = item,
-                    isDeleteAble = isDeleteAble,
-                    onItemClick = {
-                        when (item.type) {
-                            "작가" -> onAuthorClick(item.text)
-                            "책제목" -> onBookClick(item.text)
-                            else -> {}
-                        }
-                    },
+        // 모드에 따라 다른 섹션 표시
+        when (searchMode) {
+            SearchMode.POPULAR -> {
+                Spacer(modifier = Modifier.height(24.dp))
+                PopularSearchSection {
+                    searchQuery = it
+                    searchMode = SearchMode.RESULT
+                }
+            }
+            SearchMode.RECENT -> {
+                Spacer(modifier = Modifier.height(24.dp))
+                RecentSearchSection {
+                    searchQuery = it
+                    searchMode = SearchMode.RESULT
+                }
+            }
+            SearchMode.RESULT -> {
+                Spacer(modifier = Modifier.height(8.dp))
+                SearchResultSection(
+                    searchQuery = searchQuery,
                 )
             }
         }
     }
 }
-
-@Composable
-fun SearchItemRow(
-    item: SearchItem,
-    isDeleteAble: Boolean,
-    onItemClick: () -> Unit,
-) {
-    Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onItemClick() }
-                .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = item.text,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Black,
-        )
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = item.type,
-            style = MaterialTheme.typography.labelLarge,
-            color = Color.Gray,
-            modifier =
-                Modifier
-                    .background(
-                        color = Color.LightGray.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(12.dp),
-                    )
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-        )
-
-        if (isDeleteAble) {
-            IconButton(onClick = {}) {
-                Icon(painter = painterResource(R.drawable.icon_post), contentDescription = null)
-            }
-        }
-    }
-    HorizontalDivider(
-        modifier = Modifier.height(1.dp),
-        thickness = 0.5.dp,
-        color = Color.LightGray.copy(alpha = 0.5f),
-    )
-}
-
-data class SearchItem(
-    val text: String,
-    val type: String,
-)
