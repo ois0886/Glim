@@ -15,7 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.navigation.compose.NavHost
-import com.example.glim.feature.auth.navigation.authNavGraph
+import com.ssafy.glim.feature.auth.navigation.authNavGraph
+import com.ssafy.glim.feature.glimdetail.navigation.glimListNavGraph
 import com.ssafy.glim.feature.home.navigation.homeNavGraph
 import com.ssafy.glim.feature.library.navigation.libraryNavGraph
 import com.ssafy.glim.feature.main.component.MainBottomBar
@@ -66,6 +67,10 @@ internal fun MainScreen(navigator: MainNavController = rememberMainNavController
                 popBackStack = navigator::popBackStack,
             )
             reelsNavGraph(
+                padding = innerPadding,
+                popBackStack = navigator::popBackStack,
+            )
+            glimListNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,
             )

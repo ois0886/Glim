@@ -1,3 +1,4 @@
+// GlimShortCardContent.kt
 package com.ssafy.glim.feature.profile.component
 
 import androidx.compose.foundation.layout.Arrangement
@@ -29,12 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
-import com.ssafy.glim.feature.profile.RecentArticle
+import com.ssafy.glim.feature.profile.GlimShortCard
 
 @Composable
-internal fun ArticleCard(
-    article: RecentArticle,
-    onLikeClick: () -> Unit,
+internal fun GlimShortCardContent(
+    glimCard: GlimShortCard,
+    onLikeToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -51,7 +52,7 @@ internal fun ArticleCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = article.title,
+                text = glimCard.title,
                 fontSize = 14.sp,
                 color = Color.Black,
                 maxLines = 2,
@@ -65,7 +66,7 @@ internal fun ArticleCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = article.timestamp,
+                    text = glimCard.timestamp,
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
@@ -74,23 +75,23 @@ internal fun ArticleCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
-                        onClick = onLikeClick,
+                        onClick = onLikeToggle,
                         modifier = Modifier.size(20.dp)
                     ) {
                         Icon(
-                            imageVector = if (article.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = if (article.isLiked) {
+                            imageVector = if (glimCard.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = if (glimCard.isLiked) {
                                 stringResource(R.string.content_description_unlike)
                             } else {
                                 stringResource(R.string.content_description_like)
                             },
-                            tint = if (article.isLiked) Color.Red else Color.Gray,
+                            tint = if (glimCard.isLiked) Color.Red else Color.Gray,
                             modifier = Modifier.size(16.dp)
                         )
                     }
 
                     Text(
-                        text = article.likeCount.toString(),
+                        text = glimCard.likeCount.toString(),
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
@@ -102,8 +103,8 @@ internal fun ArticleCard(
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewArticleCard() {
-    val mockArticle = RecentArticle(
+private fun PreviewGlimShortCardContent() {
+    val mockGlimCard = GlimShortCard(
         id = "1",
         title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
         timestamp = "P.51",
@@ -112,17 +113,17 @@ private fun PreviewArticleCard() {
     )
 
     MaterialTheme {
-        ArticleCard(
-            article = mockArticle,
-            onLikeClick = {}
+        GlimShortCardContent(
+            glimCard = mockGlimCard,
+            onLikeToggle = {}
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewArticleCardLiked() {
-    val mockArticle = RecentArticle(
+private fun PreviewGlimShortCardContentLiked() {
+    val mockGlimCard = GlimShortCard(
         id = "2",
         title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
         timestamp = "P.51",
@@ -131,9 +132,9 @@ private fun PreviewArticleCardLiked() {
     )
 
     MaterialTheme {
-        ArticleCard(
-            article = mockArticle,
-            onLikeClick = {}
+        GlimShortCardContent(
+            glimCard = mockGlimCard,
+            onLikeToggle = {}
         )
     }
 }

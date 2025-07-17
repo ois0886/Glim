@@ -3,6 +3,7 @@ package com.ssafy.glim.feature.profile
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
+import com.ssafy.glim.core.navigation.GlimRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    @ApplicationContext private val context: Context, private val navigator: Navigator
+    @ApplicationContext private val context: Context,
+    private val navigator: Navigator
 ) : ViewModel(), ContainerHost<ProfileUiState, ProfileSideEffect> {
 
     override val container: Container<ProfileUiState, ProfileSideEffect> =
@@ -24,37 +26,66 @@ class ProfileViewModel @Inject constructor(
         loadProfileData()
     }
 
-    fun onEditProfileClicked() = intent {}
+    // 네비게이션 함수들
+    fun navigateToGlimLikedList() = intent {
+        navigator.navigate(GlimRoute.Liked)
+    }
 
-    fun onViewAllRecentArticlesClicked() = intent {}
+    fun navigateToGlimUploadList() = intent {
+        navigator.navigate(GlimRoute.Upload)
+    }
 
-    fun onPersonalInfoClicked() = intent {}
+    fun navigateToEditProfile() = intent {
+        // TODO: 프로필 편집 화면으로 이동
+        postSideEffect(ProfileSideEffect.ShowToast("프로필 편집 화면으로 이동"))
+    }
 
-    fun onAccountSettingsClicked() = intent {}
+    fun navigateToPersonalInfo() = intent {
+        // TODO: 개인정보 설정 화면으로 이동
+        postSideEffect(ProfileSideEffect.ShowToast("개인정보 설정 화면으로 이동"))
+    }
 
-    fun onNotificationSettingsClicked() = intent {}
+    fun navigateToAccountSettings() = intent {
+        // TODO: 계정 설정 화면으로 이동
+        postSideEffect(ProfileSideEffect.ShowToast("계정 설정 화면으로 이동"))
+    }
 
-    fun onLogOutClick() = intent {}
+    fun navigateToNotificationSettings() = intent {
+        // TODO: 알림 설정 화면으로 이동
+        postSideEffect(ProfileSideEffect.ShowToast("알림 설정 화면으로 이동"))
+    }
 
-    fun onWithdrawalClick() = intent {
-        // 로그아웃 처리
+    // 액션 함수들
+    fun onLogOutClick() = intent {
+        // TODO: 로그아웃 처리
         postSideEffect(ProfileSideEffect.ShowToast(context.getString(R.string.logout_success)))
         navigator.navigate(Route.Login)
     }
 
-    fun onArticleLikeClicked(articleId: String) = intent {
-        val currentArticles = state.recentArticles
-        val updatedArticles = currentArticles.map { article ->
-            if (article.id == articleId) {
-                article.copy(
-                    isLiked = !article.isLiked,
-                    likeCount = if (article.isLiked) article.likeCount - 1 else article.likeCount + 1
+    fun onWithdrawalClick() = intent {
+        // TODO: 회원탈퇴 처리
+        postSideEffect(ProfileSideEffect.ShowToast("회원탈퇴 처리"))
+        navigator.navigate(Route.Login)
+    }
+
+    fun onGlimLikeToggle(glimId: String) = intent {
+        val currentGlims = state.glimShortCards
+        val updatedGlims = currentGlims.map { glim ->
+            if (glim.id == glimId) {
+                glim.copy(
+                    isLiked = !glim.isLiked,
+                    likeCount = if (glim.isLiked) glim.likeCount - 1 else glim.likeCount + 1
                 )
             } else {
-                article
+                glim
             }
         }
-        reduce { state.copy(recentArticles = updatedArticles) }
+        reduce { state.copy(glimShortCards = updatedGlims) }
+
+        // TODO: 서버에 좋아요 상태 업데이트
+        val toggledGlim = updatedGlims.find { it.id == glimId }
+        val message = if (toggledGlim?.isLiked == true) "좋아요를 눌렀습니다." else "좋아요를 취소했습니다."
+        postSideEffect(ProfileSideEffect.ShowToast(message))
     }
 
     private fun loadProfileData() = intent {
@@ -62,14 +93,15 @@ class ProfileViewModel @Inject constructor(
 
         try {
             // TODO: 실제 API 호출로 교체
-            val mockRecentArticles = listOf(
-                RecentArticle(
+            val mockGlimShortCards = listOf(
+                GlimShortCard(
                     id = "1",
                     title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
                     timestamp = "P.51",
                     likeCount = 1247,
                     isLiked = false
-                ), RecentArticle(
+                ),
+                GlimShortCard(
                     id = "2",
                     title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
                     timestamp = "P.51",
@@ -82,10 +114,10 @@ class ProfileViewModel @Inject constructor(
                 state.copy(
                     isLoading = false,
                     userName = "박성준",
-                    publishedArticleCount = 24,
-                    likedArticleCount = 8,
-                    recentArticles = mockRecentArticles,
-                    profileImageUrl = "https://example.com/profile.jpg" // 실제 이미지 URL
+                    publishedGlimCount = 24,
+                    likedGlimCount = 8,
+                    glimShortCards = mockGlimShortCards,
+                    profileImageUrl = "https://example.com/profile.jpg"
                 )
             }
         } catch (e: Exception) {

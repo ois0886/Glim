@@ -10,6 +10,15 @@ sealed interface Route {
     data object SignUp : Route
 }
 
+sealed interface GlimRoute : Route {
+
+    @Serializable
+    data object Liked : GlimRoute
+
+    @Serializable
+    data object Upload : GlimRoute
+}
+
 sealed interface BottomTabRoute : Route {
     @Serializable
     data object Home : BottomTabRoute

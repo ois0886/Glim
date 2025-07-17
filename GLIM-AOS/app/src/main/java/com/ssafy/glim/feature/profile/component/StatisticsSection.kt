@@ -1,5 +1,7 @@
+// StatisticsSection.kt
 package com.ssafy.glim.feature.profile.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,8 +20,10 @@ import com.ssafy.glim.R
 
 @Composable
 internal fun StatisticsSection(
-    publishedCount: Int,
-    likedCount: Int,
+    navigateToGlimUploadList: () -> Unit,
+    navigateToGlimLikedList: () -> Unit,
+    publishedGlimCount: Int,
+    likedGlimCount: Int,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -27,13 +31,15 @@ internal fun StatisticsSection(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         StatisticItem(
-            count = publishedCount,
-            label = stringResource(R.string.profile_published_articles)
+            count = publishedGlimCount,
+            label = stringResource(R.string.profile_published_articles),
+            onClick = navigateToGlimUploadList
         )
 
         StatisticItem(
-            count = likedCount,
-            label = stringResource(R.string.profile_liked_articles)
+            count = likedGlimCount,
+            label = stringResource(R.string.profile_liked_articles),
+            onClick = navigateToGlimLikedList
         )
     }
 }
@@ -42,10 +48,11 @@ internal fun StatisticsSection(
 private fun StatisticItem(
     count: Int,
     label: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -68,8 +75,10 @@ private fun StatisticItem(
 private fun PreviewStatisticsSection() {
     MaterialTheme {
         StatisticsSection(
-            publishedCount = 24,
-            likedCount = 8
+            navigateToGlimUploadList = {},
+            navigateToGlimLikedList = {},
+            publishedGlimCount = 24,
+            likedGlimCount = 8
         )
     }
 }

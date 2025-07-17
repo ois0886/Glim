@@ -19,7 +19,6 @@ fun NavGraphBuilder.homeNavGraph(
     composable<BottomTabRoute.Home> {
         HomeRoute(
             padding = padding,
-            popBackStack = popBackStack,
         )
     }
 }
