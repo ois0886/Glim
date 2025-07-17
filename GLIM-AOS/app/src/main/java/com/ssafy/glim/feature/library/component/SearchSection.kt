@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,7 +34,7 @@ fun PopularSearchSection(
     onClick: (String) -> Unit,
 ) {
     SearchWordListSection(
-        "인기 검색어", queries, false, {}, onClick
+        "인기 검색어", queries, onClick
     )
 }
 
@@ -42,20 +44,47 @@ fun RecentSearchSection(
     onClick: (String) -> Unit,
     onDeleteClick: (SearchItem) -> Unit
 ) {
-    SearchWordListSection(
-        "최근 검색 모록", queries, true, onDeleteClick, onClick
-    )
+    LazyRow(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(queries) { item ->
+            Row (
+                modifier = Modifier
+                    .background(
+                        Color.LightGray.copy(alpha = 0.3f),
+                        RoundedCornerShape(16.dp)
+                    )
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ){
+                Text(
+                    text = item.text,
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .clickable { onClick(item.text) },
+                    color = Color.Black,
+                )
+                Icon(
+                    painter = painterResource(R.drawable.ic_cancel),
+                    contentDescription = null,
+                    modifier = Modifier.clickable { onDeleteClick(item) }
+                )
+            }
+        }
+
+    }
 }
 
 @Composable
 private fun SearchWordListSection(
     title: String,
     searchWordList: List<SearchItem> = emptyList(),
-    isRecentSearch: Boolean = false,
-    onDeleteClick: (SearchItem) -> Unit = {},
     onClick: (String) -> Unit,
 
-) {
+    ) {
     Column(
         modifier = Modifier.padding(horizontal = 20.dp),
     ) {
@@ -74,11 +103,9 @@ private fun SearchWordListSection(
             items(searchWordList) { item ->
                 SearchItemRow(
                     item = item,
-                    isRecentSearch = isRecentSearch,
                     onItemClick = {
                         onClick(item.text)
                     },
-                    onDeleteClick = onDeleteClick
                 )
             }
         }
@@ -89,9 +116,7 @@ private fun SearchWordListSection(
 @Composable
 fun SearchItemRow(
     item: SearchItem,
-    isRecentSearch: Boolean,
     onItemClick: () -> Unit,
-    onDeleteClick: (SearchItem) -> Unit,
 ) {
     Row(
         modifier =
@@ -102,7 +127,6 @@ fun SearchItemRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (!isRecentSearch) {
             Text(
                 text = item.rankStatus.symbol,
                 style = MaterialTheme.typography.labelSmall,
@@ -115,7 +139,6 @@ fun SearchItemRow(
                 color = Color.Black,
                 fontWeight = FontWeight.Bold
             )
-        }
 
         Text(
             text = item.text,
@@ -136,15 +159,6 @@ fun SearchItemRow(
                     )
                     .padding(horizontal = 8.dp, vertical = 4.dp),
         )
-
-        if (isRecentSearch) {
-            Icon(
-                painter = painterResource(R.drawable.ic_cancel),
-                contentDescription = null,
-                modifier = Modifier.clickable {
-                    onDeleteClick(item)
-                })
-        }
     }
     Spacer(Modifier.height(8.dp))
     HorizontalDivider(

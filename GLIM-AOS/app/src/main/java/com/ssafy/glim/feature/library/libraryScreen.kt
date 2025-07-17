@@ -3,6 +3,7 @@ package com.ssafy.glim.feature.library
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -45,8 +46,10 @@ fun LibraryRoute(
     viewModel: LibraryViewModel = hiltViewModel()
 ) {
     val state by viewModel.collectAsState()
+    val focusManager = LocalFocusManager.current
 
     BackHandler {
+        focusManager.clearFocus()
         viewModel.onBackPressed()
     }
 
@@ -81,7 +84,7 @@ fun LibraryRoute(
         }
 
         OutlinedTextField(
-            value = state.searchQuery,
+            value = state.currentQuery,
             onValueChange = viewModel::onSearchQueryChanged,
             placeholder = {
                 Text(
@@ -109,7 +112,13 @@ fun LibraryRoute(
                 ),
             singleLine = true,
             suffix = {
-                Icon(painter = painterResource(R.drawable.ic_search), contentDescription = null)
+                Icon(
+                    painter = painterResource(R.drawable.ic_search),
+                    contentDescription = null,
+                    modifier = Modifier.clickable {
+                        viewModel.onSearchExecuted()
+                    }
+                )
             },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Search
@@ -122,7 +131,7 @@ fun LibraryRoute(
         )
 
         when (state.searchMode) {
-            SearchMode.POPULAR -> {
+            SearchMode.POPULAR  -> {
                 Spacer(modifier = Modifier.height(24.dp))
                 PopularSearchSection(
                     queries = state.popularSearchItems,
@@ -131,8 +140,11 @@ fun LibraryRoute(
                     },
                 )
             }
+
             SearchMode.RECENT -> {
-                Spacer(modifier = Modifier.height(24.dp))
+                if(state.recentSearchItems.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
                 RecentSearchSection(
                     queries = state.recentSearchItems,
                     onClick = { query ->
@@ -142,7 +154,15 @@ fun LibraryRoute(
                         viewModel.onRecentSearchItemDelete(searchItem)
                     }
                 )
+                Spacer(modifier = Modifier.height(24.dp))
+                PopularSearchSection(
+                    queries = state.popularSearchItems,
+                    onClick = { query ->
+                        viewModel.onPopularSearchItemClicked(query)
+                    },
+                )
             }
+
             SearchMode.RESULT -> {
                 Spacer(modifier = Modifier.height(8.dp))
                 SearchResultSection(

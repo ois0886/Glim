@@ -9,7 +9,7 @@ interface SearchQueryRepository {
 
     fun getRecentSearchQueries(): Flow<List<SearchItem>>
 
-    fun saveRecentSearchQuery(query: String, type: String): Flow<Unit>
+    fun saveRecentSearchQuery(query: String): Flow<Unit>
 
-    fun deleteRecentSearchQuery(query: String): Flow<Boolean>
+    fun deleteRecentSearchQuery(query: String): Flow<Unit>
 }

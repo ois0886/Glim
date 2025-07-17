@@ -46,15 +46,17 @@ class LibraryViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         searchMode = SearchMode.POPULAR,
-                        searchQuery = ""
+                        searchQuery = "",
+                        currentQuery = ""
                     )
                 }
             }
             SearchMode.RESULT -> {
                 reduce {
                     state.copy(
-                        searchMode = SearchMode.RECENT,
+                        searchMode = SearchMode.RECENxT,
                         searchQuery = "",
+                        currentQuery = ""
                     )
                 }
             }
@@ -66,20 +68,21 @@ class LibraryViewModel @Inject constructor(
 
     // 검색어 입력 처리
     fun onSearchQueryChanged(query: String) = intent {
-        reduce { state.copy(searchQuery = query) }
+        reduce { state.copy(currentQuery = query) }
     }
 
     // 검색 실행
     fun onSearchExecuted() = intent {
-        val query = state.searchQuery.trim()
+        val query = state.currentQuery.trim()
         if (query.isNotEmpty()) {
             performSearch(query)
             reduce {
                 state.copy(
+                    searchQuery = query,
                     searchMode = SearchMode.RESULT,
                 )
             }
-            saveRecentSearchQueryUseCase(query, "도서명").collect {
+            saveRecentSearchQueryUseCase(query).collect {
                 postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
             }
         }
@@ -87,44 +90,47 @@ class LibraryViewModel @Inject constructor(
 
     // 인기 검색어 항목 클릭
     fun onPopularSearchItemClicked(query: String) = intent {
-        reduce { state.copy(searchQuery = query) }
+        reduce { state.copy(searchQuery = query, currentQuery = query) }
         performSearch(query)
         reduce {
             state.copy(
                 searchMode = SearchMode.RESULT,
             )
         }
-        saveRecentSearchQueryUseCase(query, "도서명").collect {
+        saveRecentSearchQueryUseCase(query).collect {
             postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
         }
     }
 
     // 최근 검색어 항목 클릭
     fun onRecentSearchItemClicked(query: String) = intent {
-        reduce { state.copy(searchQuery = query) }
+        reduce { state.copy(searchQuery = query, currentQuery = query) }
         performSearch(query)
         reduce {
             state.copy(
                 searchMode = SearchMode.RESULT,
             )
         }
-        saveRecentSearchQueryUseCase(query, "도서명").collect {
+        saveRecentSearchQueryUseCase(query).collect {
             postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
         }
     }
 
-    // 최근 검색어 삭제
+    // 최근 검색어 삭제 - 수정된 버전
     fun onRecentSearchItemDelete(searchItem: SearchItem) = intent {
-        deleteRecentSearchQueryUseCase(searchItem.text).collect {
-            reduce {
-                state.copy(
-                    recentSearchItems = state.recentSearchItems.filter { it.text != searchItem.text },
-                    error = null
-                )
-            }
+        Log.d("removeSearchItem1", "Before delete: ${state.recentSearchItems}")
+
+        reduce {
+            state.copy(
+                recentSearchItems = state.recentSearchItems.filter {
+                    !(it.text == searchItem.text && it.type == searchItem.type)
+                },
+                error = null
+            )
         }
-        loadRecentSearchItems()
-        postSideEffect(LibrarySideEffect.ShowToast("검색어가 삭제되었습니다."))
+
+        deleteRecentSearchQueryUseCase(searchItem.text).collect { }
+
     }
 
     // 책 아이템 클릭
@@ -165,6 +171,7 @@ class LibraryViewModel @Inject constructor(
     private fun performSearch(query: String) = intent {
         reduce { state.copy(isLoading = true) }
         try {
+            loadRecentSearchItems()
             // 책 검색
             searchBooksUseCase(query).collect { books ->
                 reduce {

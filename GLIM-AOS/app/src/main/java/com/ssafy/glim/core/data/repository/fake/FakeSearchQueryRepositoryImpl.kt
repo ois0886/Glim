@@ -113,13 +113,14 @@ constructor() : SearchQueryRepository {
         emit(recentSearchQueries)
     }
 
-    override fun saveRecentSearchQuery(query: String, type: String) = flow {
-        emit(recentSearchQueries.add(0, SearchItem(text = query, type = type)))
+    override fun saveRecentSearchQuery(query: String) = flow {
+        recentSearchQueries.removeIf { it.text == query }
+        recentSearchQueries.add(0, SearchItem(text = query))
+        emit(Unit)
     }
 
     override fun deleteRecentSearchQuery(query: String) = flow {
-        emit(recentSearchQueries.removeIf {
-            it.text == query
-        })
+        recentSearchQueries.removeIf { it.text == query }
+        emit(Unit)
     }
 }

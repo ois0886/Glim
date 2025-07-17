@@ -6,6 +6,6 @@ import javax.inject.Inject
 class SaveRecentSearchQueryUseCase @Inject constructor(
     private val searchQueryRepository: SearchQueryRepository
 ) {
-    operator fun invoke(query: String, type: String) =
-        searchQueryRepository.saveRecentSearchQuery(query, type)
+    operator fun invoke(query: String) =
+        searchQueryRepository.saveRecentSearchQuery(query)
 }
