@@ -1,0 +1,28 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+      when: always
+    - when: never
+
+
+stages:
+  - lint
+
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+ktlint:
+  stage: lint
+  image:
+    name: openjdk:11-buster
+    entrypoint: [""]
+  allow_failure: true
+  script:
+    - ./gradlew --continue ktlint
+  artifacts:
+    reports:
+      codequality: build/reports/ktlint/ktlint.json
+
