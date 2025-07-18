@@ -74,6 +74,8 @@ dependencies {
     implementation(libs.orbit.core)
     implementation(libs.orbit.viewmodel)
     implementation(libs.orbit.compose)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.compose.material)
     testImplementation(libs.orbit.test)
 
     // Kotlin Serialization & Immutable Collections
