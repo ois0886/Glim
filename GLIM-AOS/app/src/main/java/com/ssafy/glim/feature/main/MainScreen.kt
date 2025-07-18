@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.navigation.compose.NavHost
 import com.ssafy.glim.feature.auth.navigation.authNavGraph
-import com.ssafy.glim.feature.glimdetail.navigation.glimListNavGraph
+import com.ssafy.glim.feature.glimlist.navigation.glimListNavGraph
 import com.ssafy.glim.feature.home.navigation.homeNavGraph
 import com.ssafy.glim.feature.library.navigation.libraryNavGraph
 import com.ssafy.glim.feature.main.component.MainBottomBar

@@ -14,6 +14,8 @@ fun NavGraphBuilder.authNavGraph(padding: PaddingValues) {
         )
     }
     composable<Route.SignUp> {
-        SignUpRoute()
+        SignUpRoute(
+            padding = padding
+        )
     }
 }

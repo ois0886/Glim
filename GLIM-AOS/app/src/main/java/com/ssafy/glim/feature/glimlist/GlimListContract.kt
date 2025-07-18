@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.glimdetail
+package com.ssafy.glim.feature.glimlist
 
 data class GlimListUiState(
     val glimList: List<GlimItem> = emptyList(),
@@ -19,7 +19,6 @@ data class GlimItem(
     val isLiked: Boolean = false
 )
 
-// 탭 종류 enum
 enum class GlimListType(val displayName: String) {
     LIKED("좋아요 한 글귀"),
     UPLOADED("업로드 한 글귀")
