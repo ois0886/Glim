@@ -3,13 +3,13 @@ package com.ssafy.glim.feature.profile
 data class ProfileUiState(
     val profileImageUrl: String? = null,
     val userName: String = "",
-    val publishedArticleCount: Int = 0,
-    val likedArticleCount: Int = 0,
+    val publishedGlimCount: Int = 0,
+    val likedGlimCount: Int = 0,
     val isLoading: Boolean = false,
-    val recentArticles: List<RecentArticle> = emptyList()
+    val glimShortCards: List<GlimShortCard> = emptyList()
 )
 
-data class RecentArticle(
+data class GlimShortCard(
     val id: String,
     val title: String,
     val timestamp: String,

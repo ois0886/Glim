@@ -23,9 +23,9 @@ import com.ssafy.glim.R
 
 @Composable
 internal fun SettingsSection(
-    onPersonalInfoClick: () -> Unit,
-    onAccountSettingsClick: () -> Unit,
-    onNotificationSettingsClick: () -> Unit,
+    navigateToPersonalInfo: () -> Unit,
+    navigateToAccountSettings: () -> Unit,
+    navigateToNotificationSettings: () -> Unit,
     onLogOutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -35,17 +35,17 @@ internal fun SettingsSection(
     ) {
         SettingItem(
             title = stringResource(R.string.settings_personal_info),
-            onClick = onPersonalInfoClick
+            onClick = navigateToPersonalInfo
         )
 
         SettingItem(
             title = stringResource(R.string.settings_account),
-            onClick = onAccountSettingsClick
+            onClick = navigateToAccountSettings
         )
 
         SettingItem(
             title = stringResource(R.string.settings_notification),
-            onClick = onNotificationSettingsClick
+            onClick = navigateToNotificationSettings
         )
 
         SettingItem(
@@ -88,9 +88,9 @@ internal fun SettingItem(
 private fun PreviewSettingsSection() {
     MaterialTheme {
         SettingsSection(
-            onPersonalInfoClick = {},
-            onAccountSettingsClick = {},
-            onNotificationSettingsClick = {},
+            navigateToPersonalInfo = {},
+            navigateToAccountSettings = {},
+            navigateToNotificationSettings = {},
             onLogOutClick = {}
         )
     }

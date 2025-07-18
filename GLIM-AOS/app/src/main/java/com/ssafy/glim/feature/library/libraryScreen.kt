@@ -1,49 +1,58 @@
 package com.ssafy.glim.feature.library
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
+import com.ssafy.glim.feature.library.component.PopularSearchSection
+import com.ssafy.glim.feature.library.component.RecentSearchSection
+import com.ssafy.glim.feature.library.component.SearchResultSection
+import org.orbitmvi.orbit.compose.collectAsState
+
 
 @Composable
 fun LibraryRoute(
     padding: PaddingValues,
     popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
-    onSearchQueryChange: (String) -> Unit = {},
-    onAuthorClick: (String) -> Unit = {},
-    onBookClick: (String) -> Unit = {},
+    viewModel: LibraryViewModel = hiltViewModel()
 ) {
-    var searchQuery by remember { mutableStateOf("") }
+    val state by viewModel.collectAsState()
+    val focusManager = LocalFocusManager.current
+
+    BackHandler {
+        focusManager.clearFocus()
+        viewModel.onBackPressed()
+    }
 
     Column(
         modifier =
@@ -52,36 +61,35 @@ fun LibraryRoute(
                 .background(Color.White)
                 .padding(padding),
     ) {
-        // 헤더
-        Column(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp),
-        ) {
-            Text(
-                text = "도서 검색",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-            )
+        if (state.searchMode == SearchMode.POPULAR) {
+            Column(
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.search_book_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                )
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                text = "글귀, 책제목, 작가이름으로 찾아보세요",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
-            )
+                Text(
+                    text = stringResource(R.string.search_description),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray,
+                )
+            }
+        } else {
+            Spacer(modifier = Modifier.height(20.dp))
         }
 
-        // 검색창
         OutlinedTextField(
-            value = searchQuery,
-            onValueChange = {
-                searchQuery = it
-                onSearchQueryChange(it)
-            },
+            value = state.currentQuery,
+            onValueChange = viewModel::onSearchQueryChanged,
             placeholder = {
                 Text(
-                    text = "도서명, 작가, 글귀 검색어를 입력해 주세요.",
+                    text = stringResource(R.string.search_hint_description),
                     style = MaterialTheme.typography.labelLarge,
                     color = Color.Gray,
                 )
@@ -89,7 +97,12 @@ fun LibraryRoute(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 8.dp),
+                    .padding(horizontal = 20.dp, vertical = 8.dp)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused && state.searchMode == SearchMode.POPULAR) {
+                            viewModel.updateSearchMode(SearchMode.RECENT)
+                        }
+                    },
             shape = RoundedCornerShape(8.dp),
             colors =
                 OutlinedTextFieldDefaults.colors(
@@ -99,132 +112,66 @@ fun LibraryRoute(
                     unfocusedContainerColor = Color.White,
                 ),
             singleLine = true,
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // 인기 검색어 섹션
-//        PopularSearchSection(onAuthorClick, onBookClick)
-        RecentSearchSection(onAuthorClick, onBookClick)
-    }
-}
-
-@Composable
-private fun PopularSearchSection(
-    onAuthorClick: (String) -> Unit,
-    onBookClick: (String) -> Unit,
-) {
-    SearchWordListSection("인기 검색어", false, onAuthorClick, onBookClick)
-}
-
-@Composable
-private fun RecentSearchSection(
-    onAuthorClick: (String) -> Unit,
-    onBookClick: (String) -> Unit,
-) {
-    SearchWordListSection("최근 검색 모록", true, onAuthorClick, onBookClick)
-}
-
-@Composable
-private fun SearchWordListSection(
-    title: String,
-    isDeleteAble: Boolean = false,
-    onAuthorClick: (String) -> Unit,
-    onBookClick: (String) -> Unit,
-) {
-    Column(
-        modifier = Modifier.padding(horizontal = 20.dp),
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 검색어 목록
-        val popularSearches =
-            listOf(
-                SearchItem("희랍어 시간", "책제목"),
-                SearchItem("한강", "작가"),
-                SearchItem("박성준", "작가"),
-                SearchItem("박승준", "작가"),
-                SearchItem("폴리노", "글귀"),
-                SearchItem("잠오도", "글귀"),
-                SearchItem("한강", "작가"),
+            suffix = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_search),
+                    contentDescription = null,
+                    modifier = Modifier.clickable {
+                        viewModel.onSearchExecuted()
+                    }
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    viewModel.onSearchExecuted()
+                }
             )
+        )
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-        ) {
-            items(popularSearches) { item ->
-                SearchItemRow(
-                    item = item,
-                    isDeleteAble = isDeleteAble,
-                    onItemClick = {
-                        when (item.type) {
-                            "작가" -> onAuthorClick(item.text)
-                            "책제목" -> onBookClick(item.text)
-                            else -> {}
-                        }
+        when (state.searchMode) {
+            SearchMode.POPULAR  -> {
+                Spacer(modifier = Modifier.height(24.dp))
+                PopularSearchSection(
+                    queries = state.popularSearchItems,
+                    onClick = { query ->
+                        viewModel.onPopularSearchItemClicked(query)
                     },
+                )
+            }
+
+            SearchMode.RECENT -> {
+                if(state.recentSearchItems.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+                RecentSearchSection(
+                    queries = state.recentSearchItems,
+                    onClick = { query ->
+                        viewModel.onRecentSearchItemClicked(query)
+                    },
+                    onDeleteClick = { searchItem ->
+                        viewModel.onRecentSearchItemDelete(searchItem)
+                    }
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                PopularSearchSection(
+                    queries = state.popularSearchItems,
+                    onClick = { query ->
+                        viewModel.onPopularSearchItemClicked(query)
+                    },
+                )
+            }
+
+            SearchMode.RESULT -> {
+                Spacer(modifier = Modifier.height(8.dp))
+                SearchResultSection(
+                    searchQuery = state.searchQuery,
+                    bookList = state.searchBooks,
+                    quoteList = state.searchQuotes,
                 )
             }
         }
     }
 }
-
-@Composable
-fun SearchItemRow(
-    item: SearchItem,
-    isDeleteAble: Boolean,
-    onItemClick: () -> Unit,
-) {
-    Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onItemClick() }
-                .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = item.text,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Black,
-        )
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = item.type,
-            style = MaterialTheme.typography.labelLarge,
-            color = Color.Gray,
-            modifier =
-                Modifier
-                    .background(
-                        color = Color.LightGray.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(12.dp),
-                    )
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-        )
-
-        if (isDeleteAble) {
-            IconButton(onClick = {}) {
-                Icon(painter = painterResource(R.drawable.icon_post), contentDescription = null)
-            }
-        }
-    }
-    HorizontalDivider(
-        modifier = Modifier.height(1.dp),
-        thickness = 0.5.dp,
-        color = Color.LightGray.copy(alpha = 0.5f),
-    )
-}
-
-data class SearchItem(
-    val text: String,
-    val type: String,
-)

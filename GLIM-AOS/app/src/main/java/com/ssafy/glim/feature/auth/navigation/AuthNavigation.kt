@@ -1,4 +1,4 @@
-package com.example.glim.feature.auth.navigation
+package com.ssafy.glim.feature.auth.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
@@ -14,6 +14,8 @@ fun NavGraphBuilder.authNavGraph(padding: PaddingValues) {
         )
     }
     composable<Route.SignUp> {
-        SignUpRoute()
+        SignUpRoute(
+            padding = padding
+        )
     }
 }

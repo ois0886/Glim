@@ -28,7 +28,7 @@
     <string name="profile_hint_name">2~16글자를 입력해주세요.</string>
     <string name="profile_note_name">사람들에게 보여지는 이름으로,\n불쾌감을 줄 수 있는 이름은 경고없이 변경돼요.</string>
     <string name="profile_label_birth">출생년도</string>
-    <string name="profile_hint_birth">YYYY</string>
+    <string name="profile_hint_birth">YYYYMMDD </string>
     <string name="profile_label_gender">성별</string>
     <string name="profile_gender_male">남자</string>
     <string name="profile_gender_female">여자</string>
@@ -44,9 +44,13 @@
     <string name="error_password_mismatch">비밀번호가 일치하지 않습니다.</string>
     <string name="error_name_empty">이름을 입력해주세요.</string>
     <string name="error_name_invalid">이름은 2~16자로 입력해주세요.</string>
-    <string name="error_birth_year_empty">출생연도를 입력해주세요.</string>
-    <string name="error_birth_year_invalid">4자리 숫자로 입력해주세요.</string>
-    <string name="error_birth_year_range">유효한 연도를 입력해주세요.</string>
+    <string name="error_birth_empty">생년월일을 입력해주세요</string>
+    <string name="error_birth_format">생년월일은 8자리 숫자로 입력해주세요 (YYYYMMDD)</string>
+    <string name="error_birth_year">올바른 연도를 입력해주세요 (1900~현재년도)</string>
+    <string name="error_birth_month">올바른 월을 입력해주세요 (01~12)</string>
+    <string name="error_birth_day">올바른 일을 입력해주세요</string>
+    <string name="error_birth_future">미래 날짜는 입력할 수 없습니다</string>
+    <string name="error_birth_invalid">8자리 숫자로 입력해주세요.</string>
     <string name="error_gender_empty">성별을 선택해주세요.</string>
 
     <!-- 회원가입 처리 관련 메시지 -->
@@ -75,6 +79,23 @@
     <string name="content_description_like">좋아요</string>
     <string name="content_description_unlike">좋아요 취소</string>
     <string name="content_description_navigate">이동</string>
+    <string name="search_book_title">도서 검색</string>
+    <string name="search_description">글귀, 책제목, 작가이름으로 찾아보세요.</string>
+    <string name="search_hint_description">도서명, 작가, 글귀 검색어를 입력해 주세요.</string>
+    <string name="popular_search_query">인기 검색어</string>
+    <string name="no_search_result">검색 결과가 없습니다.</string>
+    <string name="text_size_down">텍스트 크기 줄이기</string>
+    <string name="bold">굵게</string>
+    <string name="italic">기울이기</string>
+    <string name="recognize_text">텍스트 인식</string>
+    <string name="background_image">배경 이미지</string>
+    <string name="add_book_info">책 정보 추가</string>
+    <string name="cancel">취소</string>
+    <string name="exit">나가기</string>
+    <string name="download">다운로드</string>
+    <string name="like">좋아요</string>
+    <string name="share">공유</string>
+    <string name="more">더보기</string>
     <string name="today_glim">오늘의 글림</string>
     <string name="glim_home_description">잠시 멈춰 서서, 글귀를 둘러보세요.</string>
 </resources>

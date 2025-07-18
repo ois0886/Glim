@@ -39,7 +39,7 @@ import com.ssafy.glim.R
 internal fun ProfileHeader(
     profileImageUrl: String?,
     userName: String,
-    onEditClick: () -> Unit,
+    navigateToEditProfile: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -110,7 +110,7 @@ internal fun ProfileHeader(
             Spacer(modifier = Modifier.width(8.dp))
 
             IconButton(
-                onClick = onEditClick,
+                onClick = navigateToEditProfile,
                 modifier = Modifier.size(24.dp)
             ) {
                 Icon(
@@ -130,7 +130,7 @@ private fun PreviewProfileHeader() {
         ProfileHeader(
             profileImageUrl = null,
             userName = "박성준",
-            onEditClick = {}
+            navigateToEditProfile = {}
         )
     }
 }

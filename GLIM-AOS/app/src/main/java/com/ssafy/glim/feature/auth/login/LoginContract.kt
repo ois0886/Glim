@@ -1,10 +1,12 @@
 package com.ssafy.glim.feature.auth.login
 
+import androidx.annotation.StringRes
+
 data class LoginUiState(
     val email: String = "",
     val password: String = "",
-    val emailError: String? = null,
-    val passwordError: String? = null,
+    @StringRes val emailError: Int? = null,
+    @StringRes val passwordError: Int? = null,
     val isLoading: Boolean = false,
 ) {
     val isLoginEnabled: Boolean
@@ -17,4 +19,5 @@ data class LoginUiState(
 
 sealed interface LoginSideEffect {
     data class ShowError(val message: String) : LoginSideEffect
+    data class ShowErrorRes(@StringRes val messageRes: Int) : LoginSideEffect
 }
