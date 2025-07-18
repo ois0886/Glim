@@ -25,7 +25,7 @@ internal class MainNavController(
             navController
                 .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Login
+    val startDestination = MainTab.HOME.route
 
     val currentTab: MainTab?
         @Composable get() =

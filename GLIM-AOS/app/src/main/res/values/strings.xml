@@ -96,4 +96,6 @@
     <string name="like">좋아요</string>
     <string name="share">공유</string>
     <string name="more">더보기</string>
+    <string name="today_glim">오늘의 글림</string>
+    <string name="glim_home_description">잠시 멈춰 서서, 글귀를 둘러보세요.</string>
 </resources>
