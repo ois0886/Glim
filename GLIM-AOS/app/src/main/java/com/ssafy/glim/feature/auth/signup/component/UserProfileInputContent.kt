@@ -84,7 +84,6 @@ fun UserProfileInputContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 출생년도
         Text(text = stringResource(id = R.string.profile_label_birth))
         Spacer(modifier = Modifier.height(8.dp))
         TextField(

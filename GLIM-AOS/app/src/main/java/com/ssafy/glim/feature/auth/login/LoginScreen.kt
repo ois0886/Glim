@@ -38,9 +38,6 @@ import com.ssafy.glim.feature.auth.login.component.SocialButton
 import com.ssafy.glim.feature.auth.login.component.SocialProvider
 import org.orbitmvi.orbit.compose.collectSideEffect
 
-/**
- * LoginRoute: ViewModel SideEffect 및 State 구독 → 네비게이션/토스트 처리
- */
 @Composable
 internal fun LoginRoute(
     padding: PaddingValues,
@@ -54,7 +51,9 @@ internal fun LoginRoute(
             is LoginSideEffect.ShowError ->
                 Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
 
-            else -> Unit
+            is LoginSideEffect.ShowErrorRes ->
+                Toast.makeText(context, context.getString(effect.messageRes), Toast.LENGTH_SHORT)
+                    .show()
         }
     }
 
@@ -71,9 +70,6 @@ internal fun LoginRoute(
     )
 }
 
-/**
- * LoginScreen: UI 그리기
- */
 @Composable
 internal fun LoginScreen(
     state: LoginUiState,
@@ -95,11 +91,9 @@ internal fun LoginScreen(
             titleSize = 20.sp,
         )
         Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 24.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -114,7 +108,7 @@ internal fun LoginScreen(
             EmailInputTextField(
                 value = state.email,
                 onValueChange = onEmailChanged,
-                error = state.emailError,
+                error = state.emailError?.let { stringResource(it) }, // 리소스 ID를 문자열로 변환
             )
 
             Spacer(Modifier.height(16.dp))
@@ -122,23 +116,23 @@ internal fun LoginScreen(
             PasswordInputTextField(
                 value = state.password,
                 onValueChange = onPasswordChanged,
-                error = state.passwordError,
+                error = state.passwordError?.let { stringResource(it) }, // 리소스 ID를 문자열로 변환
             )
 
             Spacer(Modifier.height(24.dp))
 
             GlimButton(
-                text =
-                    if (state.isLoading) {
-                        stringResource(R.string.login_loading)
-                    } else {
-                        stringResource(R.string.login_button)
-                    },
+                text = if (state.isLoading) {
+                    stringResource(R.string.login_loading)
+                } else {
+                    stringResource(R.string.login_button)
+                },
                 onClick = onLoginClicked,
                 enabled = state.isLoginEnabled && !state.isLoading,
             )
 
             Spacer(Modifier.height(12.dp))
+
             Row {
                 TextButton(onClick = navigateToSignUp) {
                     Text(stringResource(id = R.string.login_signup))
@@ -150,6 +144,7 @@ internal fun LoginScreen(
             }
 
             Spacer(Modifier.height(24.dp))
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth(),
@@ -163,6 +158,7 @@ internal fun LoginScreen(
             }
 
             Spacer(Modifier.height(16.dp))
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -173,14 +169,13 @@ internal fun LoginScreen(
             }
 
             Spacer(Modifier.height(16.dp))
+
             TextButton(onClick = navigateToSignUpOnGuest) {
                 Text(stringResource(R.string.login_guest))
             }
         }
     }
 }
-
-// Previews
 
 @Preview(name = "Empty Form", showBackground = true)
 @Composable
@@ -202,13 +197,12 @@ fun PreviewLoginScreen_Empty() {
 @Composable
 fun PreviewLoginScreen_Errors() {
     LoginScreen(
-        state =
-            LoginUiState(
-                email = "invalid-email",
-                password = "short",
-                emailError = "유효한 이메일 형식을 입력해주세요.",
-                passwordError = "8~16자, 영문 대/소문자·숫자·특수문자 포함",
-            ),
+        state = LoginUiState(
+            email = "invalid-email",
+            password = "short",
+            emailError = R.string.error_email_invalid,
+            passwordError = R.string.error_password_invalid
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},
@@ -224,11 +218,10 @@ fun PreviewLoginScreen_Errors() {
 @Composable
 fun PreviewLoginScreen_Valid() {
     LoginScreen(
-        state =
-            LoginUiState(
-                email = "user@example.com",
-                password = "Aa1!abcd",
-            ),
+        state = LoginUiState(
+            email = "user@example.com",
+            password = "Aa1!abcd",
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},
@@ -244,12 +237,11 @@ fun PreviewLoginScreen_Valid() {
 @Composable
 fun PreviewLoginScreen_Loading() {
     LoginScreen(
-        state =
-            LoginUiState(
-                email = "user@example.com",
-                password = "Aa1!abcd",
-                isLoading = true,
-            ),
+        state = LoginUiState(
+            email = "user@example.com",
+            password = "Aa1!abcd",
+            isLoading = true,
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},

@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Glim"
+rootProject.name = "GLIM-AOS"
 include(":app")

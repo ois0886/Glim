@@ -1,4 +1,4 @@
-package com.example.glim.feature.auth.signup.component
+package com.ssafy.glim.feature.auth.signup.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

@@ -28,7 +28,7 @@
     <string name="profile_hint_name">2~16글자를 입력해주세요.</string>
     <string name="profile_note_name">사람들에게 보여지는 이름으로,\n불쾌감을 줄 수 있는 이름은 경고없이 변경돼요.</string>
     <string name="profile_label_birth">출생년도</string>
-    <string name="profile_hint_birth">YYYY</string>
+    <string name="profile_hint_birth">YYYYMMDD </string>
     <string name="profile_label_gender">성별</string>
     <string name="profile_gender_male">남자</string>
     <string name="profile_gender_female">여자</string>
@@ -44,9 +44,13 @@
     <string name="error_password_mismatch">비밀번호가 일치하지 않습니다.</string>
     <string name="error_name_empty">이름을 입력해주세요.</string>
     <string name="error_name_invalid">이름은 2~16자로 입력해주세요.</string>
-    <string name="error_birth_year_empty">출생연도를 입력해주세요.</string>
-    <string name="error_birth_year_invalid">4자리 숫자로 입력해주세요.</string>
-    <string name="error_birth_year_range">유효한 연도를 입력해주세요.</string>
+    <string name="error_birth_empty">생년월일을 입력해주세요</string>
+    <string name="error_birth_format">생년월일은 8자리 숫자로 입력해주세요 (YYYYMMDD)</string>
+    <string name="error_birth_year">올바른 연도를 입력해주세요 (1900~현재년도)</string>
+    <string name="error_birth_month">올바른 월을 입력해주세요 (01~12)</string>
+    <string name="error_birth_day">올바른 일을 입력해주세요</string>
+    <string name="error_birth_future">미래 날짜는 입력할 수 없습니다</string>
+    <string name="error_birth_invalid">8자리 숫자로 입력해주세요.</string>
     <string name="error_gender_empty">성별을 선택해주세요.</string>
 
     <!-- 회원가입 처리 관련 메시지 -->

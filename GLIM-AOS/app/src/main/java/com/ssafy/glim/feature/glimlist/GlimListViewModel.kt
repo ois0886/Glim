@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.glimdetail
+package com.ssafy.glim.feature.glimlist
 
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.navigation.Navigator
@@ -11,13 +11,11 @@ import javax.inject.Inject
 @HiltViewModel
 internal class GlimListViewModel @Inject constructor(
     private val navigator: Navigator,
-    // private val glimRepository: GlimRepository // 실제 리포지토리를 주입받아야 함
 ) : ViewModel(), ContainerHost<GlimListUiState, GlimListSideEffect> {
 
     override val container =
         container<GlimListUiState, GlimListSideEffect>(initialState = GlimListUiState())
 
-    // 임시 데이터 (실제로는 리포지토리에서 가져와야 함)
     private val mockLikedGlims = listOf(
         GlimItem(
             id = 1,
