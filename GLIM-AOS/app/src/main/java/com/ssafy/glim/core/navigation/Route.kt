@@ -34,4 +34,7 @@ sealed interface BottomTabRoute : Route {
 
     @Serializable
     data object Profile : BottomTabRoute
+
+    @Serializable
+    data object BookDetail : BottomTabRoute
 }
