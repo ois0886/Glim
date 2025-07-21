@@ -8,5 +8,5 @@ interface BookRepository {
 
     fun searchBooks(query: String): Flow<List<Book>>
 
-    fun getBookDetail(isbn: String): Flow<BookDetail>
+    fun getBookDetail(isbn: Long): Flow<BookDetail>
 }

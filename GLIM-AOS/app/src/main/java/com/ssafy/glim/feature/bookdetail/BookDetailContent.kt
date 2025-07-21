@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -50,7 +51,7 @@ fun BookDetailTopBar(
         IconButton(onClick = onBackClick) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Back",
+                contentDescription = stringResource(R.string.back),
             )
         }
 
@@ -86,7 +87,7 @@ fun BookInfoSection(state: BookDetail) {
     ) {
         AsyncImage(
             model = state.coverImageUrl,
-            contentDescription = "Book Cover",
+            contentDescription = stringResource(R.string.book_cover),
             modifier = Modifier
                 .size(80.dp, 120.dp),
             contentScale = ContentScale.Crop,
@@ -108,7 +109,6 @@ fun BookInfoSection(state: BookDetail) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Book title
                 Text(
                     text = state.title,
                     style = MaterialTheme.typography.bodyLarge,
@@ -128,14 +128,13 @@ fun BookInfoSection(state: BookDetail) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Book author
                 Text(
                     text = state.author,
                     style = MaterialTheme.typography.bodySmall,
                 )
 
                 Text(
-                    text = "발행일 ${state.publicationDate}",
+                    text = stringResource(R.string.publication_date) + state.publicationDate,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -145,14 +144,13 @@ fun BookInfoSection(state: BookDetail) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Book publisher
                 Text(
                     text = state.publisher,
                     style = MaterialTheme.typography.bodySmall,
                 )
 
                 Text(
-                    text = "정가 ${state.priceText}",
+                    text = stringResource(R.string.price) + state.priceText,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -194,7 +192,7 @@ fun QuoteCard(quote: Quote, onClickCard: (Long) -> Unit) {
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_favorite),
-                contentDescription = "Like Icon",
+                contentDescription = stringResource(R.string.like),
                 modifier = Modifier.padding(end = 4.dp)
             )
 

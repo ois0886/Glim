@@ -228,7 +228,7 @@ class FakeBookRepositoryImpl
         })
     }
 
-    override fun getBookDetail(isbn: String) = flow {
+    override fun getBookDetail(isbn: Long) = flow {
         emit(bookDetail)
     }
 }

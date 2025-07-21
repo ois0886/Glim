@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetBookDetailUseCase @Inject constructor(
     private val bookRepository: BookRepository,
 ) {
-    operator fun invoke(bookId: String) = bookRepository.getBookDetail(bookId)
+    operator fun invoke(bookId: Long) = bookRepository.getBookDetail(bookId)
 }

@@ -1,6 +1,7 @@
 package com.ssafy.glim.feature.bookdetail
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,12 +24,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +46,7 @@ import kotlin.math.min
 
 @Composable
 fun BookDetailScreen(
+    bookId: Long,
     padding: PaddingValues,
     popBackStack: () -> Unit,
     viewModel: BookDetailViewModel = hiltViewModel(),
@@ -50,10 +54,14 @@ fun BookDetailScreen(
     val state by viewModel.collectAsState()
     val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        viewModel.initBookId(bookId)
+    }
+
     viewModel.collectSideEffect {
         when (it) {
             is BookDetailSideEffect.ShowToast -> {
-
+                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
             }
 
             is BookDetailSideEffect.OpenUrl -> {
@@ -81,6 +89,7 @@ fun BookDetailScreen(
 
 @Composable
 fun BookDetailContent(
+    modifier: Modifier = Modifier,
     book: BookDetail,
     isDescriptionExpanded: Boolean = false,
     isAuthorDescriptionExpanded: Boolean = false,
@@ -89,7 +98,6 @@ fun BookDetailContent(
     toggleBookDescriptionExpanded: () -> Unit,
     toggleAuthorDescriptionExpanded: () -> Unit,
     popBackStack : () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
 
@@ -131,7 +139,7 @@ fun BookDetailContent(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        TitleWithAction(title = "관련 글귀")
+                        TitleWithAction(title = stringResource(R.string.relative_quote))
 
                         for (quote in book.quotes) {
                             QuoteCard(quote) { onClickQuote(it) }
@@ -151,7 +159,7 @@ fun BookDetailContent(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         TitleWithAction(
-                            title = "도서 개요",
+                            title = stringResource(R.string.book_summary),
                             isExpanded = isDescriptionExpanded,
                             action = toggleBookDescriptionExpanded
                         )
@@ -177,7 +185,7 @@ fun BookDetailContent(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             TitleWithAction(
-                                title = "작가 소개",
+                                title = stringResource(R.string.author_intro),
                                 isExpanded = isAuthorDescriptionExpanded,
                                 action = toggleAuthorDescriptionExpanded
                             )
@@ -205,7 +213,7 @@ fun BookDetailContent(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_forward),
-                    contentDescription = "Add Quote",
+                    contentDescription = stringResource(R.string.open_url),
                     tint = Color.White
                 )
             }
@@ -224,7 +232,7 @@ private fun TitleWithAction(
         ) {
             Icon(
                 painter = painterResource(id = if (isExpanded) R.drawable.ic_arrow_down else R.drawable.ic_forward),
-                contentDescription = "Add Quote",
+                contentDescription = stringResource(R.string.more),
                 tint = MaterialTheme.colorScheme.primary
             )
         }

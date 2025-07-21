@@ -19,16 +19,24 @@ class BookDetailViewModel @Inject constructor(
     override val container: Container<BookDetailState, BookDetailSideEffect> = container(BookDetailState())
 
     init {
-        loadBookDetail("1")
+        loadBookDetail()
     }
 
-    private fun loadBookDetail(bookId: String) = intent {
-        getBookDetailUseCase(bookId).collect {
+    private fun loadBookDetail() = intent {
+        getBookDetailUseCase(state.bookId).collect {
             reduce {
                 state.copy(
                     bookDetail = it
                 )
             }
+        }
+    }
+
+    fun initBookId(bookId: Long) = intent {
+        reduce {
+            state.copy(
+                bookId = bookId
+            )
         }
     }
 

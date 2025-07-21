@@ -6,20 +6,18 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.ssafy.glim.core.navigation.BottomTabRoute
+import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.bookdetail.BookDetailScreen
-
-fun NavController.navigateToBookDetail(navOptions: NavOptions) {
-    navigate(BottomTabRoute.BookDetail, navOptions)
-}
 
 fun NavGraphBuilder.bookDetailNavGraph(
     padding: PaddingValues,
     popBackStack: () -> Unit,
 ) {
-    composable<BottomTabRoute.BookDetail> {
+    composable<Route.BookDetail> { backStackEntry ->
         BookDetailScreen(
             padding = padding,
-            popBackStack = popBackStack
+            popBackStack = popBackStack,
+            bookId = backStackEntry.arguments?.getLong("bookId") ?: 0L,
         )
     }
 }

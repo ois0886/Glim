@@ -13,6 +13,7 @@ import com.ssafy.glim.core.domain.usecase.search.GetRecentSearchQueriesUseCase
 import com.ssafy.glim.core.domain.usecase.search.SaveRecentSearchQueryUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
+import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.library.component.SearchTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
@@ -134,7 +135,7 @@ class LibraryViewModel @Inject constructor(
 
     // 책 아이템 클릭
     fun onBookClicked(Book: Book) = intent {
-        navigator.navigate(BottomTabRoute.BookDetail)
+        navigator.navigate(Route.BookDetail(bookId = Book.id))
     }
 
     // 글귀 아이템 클릭
