@@ -5,6 +5,7 @@ import com.ssafy.glim.core.domain.model.Glim
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.repository.BookRepository
 import com.ssafy.glim.core.domain.repository.QuoteRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -305,4 +306,13 @@ class FakeQuoteRepositoryImpl
             quote.text.contains(query)
         })
     }
+
+    override suspend fun getGlims(
+        page: Int,
+        size: Int,
+        sort: String
+    ): List<Glim> {
+        TODO("Not yet implemented")
+    }
+    
 }
