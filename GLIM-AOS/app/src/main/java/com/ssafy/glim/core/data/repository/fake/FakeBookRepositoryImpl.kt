@@ -1,11 +1,9 @@
 package com.ssafy.glim.core.data.repository.fake
 
-import android.util.Log
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.core.domain.model.Glim
-import com.ssafy.glim.core.domain.model.RankStatus
-import com.ssafy.glim.core.domain.model.SearchItem
+import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.repository.BookRepository
+import com.ssafy.glim.feature.bookdetail.BookDetail
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -13,6 +11,34 @@ class FakeBookRepositoryImpl
     @Inject
     constructor() : BookRepository {
         private val books = mutableListOf<Book>()
+        private val bookDetail = BookDetail(
+            title = "82년생 김지영",
+            author = "조남주",
+            publisher = "민음사",
+            publicationDate = "2016-10-14",
+            isbn = "9788937473142",
+            description = "한국 사회에서 여성으로 살아가는 것의 현실을 담담하게 그려낸 소설. 평범한 여성의 일상을 통해 우리 사회의 성차별 구조를 드러낸다.",
+            coverImageUrl = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            subTitle = "2024년 노벨문학상 수상 작가",
+            price = 13000,
+            category = "심리 소설",
+            quotes = listOf(
+                Quote(
+                    text = "나는 그저 평범하게 살고 싶었을 뿐이다.",
+                    bookTitle = "99년생 박성준",
+                    likes = 2847,
+                    page = "p.51"
+                ),
+                Quote(
+                    text = "나는 그저 평범하게 살고 싶었을 뿐이다.",
+                    bookTitle = "99년생 박성준",
+                    likes = 2847,
+                    page = "p.51"
+                ),
+            ),
+            authorDescription =
+                    "조남주는 1982년 서울에서 태어나, 고려대학교에서 국어국문학을 전공했다. 그녀의 첫 소설 '82년생 김지영'은 한국 사회에서 여성으로 살아가는 것의 현실을 담담하게 그려내며 큰 반향을 일으켰다. 이후에도 다양한 작품을 통해 사회적 이슈를 다루고 있다.",
+        )
 
         init {
             books.add(
@@ -200,5 +226,9 @@ class FakeBookRepositoryImpl
         emit(books.filter { book ->
             book.title.contains(query)
         })
+    }
+
+    override fun getBookDetail(isbn: Long) = flow {
+        emit(bookDetail)
     }
 }

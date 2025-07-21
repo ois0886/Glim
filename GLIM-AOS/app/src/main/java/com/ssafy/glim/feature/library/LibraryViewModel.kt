@@ -11,6 +11,9 @@ import com.ssafy.glim.core.domain.usecase.search.DeleteRecentSearchQueryUseCase
 import com.ssafy.glim.core.domain.usecase.search.GetPopularSearchQueriesUseCase
 import com.ssafy.glim.core.domain.usecase.search.GetRecentSearchQueriesUseCase
 import com.ssafy.glim.core.domain.usecase.search.SaveRecentSearchQueryUseCase
+import com.ssafy.glim.core.navigation.BottomTabRoute
+import com.ssafy.glim.core.navigation.Navigator
+import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.library.component.SearchTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
@@ -25,7 +28,8 @@ class LibraryViewModel @Inject constructor(
     private val getPopularSearchQueriesUseCase: GetPopularSearchQueriesUseCase,
     private val getRecentSearchQueriesUseCase: GetRecentSearchQueriesUseCase,
     private val saveRecentSearchQueryUseCase: SaveRecentSearchQueryUseCase,
-    private val deleteRecentSearchQueryUseCase: DeleteRecentSearchQueryUseCase
+    private val deleteRecentSearchQueryUseCase: DeleteRecentSearchQueryUseCase,
+    private val navigator: Navigator
 ) : ViewModel(), ContainerHost<LibraryState, LibrarySideEffect> {
 
     override val container: Container<LibraryState, LibrarySideEffect> = container(LibraryState())
@@ -118,8 +122,6 @@ class LibraryViewModel @Inject constructor(
 
     // 최근 검색어 삭제 - 수정된 버전
     fun onRecentSearchItemDelete(searchItem: SearchItem) = intent {
-        Log.d("removeSearchItem1", "Before delete: ${state.recentSearchItems}")
-
         reduce {
             state.copy(
                 recentSearchItems = state.recentSearchItems.filter {
@@ -128,17 +130,17 @@ class LibraryViewModel @Inject constructor(
                 error = null
             )
         }
-
         deleteRecentSearchQueryUseCase(searchItem.text).collect { }
-
     }
 
     // 책 아이템 클릭
     fun onBookClicked(Book: Book) = intent {
+        navigator.navigate(Route.BookDetail(bookId = Book.id))
     }
 
     // 글귀 아이템 클릭
     fun onQuoteClicked(Quote: Quote) = intent {
+        navigator.navigate(BottomTabRoute.Reels)
     }
 
     // 인기 검색어 로드
