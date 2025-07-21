@@ -1,7 +1,5 @@
 package com.ssafy.glim.feature.post.component.editabletext
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,31 +18,27 @@ fun TextStyleControls(
     onToggleBold: () -> Unit,
     onToggleItalic: () -> Unit,
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    IconButton(
+        onClick = onToggleBold,
+        modifier = Modifier.size(32.dp),
     ) {
-        IconButton(
-            onClick = onToggleBold,
-            modifier = Modifier.size(32.dp),
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_title),
-                contentDescription = stringResource(R.string.bold),
-                tint = if (isBold) Color.Yellow else Color.White,
-                modifier = Modifier.size(16.dp),
-            )
-        }
+        Icon(
+            painter = painterResource(R.drawable.ic_bold),
+            contentDescription = stringResource(R.string.bold),
+            tint = if (isBold) Color.Yellow else Color.White,
+            modifier = Modifier.size(16.dp),
+        )
+    }
 
-        IconButton(
-            onClick = onToggleItalic,
-            modifier = Modifier.size(32.dp),
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_more),
-                contentDescription = stringResource(R.string.italic),
-                tint = if (isItalic) Color.Yellow else Color.White,
-                modifier = Modifier.size(16.dp),
-            )
-        }
+    IconButton(
+        onClick = onToggleItalic,
+        modifier = Modifier.size(32.dp),
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_italic),
+            contentDescription = stringResource(R.string.italic),
+            tint = if (isItalic) Color.Yellow else Color.White,
+            modifier = Modifier.size(16.dp),
+        )
     }
 }

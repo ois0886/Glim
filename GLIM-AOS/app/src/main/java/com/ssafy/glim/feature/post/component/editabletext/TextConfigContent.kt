@@ -38,8 +38,6 @@ fun TextConfigContent(
                 onDecreaseFontSize = onDecreaseFontSize,
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
-
             TextStyleControls(
                 isBold = textStyle.isBold,
                 isItalic = textStyle.isItalic,
