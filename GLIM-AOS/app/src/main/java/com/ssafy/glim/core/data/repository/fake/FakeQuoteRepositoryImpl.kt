@@ -307,7 +307,12 @@ class FakeQuoteRepositoryImpl
         })
     }
 
-    override fun getQuotes(userId: String): Flow<List<Quote>> {
+    override suspend fun getGlims(
+        page: Int,
+        size: Int,
+        sort: String
+    ): List<Glim> {
         TODO("Not yet implemented")
     }
+    
 }
