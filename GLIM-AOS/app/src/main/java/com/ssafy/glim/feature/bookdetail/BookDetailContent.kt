@@ -134,7 +134,7 @@ fun BookInfoSection(state: BookDetail) {
                 )
 
                 Text(
-                    text = stringResource(R.string.publication_date) + state.publicationDate,
+                    text = stringResource(R.string.publication_date) + " ${state.publicationDate}",
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -150,7 +150,7 @@ fun BookInfoSection(state: BookDetail) {
                 )
 
                 Text(
-                    text = stringResource(R.string.price) + state.priceText,
+                    text = stringResource(R.string.price) + " ${state.priceText}",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )

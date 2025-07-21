@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.bookdetail
 
+import com.ssafy.glim.core.common.extensions.toCommaSeparatedPrice
 import com.ssafy.glim.core.domain.model.Quote
 
 data class BookDetailState(
@@ -28,9 +29,8 @@ data class BookDetail(
     val marketUrl: String = "https://www.naver.com",
 ) {
     val priceText
-        //comma-separated price with "원" suffix
         get() = if (price > 0) "${
-            price.toString().replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
+            price.toString().toCommaSeparatedPrice()
         }원" else "가격 정보 없음"
 
 }
