@@ -8,6 +8,9 @@ sealed interface Route {
 
     @Serializable
     data object SignUp : Route
+
+    @Serializable
+    data class BookDetail(val bookId: Long) : BottomTabRoute
 }
 
 sealed interface GlimRoute : Route {

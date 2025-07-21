@@ -170,6 +170,8 @@ fun LibraryRoute(
                     searchQuery = state.searchQuery,
                     bookList = state.searchBooks,
                     quoteList = state.searchQuotes,
+                    onBookClick = {viewModel.onBookClicked(it)},
+                    onQuoteClick = {viewModel.onQuoteClicked(it)}
                 )
             }
         }

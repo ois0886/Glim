@@ -17,6 +17,13 @@ val glimDefaultFont =
 // Set of Material typography styles to start with
 val Typography =
     Typography(
+        displayLarge =
+            TextStyle(
+                fontFamily = glimDefaultFont,
+                fontWeight = FontWeight.Normal,
+                fontSize = 56.sp,
+                letterSpacing = 0.5.sp,
+            ),
         headlineLarge =
             TextStyle(
                 fontFamily = glimDefaultFont,

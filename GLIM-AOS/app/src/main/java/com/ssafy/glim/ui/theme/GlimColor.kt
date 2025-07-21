@@ -21,6 +21,7 @@ object GlimColor {
     val LightGray200 = Color(0xFFE3E4EA)
     val LightGray100 = Color(0xFFF1F3F7)
 
+    val LightBlue = Color(0xFF7852FF)
     val LightBlueGreen = Color(0xFF1FC0BA)
     val LightRed = Color(0xFFFF5858)
     val LightOrange = Color(0xFFFF8A1F)
@@ -31,4 +32,6 @@ object GlimColor {
     val GoogleColor = Color.White
     val KakaoColor = Color(0xFFFEE500)
     val NaverColor = Color(0xFF03C75A)
+
+    val LightBrown = Color(0xFFDAC183)
 }

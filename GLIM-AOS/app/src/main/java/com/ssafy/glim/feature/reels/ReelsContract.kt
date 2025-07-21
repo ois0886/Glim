@@ -2,7 +2,7 @@ package com.ssafy.glim.feature.reels
 
 import com.ssafy.glim.core.domain.model.Glim
 
-// ReelsState.kt
+// ReelsContract.kt
 data class ReelsState(
     val glims: List<Glim> = emptyList(),
     val currentGlimId: Long = -1,
