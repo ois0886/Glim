@@ -1,5 +1,7 @@
 package com.ssafy.glim.feature.auth.signup
 
+import androidx.annotation.StringRes
+
 data class SignUpUiState(
     val currentStep: SignUpStep = SignUpStep.Email,
     val email: String = "",
@@ -9,39 +11,42 @@ data class SignUpUiState(
     val name: String = "",
     val birthYear: String = "",
     val gender: String? = null,
+    @StringRes val emailError: Int? = null,
+    @StringRes val codeError: Int? = null,
+    @StringRes val passwordError: Int? = null,
+    @StringRes val confirmPasswordError: Int? = null,
+    @StringRes val nameError: Int? = null,
+    @StringRes val birthYearError: Int? = null,
     val isLoading: Boolean = false,
-    val emailError: String? = null,
-    val codeError: String? = null,
-    val passwordError: String? = null,
-    val confirmPasswordError: String? = null,
-    val nameError: String? = null,
-    val birthYearError: String? = null,
 ) {
-    val isStepValid: Boolean
-        get() =
-            when (currentStep) {
-                SignUpStep.Email -> email.isNotBlank() && emailError == null
-                SignUpStep.Code -> code.isNotBlank() && codeError == null
-                SignUpStep.Password ->
-                    password.isNotBlank() && confirmPassword.isNotBlank() &&
-                            passwordError == null && confirmPasswordError == null
+    val isCurrentStepValid: Boolean
+        get() = when (currentStep) {
+            SignUpStep.Email -> email.isNotBlank() && emailError == null
+            SignUpStep.Code -> code.isNotBlank() && codeError == null
+            SignUpStep.Password ->
+                password.isNotBlank() &&
+                        confirmPassword.isNotBlank() &&
+                        passwordError == null &&
+                        confirmPasswordError == null
 
-                SignUpStep.Profile ->
-                    name.isNotBlank() && birthYear.isNotBlank() && gender != null &&
-                            nameError == null && birthYearError == null
-            }
+            SignUpStep.Profile ->
+                name.isNotBlank() &&
+                        birthYear.isNotBlank() &&
+                        gender != null &&
+                        nameError == null &&
+                        birthYearError == null
+        }
 }
 
 sealed interface SignUpSideEffect {
-    data class ShowToast(val message: String) : SignUpSideEffect
+    data class ShowToast(@StringRes val message: Int) : SignUpSideEffect
 }
 
 enum class SignUpStep(val progress: Float) {
     Email(0.25f),
     Code(0.5f),
     Password(0.75f),
-    Profile(1f),
-    ;
+    Profile(1f);
 
     fun next(): SignUpStep? =
         when (this) {

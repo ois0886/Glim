@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.glimdetail
+package com.ssafy.glim.feature.glimlist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -45,7 +46,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 internal fun GlimListRoute(
     padding: PaddingValues,
     popBackStack: () -> Unit,
-    listType: GlimListType = GlimListType.LIKED, // 기본값으로 좋아요 한 글귀
+    listType: GlimListType = GlimListType.LIKED,
     viewModel: GlimListViewModel = hiltViewModel()
 ) {
     viewModel.collectSideEffect { effect ->
@@ -98,7 +99,7 @@ private fun GlimListScreen(
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "뒤로가기",
                         tint = Color.Black
                     )
@@ -161,7 +162,6 @@ private fun GlimListItem(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // 글귀 내용
             Text(
                 text = glim.content,
                 fontSize = 16.sp,
@@ -169,18 +169,14 @@ private fun GlimListItem(
                 lineHeight = 24.sp,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
-            // 하단 정보 (작가명, 좋아요)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 작가 정보
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // 작가 프로필 이미지 (임시로 색상 박스 사용)
                     Box(
                         modifier = Modifier
                             .size(24.dp)
