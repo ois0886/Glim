@@ -30,14 +30,16 @@ import kotlinx.collections.immutable.toImmutableList
 internal fun MainScreen(navigator: MainNavController = rememberMainNavController()) {
     Scaffold(
         bottomBar = {
-            MainBottomBar(
-                tabs = MainTab.entries.toImmutableList(),
-                currentTab = navigator.currentTab,
-                onTabSelected = {
-                    navigator.navigate(it)
-                },
-                visible = navigator.shouldShowBottomBar(),
-            )
+            if(navigator.currentTab != MainTab.POST){
+                MainBottomBar(
+                    tabs = MainTab.entries.toImmutableList(),
+                    currentTab = navigator.currentTab,
+                    onTabSelected = {
+                        navigator.navigate(it)
+                    },
+                    visible = navigator.shouldShowBottomBar(),
+                )
+            }
         },
         containerColor = MaterialTheme.colorScheme.background,
     ) { innerPadding ->

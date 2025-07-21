@@ -1,15 +1,9 @@
 package com.ssafy.glim.core.data.repository.fake
 
-import android.util.Log
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.core.domain.model.Glim
 import com.ssafy.glim.core.domain.model.Quote
-import com.ssafy.glim.core.domain.model.RankStatus
-import com.ssafy.glim.core.domain.model.SearchItem
 import com.ssafy.glim.core.domain.repository.BookRepository
-import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.feature.bookdetail.BookDetail
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -24,7 +18,7 @@ class FakeBookRepositoryImpl
             publicationDate = "2016-10-14",
             isbn = "9788937473142",
             description = "한국 사회에서 여성으로 살아가는 것의 현실을 담담하게 그려낸 소설. 평범한 여성의 일상을 통해 우리 사회의 성차별 구조를 드러낸다.",
-            coverImageUrl = "https://example.com/book1.jpg",
+            coverImageUrl = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
             subTitle = "2024년 노벨문학상 수상 작가",
             price = 13000,
             category = "심리 소설",
@@ -33,11 +27,13 @@ class FakeBookRepositoryImpl
                     text = "나는 그저 평범하게 살고 싶었을 뿐이다.",
                     bookTitle = "99년생 박성준",
                     likes = 2847,
+                    page = "p.51"
                 ),
                 Quote(
                     text = "나는 그저 평범하게 살고 싶었을 뿐이다.",
                     bookTitle = "99년생 박성준",
                     likes = 2847,
+                    page = "p.51"
                 ),
             ),
             authorDescription =

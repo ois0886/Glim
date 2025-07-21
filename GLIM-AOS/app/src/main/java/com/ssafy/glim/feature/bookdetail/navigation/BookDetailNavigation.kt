@@ -18,7 +18,8 @@ fun NavGraphBuilder.bookDetailNavGraph(
 ) {
     composable<BottomTabRoute.BookDetail> {
         BookDetailScreen(
-            padding = padding
+            padding = padding,
+            popBackStack = popBackStack
         )
     }
 }

@@ -49,44 +49,37 @@ internal fun MainBottomBar(
             Color.White to MaterialTheme.colorScheme.onSurface
         }
 
-    if (currentTab != MainTab.POST) {
-        Box(modifier = Modifier.background(backgroundColor)) {
-            Column {
-                if (currentTab != MainTab.REELS) {
-                    HorizontalDivider(
-                        color = MaterialTheme.colorScheme.outline,
-                        thickness = (0.2).dp,
-                    )
-                }
-                AnimatedVisibility(
-                    visible = visible,
-                    enter = fadeIn() + slideIn { IntOffset(0, it.height) },
-                    exit = fadeOut() + slideOut { IntOffset(0, it.height) },
+    Box(modifier = Modifier.background(backgroundColor)) {
+        Column {
+            AnimatedVisibility(
+                visible = visible,
+                enter = fadeIn() + slideIn { IntOffset(0, it.height) },
+                exit = fadeOut() + slideOut { IntOffset(0, it.height) },
+            ) {
+                Row(
+                    modifier =
+                        Modifier
+                            .navigationBarsPadding()
+                            .fillMaxWidth()
+                            .height(64.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        modifier =
-                            Modifier
-                                .navigationBarsPadding()
-                                .fillMaxWidth()
-                                .height(64.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        tabs.forEach { tab ->
-                            MainBottomBarItem(
-                                tab = tab,
-                                selected = tab == currentTab,
-                                iconTint = iconTint,
-                                onClick = {
-                                    if (tab != currentTab) {
-                                        onTabSelected(tab)
-                                    }
-                                },
-                            )
-                        }
+                    tabs.forEach { tab ->
+                        MainBottomBarItem(
+                            tab = tab,
+                            selected = tab == currentTab,
+                            iconTint = iconTint,
+                            onClick = {
+                                if (tab != currentTab) {
+                                    onTabSelected(tab)
+                                }
+                            },
+                        )
                     }
                 }
             }
         }
+
     }
 }
 
