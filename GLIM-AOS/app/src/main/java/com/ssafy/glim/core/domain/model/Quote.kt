@@ -4,5 +4,5 @@ data class Quote(
     val text: String,
     val bookTitle: String,
     val page: String? = null,
-    val likes: Int
+    val likes: Long
 )

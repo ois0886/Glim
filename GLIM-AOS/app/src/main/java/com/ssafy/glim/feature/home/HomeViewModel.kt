@@ -70,7 +70,6 @@ class HomeViewModel @Inject constructor(
             HomeSectionUiModel.BookSection("rainy_day", "비오는 날 보기 좋은 책", rainyDayBooks)
         )
 
-        // 4) 로딩 끝, 섹션 채우기
         reduce {
             state.copy(
                 isLoading = false,

@@ -5,6 +5,7 @@ import com.ssafy.glim.core.domain.model.Glim
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.repository.BookRepository
 import com.ssafy.glim.core.domain.repository.QuoteRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -304,5 +305,9 @@ class FakeQuoteRepositoryImpl
         emit(quotes.filter { quote ->
             quote.text.contains(query)
         })
+    }
+
+    override fun getQuotes(userId: String): Flow<List<Quote>> {
+        TODO("Not yet implemented")
     }
 }
