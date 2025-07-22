@@ -1,8 +1,8 @@
 package com.ssafy.glim.feature.lock
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.usecase.quote.GetGlimsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -50,11 +50,11 @@ class LockViewModel @Inject constructor(
     }
 
     fun saveGlim() = intent {
-        postSideEffect(LockSideEffect.ShowSaveToast)
+        postSideEffect(LockSideEffect.ShowToast(R.string.saved))
     }
 
     fun favoriteGlim() = intent {
-        postSideEffect(LockSideEffect.ShowFavoriteToast)
+        postSideEffect(LockSideEffect.ShowToast(R.string.i_love_it))
     }
 
     fun viewBook() = intent {
