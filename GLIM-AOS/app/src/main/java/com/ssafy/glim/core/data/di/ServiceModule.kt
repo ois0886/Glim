@@ -22,6 +22,6 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideQuoteService(
-        @Named("default") retrofit: Retrofit,
+        retrofit: Retrofit,
     ): QuoteService = retrofit.create(QuoteService::class.java)
 }

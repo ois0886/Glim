@@ -1,17 +1,21 @@
 package com.ssafy.glim.core.data.repository.fake
 
-import com.ssafy.glim.core.domain.model.Book
+import android.util.Log
+import com.ssafy.glim.core.data.datasource.remote.QuoteRemoteDataSource
+import com.ssafy.glim.core.data.mapper.toDomain
 import com.ssafy.glim.core.domain.model.Glim
 import com.ssafy.glim.core.domain.model.Quote
-import com.ssafy.glim.core.domain.repository.BookRepository
 import com.ssafy.glim.core.domain.repository.QuoteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class FakeQuoteRepositoryImpl
     @Inject
-    constructor() : QuoteRepository {
+    constructor(
+        private val quoteDataSource : QuoteRemoteDataSource
+    ) : QuoteRepository {
         private val quotes = mutableListOf<Quote>()
 
         init {
@@ -307,12 +311,8 @@ class FakeQuoteRepositoryImpl
         })
     }
 
-    override suspend fun getGlims(
-        page: Int,
-        size: Int,
-        sort: String
-    ): List<Glim> {
-        TODO("Not yet implemented")
-    }
-    
+    override fun getGlims(page: Int, size: Int, sort : String): Flow<List<Glim>> =
+        quoteDataSource.fetchQuotes(page, size, sort)
+            .map { dtoList -> dtoList.map { it.toDomain() } }
+
 }

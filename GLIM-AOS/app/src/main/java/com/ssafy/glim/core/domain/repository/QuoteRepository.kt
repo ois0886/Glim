@@ -8,9 +8,9 @@ interface QuoteRepository {
 
     fun searchQuotes(query: String): Flow<List<Quote>>
 
-    suspend fun getGlims(
+    fun getGlims(
         page: Int = 0,
         size: Int = 10,
         sort: String
-    ) : List<Glim>
+    ) : Flow<List<Glim>>
 }
