@@ -26,6 +26,7 @@ import com.ssafy.glim.feature.auth.signup.component.EmailVerificationCodeInputCo
 import com.ssafy.glim.feature.auth.signup.component.PasswordConfirmInputContent
 import com.ssafy.glim.feature.auth.signup.component.ProgressIndicatorBar
 import com.ssafy.glim.feature.auth.signup.component.UserProfileInputContent
+import com.ssafy.glim.feature.main.excludeSystemBars
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -78,7 +79,9 @@ private fun SignUpScreen(
         onBackStep()
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(padding.excludeSystemBars())) {
         GlimTopBar(
             title = stringResource(R.string.login_signup),
             showBack = state.currentStep != SignUpStep.Email,
@@ -93,7 +96,7 @@ private fun SignUpScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (state.currentStep) {

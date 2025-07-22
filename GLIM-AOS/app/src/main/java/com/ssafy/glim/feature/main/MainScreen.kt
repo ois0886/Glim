@@ -24,6 +24,7 @@ import com.ssafy.glim.feature.main.component.MainBottomBar
 import com.ssafy.glim.feature.post.navigation.postNavGraph
 import com.ssafy.glim.feature.profile.navigation.profileNavGraph
 import com.ssafy.glim.feature.reels.navigation.reelsNavGraph
+import com.ssafy.glim.feature.updateInfo.navigation.updateInfoNavGraph
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -77,6 +78,12 @@ internal fun MainScreen(navigator: MainNavController = rememberMainNavController
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,
             )
+
+            updateInfoNavGraph(
+                padding = innerPadding,
+                popBackStack = navigator::popBackStack,
+            )
+
             bookDetailNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,

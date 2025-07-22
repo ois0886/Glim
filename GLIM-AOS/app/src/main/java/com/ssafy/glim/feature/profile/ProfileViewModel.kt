@@ -36,18 +36,12 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun navigateToEditProfile() = intent {
-        // TODO: 프로필 편집 화면으로 이동
-        postSideEffect(ProfileSideEffect.ShowToast("프로필 편집 화면으로 이동"))
+        navigator.navigate(Route.UpdateInfo)
     }
 
-    fun navigateToPersonalInfo() = intent {
-        // TODO: 개인정보 설정 화면으로 이동
-        postSideEffect(ProfileSideEffect.ShowToast("개인정보 설정 화면으로 이동"))
-    }
-
-    fun navigateToAccountSettings() = intent {
-        // TODO: 계정 설정 화면으로 이동
-        postSideEffect(ProfileSideEffect.ShowToast("계정 설정 화면으로 이동"))
+    fun navigateToLockSettings() = intent {
+        // TODO: 잠금 설정 화면으로 이동
+        postSideEffect(ProfileSideEffect.ShowToast("잠금 설정 화면으로 이동"))
     }
 
     fun navigateToNotificationSettings() = intent {

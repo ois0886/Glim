@@ -75,6 +75,7 @@ fun GlimTopBar(
                     ),
             )
         }
+
         TitleAlignment.Left -> {
             TopAppBar(
                 title = {
