@@ -1,4 +1,3 @@
-// StatisticsSection.kt
 package com.ssafy.glim.feature.profile.component
 
 import androidx.compose.foundation.clickable
@@ -19,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
 
 @Composable
-internal fun StatisticsSection(
+internal fun MyGlimsSection(
     navigateToGlimUploadList: () -> Unit,
     navigateToGlimLikedList: () -> Unit,
     publishedGlimCount: Int,
@@ -30,13 +29,13 @@ internal fun StatisticsSection(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        StatisticItem(
+        MyGlimsItem(
             count = publishedGlimCount,
-            label = stringResource(R.string.profile_published_articles),
+            label = stringResource(R.string.profile_liked_articles),
             onClick = navigateToGlimUploadList
         )
 
-        StatisticItem(
+        MyGlimsItem(
             count = likedGlimCount,
             label = stringResource(R.string.profile_liked_articles),
             onClick = navigateToGlimLikedList
@@ -45,7 +44,7 @@ internal fun StatisticsSection(
 }
 
 @Composable
-private fun StatisticItem(
+private fun MyGlimsItem(
     count: Int,
     label: String,
     onClick: () -> Unit,
@@ -72,9 +71,9 @@ private fun StatisticItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewStatisticsSection() {
+private fun PreviewMyGlimsSection() {
     MaterialTheme {
-        StatisticsSection(
+        MyGlimsSection(
             navigateToGlimUploadList = {},
             navigateToGlimLikedList = {},
             publishedGlimCount = 24,
