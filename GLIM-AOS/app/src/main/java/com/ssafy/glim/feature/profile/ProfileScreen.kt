@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.feature.profile.component.ProfileHeader
 import com.ssafy.glim.feature.profile.component.SettingsSection
-import com.ssafy.glim.feature.profile.component.StatisticsSection
+import com.ssafy.glim.feature.profile.component.MyGlimsSection
 import com.ssafy.glim.feature.profile.component.UploadGlimCardListSection
 import com.ssafy.glim.feature.profile.component.WithdrawalButton
 import org.orbitmvi.orbit.compose.collectAsState
@@ -50,8 +50,7 @@ internal fun ProfileRoute(
         navigateToEditProfile = viewModel::navigateToEditProfile,
         navigateToGlimUploadList = viewModel::navigateToGlimUploadList,
         navigateToGlimLikedList = viewModel::navigateToGlimLikedList,
-        navigateToPersonalInfo = viewModel::navigateToPersonalInfo,
-        navigateToAccountSettings = viewModel::navigateToAccountSettings,
+        navigateToAccountSettings = viewModel::navigateToLockSettings,
         navigateToNotificationSettings = viewModel::navigateToNotificationSettings,
         onLogOutClick = viewModel::onLogOutClick,
         onWithdrawalClick = viewModel::onWithdrawalClick,
@@ -66,7 +65,6 @@ private fun ProfileScreen(
     navigateToEditProfile: () -> Unit,
     navigateToGlimUploadList: () -> Unit,
     navigateToGlimLikedList: () -> Unit,
-    navigateToPersonalInfo: () -> Unit,
     navigateToAccountSettings: () -> Unit,
     navigateToNotificationSettings: () -> Unit,
     onLogOutClick: () -> Unit,
@@ -84,13 +82,12 @@ private fun ProfileScreen(
         item {
             ProfileHeader(
                 profileImageUrl = state.profileImageUrl,
-                userName = state.userName,
-                navigateToEditProfile = navigateToEditProfile
+                userName = state.userName
             )
         }
 
         item {
-            StatisticsSection(
+            MyGlimsSection(
                 navigateToGlimUploadList = navigateToGlimUploadList,
                 navigateToGlimLikedList = navigateToGlimLikedList,
                 publishedGlimCount = state.publishedGlimCount,
@@ -108,7 +105,7 @@ private fun ProfileScreen(
 
         item {
             SettingsSection(
-                navigateToPersonalInfo = navigateToPersonalInfo,
+                navigateToEditProfile = navigateToEditProfile,
                 navigateToAccountSettings = navigateToAccountSettings,
                 navigateToNotificationSettings = navigateToNotificationSettings,
                 onLogOutClick = onLogOutClick
@@ -154,7 +151,6 @@ private fun PreviewProfileScreen() {
             navigateToEditProfile = {},
             navigateToGlimUploadList = {},
             navigateToGlimLikedList = {},
-            navigateToPersonalInfo = {},
             navigateToAccountSettings = {},
             navigateToNotificationSettings = {},
             onLogOutClick = {},
@@ -182,7 +178,6 @@ private fun PreviewEmptyGlimCards() {
             navigateToEditProfile = {},
             navigateToGlimUploadList = {},
             navigateToGlimLikedList = {},
-            navigateToPersonalInfo = {},
             navigateToAccountSettings = {},
             navigateToNotificationSettings = {},
             onLogOutClick = {},
@@ -210,7 +205,6 @@ private fun PreviewLoadingState() {
             navigateToEditProfile = {},
             navigateToGlimUploadList = {},
             navigateToGlimLikedList = {},
-            navigateToPersonalInfo = {},
             navigateToAccountSettings = {},
             navigateToNotificationSettings = {},
             onLogOutClick = {},

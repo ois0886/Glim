@@ -64,14 +64,7 @@ internal fun PostRoute(
 
     DarkThemeScreen {
         PostContent(
-            recognizedText = state.recognizedText,
-            textStyle = state.textStyle,
-            backgroundImageUri = state.backgroundImageUri,
-            showExitDialog = state.showExitDialog,
-            isFocused = state.isFocused,
-            isDragging = state.isDragging,
-            offsetX = state.textPosition.offsetX,
-            offsetY = state.textPosition.offsetY,
+            state = state,
             onTextChanged = viewModel::textChanged,
             onTextFocusChanged = viewModel::onTextFocusChanged,
             onBackgroundClick = viewModel::onBackgroundClick,
@@ -87,6 +80,8 @@ internal fun PostRoute(
             onCompleteClick = viewModel::completeClick,
             onConfirmExit = viewModel::confirmExit,
             onCancelExit = viewModel::cancelExit,
+            updateBottomSheetState = viewModel::updateBottomSheetState,
+            selectedBook = viewModel::selectedBook,
             modifier = Modifier.padding(padding.excludeSystemBars()),
         )
     }

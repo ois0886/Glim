@@ -23,6 +23,7 @@ import com.ssafy.glim.R
 fun ActionButtons(
     onTextExtractionClick: () -> Unit,
     onBackgroundImageButtonClick: () -> Unit,
+    onCreateTextClick: (Boolean) -> Unit,
     onCompleteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -54,7 +55,7 @@ fun ActionButtons(
         )
 
         ActionButton(
-            onClick = { /* 새 텍스트 생성 */ },
+            onClick = { onCreateTextClick(true) },
             iconRes = R.drawable.ic_title,
             contentDescription = "새 텍스트",
         )

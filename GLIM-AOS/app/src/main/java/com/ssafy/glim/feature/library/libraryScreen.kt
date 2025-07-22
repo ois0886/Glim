@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.library
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -33,6 +31,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
+import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.feature.library.component.PopularSearchSection
 import com.ssafy.glim.feature.library.component.RecentSearchSection
 import com.ssafy.glim.feature.library.component.SearchResultSection
@@ -41,9 +40,10 @@ import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
 fun LibraryRoute(
+    modifier: Modifier = Modifier,
     padding: PaddingValues,
     popBackStack: () -> Unit,
-    modifier: Modifier = Modifier,
+    onBookSelected: ((Book) -> Unit)? = null,
     viewModel: LibraryViewModel = hiltViewModel()
 ) {
     val state by viewModel.collectAsState()
@@ -132,7 +132,7 @@ fun LibraryRoute(
         )
 
         when (state.searchMode) {
-            SearchMode.POPULAR  -> {
+            SearchMode.POPULAR -> {
                 Spacer(modifier = Modifier.height(24.dp))
                 PopularSearchSection(
                     queries = state.popularSearchItems,
@@ -143,7 +143,7 @@ fun LibraryRoute(
             }
 
             SearchMode.RECENT -> {
-                if(state.recentSearchItems.isNotEmpty()) {
+                if (state.recentSearchItems.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(12.dp))
                 }
                 RecentSearchSection(
@@ -170,8 +170,11 @@ fun LibraryRoute(
                     searchQuery = state.searchQuery,
                     bookList = state.searchBooks,
                     quoteList = state.searchQuotes,
-                    onBookClick = {viewModel.onBookClicked(it)},
-                    onQuoteClick = {viewModel.onQuoteClicked(it)}
+                    onBookClick = {
+                        if (onBookSelected == null) viewModel.onBookClicked(it)
+                        else onBookSelected(it)
+                    },
+                    onQuoteClick = { viewModel.onQuoteClicked(it) }
                 )
             }
         }

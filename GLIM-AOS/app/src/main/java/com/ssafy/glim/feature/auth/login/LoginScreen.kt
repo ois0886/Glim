@@ -36,6 +36,7 @@ import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
 import com.ssafy.glim.feature.auth.login.component.SocialButton
 import com.ssafy.glim.feature.auth.login.component.SocialProvider
+import com.ssafy.glim.feature.main.excludeSystemBars
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
@@ -82,7 +83,11 @@ internal fun LoginScreen(
     navigateToSocialLogin: (SocialProvider) -> Unit,
     navigateToSignUpOnGuest: () -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding.excludeSystemBars())
+    ) {
         GlimTopBar(
             title = stringResource(id = R.string.login_title),
             showBack = false,
@@ -93,7 +98,7 @@ internal fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(

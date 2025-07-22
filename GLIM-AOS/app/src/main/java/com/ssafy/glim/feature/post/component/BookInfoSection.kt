@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.post.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -16,14 +17,39 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
+import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.feature.reels.GlimBookContent
 
 @Composable
-fun BookInfoSection(modifier: Modifier = Modifier) {
+fun BookInfoSection(
+    modifier: Modifier = Modifier,
+    book: Book? = null,
+    page: String = "",
+    onBookInfoClick: (Long?) -> Unit,
+) {
+    if (book != null) {
+        GlimBookContent(
+            modifier = modifier,
+            bookId = book.id,
+            author = book.author,
+            bookName = book.title,
+            pageInfo = page,
+            onBookInfoClick = onBookInfoClick
+        )
+    }
+    else {
+        AddBookContent(modifier, onBookInfoClick)
+    }
+}
+
+@Composable
+private fun AddBookContent(modifier: Modifier, onBookClick: (Long?) -> Unit) {
     Row(
         modifier =
             modifier
                 .padding(16.dp)
-                .padding(end = 80.dp),
+                .padding(end = 80.dp)
+                .clickable { onBookClick(null) },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(onClick = {}) {
