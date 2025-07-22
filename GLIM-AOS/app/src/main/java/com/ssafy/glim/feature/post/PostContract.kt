@@ -5,6 +5,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.ssafy.glim.core.domain.model.Book
 
 sealed interface PostSideEffect {
     data object NavigateBack : PostSideEffect
@@ -25,7 +26,8 @@ data class PostState(
     val textPosition: TextPosition = TextPosition(),
     val isFocused: Boolean = false,
     val isDragging: Boolean = false,
-    val bookId: String = "",
+    val book: Book? = null,
+    val showBottomSheet: Boolean = false,
     val isLoading: Boolean = false,
     val error: String? = null,
 )

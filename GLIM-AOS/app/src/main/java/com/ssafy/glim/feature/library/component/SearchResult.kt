@@ -65,44 +65,44 @@ fun SearchResultSection(
             .background(Color.White)
     ) {
         // 탭 메뉴
-        TabRow(
-            selectedTabIndex = selectedTab.ordinal,
-            modifier = Modifier.padding(horizontal = 20.dp),
-            containerColor = Color.White,
-            contentColor = Color.Black,
-            indicator = { tabPositions ->
-                SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab.ordinal]),
-                    height = 2.dp,
-                    color = Color.Black
-                )
-            },
-            divider = {}
-        ) {
-            SearchTab.entries.forEach { tab ->
-                Tab(
-                    selected = selectedTab == tab,
-                    onClick = { selectedTab = tab },
-                    text = {
-                        Text(
-                            text = tab.displayName,
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Normal,
-                            color = Color.Black
-                        )
-                    }
-                )
-            }
-        }
-
-        // 탭 하단 구분선
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 20.dp),
-            thickness = 0.5.dp,
-            color = Color.LightGray
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
+//        TabRow(
+//            selectedTabIndex = selectedTab.ordinal,
+//            modifier = Modifier.padding(horizontal = 20.dp),
+//            containerColor = Color.White,
+//            contentColor = Color.Black,
+//            indicator = { tabPositions ->
+//                SecondaryIndicator(
+//                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab.ordinal]),
+//                    height = 2.dp,
+//                    color = Color.Black
+//                )
+//            },
+//            divider = {}
+//        ) {
+//            SearchTab.entries.forEach { tab ->
+//                Tab(
+//                    selected = selectedTab == tab,
+//                    onClick = { selectedTab = tab },
+//                    text = {
+//                        Text(
+//                            text = tab.displayName,
+//                            style = MaterialTheme.typography.bodyLarge,
+//                            fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Normal,
+//                            color = Color.Black
+//                        )
+//                    }
+//                )
+//            }
+//        }
+//
+//        // 탭 하단 구분선
+//        HorizontalDivider(
+//            modifier = Modifier.padding(horizontal = 20.dp),
+//            thickness = 0.5.dp,
+//            color = Color.LightGray
+//        )
+//
+//        Spacer(modifier = Modifier.height(8.dp))
 
         // 검색 결과 헤더
         Text(
@@ -118,7 +118,7 @@ fun SearchResultSection(
             SearchTab.BOOKS -> {
                 BookListContent(
                     books = bookList,
-                    onBookClick = onBookClick
+                    onBookClick = { onBookClick(it) }
                 )
             }
             SearchTab.QUOTES -> {
