@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -75,8 +76,7 @@ class LockScreenActivity : ComponentActivity() {
                 viewModel.collectSideEffect { effect ->
                     when (effect) {
                         is LockSideEffect.Unlock         -> finish()
-                        is LockSideEffect.ShowSaveToast  -> showToast("저장되었습니다")
-                        is LockSideEffect.ShowFavoriteToast -> showToast("좋아요!")
+                        is LockSideEffect.ShowToast  ->  Toast.makeText(this, this.getString(effect.messageRes), Toast.LENGTH_SHORT).show()
                         is LockSideEffect.NavigateBook   -> Unit/* 북 디테일로 이동 */
                         is LockSideEffect.NavigateQuotes -> Unit/* 글귀 화면으로 이동 */
                     }
@@ -94,10 +94,6 @@ class LockScreenActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    private fun showToast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -137,7 +133,7 @@ fun LockScreenContent(
         val currentQuote = state.quotes.getOrNull(state.currentIndex)
         if (currentQuote != null) {
             AsyncImage(
-                model = currentQuote.imgUrl,              // domain 모델 필드명으로 변경
+                model = currentQuote.imgUrl,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
@@ -145,7 +141,6 @@ fun LockScreenContent(
                 placeholder = painterResource(R.drawable.example_glim_2)
             )
         } else {
-            // 아직 로드되지 않았거나 인덱스 초과 시 기본 배경
             Image(
                 painter = painterResource(R.drawable.example_glim_2),
                 contentDescription = null,
@@ -165,14 +160,14 @@ fun LockScreenContent(
             IconButton(onClick = saveGlim) {
                 Icon(
                     painter = painterResource(R.drawable.ic_download),
-                    contentDescription = "저장",
+                    contentDescription = stringResource(R.string.save),
                     tint = MainColor.copy(alpha = 0.8f)
                 )
             }
             IconButton(onClick = favoriteGlim) {
                 Icon(
                     painter = painterResource(R.drawable.ic_favorite),
-                    contentDescription = "좋아요",
+                    contentDescription = stringResource(R.string.like),
                     tint = LightRed
                 )
             }
@@ -199,7 +194,7 @@ fun LockScreenContent(
                 Spacer(Modifier.width(4.dp))
                 val fmtSec = state.time.format(dayFmt)
                 Text(
-                    text = "($fmtSec)",
+                    text = stringResource(R.string.time_format_date, fmtSec),
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.White
                 )
@@ -217,7 +212,7 @@ fun LockScreenContent(
                 modifier = Modifier
                     .weight(1F)
                     .fillMaxWidth(),
-                text = "도서 보기",
+                text = stringResource(R.string.read_book),
                 isComplete = state.isComplete,
                 onSwipe = viewBook,
                 backgroundColor = LightBlue,
@@ -230,7 +225,7 @@ fun LockScreenContent(
                 modifier = Modifier
                     .weight(1F)
                     .fillMaxWidth(),
-                text = "글귀 보기",
+                text = stringResource(R.string.read_glim),
                 isComplete = state.isComplete,
                 onSwipe = viewQuote,
                 backgroundColor = LightBlue,
@@ -243,7 +238,7 @@ fun LockScreenContent(
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .padding(horizontal = 36.dp, vertical = 48.dp),
-            text = "밀어서 잠금 해제 >>",
+            text = stringResource(R.string.lock_screen_slide_description),
             isComplete = state.isComplete,
             onSwipe = unlockMain,
         )
