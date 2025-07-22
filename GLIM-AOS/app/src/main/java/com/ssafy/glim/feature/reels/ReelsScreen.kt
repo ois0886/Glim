@@ -2,6 +2,7 @@ package com.ssafy.glim.feature.reels
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -137,6 +138,11 @@ internal fun ReelsRoute(
                     captureAction()
                     viewModel.onCaptureClick("Glim_${System.currentTimeMillis()}.jpg")
                 },
+                onBookInfoClick = {
+                    it?.let {
+                        viewModel.onBookInfoClick(it)
+                    }
+                }
             )
         }
     }
@@ -150,6 +156,7 @@ fun GlimItem(
     onShareClick: () -> Unit = {},
     onMoreClick: () -> Unit = {},
     onCaptureClick: () -> Unit = {},
+    onBookInfoClick: (Long?) -> Unit
 ) {
     Box(modifier = modifier) {
         AsyncImage(
@@ -162,10 +169,13 @@ fun GlimItem(
 
         GlimBookContent(
             modifier = Modifier.align(Alignment.BottomEnd),
+            bookId = glim.bookId,
             author = glim.bookAuthor,
             bookName = glim.bookTitle,
             pageInfo = glim.pageInfo,
-        )
+        ) {
+            onBookInfoClick(glim.bookId)
+        }
 
         Column(
             modifier =
@@ -229,9 +239,11 @@ fun GlimItem(
 @Composable
 fun GlimBookContent(
     modifier: Modifier = Modifier,
+    bookId: Long,
     author: String,
     bookName: String,
     pageInfo: String,
+    onBookInfoClick: (Long?) -> Unit = {},
 ) {
     Surface(
         modifier =
@@ -250,7 +262,8 @@ fun GlimBookContent(
             modifier =
                 Modifier
                     .padding(16.dp)
-                    .padding(end = 80.dp),
+                    .padding(end = 80.dp)
+                    .clickable { onBookInfoClick(bookId) },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

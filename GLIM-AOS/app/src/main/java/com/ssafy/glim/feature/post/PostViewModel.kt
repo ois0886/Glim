@@ -67,11 +67,7 @@ class PostViewModel @Inject constructor(
         isOpen: Boolean,
     ) =
         intent {
-            reduce {
-                state.copy(
-                    showBottomSheet = isOpen
-                )
-            }
+            reduce { state.copy(showBottomSheet = isOpen) }
         }
 
     // 드래그 시작

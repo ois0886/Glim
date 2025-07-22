@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.post.component
 
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,10 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -28,7 +24,6 @@ import coil.compose.AsyncImage
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.feature.library.LibraryRoute
 import com.ssafy.glim.feature.post.PostState
-import com.ssafy.glim.feature.post.TextStyleState
 import com.ssafy.glim.feature.post.component.editabletext.EditableTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,9 +112,9 @@ fun PostContent(
         BookInfoSection(
             modifier = Modifier.align(Alignment.BottomStart),
             book = state.book,
-            onBookClick = {
+            onBookInfoClick = {
                 updateBottomSheetState(true)
-            }
+            },
         )
 
         if (state.showBottomSheet) {
