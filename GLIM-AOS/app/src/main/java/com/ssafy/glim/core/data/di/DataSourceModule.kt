@@ -1,8 +1,7 @@
 package com.ssafy.glim.core.data.di
 
-import com.ssafy.glim.core.data.datasource.impl.QuoteRemoteDataSourceImpl
+import com.ssafy.glim.core.data.datasource.impl.QuoteRemoteDataSource
 import com.ssafy.glim.core.data.datasource.remote.AuthRemoteDataSource
-import com.ssafy.glim.core.data.datasource.remote.QuoteRemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,5 +17,5 @@ interface DataSourceModule {
 
     @Singleton
     @Binds
-    fun bindQuoteRemoteDataSource(dataSource: QuoteRemoteDataSourceImpl): QuoteRemoteDataSource
+    fun bindQuoteRemoteDataSource(dataSource: QuoteRemoteDataSource): QuoteRemoteDataSource
 }

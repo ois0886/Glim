@@ -1,7 +1,6 @@
 package com.ssafy.glim.core.data.repository.fake
 
 import android.util.Log
-import com.ssafy.glim.core.data.datasource.remote.QuoteRemoteDataSource
 import com.ssafy.glim.core.data.mapper.toDomain
 import com.ssafy.glim.core.domain.model.Glim
 import com.ssafy.glim.core.domain.model.Quote

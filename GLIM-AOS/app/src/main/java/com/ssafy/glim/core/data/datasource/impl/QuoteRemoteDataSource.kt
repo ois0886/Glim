@@ -1,14 +1,17 @@
 package com.ssafy.glim.core.data.datasource.impl
 
-import com.ssafy.glim.core.data.datasource.remote.QuoteRemoteDataSource
 import com.ssafy.glim.core.data.dto.response.GlimResponse
+import com.ssafy.glim.core.data.service.QuoteService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Response
 import javax.inject.Inject
 
-class QuoteRemoteDataSourceImpl @Inject constructor(
-
-) : QuoteRemoteDataSource {
+class QuoteRemoteDataSource @Inject constructor(
+    private val quoteService: QuoteService
+) {
     private val all = List(50) { idx ->
         GlimResponse(
             quoteId = idx.toLong(),
@@ -20,10 +23,19 @@ class QuoteRemoteDataSourceImpl @Inject constructor(
             quoteViews = 0
         )
     }
-    override fun fetchQuotes(page: Int, size: Int, sort: String) : Flow<List<GlimResponse>> = flow {
+
+    fun fetchQuotes(page: Int, size: Int, sort: String): Flow<List<GlimResponse>> = flow {
         val from = page * size
-        val to   = (from + size).coerceAtMost(all.size)
+        val to = (from + size).coerceAtMost(all.size)
         val slice = if (from < to) all.subList(from, to) else emptyList()
         emit(slice)
     }
+
+    suspend fun createQuote(
+        quoteData: RequestBody,
+        quoteImage: MultipartBody.Part?
+    ): Response<Unit> = quoteService.createQuote(
+        quoteData = quoteData,
+        quoteImage = quoteImage
+    )
 }
