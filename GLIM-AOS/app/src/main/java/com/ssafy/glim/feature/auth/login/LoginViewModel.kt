@@ -10,7 +10,8 @@ import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.auth.login.component.SocialProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -56,6 +57,7 @@ constructor(
     }
 
     fun onLoginClicked() = intent {
+        // 1. 입력값 검증
         val emailValidation = ValidationUtils.validateEmail(
             email = state.email,
             emptyErrorRes = R.string.error_email_empty,
@@ -76,21 +78,63 @@ constructor(
             passwordValidation.errorMessageRes
         } else null
 
+        // 2. 검증 실패 시 에러 표시
         if (emailError != null || passwordError != null) {
             reduce { state.copy(emailError = emailError, passwordError = passwordError) }
-            postSideEffect(LoginSideEffect.ShowErrorRes(emailError ?: passwordError!!))
+            postSideEffect(LoginSideEffect.ShowError(emailError ?: passwordError!!))
             return@intent
         }
 
-        reduce { state.copy(isLoading = true) }
-        delay(1_000)
+        // 3. 로그인 API 호출
+        loginUseCase(
+            email = state.email,
+            password = state.password
+        )
+            .onStart {
+                reduce { state.copy(isLoading = true) }
+            }
+            .catch { exception ->
+                reduce { state.copy(isLoading = false) }
+                postSideEffect(LoginSideEffect.ShowError(R.string.login_failed))
+            }
+            .collect { result ->
+                reduce { state.copy(isLoading = false) }
+
+                if (result.isSuccess) {
+                    navigateToHome()
+                } else {
+                    postSideEffect(LoginSideEffect.ShowError(R.string.login_failed))
+                }
+            }
     }
 
-    fun navigateToSignUp() = intent { navigator.navigate(Route.SignUp) }
+    fun navigateToSignUp() = intent {
+        navigator.navigate(Route.SignUp)
+    }
 
-    fun navigateToHome() = intent { navigator.navigate(BottomTabRoute.Home) }
+    fun navigateToHome() = intent {
+        navigator.navigate(BottomTabRoute.Home)
+    }
 
-    fun navigateToForgotPassword() = intent {}
+    fun navigateToForgotPassword() = intent {
+        // TODO: 비밀번호 찾기 화면으로 이동
+        // navigator.navigate(Route.ForgotPassword)
+    }
 
-    fun navigateToSocialLogin(socialProvider: SocialProvider) = intent {}
+    fun navigateToSocialLogin(socialProvider: SocialProvider) = intent {
+        // TODO: 소셜 로그인 구현
+        when (socialProvider) {
+            SocialProvider.GOOGLE -> {
+                postSideEffect(LoginSideEffect.ShowError(R.string.social_login_message))
+            }
+
+            SocialProvider.KAKAO -> {
+                postSideEffect(LoginSideEffect.ShowError(R.string.social_login_message))
+            }
+
+            SocialProvider.NAVER -> {
+                postSideEffect(LoginSideEffect.ShowError(R.string.social_login_message))
+            }
+        }
+    }
 }

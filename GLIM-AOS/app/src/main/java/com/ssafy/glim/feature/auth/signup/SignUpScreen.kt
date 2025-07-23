@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -79,9 +80,12 @@ private fun SignUpScreen(
         onBackStep()
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(padding.excludeSystemBars())) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding.excludeSystemBars())
+            .imePadding()
+    ) {
         GlimTopBar(
             title = stringResource(R.string.login_signup),
             showBack = state.currentStep != SignUpStep.Email,
@@ -129,9 +133,9 @@ private fun SignUpScreen(
                         name = state.name,
                         onNameChange = onNameChanged,
                         nameError = state.nameError?.let { stringResource(it) },
-                        birthYear = state.birthYear,
+                        birthYear = state.birthDate,
                         onBirthYearChange = onBirthYearChanged,
-                        birthYearError = state.birthYearError?.let { stringResource(it) },
+                        birthYearError = state.birthDateError?.let { stringResource(it) },
                         selectedGender = state.gender,
                         onGenderSelect = onGenderSelected,
                     )
@@ -141,9 +145,9 @@ private fun SignUpScreen(
 
             GlimButton(
                 text = when (state.currentStep) {
-                    SignUpStep.Email -> "인증번호 전송"
-                    SignUpStep.Code -> "인증완료"
-                    SignUpStep.Password -> "확인"
+                    SignUpStep.Email -> stringResource(R.string.signup_send_verification_code)
+                    SignUpStep.Code -> stringResource(R.string.signup_verify_code)
+                    SignUpStep.Password -> stringResource(R.string.signup_confirm)
                     SignUpStep.Profile -> stringResource(R.string.login_signup)
                 },
                 onClick = onNextStep,
@@ -274,10 +278,10 @@ private fun PreviewSignUpScreen_ProfileStep() {
         state = SignUpUiState(
             currentStep = SignUpStep.Profile,
             name = "인성",
-            birthYear = "1998",
+            birthDate = "1998",
             gender = "남성",
             nameError = null,
-            birthYearError = null,
+            birthDateError = null,
         ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},

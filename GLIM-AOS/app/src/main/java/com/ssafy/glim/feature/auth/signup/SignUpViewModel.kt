@@ -3,13 +3,18 @@ package com.ssafy.glim.feature.auth.signup
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.extensions.extractDigits
+import com.ssafy.glim.core.common.extensions.formatBirthDate
+import com.ssafy.glim.core.common.extensions.formatGender
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.domain.usecase.auth.CertifyValidCodeUseCase
 import com.ssafy.glim.core.domain.usecase.auth.SignUpUseCase
 import com.ssafy.glim.core.navigation.Navigator
+import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 
@@ -156,7 +161,7 @@ constructor(
             is ValidationResult.Invalid -> validationResult.errorMessageRes
         }
 
-        reduce { state.copy(birthYear = filteredBirth, birthYearError = error) }
+        reduce { state.copy(birthDate = filteredBirth, birthDateError = error) }
     }
 
     fun onGenderSelected(gender: String) = intent {
@@ -242,7 +247,7 @@ constructor(
                 )
 
                 val birthDateValidation = ValidationUtils.validateBirthDate(
-                    birthDate = state.birthYear,
+                    birthDate = state.birthDate,
                     emptyErrorRes = R.string.error_birth_empty,
                     formatErrorRes = R.string.error_birth_format,
                     yearErrorRes = R.string.error_birth_year,
@@ -277,11 +282,11 @@ constructor(
                     reduce {
                         state.copy(
                             nameError = nameError,
-                            birthYearError = birthDateError,
+                            birthDateError = birthDateError,
                         )
                     }
                 } else {
-                    // TODO: 회원가입 완료 처리
+                    performSignUp()
                 }
             }
         }
@@ -305,7 +310,7 @@ constructor(
             .catch { exception ->
                 reduce { state.copy(isLoading = false) }
                 val errorMessage = exception.message ?: "코드 인증에 실패했습니다."
-                postSideEffect(SignUpSideEffect.ShowToast(errorMessage))
+                postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_verification_failed))
                 reduce { state.copy(codeError = R.string.error_code_verification_failed) }
             }
             .collect { result ->
@@ -313,7 +318,7 @@ constructor(
                 if (result.isSuccess) {
                     moveToNextStep()
                 } else {
-                    postSideEffect(SignUpSideEffect.ShowToastRes(R.string.error_code_incorrect))
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_incorrect))
                     reduce { state.copy(codeError = R.string.error_code_incorrect) }
                 }
             }
@@ -324,5 +329,35 @@ constructor(
         state.currentStep.next()?.let { next ->
             reduce { state.copy(currentStep = next) }
         }
+    }
+
+    private fun performSignUp() = intent {
+        val formattedBirthDate = state.birthDate.formatBirthDate()
+        val genderData = checkNotNull(state.gender) { "Data must not be null at this point" }
+        genderData.formatGender()
+
+        signUpUseCase(
+            email = state.email,
+            nickname = state.name,
+            password = state.password,
+            gender = genderData,
+            birthDate = formattedBirthDate
+        )
+            .onStart {
+                reduce { state.copy(isLoading = true) }
+            }
+            .catch { exception ->
+                reduce { state.copy(isLoading = false) }
+                postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
+            }
+            .collect { result ->
+                reduce { state.copy(isLoading = false) }
+                if (result.isSuccess) {
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_success))
+                    navigator.navigate(route = Route.Login, launchSingleTop = true)
+                } else {
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
+                }
+            }
     }
 }

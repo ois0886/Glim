@@ -1,13 +1,11 @@
 package com.ssafy.glim.feature.profile
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.navigation.GlimRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -15,7 +13,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val navigator: Navigator
 ) : ViewModel(), ContainerHost<ProfileUiState, ProfileSideEffect> {
 
@@ -41,24 +38,24 @@ class ProfileViewModel @Inject constructor(
 
     fun navigateToLockSettings() = intent {
         // TODO: 잠금 설정 화면으로 이동
-        postSideEffect(ProfileSideEffect.ShowToast("잠금 설정 화면으로 이동"))
+        postSideEffect(ProfileSideEffect.ShowToast(R.string.lock_settings_message))
     }
 
     fun navigateToNotificationSettings() = intent {
         // TODO: 알림 설정 화면으로 이동
-        postSideEffect(ProfileSideEffect.ShowToast("알림 설정 화면으로 이동"))
+        postSideEffect(ProfileSideEffect.ShowToast(R.string.notification_settings_message))
     }
 
     // 액션 함수들
     fun onLogOutClick() = intent {
         // TODO: 로그아웃 처리
-        postSideEffect(ProfileSideEffect.ShowToast(context.getString(R.string.logout_success)))
+        postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_success))
         navigator.navigate(Route.Login)
     }
 
     fun onWithdrawalClick() = intent {
         // TODO: 회원탈퇴 처리
-        postSideEffect(ProfileSideEffect.ShowToast("회원탈퇴 처리"))
+        postSideEffect(ProfileSideEffect.ShowToast(R.string.withdrawal_message))
         navigator.navigate(Route.Login)
     }
 
@@ -78,8 +75,12 @@ class ProfileViewModel @Inject constructor(
 
         // TODO: 서버에 좋아요 상태 업데이트
         val toggledGlim = updatedGlims.find { it.id == glimId }
-        val message = if (toggledGlim?.isLiked == true) "좋아요를 눌렀습니다." else "좋아요를 취소했습니다."
-        postSideEffect(ProfileSideEffect.ShowToast(message))
+        val messageRes = if (toggledGlim?.isLiked == true) {
+            R.string.like_added_message
+        } else {
+            R.string.like_removed_message
+        }
+        postSideEffect(ProfileSideEffect.ShowToast(messageRes))
     }
 
     private fun loadProfileData() = intent {
@@ -116,11 +117,7 @@ class ProfileViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             reduce { state.copy(isLoading = false) }
-            postSideEffect(
-                ProfileSideEffect.ShowError(
-                    context.getString(R.string.error_load_profile_failed)
-                )
-            )
+            postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
         }
     }
 }

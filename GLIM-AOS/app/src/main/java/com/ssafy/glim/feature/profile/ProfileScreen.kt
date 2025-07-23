@@ -1,6 +1,6 @@
-// ProfileScreen.kt
 package com.ssafy.glim.feature.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,9 +16,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ssafy.glim.feature.profile.component.MyGlimsSection
 import com.ssafy.glim.feature.profile.component.ProfileHeader
 import com.ssafy.glim.feature.profile.component.SettingsSection
-import com.ssafy.glim.feature.profile.component.MyGlimsSection
 import com.ssafy.glim.feature.profile.component.UploadGlimCardListSection
 import com.ssafy.glim.feature.profile.component.WithdrawalButton
 import org.orbitmvi.orbit.compose.collectAsState
@@ -36,11 +36,19 @@ internal fun ProfileRoute(
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is ProfileSideEffect.ShowToast -> {
-                // TODO: Toast 표시
+                Toast.makeText(
+                    context,
+                    context.getString(sideEffect.messageRes),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             is ProfileSideEffect.ShowError -> {
-                // TODO: 에러 표시
+                Toast.makeText(
+                    context,
+                    context.getString(sideEffect.messageRes),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -50,7 +58,7 @@ internal fun ProfileRoute(
         navigateToEditProfile = viewModel::navigateToEditProfile,
         navigateToGlimUploadList = viewModel::navigateToGlimUploadList,
         navigateToGlimLikedList = viewModel::navigateToGlimLikedList,
-        navigateToAccountSettings = viewModel::navigateToLockSettings,
+        navigateToLockSettings = viewModel::navigateToLockSettings,
         navigateToNotificationSettings = viewModel::navigateToNotificationSettings,
         onLogOutClick = viewModel::onLogOutClick,
         onWithdrawalClick = viewModel::onWithdrawalClick,
@@ -65,7 +73,7 @@ private fun ProfileScreen(
     navigateToEditProfile: () -> Unit,
     navigateToGlimUploadList: () -> Unit,
     navigateToGlimLikedList: () -> Unit,
-    navigateToAccountSettings: () -> Unit,
+    navigateToLockSettings: () -> Unit,
     navigateToNotificationSettings: () -> Unit,
     onLogOutClick: () -> Unit,
     onWithdrawalClick: () -> Unit,
@@ -106,7 +114,7 @@ private fun ProfileScreen(
         item {
             SettingsSection(
                 navigateToEditProfile = navigateToEditProfile,
-                navigateToAccountSettings = navigateToAccountSettings,
+                navigateToAccountSettings = navigateToLockSettings,
                 navigateToNotificationSettings = navigateToNotificationSettings,
                 onLogOutClick = onLogOutClick
             )
@@ -151,7 +159,7 @@ private fun PreviewProfileScreen() {
             navigateToEditProfile = {},
             navigateToGlimUploadList = {},
             navigateToGlimLikedList = {},
-            navigateToAccountSettings = {},
+            navigateToLockSettings = {},
             navigateToNotificationSettings = {},
             onLogOutClick = {},
             onWithdrawalClick = {},
@@ -178,7 +186,7 @@ private fun PreviewEmptyGlimCards() {
             navigateToEditProfile = {},
             navigateToGlimUploadList = {},
             navigateToGlimLikedList = {},
-            navigateToAccountSettings = {},
+            navigateToLockSettings = {},
             navigateToNotificationSettings = {},
             onLogOutClick = {},
             onWithdrawalClick = {},
@@ -205,7 +213,7 @@ private fun PreviewLoadingState() {
             navigateToEditProfile = {},
             navigateToGlimUploadList = {},
             navigateToGlimLikedList = {},
-            navigateToAccountSettings = {},
+            navigateToLockSettings = {},
             navigateToNotificationSettings = {},
             onLogOutClick = {},
             onWithdrawalClick = {},
