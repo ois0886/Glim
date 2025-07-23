@@ -56,9 +56,9 @@ fun SearchResultSection(
 
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .background(Color.White),
+        modifier
+            .fillMaxSize()
+            .background(Color.White),
     ) {
         // 탭 메뉴
 //        TabRow(
@@ -186,9 +186,9 @@ private fun BookCard(
 ) {
     Card(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
@@ -199,12 +199,12 @@ private fun BookCard(
             // 책 아이콘/이미지
             Box(
                 modifier =
-                    Modifier
-                        .size(80.dp)
-                        .background(
-                            color = Color.LightGray.copy(alpha = 0.3f),
-                            shape = RoundedCornerShape(8.dp),
-                        ),
+                Modifier
+                    .size(80.dp)
+                    .background(
+                        color = Color.LightGray.copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(8.dp),
+                    ),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -254,9 +254,9 @@ private fun QuoteCard(
 ) {
     Card(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {

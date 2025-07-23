@@ -48,10 +48,10 @@ private fun AddBookContent(
 ) {
     Row(
         modifier =
-            modifier
-                .padding(16.dp)
-                .padding(end = 80.dp)
-                .clickable { onBookClick(null) },
+        modifier
+            .padding(16.dp)
+            .padding(end = 80.dp)
+            .clickable { onBookClick(null) },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(onClick = {}) {

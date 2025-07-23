@@ -4,9 +4,9 @@ import com.ssafy.glim.core.domain.repository.BookRepository
 import javax.inject.Inject
 
 class GetBookDetailUseCase
-    @Inject
-    constructor(
-        private val bookRepository: BookRepository,
-    ) {
-        operator fun invoke(bookId: Long) = bookRepository.getBookDetail(bookId)
-    }
+@Inject
+constructor(
+    private val bookRepository: BookRepository,
+) {
+    operator fun invoke(bookId: Long) = bookRepository.getBookDetail(bookId)
+}

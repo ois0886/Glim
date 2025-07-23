@@ -44,9 +44,9 @@ fun BookDetailTopBar(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(LightBrown),
+        Modifier
+            .fillMaxWidth()
+            .background(LightBrown),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(onClick = onBackClick) {
@@ -63,10 +63,10 @@ fun BookDetailTopBar(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier =
-                Modifier
-                    .alpha(alpha)
-                    .weight(1f)
-                    .padding(end = 16.dp),
+            Modifier
+                .alpha(alpha)
+                .weight(1f)
+                .padding(end = 16.dp),
         )
     }
 }
@@ -75,24 +75,24 @@ fun BookDetailTopBar(
 fun BookInfoSection(state: BookDetail) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(
-                    brush =
-                        Brush.linearGradient(
-                            colors = listOf(LightBrown, LightBrown.copy(alpha = 0.0f)),
-                            start = Offset(0f, 0f),
-                            end = Offset(0f, Float.POSITIVE_INFINITY),
-                        ),
-                )
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+        Modifier
+            .fillMaxWidth()
+            .background(
+                brush =
+                Brush.linearGradient(
+                    colors = listOf(LightBrown, LightBrown.copy(alpha = 0.0f)),
+                    start = Offset(0f, 0f),
+                    end = Offset(0f, Float.POSITIVE_INFINITY),
+                ),
+            )
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
     ) {
         AsyncImage(
             model = state.coverImageUrl,
             contentDescription = stringResource(R.string.book_cover),
             modifier =
-                Modifier
-                    .size(80.dp, 120.dp),
+            Modifier
+                .size(80.dp, 120.dp),
             contentScale = ContentScale.Crop,
             placeholder = painterResource(id = R.drawable.ic_image),
             error = painterResource(id = R.drawable.ic_image),
@@ -169,12 +169,12 @@ fun QuoteCard(
 ) {
     Card(
         modifier =
-            Modifier
-                .clickable { onClickCard(quote.id) },
+        Modifier
+            .clickable { onClickCard(quote.id) },
         colors =
-            CardDefaults.cardColors(
-                containerColor = Color.White,
-            ),
+        CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
@@ -185,9 +185,9 @@ fun QuoteCard(
         )
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

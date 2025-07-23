@@ -51,11 +51,11 @@ fun GlimTopBar(
                     Text(
                         text = title,
                         style =
-                            TextStyle(
-                                color = titleColor,
-                                fontSize = titleSize,
-                                fontWeight = FontWeight.SemiBold,
-                            ),
+                        TextStyle(
+                            color = titleColor,
+                            fontSize = titleSize,
+                            fontWeight = FontWeight.SemiBold,
+                        ),
                     )
                 },
                 navigationIcon = {
@@ -70,9 +70,9 @@ fun GlimTopBar(
                     }
                 },
                 colors =
-                    TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = Color.Transparent,
-                    ),
+                TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent,
+                ),
             )
         }
 
@@ -86,11 +86,11 @@ fun GlimTopBar(
                         Text(
                             text = title,
                             style =
-                                TextStyle(
-                                    color = titleColor,
-                                    fontSize = titleSize,
-                                    fontWeight = FontWeight.Medium,
-                                ),
+                            TextStyle(
+                                color = titleColor,
+                                fontSize = titleSize,
+                                fontWeight = FontWeight.Medium,
+                            ),
                         )
                     }
                 },
@@ -106,9 +106,9 @@ fun GlimTopBar(
                     }
                 },
                 colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent,
-                    ),
+                TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                ),
             )
         }
     }

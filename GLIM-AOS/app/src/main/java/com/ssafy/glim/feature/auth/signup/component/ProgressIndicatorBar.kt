@@ -15,17 +15,17 @@ import androidx.compose.ui.unit.dp
 fun ProgressIndicatorBar(progress: Float) {
     Box(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-                .background(Color.LightGray),
+        Modifier
+            .fillMaxWidth()
+            .height(4.dp)
+            .background(Color.LightGray),
     ) {
         Box(
             modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(progress)
-                    .background(MaterialTheme.colorScheme.primary),
+            Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(progress)
+                .background(MaterialTheme.colorScheme.primary),
         )
     }
 }

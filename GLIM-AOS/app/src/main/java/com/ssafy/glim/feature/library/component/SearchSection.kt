@@ -48,29 +48,29 @@ fun RecentSearchSection(
 ) {
     LazyRow(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(queries) { item ->
             Row(
                 modifier =
-                    Modifier
-                        .background(
-                            Color.LightGray.copy(alpha = 0.3f),
-                            RoundedCornerShape(16.dp),
-                        )
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                Modifier
+                    .background(
+                        Color.LightGray.copy(alpha = 0.3f),
+                        RoundedCornerShape(16.dp),
+                    )
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = item,
                     style = MaterialTheme.typography.labelLarge,
                     modifier =
-                        Modifier
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                            .clickable { onClick(item) },
+                    Modifier
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .clickable { onClick(item) },
                     color = Color.Black,
                 )
                 Icon(
@@ -124,10 +124,10 @@ fun SearchItemRow(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onItemClick() }
-                .padding(vertical = 4.dp),
+        Modifier
+            .fillMaxWidth()
+            .clickable { onItemClick() }
+            .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -156,12 +156,12 @@ fun SearchItemRow(
             style = MaterialTheme.typography.labelLarge,
             color = Color.Gray,
             modifier =
-                Modifier
-                    .background(
-                        color = Color.LightGray.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(12.dp),
-                    )
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
+            Modifier
+                .background(
+                    color = Color.LightGray.copy(alpha = 0.3f),
+                    shape = RoundedCornerShape(12.dp),
+                )
+                .padding(horizontal = 8.dp, vertical = 4.dp),
         )
     }
     Spacer(Modifier.height(8.dp))

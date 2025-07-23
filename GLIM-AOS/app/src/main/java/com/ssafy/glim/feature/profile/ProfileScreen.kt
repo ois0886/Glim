@@ -82,9 +82,9 @@ private fun ProfileScreen(
 ) {
     LazyColumn(
         modifier =
-            modifier
-                .fillMaxSize()
-                .background(Color.White),
+        modifier
+            .fillMaxSize()
+            .background(Color.White),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
@@ -138,22 +138,22 @@ private fun PreviewProfileScreen() {
             likedGlimCount = 8,
             isLoading = false,
             glimShortCards =
-                listOf(
-                    GlimShortCard(
-                        id = "1",
-                        title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
-                        timestamp = "P.51",
-                        likeCount = 1247,
-                        isLiked = false,
-                    ),
-                    GlimShortCard(
-                        id = "2",
-                        title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
-                        timestamp = "P.51",
-                        likeCount = 856,
-                        isLiked = true,
-                    ),
+            listOf(
+                GlimShortCard(
+                    id = "1",
+                    title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
+                    timestamp = "P.51",
+                    likeCount = 1247,
+                    isLiked = false,
                 ),
+                GlimShortCard(
+                    id = "2",
+                    title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
+                    timestamp = "P.51",
+                    likeCount = 856,
+                    isLiked = true,
+                ),
+            ),
         )
 
     MaterialTheme {

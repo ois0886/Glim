@@ -81,10 +81,10 @@ fun BookDetailScreen(
         toggleAuthorDescriptionExpanded = viewModel::toggleAuthorDescriptionExpanded,
         popBackStack = popBackStack,
         modifier =
-            Modifier
-                .fillMaxSize()
-                .background(color = LightBrown)
-                .padding(padding),
+        Modifier
+            .fillMaxSize()
+            .background(color = LightBrown)
+            .padding(padding),
     )
 }
 
@@ -104,10 +104,10 @@ fun BookDetailContent(
 
     val titleAlpha by animateFloatAsState(
         targetValue =
-            when {
-                listState.firstVisibleItemIndex > 0 -> 1f
-                else -> min(listState.firstVisibleItemScrollOffset / 200f, 1f)
-            },
+        when {
+            listState.firstVisibleItemIndex > 0 -> 1f
+            else -> min(listState.firstVisibleItemScrollOffset / 200f, 1f)
+        },
         label = "titleAlpha",
     )
 
@@ -121,11 +121,11 @@ fun BookDetailContent(
             LazyColumn(
                 state = listState,
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(
-                            color = Color.White,
-                        ),
+                Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = Color.White,
+                    ),
             ) {
                 item {
                     BookInfoSection(book)
@@ -211,9 +211,9 @@ fun BookDetailContent(
                 containerColor = LightBrown,
                 contentColor = Color.White,
                 modifier =
-                    Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(16.dp),
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_forward),
@@ -261,16 +261,16 @@ private fun TitleWithAction(
 fun BookDetailScreenPreview() {
     BookDetailContent(
         book =
-            BookDetail(
-                title = "Sample Book Title",
-                subTitle = "Sample Subtitle",
-                author = "Author Name",
-                publisher = "Publisher Name",
-                publicationDate = "2023-10-01",
-                category = "Fiction",
-                price = 15000,
-                coverImageUrl = "https://example.com/cover.jpg",
-            ),
+        BookDetail(
+            title = "Sample Book Title",
+            subTitle = "Sample Subtitle",
+            author = "Author Name",
+            publisher = "Publisher Name",
+            publicationDate = "2023-10-01",
+            category = "Fiction",
+            price = 15000,
+            coverImageUrl = "https://example.com/cover.jpg",
+        ),
         onClickQuote = {},
         openUrl = {},
         isDescriptionExpanded = true,

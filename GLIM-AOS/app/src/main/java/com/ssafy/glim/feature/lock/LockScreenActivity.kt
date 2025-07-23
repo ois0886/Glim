@@ -115,20 +115,20 @@ fun LockScreenContent(
 
     Box(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .background(Color.Black)
-                .navigationBarsPadding()
-                .pointerInput(Unit) {
-                    var totalDragY = 0f
-                    detectVerticalDragGestures(
-                        onVerticalDrag = { _, dragAmount -> totalDragY += dragAmount },
-                        onDragEnd = {
-                            if (totalDragY < -100f) nextQuote()
-                            totalDragY = 0f
-                        },
-                    )
-                },
+        Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .navigationBarsPadding()
+            .pointerInput(Unit) {
+                var totalDragY = 0f
+                detectVerticalDragGestures(
+                    onVerticalDrag = { _, dragAmount -> totalDragY += dragAmount },
+                    onDragEnd = {
+                        if (totalDragY < -100f) nextQuote()
+                        totalDragY = 0f
+                    },
+                )
+            },
     ) {
         val currentQuote = state.quotes.getOrNull(state.currentIndex)
         if (currentQuote != null) {
@@ -151,10 +151,10 @@ fun LockScreenContent(
 
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .systemBarsPadding()
-                    .padding(top = 4.dp, start = 16.dp, end = 16.dp),
+            Modifier
+                .fillMaxWidth()
+                .systemBarsPadding()
+                .padding(top = 4.dp, start = 16.dp, end = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             IconButton(onClick = saveGlim) {
@@ -175,9 +175,9 @@ fun LockScreenContent(
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 72.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 72.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -203,17 +203,17 @@ fun LockScreenContent(
         }
         Row(
             modifier =
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth(),
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             SwipeButton(
                 isIcon = true,
                 modifier =
-                    Modifier
-                        .weight(1F)
-                        .fillMaxWidth(),
+                Modifier
+                    .weight(1F)
+                    .fillMaxWidth(),
                 text = stringResource(R.string.read_book),
                 isComplete = state.isComplete,
                 onSwipe = viewBook,
@@ -225,9 +225,9 @@ fun LockScreenContent(
             SwipeButton(
                 isIcon = true,
                 modifier =
-                    Modifier
-                        .weight(1F)
-                        .fillMaxWidth(),
+                Modifier
+                    .weight(1F)
+                    .fillMaxWidth(),
                 text = stringResource(R.string.read_glim),
                 isComplete = state.isComplete,
                 onSwipe = viewQuote,
@@ -238,10 +238,10 @@ fun LockScreenContent(
 
         SwipeButton(
             modifier =
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(horizontal = 36.dp, vertical = 48.dp),
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(horizontal = 36.dp, vertical = 48.dp),
             text = stringResource(R.string.lock_screen_slide_description),
             isComplete = state.isComplete,
             onSwipe = unlockMain,

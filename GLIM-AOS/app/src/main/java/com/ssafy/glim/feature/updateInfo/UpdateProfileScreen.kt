@@ -95,9 +95,9 @@ internal fun UpdateProfileScreen(
 ) {
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(padding.excludeSystemBars()),
+        Modifier
+            .fillMaxSize()
+            .padding(padding.excludeSystemBars()),
     ) {
         GlimTopBar(
             title = stringResource(id = R.string.edit_profile_title),
@@ -110,10 +110,10 @@ internal fun UpdateProfileScreen(
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             ProfileImageSection(
@@ -158,11 +158,11 @@ internal fun UpdateProfileScreen(
 
             GlimButton(
                 text =
-                    if (state.isLoading) {
-                        stringResource(R.string.updating)
-                    } else {
-                        stringResource(R.string.update)
-                    },
+                if (state.isLoading) {
+                    stringResource(R.string.updating)
+                } else {
+                    stringResource(R.string.update)
+                },
                 onClick = onSaveClicked,
                 enabled = state.isSaveEnabled && !state.isLoading,
             )
@@ -177,13 +177,13 @@ internal fun UpdateProfileScreen(
 fun UpdateProfileScreenPreview() {
     UpdateProfileScreen(
         state =
-            UpdateInfoUiState(
-                profileImageUri = null,
-                name = "홍길동",
-                nameError = null,
-                email = "hong@example.com",
-                isLoading = false,
-            ),
+        UpdateInfoUiState(
+            profileImageUri = null,
+            name = "홍길동",
+            nameError = null,
+            email = "hong@example.com",
+            isLoading = false,
+        ),
         padding = PaddingValues(0.dp),
         onNameChanged = {},
         onProfileImageClicked = {},
@@ -197,13 +197,13 @@ fun UpdateProfileScreenPreview() {
 fun UpdateProfileScreenErrorPreview() {
     UpdateProfileScreen(
         state =
-            UpdateInfoUiState(
-                profileImageUri = null,
-                name = "",
-                nameError = R.string.error_name_empty,
-                email = "hong@example.com",
-                isLoading = false,
-            ),
+        UpdateInfoUiState(
+            profileImageUri = null,
+            name = "",
+            nameError = R.string.error_name_empty,
+            email = "hong@example.com",
+            isLoading = false,
+        ),
         padding = PaddingValues(0.dp),
         onNameChanged = {},
         onProfileImageClicked = {},

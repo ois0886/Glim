@@ -36,8 +36,8 @@ fun UserProfileInputContent(
 ) {
     Column(
         modifier =
-            Modifier
-                .fillMaxWidth(),
+        Modifier
+            .fillMaxWidth(),
     ) {
         Text(
             text = stringResource(id = R.string.profile_title),

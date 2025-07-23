@@ -41,20 +41,20 @@ fun EditableTextField(
 ) {
     Column(
         modifier =
-            modifier
-                .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDragStart = {
-                            onDragStart()
-                        },
-                        onDragEnd = {
-                            onDragEnd()
-                        },
-                    ) { _, dragAmount ->
-                        onDrag(dragAmount.x, dragAmount.y)
-                    }
-                },
+        modifier
+            .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragStart = {
+                        onDragStart()
+                    },
+                    onDragEnd = {
+                        onDragEnd()
+                    },
+                ) { _, dragAmount ->
+                    onDrag(dragAmount.x, dragAmount.y)
+                }
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (isFocused && !isDragging) {
@@ -71,34 +71,34 @@ fun EditableTextField(
             value = text,
             onValueChange = onTextChange,
             textStyle =
-                MaterialTheme.typography.bodyMedium.copy(
-                    textAlign = TextAlign.Center,
-                    lineHeight = 40.sp,
-                    fontSize = textStyle.fontSizeUnit,
-                    fontWeight = textStyle.fontWeight,
-                    fontStyle = textStyle.fontStyle,
-                ),
+            MaterialTheme.typography.bodyMedium.copy(
+                textAlign = TextAlign.Center,
+                lineHeight = 40.sp,
+                fontSize = textStyle.fontSizeUnit,
+                fontWeight = textStyle.fontWeight,
+                fontStyle = textStyle.fontStyle,
+            ),
             colors =
-                TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                ),
+            TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            ),
             readOnly = isDragging,
             modifier =
-                Modifier
-                    .onFocusChanged { focusState ->
-                        onFocusChanged(focusState.isFocused)
-                    }.border(
-                        width = 1.dp,
-                        color =
-                            when {
-                                isDragging -> Color.Yellow
-                                isFocused -> Color.White
-                                else -> Color.Transparent
-                            },
-                    ),
+            Modifier
+                .onFocusChanged { focusState ->
+                    onFocusChanged(focusState.isFocused)
+                }.border(
+                    width = 1.dp,
+                    color =
+                    when {
+                        isDragging -> Color.Yellow
+                        isFocused -> Color.White
+                        else -> Color.Transparent
+                    },
+                ),
         )
     }
 }

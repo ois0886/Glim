@@ -30,19 +30,19 @@ fun EmailVerificationCodeInputContent(
         Text(
             text = stringResource(R.string.auth_greeting),
             style =
-                MaterialTheme.typography.bodySmall.copy(
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                ),
+            MaterialTheme.typography.bodySmall.copy(
+                color = Color.Gray,
+                fontSize = 14.sp,
+            ),
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(R.string.verification_code_instruction),
             style =
-                MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                ),
+            MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+            ),
         )
         Spacer(modifier = Modifier.height(12.dp))
         TextField(
@@ -53,19 +53,19 @@ fun EmailVerificationCodeInputContent(
                 }
             },
             modifier =
-                modifier
-                    .fillMaxWidth(),
+            modifier
+                .fillMaxWidth(),
             isError = error != null,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             label = {
                 Text(
                     text = error ?: stringResource(id = R.string.verification_code_placeholder),
                     color =
-                        if (error != null) {
-                            MaterialTheme.colorScheme.error
-                        } else {
-                            Color.Gray
-                        },
+                    if (error != null) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        Color.Gray
+                    },
                     fontSize = 14.sp,
                 )
             },

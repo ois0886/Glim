@@ -31,30 +31,30 @@ fun ProfileImageSection(
 ) {
     Box(
         modifier =
-            Modifier
-                .size(160.dp),
+        Modifier
+            .size(160.dp),
         contentAlignment = Alignment.Center,
     ) {
         SubcomposeAsyncImage(
             model =
-                ImageRequest.Builder(LocalContext.current)
-                    .data(imageUri)
-                    .crossfade(true)
-                    .build(),
+            ImageRequest.Builder(LocalContext.current)
+                .data(imageUri)
+                .crossfade(true)
+                .build(),
             contentDescription = stringResource(R.string.content_description_profile_image),
             modifier =
-                Modifier
-                    .size(120.dp)
-                    .clip(CircleShape),
+            Modifier
+                .size(120.dp)
+                .clip(CircleShape),
             contentScale = ContentScale.Crop,
             loading = {
                 Box(
                     modifier =
-                        Modifier
-                            .size(80.dp)
-                            .background(
-                                color = Color.Gray.copy(alpha = 0.1f),
-                            ),
+                    Modifier
+                        .size(80.dp)
+                        .background(
+                            color = Color.Gray.copy(alpha = 0.1f),
+                        ),
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator(
@@ -67,11 +67,11 @@ fun ProfileImageSection(
             error = {
                 Box(
                     modifier =
-                        Modifier
-                            .size(80.dp)
-                            .background(
-                                color = Color.Gray.copy(alpha = 0.2f),
-                            ),
+                    Modifier
+                        .size(80.dp)
+                        .background(
+                            color = Color.Gray.copy(alpha = 0.2f),
+                        ),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
@@ -86,12 +86,12 @@ fun ProfileImageSection(
 
         Box(
             modifier =
-                Modifier
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary)
-                    .align(Alignment.BottomCenter)
-                    .clickable { onImageClicked() },
+            Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary)
+                .align(Alignment.BottomCenter)
+                .clickable { onImageClicked() },
             contentAlignment = Alignment.Center,
         ) {
             Icon(
