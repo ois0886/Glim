@@ -3,6 +3,7 @@ accompanistSystemuicontroller = "0.32.0"
 agp = "8.9.1"
 coilCompose = "2.5.0"
 converterGson = "3.0.0"
+datastorePreferences = "1.1.7"
 gson = "2.13.1"
 kotlin = "2.1.21"
 coreKtx = "1.10.1"
@@ -32,11 +33,11 @@ turbine = "1.2.0"
 ktlint = "12.2.0"
 workRuntimeKtx = "2.10.2"
 composeMaterial = "1.4.1"
-detekt = "1.23.8"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coilCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
@@ -79,9 +80,6 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
-detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
-detekt-compose-rules = { module = "io.nlopez.compose.rules:detekt", version = "0.3.11" }
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -91,4 +89,3 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

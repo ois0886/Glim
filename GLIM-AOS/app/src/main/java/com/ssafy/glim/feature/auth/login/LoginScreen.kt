@@ -112,7 +112,7 @@ internal fun LoginScreen(
             EmailInputTextField(
                 value = state.email,
                 onValueChange = onEmailChanged,
-                error = state.emailError?.let { stringResource(it) },
+                error = state.emailError?.let { stringResource(it) }, // 리소스 ID를 문자열로 변환
             )
 
             Spacer(Modifier.height(16.dp))
@@ -120,7 +120,7 @@ internal fun LoginScreen(
             PasswordInputTextField(
                 value = state.password,
                 onValueChange = onPasswordChanged,
-                error = state.passwordError?.let { stringResource(it) },
+                error = state.passwordError?.let { stringResource(it) }, // 리소스 ID를 문자열로 변환
             )
 
             Spacer(Modifier.height(24.dp))

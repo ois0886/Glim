@@ -14,18 +14,17 @@ object SimpleNotificationBuilder {
         name: String,
         importance: Int = NotificationManager.IMPORTANCE_HIGH,
         description: String,
-    ) =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel(channelId, name, importance).apply {
-                setShowBadge(false)
-                enableLights(true)
-                this.description = description
-                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                lightColor = Color.BLACK
-            }
-        } else {
-            Unit
+    ) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        NotificationChannel(channelId, name, importance).apply {
+            setShowBadge(false)
+            enableLights(true)
+            this.description = description
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            lightColor = Color.BLACK
         }
+    } else {
+        Unit
+    }
 
     fun createBuilder(
         context: Context,

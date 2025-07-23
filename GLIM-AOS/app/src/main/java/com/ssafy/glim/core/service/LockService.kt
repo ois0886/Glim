@@ -69,9 +69,7 @@ class LockService : Service() {
         }
     }
 
-    private fun getStringWithContext(
-        stringRes: Int,
-    ): String {
+    private fun getStringWithContext(stringRes: Int): String {
         return applicationContext.getString(stringRes)
     }
 

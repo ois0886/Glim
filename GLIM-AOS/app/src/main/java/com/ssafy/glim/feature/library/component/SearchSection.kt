@@ -42,9 +42,9 @@ fun PopularSearchSection(
 
 @Composable
 fun RecentSearchSection(
-    queries: List<SearchItem>,
+    queries: List<String>,
     onClick: (String) -> Unit,
-    onDeleteClick: (SearchItem) -> Unit,
+    onDeleteClick: (String) -> Unit,
 ) {
     LazyRow(
         modifier =
@@ -65,12 +65,12 @@ fun RecentSearchSection(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = item.text,
+                    text = item,
                     style = MaterialTheme.typography.labelLarge,
                     modifier =
                     Modifier
                         .padding(horizontal = 8.dp, vertical = 4.dp)
-                        .clickable { onClick(item.text) },
+                        .clickable { onClick(item) },
                     color = Color.Black,
                 )
                 Icon(

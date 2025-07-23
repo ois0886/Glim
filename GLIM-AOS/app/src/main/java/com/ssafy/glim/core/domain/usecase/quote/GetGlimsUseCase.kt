@@ -13,6 +13,5 @@ constructor(
     operator fun invoke(
         page: Int,
         size: Int,
-    ): Flow<List<Glim>> =
-        repository.getGlims(page, size, "")
+    ): Flow<List<Glim>> = repository.getGlims(page, size, "")
 }

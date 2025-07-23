@@ -11,6 +11,5 @@ constructor(
     operator fun invoke(
         email: String,
         password: String,
-    ) =
-        repository.login(email = email, password = password)
+    ) = repository.login(email = email, password = password)
 }

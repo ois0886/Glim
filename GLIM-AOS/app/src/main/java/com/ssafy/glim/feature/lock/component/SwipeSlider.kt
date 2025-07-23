@@ -110,7 +110,18 @@ fun SwipeButton(
         contentAlignment = Alignment.Center,
         modifier =
         modifier
-            .clip(if (swipeDirection == SwipeDirection.RightToLeft) RoundedCornerShape(0, 40, 40, 0) else RoundedCornerShape(40, 0, 0, 40))
+            .clip(
+                if (swipeDirection == SwipeDirection.RightToLeft) {
+                    RoundedCornerShape(
+                        0,
+                        40,
+                        40,
+                        0,
+                    )
+                } else {
+                    RoundedCornerShape(40, 0, 0, 40)
+                },
+            )
             .background(backgroundColor)
             .swipeable(
                 state = swipeableState,

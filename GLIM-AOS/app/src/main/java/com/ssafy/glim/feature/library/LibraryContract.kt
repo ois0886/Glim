@@ -19,7 +19,7 @@ data class LibraryState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val popularSearchItems: List<SearchItem> = emptyList(),
-    val recentSearchItems: List<SearchItem> = emptyList(),
+    val recentSearchItems: List<String> = emptyList(),
     val searchBooks: List<Book> = emptyList(),
     val searchQuotes: List<Quote> = emptyList(),
 )

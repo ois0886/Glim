@@ -15,8 +15,7 @@ constructor(
 
     suspend fun login(request: LoginRequest) = service.login(request)
 
-    suspend fun refreshToken(authorization: String) =
-        service.refreshToken(authorization)
+    suspend fun refreshToken(authorization: String) = service.refreshToken(authorization)
 
     suspend fun logout(request: LogoutRequest) = service.logout(request)
 }

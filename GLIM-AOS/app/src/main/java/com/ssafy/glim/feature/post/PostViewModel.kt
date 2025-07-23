@@ -64,9 +64,7 @@ constructor(
             reduce { state.copy(isFocused = false) }
         }
 
-    fun updateBottomSheetState(
-        isOpen: Boolean,
-    ) =
+    fun updateBottomSheetState(isOpen: Boolean) =
         intent {
             reduce { state.copy(showBottomSheet = isOpen) }
         }

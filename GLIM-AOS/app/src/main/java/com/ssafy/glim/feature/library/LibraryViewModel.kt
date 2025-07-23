@@ -3,7 +3,6 @@ package com.ssafy.glim.feature.library
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
-import com.ssafy.glim.core.domain.model.SearchItem
 import com.ssafy.glim.core.domain.usecase.book.SearchBooksUseCase
 import com.ssafy.glim.core.domain.usecase.quote.SearchQuotesUseCase
 import com.ssafy.glim.core.domain.usecase.search.DeleteRecentSearchQueryUseCase
@@ -89,9 +88,7 @@ constructor(
                         searchMode = SearchMode.RESULT,
                     )
                 }
-                saveRecentSearchQueryUseCase(query).collect {
-                    postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
-                }
+                saveRecentSearchQueryUseCase(query)
             }
         }
 
@@ -105,9 +102,7 @@ constructor(
                     searchMode = SearchMode.RESULT,
                 )
             }
-            saveRecentSearchQueryUseCase(query).collect {
-                postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
-            }
+            saveRecentSearchQueryUseCase(query)
         }
 
     // 최근 검색어 항목 클릭
@@ -120,24 +115,22 @@ constructor(
                     searchMode = SearchMode.RESULT,
                 )
             }
-            saveRecentSearchQueryUseCase(query).collect {
-                postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
-            }
+            saveRecentSearchQueryUseCase(query)
         }
 
     // 최근 검색어 삭제 - 수정된 버전
-    fun onRecentSearchItemDelete(searchItem: SearchItem) =
+    fun onRecentSearchItemDelete(searchQuery: String) =
         intent {
             reduce {
                 state.copy(
                     recentSearchItems =
                     state.recentSearchItems.filter {
-                        !(it.text == searchItem.text && it.type == searchItem.type)
+                        it != searchQuery
                     },
                     error = null,
                 )
             }
-            deleteRecentSearchQueryUseCase(searchItem.text).collect { }
+            deleteRecentSearchQueryUseCase(searchQuery)
         }
 
     // 책 아이템 클릭

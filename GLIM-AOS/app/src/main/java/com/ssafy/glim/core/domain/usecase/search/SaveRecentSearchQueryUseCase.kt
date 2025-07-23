@@ -8,6 +8,5 @@ class SaveRecentSearchQueryUseCase
 constructor(
     private val searchQueryRepository: SearchQueryRepository,
 ) {
-    operator fun invoke(query: String) =
-        searchQueryRepository.saveRecentSearchQuery(query)
+    suspend operator fun invoke(query: String) = searchQueryRepository.saveRecentSearchQuery(query)
 }

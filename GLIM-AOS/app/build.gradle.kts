@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.detekt)
 }
 
 android {
@@ -33,37 +32,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
     }
-    @Suppress("UnstableApiUsage")
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.13"
     }
-}
-
-ktlint {
-    version.set("1.1.0")
-}
-
-detekt {
-    toolVersion = "1.23.4"
-    config.setFrom("$projectDir/config/detekt/detekt.yml")
-    buildUponDefaultConfig = true
-    allRules = false
-
-    source.setFrom(
-        "src/main/java",
-        "src/main/kotlin",
-        "src/test/java",
-        "src/test/kotlin",
-    )
 }
 
 dependencies {
@@ -126,7 +106,6 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.gson)
 
-    // detekt
-    detektPlugins(libs.detekt.formatting)
-    detektPlugins(libs.detekt.compose.rules)
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
 }

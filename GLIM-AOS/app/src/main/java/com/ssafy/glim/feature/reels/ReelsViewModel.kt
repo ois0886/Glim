@@ -104,7 +104,7 @@ constructor(
                     reduce {
                         state.copy(
                             glims = glims,
-                            currentGlimId = glims.firstOrNull()?.id ?: -1,
+                            currentGlimId = glims.firstOrNull()?.id ?: -1, // 첫 번째 글림의 ID 설정
                             isLoading = false,
                             hasMoreData = glims.size >= 10,
                         )

@@ -8,5 +8,5 @@ class DeleteRecentSearchQueryUseCase
 constructor(
     private val searchQueryRepository: SearchQueryRepository,
 ) {
-    operator fun invoke(query: String) = searchQueryRepository.deleteRecentSearchQuery(query)
+    suspend operator fun invoke(query: String) = searchQueryRepository.deleteRecentSearchQuery(query)
 }
