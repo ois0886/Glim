@@ -1,12 +1,14 @@
 package com.ssafy.glim.core.data.di
 
 import com.ssafy.glim.core.data.repository.AuthRepositoryImpl
+import com.ssafy.glim.core.data.repository.CurationRepositoryImpl
 import com.ssafy.glim.core.data.repository.fake.FakeBookRepositoryImpl
 import com.ssafy.glim.core.data.repository.fake.FakeGlimRepositoryImpl
 import com.ssafy.glim.core.data.repository.fake.FakeQuoteRepositoryImpl
 import com.ssafy.glim.core.data.repository.fake.FakeSearchQueryRepositoryImpl
 import com.ssafy.glim.core.domain.repository.AuthRepository
 import com.ssafy.glim.core.domain.repository.BookRepository
+import com.ssafy.glim.core.domain.repository.CurationRepository
 import com.ssafy.glim.core.domain.repository.GlimRepository
 import com.ssafy.glim.core.domain.repository.QuoteRepository
 import com.ssafy.glim.core.domain.repository.SearchQueryRepository
@@ -38,5 +40,9 @@ interface RepositoryModule {
     @Singleton
     @Binds
     fun bindSearchQueryRepository(repository: FakeSearchQueryRepositoryImpl): SearchQueryRepository
+
+    @Singleton
+    @Binds
+    fun bindCurationRepository(repository: CurationRepositoryImpl): CurationRepository
 
 }

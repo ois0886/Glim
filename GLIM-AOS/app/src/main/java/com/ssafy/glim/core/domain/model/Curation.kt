@@ -5,6 +5,6 @@ data class Curation(
     val title: String,
     val description: String,
     val type: CurationType,
-    val contents: List<CurationContent>
+    val contents: CurationContent
 )
 

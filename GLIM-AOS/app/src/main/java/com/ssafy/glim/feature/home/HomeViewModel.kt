@@ -2,24 +2,22 @@ package com.ssafy.glim.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssafy.glim.core.domain.model.CurationType
+import com.ssafy.glim.core.domain.usecase.curation.GetMainCurationsUseCase
 import com.ssafy.glim.core.navigation.Navigator
-import com.ssafy.glim.feature.home.model.BookItem
-import com.ssafy.glim.feature.home.model.GlimInfo
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.syntax.IntentContext
-import org.orbitmvi.orbit.syntax.Syntax
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val getMainCurationsUseCase: GetMainCurationsUseCase,
     private val navigator: Navigator,
 ) : ViewModel(), ContainerHost<HomeUiState, HomeSideEffect> {
     override val container = container<HomeUiState, HomeSideEffect>(initialState = HomeUiState())
@@ -36,45 +34,39 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
-        loadDummyData()
+        loadCurationData()
     }
 
-    private fun loadDummyData() = intent {
-        // 1) 로딩 시작
+    private fun loadCurationData() = intent {
         reduce { state.copy(isLoading = true) }
+        runCatching { getMainCurationsUseCase() }
+            .onSuccess { curations ->
+                val sections = curations.map { curation ->
+                    when (curation.type) {
+                        CurationType.QUOTE -> HomeSectionUiModel.GlimSection(
+                            id    = curation.id?.toString().orEmpty(),
+                            title = curation.title,
+                            glims = curation.contents.glim
+                        )
+                        CurationType.BOOK  -> HomeSectionUiModel.BookSection(
+                            id    = curation.id?.toString().orEmpty(),
+                            title = curation.title,
+                            books = curation.contents.book
+                        )
+                    }
+                }
 
-        // 2) (실제론 서버 호출) → 여기선 더미 딜레이
-        delay(300)
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        sections  = sections
+                    )
+                }
+            }
+            .onFailure { throwable ->
+                reduce { state.copy(isLoading = false) }
+                postSideEffect(HomeSideEffect.ShowError(throwable.message ?: "알 수 없는 에러"))
+            }
 
-        // 3) 더미 데이터 생성
-        val todayQuotes = listOf(
-            GlimInfo("q1", "이젠 더이상 둥글지도 않아…", "채식주의자", "한강", background = "1"),
-            GlimInfo("q2", "어떤 기억은 시간이 흐른다고 사라지는 것이 아니라…", "소년이 온다", "한강",background = "2")
-        )
-        val hangangQuotes = listOf(
-            GlimInfo("q3", "그녀는 바람이었다…", "작별하지 않는다", "한강",background = "3")
-        )
-        val bestSellers = listOf(
-            BookItem("b1", "회람의 시간", bookCover = "1"),
-            BookItem("b2", "작별하지 않는다",bookCover = "2"),
-            BookItem("b3", "소년이 온다",bookCover = "4")
-        )
-        val rainyDayBooks = listOf(
-            BookItem("b4", "바람이 분다, 가라",bookCover = "5"),
-            BookItem("b5", "흰",bookCover = "3")
-        )
-        val sections = listOf(
-            HomeSectionUiModel.GlimSection("today_quote", "오늘의 추천 글귀", todayQuotes),
-            HomeSectionUiModel.GlimSection("hangang_collection", "한강 작가 컬렉션", hangangQuotes),
-            HomeSectionUiModel.BookSection("best_seller", "베스트셀러", bestSellers),
-            HomeSectionUiModel.BookSection("rainy_day", "비오는 날 보기 좋은 책", rainyDayBooks)
-        )
-
-        reduce {
-            state.copy(
-                isLoading = false,
-                sections = sections
-            )
-        }
     }
 }
