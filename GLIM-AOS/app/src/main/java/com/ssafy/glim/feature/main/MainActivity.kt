@@ -3,21 +3,18 @@ package com.ssafy.glim.feature.main
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
+import androidx.core.net.toUri
 import com.ssafy.glim.core.navigation.LaunchedNavigator
+import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.service.LockServiceManager
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.core.net.toUri
-import com.ssafy.glim.core.navigation.Route
-import com.ssafy.glim.core.service.LockServiceManager
 import javax.inject.Inject
 
 private const val REQ_CODE_OVERLAY_PERMISSION: Int = 0
