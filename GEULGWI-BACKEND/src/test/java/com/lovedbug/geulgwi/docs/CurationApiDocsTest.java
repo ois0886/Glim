@@ -136,7 +136,7 @@ class CurationApiDocsTest extends RestDocsTestSupport {
         Member member = Member.builder()
             .email("kim@naver.com")
             .password("pass")
-            .nickName("닉네임")
+            .nickname("닉네임")
             .gender(MemberGender.MALE)
             .status(MemberStatus.ACTIVE)
             .role(MemberRole.USER)
