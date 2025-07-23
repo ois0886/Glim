@@ -46,7 +46,7 @@ internal fun GlimListRoute(
     padding: PaddingValues,
     popBackStack: () -> Unit,
     listType: GlimListType = GlimListType.LIKED,
-    viewModel: GlimListViewModel = hiltViewModel(),
+    viewModel: GlimListViewModel = hiltViewModel()
 ) {
     viewModel.collectSideEffect { effect ->
         when (effect) {
@@ -67,7 +67,7 @@ internal fun GlimListRoute(
         listType = listType,
         onBackClick = popBackStack,
         onLikeClick = { glimId -> viewModel.toggleLike(glimId) },
-        onTabChange = { newType -> viewModel.loadGlimList(newType) },
+        onTabChange = { newType -> viewModel.loadGlimList(newType) }
     )
 }
 
@@ -78,13 +78,12 @@ private fun GlimListScreen(
     listType: GlimListType,
     onBackClick: () -> Unit,
     onLikeClick: (Long) -> Unit,
-    onTabChange: (GlimListType) -> Unit,
+    onTabChange: (GlimListType) -> Unit
 ) {
     Column(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(Color.White)
     ) {
         // 상단 앱바
         TopAppBar(
@@ -93,7 +92,7 @@ private fun GlimListScreen(
                     text = listType.displayName,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.Black,
+                    color = Color.Black
                 )
             },
             navigationIcon = {
@@ -101,21 +100,20 @@ private fun GlimListScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "뒤로가기",
-                        tint = Color.Black,
+                        tint = Color.Black
                     )
                 }
             },
-            colors =
-            TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White,
-            ),
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.White
+            )
         )
 
         // 로딩 상태 처리
         if (uiState.isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
+                contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
             }
@@ -124,16 +122,16 @@ private fun GlimListScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(
                     count = uiState.glimList.size,
-                    key = { index -> uiState.glimList[index].id },
+                    key = { index -> uiState.glimList[index].id }
                 ) { index ->
                     val glim = uiState.glimList[index]
                     GlimListItem(
                         glim = glim,
-                        onLikeClick = { onLikeClick(glim.id) },
+                        onLikeClick = { onLikeClick(glim.id) }
                     )
                 }
             }
@@ -144,52 +142,47 @@ private fun GlimListScreen(
 @Composable
 private fun GlimListItem(
     glim: GlimItem,
-    onLikeClick: () -> Unit,
+    onLikeClick: () -> Unit
 ) {
     Card(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .clickable { /* 상세 화면으로 이동 */ },
         shape = RoundedCornerShape(12.dp),
-        colors =
-        CardDefaults.cardColors(
-            containerColor = Color.White,
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
         ),
-        elevation =
-        CardDefaults.cardElevation(
-            defaultElevation = 2.dp,
-        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        )
     ) {
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp)
         ) {
             Text(
                 text = glim.content,
                 fontSize = 16.sp,
                 color = Color.Black,
                 lineHeight = 24.sp,
-                modifier = Modifier.padding(bottom = 16.dp),
+                modifier = Modifier.padding(bottom = 16.dp)
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .size(24.dp)
                             .background(
                                 Color.Blue,
-                                RoundedCornerShape(4.dp),
-                            ),
+                                RoundedCornerShape(4.dp)
+                            )
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -197,30 +190,30 @@ private fun GlimListItem(
                     Text(
                         text = glim.author,
                         fontSize = 14.sp,
-                        color = Color.Gray,
+                        color = Color.Gray
                     )
                 }
 
                 // 좋아요 버튼
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
                         onClick = onLikeClick,
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(24.dp)
                     ) {
                         Icon(
                             imageVector = if (glim.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = "좋아요",
                             tint = if (glim.isLiked) Color.Red else Color.Gray,
-                            modifier = Modifier.size(16.dp),
+                            modifier = Modifier.size(16.dp)
                         )
                     }
 
                     Text(
                         text = glim.likeCount.toString(),
                         fontSize = 14.sp,
-                        color = Color.Gray,
+                        color = Color.Gray
                     )
                 }
             }
