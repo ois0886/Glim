@@ -10,10 +10,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.LaunchedEffect
 import com.ssafy.glim.core.navigation.LaunchedNavigator
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.net.toUri
+import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.service.LockServiceManager
 import javax.inject.Inject
 
@@ -38,7 +40,6 @@ object PermissionUtil {
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var lockServiceManager: LockServiceManager
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (PermissionUtil.alertPermissionCheck(this)) {
@@ -51,6 +52,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navigator: MainNavController = rememberMainNavController()
             LaunchedNavigator(navigator.navController)
+            val initialRoute = intent.getStringExtra("nav_route")
+            LaunchedEffect(initialRoute) {
+                if(initialRoute == "book"){
+                    navigator.navController.navigate(Route.BookDetail(1))
+                }
+                else if(initialRoute == "glim"){
+                    navigator.navigate(MainTab.REELS)
+                }
+            }
             MyApplicationTheme {
                 MainScreen(
                     navigator = navigator,
@@ -58,7 +68,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun startLockService() {
         lockServiceManager.start()
     }
