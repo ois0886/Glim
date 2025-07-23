@@ -136,3 +136,8 @@ object ValidationUtils {
         }
     }
 }
+
+fun ValidationResult.toErrorRes(): Int? = when (this) {
+    is ValidationResult.Valid -> null
+    is ValidationResult.Invalid -> this.errorMessageRes
+}

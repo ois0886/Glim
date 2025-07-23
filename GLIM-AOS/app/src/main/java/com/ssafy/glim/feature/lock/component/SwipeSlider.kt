@@ -5,12 +5,16 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -25,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -38,6 +41,7 @@ import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import com.ssafy.glim.R
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 // 드래그 방향 지정
@@ -49,7 +53,6 @@ enum class SwipeDirection {
 @Composable
 private fun SwipeIndicator(
     modifier: Modifier = Modifier,
-    backgroundColor: Color,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -59,12 +62,7 @@ private fun SwipeIndicator(
             .clip(CircleShape)
             .background(Color.Transparent),
     ) {
-        Icon(
-            imageVector = Icons.Rounded.Check,
-            contentDescription = null,
-            tint = backgroundColor,
-            modifier = Modifier.size(24.dp),
-        )
+
     }
 }
 
@@ -76,7 +74,6 @@ fun SwipeButton(
     text: String,
     isComplete: Boolean,
     swipeDirection: SwipeDirection = SwipeDirection.LeftToRight,
-    doneImageVector: ImageVector = Icons.Rounded.Done,
     backgroundColor: Color = Color.Transparent,
     paintRes: Int = R.drawable.ic_favorite,
     onSwipe: () -> Unit,
@@ -97,6 +94,7 @@ fun SwipeButton(
         animationSpec = tween(durationMillis = 300),
         label = "",
     )
+    val offsetX       = swipeableState.currentValue.toFloat()
 
     LaunchedEffect(swipeableState.currentValue) {
         if (swipeableState.currentValue == 1) {
@@ -147,7 +145,6 @@ fun SwipeButton(
             Modifier
                 .align(indicatorAlignment)
                 .alpha(alpha),
-            backgroundColor = backgroundColor,
         )
         // 텍스트
         if (!isIcon) {
@@ -177,15 +174,6 @@ fun SwipeButton(
                 Modifier
                     .fillMaxSize()
                     .padding(4.dp),
-            )
-        }
-        // 완료 아이콘
-        AnimatedVisibility(visible = isComplete) {
-            Icon(
-                imageVector = doneImageVector,
-                contentDescription = null,
-                tint = Color.Transparent,
-                modifier = Modifier.size(44.dp),
             )
         }
     }
