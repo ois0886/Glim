@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15.3
+    container_name: geulgwi_postgres
+    environment:
+      POSTGRES_DB: geulgwi
+      POSTGRES_USER: geulgwi_user
+      POSTGRES_PASSWORD: geulgwi_pw
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
+    networks:
+      - geulgwi-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
+    container_name: geulgwi_backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./upload-images:/upload/image
+    depends_on:
+      - postgres
+    networks:
+      - geulgwi-net
+
+networks:
+  geulgwi-net:
+    driver: bridge

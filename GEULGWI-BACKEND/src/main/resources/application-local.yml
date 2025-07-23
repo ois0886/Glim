@@ -9,3 +9,6 @@ spring:
 
 aladin:
   ttbkey: ttbhongsbien1441001
+
+jwt:
+  secret: abcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefg
