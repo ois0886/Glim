@@ -35,6 +35,17 @@ include::{snippets}/book_api_docs_test/get_books_by_keyword/http-response.adoc[]
 
 include::{snippets}/book_api_docs_test/get_books_by_keyword/response-fields.adoc[]
 
+=== 키워드로 인기 검색어 조회
+
+include::{snippets}/book_api_docs_test/get_search_keyword_history/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/book_api_docs_test/get_search_keyword_history/http-response.adoc[]
+
+include::{snippets}/book_api_docs_test/get_search_keyword_history/response-fields.adoc[]
+
+
 === 인기있는 도서 검색
 
 ==== 요청
