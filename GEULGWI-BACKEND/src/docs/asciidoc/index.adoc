@@ -77,6 +77,18 @@ include::{snippets}/quote_api_docs_test/get_quotes_order_by_condition/http-respo
 
 include::{snippets}/quote_api_docs_test/get_quotes_order_by_condition/response-fields.adoc[]
 
+=== 특정 도서의 isbn으로 글귀 목록 조회
+
+==== 요청
+
+include::{snippets}/quote_api_docs_test/get_public_quotes_by_isbn/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/quote_api_docs_test/get_public_quotes_by_isbn/http-response.adoc[]
+
+include::{snippets}/quote_api_docs_test/get_public_quotes_by_isbn/response-fields.adoc[]
+
 === 글귀 생성
 
 ==== 요청
