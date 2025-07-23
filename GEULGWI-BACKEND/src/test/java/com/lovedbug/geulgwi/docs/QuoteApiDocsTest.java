@@ -10,6 +10,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,6 +57,48 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
 
         entityManager.clear();
+    }
+
+    @DisplayName("특정 도서의 isbn으로 관련있는 글귀 목록을 조회한다")
+    @Test
+    void get_public_quotes_by_isbn(){
+        Book book = createBook();
+        bookRepository.save(book);
+
+        Quote quote1 = Quote.builder()
+            .content("첫번째 글귀")
+            .views(5)
+            .page(10)
+            .book(book)
+            .memberId(42L)
+            .build();
+
+        Quote quote2 = Quote.builder()
+            .content("두번째 글귀")
+            .views(3)
+            .page(20)
+            .book(book)
+            .memberId(42L)
+            .build();
+
+        quoteRepository.saveAll(List.of(quote1, quote2));
+
+        given(this.spec)
+            .filter(document("{class_name}/{method_name}",
+                pathParameters(
+                    parameterWithName("isbn").description("조회할 도서의 isbn")
+                ),
+                responseFields(
+                    fieldWithPath("[].quoteId").description("글귀 ID"),
+                    fieldWithPath("[].content").description("글귀 내용"),
+                    fieldWithPath("[].views").description("조회수"),
+                    fieldWithPath("[].page").description("도서 내 페이지 번호")
+                )
+                ))
+            .when()
+            .get("/api/v1/quotes/{isbn}", book.getIsbn())
+            .then()
+            .statusCode(200);
     }
 
     @DisplayName("특정 조건으로 정렬된 글귀 목록을 조회한다")
