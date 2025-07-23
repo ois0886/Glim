@@ -1,0 +1,20 @@
+package com.lovedbug.geulgwi.dto.request;
+
+import com.lovedbug.geulgwi.enums.MemberGender;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import java.time.LocalDate;
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class UpdateRequestDto {
+
+    private String password;
+    private String nickname;
+    private LocalDate birthDate;
+    private MemberGender gender;
+}
