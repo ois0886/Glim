@@ -6,13 +6,13 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetGlimsUseCase
-    @Inject
-    constructor(
-        private val repository: QuoteRepository,
-    ) {
-        operator fun invoke(
-            page: Int,
-            size: Int,
-        ): Flow<List<Glim>> =
-            repository.getGlims(page, size, "")
-    }
+@Inject
+constructor(
+    private val repository: QuoteRepository,
+) {
+    operator fun invoke(
+        page: Int,
+        size: Int,
+    ): Flow<List<Glim>> =
+        repository.getGlims(page, size, "")
+}

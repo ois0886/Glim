@@ -57,10 +57,10 @@ internal fun MainBottomBar(
             ) {
                 Row(
                     modifier =
-                        Modifier
-                            .navigationBarsPadding()
-                            .fillMaxWidth()
-                            .height(64.dp),
+                    Modifier
+                        .navigationBarsPadding()
+                        .fillMaxWidth()
+                        .height(64.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     tabs.forEach { tab ->
@@ -90,16 +90,16 @@ private fun RowScope.MainBottomBarItem(
 ) {
     Box(
         modifier =
-            Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .selectable(
-                    selected = selected,
-                    indication = null,
-                    role = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = onClick,
-                ),
+        Modifier
+            .weight(1f)
+            .fillMaxHeight()
+            .selectable(
+                selected = selected,
+                indication = null,
+                role = null,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onClick,
+            ),
         contentAlignment = Alignment.Center,
     ) {
         Column(

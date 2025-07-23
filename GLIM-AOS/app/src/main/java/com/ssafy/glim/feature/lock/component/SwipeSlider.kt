@@ -54,10 +54,10 @@ private fun SwipeIndicator(
     Box(
         contentAlignment = Alignment.Center,
         modifier =
-            modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .background(Color.Transparent),
+        modifier
+            .size(36.dp)
+            .clip(CircleShape)
+            .background(Color.Transparent),
     ) {
         Icon(
             imageVector = Icons.Rounded.Check,
@@ -111,31 +111,31 @@ fun SwipeButton(
     Box(
         contentAlignment = Alignment.Center,
         modifier =
-            modifier
-                .clip(if (swipeDirection == SwipeDirection.RightToLeft) RoundedCornerShape(0, 40, 40, 0) else RoundedCornerShape(40, 0, 0, 40))
-                .background(backgroundColor)
-                .swipeable(
-                    state = swipeableState,
-                    anchors = anchors,
-                    thresholds = { _, _ -> FractionalThreshold(0.3f) },
-                    orientation = Orientation.Horizontal,
-                )
-                .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
-                .then(
-                    if (swipeComplete) {
-                        Modifier.width(64.dp)
-                    } else {
-                        Modifier.fillMaxWidth()
-                    },
-                )
-                .height(64.dp),
+        modifier
+            .clip(if (swipeDirection == SwipeDirection.RightToLeft) RoundedCornerShape(0, 40, 40, 0) else RoundedCornerShape(40, 0, 0, 40))
+            .background(backgroundColor)
+            .swipeable(
+                state = swipeableState,
+                anchors = anchors,
+                thresholds = { _, _ -> FractionalThreshold(0.3f) },
+                orientation = Orientation.Horizontal,
+            )
+            .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
+            .then(
+                if (swipeComplete) {
+                    Modifier.width(64.dp)
+                } else {
+                    Modifier.fillMaxWidth()
+                },
+            )
+            .height(64.dp),
     ) {
         // 인디케이터
         SwipeIndicator(
             modifier =
-                Modifier
-                    .align(indicatorAlignment)
-                    .alpha(alpha),
+            Modifier
+                .align(indicatorAlignment)
+                .alpha(alpha),
             backgroundColor = backgroundColor,
         )
         // 텍스트
@@ -145,10 +145,10 @@ fun SwipeButton(
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .alpha(alpha)
-                        .padding(horizontal = 40.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .alpha(alpha)
+                    .padding(horizontal = 40.dp),
             )
         } else {
             Icon(
@@ -163,9 +163,9 @@ fun SwipeButton(
                 color = Color.Transparent,
                 strokeWidth = 1.dp,
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(4.dp),
+                Modifier
+                    .fillMaxSize()
+                    .padding(4.dp),
             )
         }
         // 완료 아이콘

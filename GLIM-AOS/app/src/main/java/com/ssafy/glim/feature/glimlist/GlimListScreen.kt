@@ -83,9 +83,9 @@ private fun GlimListScreen(
 ) {
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .background(Color.White),
+        Modifier
+            .fillMaxSize()
+            .background(Color.White),
     ) {
         // 상단 앱바
         TopAppBar(
@@ -107,9 +107,9 @@ private fun GlimListScreen(
                 }
             },
             colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                ),
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.White,
+            ),
         )
 
         // 로딩 상태 처리
@@ -149,24 +149,24 @@ private fun GlimListItem(
 ) {
     Card(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { /* 상세 화면으로 이동 */ },
+        Modifier
+            .fillMaxWidth()
+            .clickable { /* 상세 화면으로 이동 */ },
         shape = RoundedCornerShape(12.dp),
         colors =
-            CardDefaults.cardColors(
-                containerColor = Color.White,
-            ),
+        CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
         elevation =
-            CardDefaults.cardElevation(
-                defaultElevation = 2.dp,
-            ),
+        CardDefaults.cardElevation(
+            defaultElevation = 2.dp,
+        ),
     ) {
         Column(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         ) {
             Text(
                 text = glim.content,
@@ -185,12 +185,12 @@ private fun GlimListItem(
                 ) {
                     Box(
                         modifier =
-                            Modifier
-                                .size(24.dp)
-                                .background(
-                                    Color.Blue,
-                                    RoundedCornerShape(4.dp),
-                                ),
+                        Modifier
+                            .size(24.dp)
+                            .background(
+                                Color.Blue,
+                                RoundedCornerShape(4.dp),
+                            ),
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))

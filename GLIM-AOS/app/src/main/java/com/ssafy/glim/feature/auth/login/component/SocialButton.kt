@@ -36,9 +36,9 @@ fun SocialButton(
         border = BorderStroke(1.dp, Color.LightGray),
         color = bgColor,
         modifier =
-            Modifier
-                .size(48.dp)
-                .clickable(onClick = onClick),
+        Modifier
+            .size(48.dp)
+            .clickable(onClick = onClick),
     ) {
         Image(
             painter = painterResource(iconRes),

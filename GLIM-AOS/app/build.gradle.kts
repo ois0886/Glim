@@ -48,22 +48,10 @@ android {
     }
 }
 
-// ktlint 설정
 ktlint {
     version.set("1.1.0")
-    debug.set(false)
-    verbose.set(true)
-    android.set(true)
-    outputToConsole.set(true)
-    ignoreFailures.set(false)
-
-    filter {
-        exclude("**/generated/**")
-        exclude("**/build/**")
-    }
 }
 
-// detekt 설정
 detekt {
     toolVersion = "1.23.4"
     config.setFrom("$projectDir/config/detekt/detekt.yml")

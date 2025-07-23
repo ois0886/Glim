@@ -80,9 +80,9 @@ private fun HomeScreen(
 ) {
     LazyColumn(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(padding),
+        Modifier
+            .fillMaxSize()
+            .padding(padding),
     ) {
         item {
             GlimHomeTitle()
@@ -112,25 +112,25 @@ private fun HomeScreen(
 fun GlimHomeTitle() {
     Column(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 16.dp),
     ) {
         Text(
             text = stringResource(R.string.today_glim),
             style =
-                MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                ),
+            MaterialTheme.typography.headlineMedium.copy(
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+            ),
         )
         Spacer(Modifier.height(16.dp))
         Text(
             text = stringResource(R.string.glim_home_description),
             style =
-                MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 16.sp,
-                ),
+            MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 16.sp,
+            ),
             color = LightGray600,
         )
     }
@@ -141,10 +141,10 @@ fun SectionTitle(text: String) {
     Text(
         text = text,
         style =
-            MaterialTheme.typography.titleMedium.copy(
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-            ),
+        MaterialTheme.typography.titleMedium.copy(
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+        ),
         modifier = Modifier.padding(16.dp),
     )
 }
@@ -166,9 +166,9 @@ fun GlimCarousel(
         items(glims) { glim ->
             Column(
                 modifier =
-                    Modifier
-                        .width(itemSize.width)
-                        .clickable { onItemClick() },
+                Modifier
+                    .width(itemSize.width)
+                    .clickable { onItemClick() },
                 horizontalAlignment = Alignment.Start,
             ) {
                 Card(
@@ -179,13 +179,13 @@ fun GlimCarousel(
                     Box {
                         Image(
                             painter =
-                                if (glim.background == "1") {
-                                    painterResource(R.drawable.example_glim_3)
-                                } else if (glim.background == "2") {
-                                    painterResource(R.drawable.example_glim_4)
-                                } else {
-                                    painterResource(R.drawable.example_glim_1)
-                                },
+                            if (glim.background == "1") {
+                                painterResource(R.drawable.example_glim_3)
+                            } else if (glim.background == "2") {
+                                painterResource(R.drawable.example_glim_4)
+                            } else {
+                                painterResource(R.drawable.example_glim_1)
+                            },
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(itemSize),
@@ -196,21 +196,21 @@ fun GlimCarousel(
                 Text(
                     text = glim.title,
                     style =
-                        MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = LightGray900,
-                        ),
+                    MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = LightGray900,
+                    ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = glim.author,
                     style =
-                        MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 14.sp,
-                            color = LightGray700,
-                        ),
+                    MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 14.sp,
+                        color = LightGray700,
+                    ),
                 )
             }
         }
@@ -234,9 +234,9 @@ fun BookCarousel(
         items(books) { book ->
             Column(
                 modifier =
-                    Modifier
-                        .width(itemWidth)
-                        .clickable { onItemClick(book.id) },
+                Modifier
+                    .width(itemWidth)
+                    .clickable { onItemClick(book.id) },
                 horizontalAlignment = Alignment.Start,
             ) {
                 Card(
@@ -246,13 +246,13 @@ fun BookCarousel(
                 ) {
                     Image(
                         painter =
-                            if (book.bookCover == "1") {
-                                painterResource(R.drawable.example_glim_3)
-                            } else if (book.bookCover == "2") {
-                                painterResource(R.drawable.example_glim_4)
-                            } else {
-                                painterResource(R.drawable.example_glim_2)
-                            },
+                        if (book.bookCover == "1") {
+                            painterResource(R.drawable.example_glim_3)
+                        } else if (book.bookCover == "2") {
+                            painterResource(R.drawable.example_glim_4)
+                        } else {
+                            painterResource(R.drawable.example_glim_2)
+                        },
                         contentDescription = book.title,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize(),
@@ -262,10 +262,10 @@ fun BookCarousel(
                 Text(
                     text = book.title,
                     style =
-                        MaterialTheme.typography.bodySmall.copy(
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                        ),
+                    MaterialTheme.typography.bodySmall.copy(
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                    ),
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,

@@ -82,10 +82,10 @@ private fun SignUpScreen(
 
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(padding.excludeSystemBars())
-                .imePadding(),
+        Modifier
+            .fillMaxSize()
+            .padding(padding.excludeSystemBars())
+            .imePadding(),
     ) {
         GlimTopBar(
             title = stringResource(R.string.login_signup),
@@ -100,9 +100,9 @@ private fun SignUpScreen(
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(PaddingValues(16.dp)),
+            Modifier
+                .fillMaxSize()
+                .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (state.currentStep) {
@@ -147,12 +147,12 @@ private fun SignUpScreen(
 
             GlimButton(
                 text =
-                    when (state.currentStep) {
-                        SignUpStep.Email -> stringResource(R.string.signup_send_verification_code)
-                        SignUpStep.Code -> stringResource(R.string.signup_verify_code)
-                        SignUpStep.Password -> stringResource(R.string.signup_confirm)
-                        SignUpStep.Profile -> stringResource(R.string.login_signup)
-                    },
+                when (state.currentStep) {
+                    SignUpStep.Email -> stringResource(R.string.signup_send_verification_code)
+                    SignUpStep.Code -> stringResource(R.string.signup_verify_code)
+                    SignUpStep.Password -> stringResource(R.string.signup_confirm)
+                    SignUpStep.Profile -> stringResource(R.string.login_signup)
+                },
                 onClick = onNextStep,
                 enabled = state.isCurrentStepValid && !state.isLoading,
             )
@@ -165,11 +165,11 @@ private fun SignUpScreen(
 private fun PreviewSignUpScreen_EmailStep() {
     SignUpScreen(
         state =
-            SignUpUiState(
-                currentStep = SignUpStep.Email,
-                email = "user@example.com",
-                emailError = null,
-            ),
+        SignUpUiState(
+            currentStep = SignUpStep.Email,
+            email = "user@example.com",
+            emailError = null,
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},
@@ -188,11 +188,11 @@ private fun PreviewSignUpScreen_EmailStep() {
 private fun PreviewSignUpScreen_EmailStepWithError() {
     SignUpScreen(
         state =
-            SignUpUiState(
-                currentStep = SignUpStep.Email,
-                email = "invalid-email",
-                emailError = R.string.error_email_invalid,
-            ),
+        SignUpUiState(
+            currentStep = SignUpStep.Email,
+            email = "invalid-email",
+            emailError = R.string.error_email_invalid,
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},
@@ -211,11 +211,11 @@ private fun PreviewSignUpScreen_EmailStepWithError() {
 private fun PreviewSignUpScreen_CodeStep() {
     SignUpScreen(
         state =
-            SignUpUiState(
-                currentStep = SignUpStep.Code,
-                code = "123456",
-                codeError = null,
-            ),
+        SignUpUiState(
+            currentStep = SignUpStep.Code,
+            code = "123456",
+            codeError = null,
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},
@@ -234,13 +234,13 @@ private fun PreviewSignUpScreen_CodeStep() {
 private fun PreviewSignUpScreen_PasswordStep() {
     SignUpScreen(
         state =
-            SignUpUiState(
-                currentStep = SignUpStep.Password,
-                password = "Aa1!aaaa",
-                confirmPassword = "Aa1!aaaa",
-                passwordError = null,
-                confirmPasswordError = null,
-            ),
+        SignUpUiState(
+            currentStep = SignUpStep.Password,
+            password = "Aa1!aaaa",
+            confirmPassword = "Aa1!aaaa",
+            passwordError = null,
+            confirmPasswordError = null,
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},
@@ -259,13 +259,13 @@ private fun PreviewSignUpScreen_PasswordStep() {
 private fun PreviewSignUpScreen_PasswordStepWithError() {
     SignUpScreen(
         state =
-            SignUpUiState(
-                currentStep = SignUpStep.Password,
-                password = "short",
-                confirmPassword = "different",
-                passwordError = R.string.error_password_invalid,
-                confirmPasswordError = R.string.error_password_mismatch,
-            ),
+        SignUpUiState(
+            currentStep = SignUpStep.Password,
+            password = "short",
+            confirmPassword = "different",
+            passwordError = R.string.error_password_invalid,
+            confirmPasswordError = R.string.error_password_mismatch,
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},
@@ -284,14 +284,14 @@ private fun PreviewSignUpScreen_PasswordStepWithError() {
 private fun PreviewSignUpScreen_ProfileStep() {
     SignUpScreen(
         state =
-            SignUpUiState(
-                currentStep = SignUpStep.Profile,
-                name = "인성",
-                birthDate = "1998",
-                gender = "남성",
-                nameError = null,
-                birthDateError = null,
-            ),
+        SignUpUiState(
+            currentStep = SignUpStep.Profile,
+            name = "인성",
+            birthDate = "1998",
+            gender = "남성",
+            nameError = null,
+            birthDateError = null,
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},

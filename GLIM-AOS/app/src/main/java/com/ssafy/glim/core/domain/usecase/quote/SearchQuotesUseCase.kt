@@ -4,9 +4,9 @@ import com.ssafy.glim.core.domain.repository.QuoteRepository
 import javax.inject.Inject
 
 class SearchQuotesUseCase
-    @Inject
-    constructor(
-        private val quoteRepository: QuoteRepository,
-    ) {
-        operator fun invoke(query: String) = quoteRepository.searchQuotes(query)
-    }
+@Inject
+constructor(
+    private val quoteRepository: QuoteRepository,
+) {
+    operator fun invoke(query: String) = quoteRepository.searchQuotes(query)
+}
