@@ -169,7 +169,6 @@ constructor(
         reduce { state.copy(gender = gender) }
     }
 
-
     fun onNextStep() = intent {
         when (state.currentStep) {
             SignUpStep.Auth -> validateAuthStep()
@@ -286,7 +285,6 @@ constructor(
         }
     }
 
-
     fun onBackStep() = intent {
         state.currentStep.prev()?.let { prev ->
             reduce { state.copy(currentStep = prev) }
@@ -294,7 +292,6 @@ constructor(
     }
 
     private fun certifyValidCode() = intent {
-
         performSignUp()
         // TODO: 실제 인증 코드 검증 로직
         /*
@@ -317,7 +314,7 @@ constructor(
                     reduce { state.copy(codeError = R.string.error_code_incorrect) }
                 }
             }
-        */
+         */
     }
 
     private fun moveToNextStep() = intent {

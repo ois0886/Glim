@@ -22,20 +22,20 @@ data class SignUpUiState(
     val isCurrentStepValid: Boolean
         get() = when (currentStep) {
             SignUpStep.Auth -> email.isNotBlank() &&
-                    emailError == null &&
-                    password.isNotBlank() &&
-                    confirmPassword.isNotBlank() &&
-                    passwordError == null &&
-                    confirmPasswordError == null
+                emailError == null &&
+                password.isNotBlank() &&
+                confirmPassword.isNotBlank() &&
+                passwordError == null &&
+                confirmPasswordError == null
 
             SignUpStep.Profile -> name.isNotBlank() &&
-                    birthDate.isNotBlank() &&
-                    gender != null &&
-                    nameError == null &&
-                    birthDateError == null
+                birthDate.isNotBlank() &&
+                gender != null &&
+                nameError == null &&
+                birthDateError == null
 
             SignUpStep.Code -> code.isNotBlank() &&
-                    codeError == null
+                codeError == null
         }
 }
 
