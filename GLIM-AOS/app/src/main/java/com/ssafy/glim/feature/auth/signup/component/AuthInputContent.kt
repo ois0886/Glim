@@ -43,10 +43,10 @@ fun AuthInputContent(
         Text(
             text = stringResource(R.string.email_auth_instruction),
             style =
-                MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                ),
+            MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+            ),
         )
         Spacer(modifier = Modifier.height(12.dp))
         EmailInputTextField(
