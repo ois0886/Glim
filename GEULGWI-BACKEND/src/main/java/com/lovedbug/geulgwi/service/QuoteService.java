@@ -1,9 +1,11 @@
 package com.lovedbug.geulgwi.service;
 
+import com.lovedbug.geulgwi.dto.resposne.QuoteResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,6 +36,14 @@ public class QuoteService {
         return quotes.stream()
             .map(QuoteService::toDto)
             .toList();
+    }
+
+    public List<QuoteResponseDto> getPublicQuotesByIsbn(String isbn){
+        List<Quote> quotes = quoteRepository.findAllByBookIsbnAndVisibility(isbn, "PUBLIC");
+
+        return quotes.stream()
+            .map(QuoteResponseDto::toResponseDto)
+            .collect(Collectors.toList());
     }
 
     @Transactional
@@ -75,4 +85,5 @@ public class QuoteService {
             .bookCoverUrl(quote.getBook().getCoverUrl())
             .build();
     }
+
 }
