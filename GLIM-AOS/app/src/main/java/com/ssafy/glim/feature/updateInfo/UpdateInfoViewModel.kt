@@ -14,14 +14,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class UpdateInfoViewModel
-@Inject constructor(
+@Inject
+constructor(
     private val navigator: Navigator,
-    //private val updateProfileUseCase: UpdateProfileUseCase,
+    // private val updateProfileUseCase: UpdateProfileUseCase,
 ) : ViewModel(), ContainerHost<UpdateInfoUiState, UpdateInfoSideEffect> {
-
-    override val container = container<UpdateInfoUiState, UpdateInfoSideEffect>(
-        initialState = UpdateInfoUiState()
-    )
+    override val container =
+        container<UpdateInfoUiState, UpdateInfoSideEffect>(
+            initialState = UpdateInfoUiState(),
+        )
 
     fun onImageSelected(uri: Uri) {
         intent {
@@ -29,46 +30,56 @@ internal class UpdateInfoViewModel
         }
     }
 
-    fun onNameChanged(name: String) = intent {
-        val validationResult = ValidationUtils.validateName(
-            name = name,
-            emptyErrorRes = R.string.error_name_empty,
-            invalidErrorRes = R.string.error_name_invalid
-        )
+    fun onNameChanged(name: String) =
+        intent {
+            val validationResult =
+                ValidationUtils.validateName(
+                    name = name,
+                    emptyErrorRes = R.string.error_name_empty,
+                    invalidErrorRes = R.string.error_name_invalid,
+                )
 
-        val error = when (validationResult) {
-            is ValidationResult.Valid -> null
-            is ValidationResult.Invalid -> validationResult.errorMessageRes
+            val error =
+                when (validationResult) {
+                    is ValidationResult.Valid -> null
+                    is ValidationResult.Invalid -> validationResult.errorMessageRes
+                }
+
+            reduce { state.copy(name = name, nameError = error) }
         }
 
-        reduce { state.copy(name = name, nameError = error) }
-    }
-
-    fun onProfileImageClicked() = intent {
-        postSideEffect(UpdateInfoSideEffect.ShowImagePicker)
-    }
-
-    fun onSaveClicked() = intent {
-        val nameValidation = ValidationUtils.validateName(
-            name = state.name,
-            emptyErrorRes = R.string.error_name_empty,
-            invalidErrorRes = R.string.error_name_invalid
-        )
-
-        val nameError = if (nameValidation is ValidationResult.Invalid) {
-            nameValidation.errorMessageRes
-        } else null
-
-        if (nameError != null) {
-            return@intent
+    fun onProfileImageClicked() =
+        intent {
+            postSideEffect(UpdateInfoSideEffect.ShowImagePicker)
         }
 
-        reduce { state.copy(isLoading = true) }
-        delay(1_000)
-        reduce { state.copy(isLoading = false) }
-    }
+    fun onSaveClicked() =
+        intent {
+            val nameValidation =
+                ValidationUtils.validateName(
+                    name = state.name,
+                    emptyErrorRes = R.string.error_name_empty,
+                    invalidErrorRes = R.string.error_name_invalid,
+                )
 
-    fun onBackClicked() = intent {
-        navigator.navigateBack()
-    }
+            val nameError =
+                if (nameValidation is ValidationResult.Invalid) {
+                    nameValidation.errorMessageRes
+                } else {
+                    null
+                }
+
+            if (nameError != null) {
+                return@intent
+            }
+
+            reduce { state.copy(isLoading = true) }
+            delay(1_000)
+            reduce { state.copy(isLoading = false) }
+        }
+
+    fun onBackClicked() =
+        intent {
+            navigator.navigateBack()
+        }
 }

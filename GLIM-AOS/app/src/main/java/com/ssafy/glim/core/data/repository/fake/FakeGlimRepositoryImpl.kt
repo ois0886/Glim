@@ -139,18 +139,19 @@ constructor() : GlimRepository {
             emit(glimDummyData)
         }
 
-    override fun saveGlimData(data: GlimInput) = flow {
-        val newGlim =
-            Glim(
-                id = (glimDummyData.size + 1).toLong(),
-                imgUrl = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
-                isLike = false,
-                likes = 0,
-                bookTitle = "봄날은 간다",
-                bookAuthor = "김유정",
-                bookImgUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
-            )
-        glimDummyData.add(newGlim)
-        emit(true)
-    }
+    override fun saveGlimData(data: GlimInput) =
+        flow {
+            val newGlim =
+                Glim(
+                    id = (glimDummyData.size + 1).toLong(),
+                    imgUrl = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+                    isLike = false,
+                    likes = 0,
+                    bookTitle = "봄날은 간다",
+                    bookAuthor = "김유정",
+                    bookImgUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
+                )
+            glimDummyData.add(newGlim)
+            emit(true)
+        }
 }

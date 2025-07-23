@@ -21,15 +21,15 @@ fun RowScope.GenderSelectableButton(
     OutlinedButton(
         onClick = onClick,
         colors =
-            ButtonDefaults.outlinedButtonColors(
-                containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                contentColor = if (isSelected) Color.White else Color.Black,
-            ),
+        ButtonDefaults.outlinedButtonColors(
+            containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+            contentColor = if (isSelected) Color.White else Color.Black,
+        ),
         border = BorderStroke(1.dp, Color.Black),
         modifier =
-            Modifier
-                .weight(1f)
-                .height(48.dp),
+        Modifier
+            .weight(1f)
+            .height(48.dp),
     ) {
         Text(text)
     }

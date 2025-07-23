@@ -38,5 +38,4 @@ interface RepositoryModule {
     @Singleton
     @Binds
     fun bindSearchQueryRepository(repository: FakeSearchQueryRepositoryImpl): SearchQueryRepository
-
 }

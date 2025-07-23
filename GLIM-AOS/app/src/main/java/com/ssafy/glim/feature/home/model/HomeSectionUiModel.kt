@@ -7,12 +7,12 @@ sealed class HomeSectionUiModel {
     data class GlimSection(
         override val id: String,
         override val title: String,
-        val glims: List<GlimInfo>
+        val glims: List<GlimInfo>,
     ) : HomeSectionUiModel()
 
     data class BookSection(
         override val id: String,
         override val title: String,
-        val books: List<BookItem>
+        val books: List<BookItem>,
     ) : HomeSectionUiModel()
 }

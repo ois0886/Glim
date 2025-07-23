@@ -6,7 +6,7 @@ import retrofit2.Response
 fun <T, R> Response<T>.handleResponse(
     tag: String,
     successMessage: String,
-    transform: (T) -> R
+    transform: (T) -> R,
 ): Result<R> {
     return try {
         if (isSuccessful) {
@@ -21,4 +21,3 @@ fun <T, R> Response<T>.handleResponse(
         Result.failure(e)
     }
 }
-

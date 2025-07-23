@@ -46,13 +46,14 @@ internal fun UpdateProfileRoute(
     val uiState by viewModel.container.stateFlow.collectAsState()
     val context = LocalContext.current
 
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            viewModel.onImageSelected(it)
+    val imagePickerLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent(),
+        ) { uri: Uri? ->
+            uri?.let {
+                viewModel.onImageSelected(it)
+            }
         }
-    }
     viewModel.collectSideEffect { effect ->
         when (effect) {
             is UpdateInfoSideEffect.ShowErrorRes ->
@@ -67,7 +68,7 @@ internal fun UpdateProfileRoute(
                 Toast.makeText(
                     context,
                     context.getString(R.string.success_update_profile),
-                    Toast.LENGTH_SHORT
+                    Toast.LENGTH_SHORT,
                 ).show()
             }
         }
@@ -93,9 +94,10 @@ internal fun UpdateProfileScreen(
     onBackClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
-            .padding(padding.excludeSystemBars())
+            .padding(padding.excludeSystemBars()),
     ) {
         GlimTopBar(
             title = stringResource(id = R.string.edit_profile_title),
@@ -107,7 +109,8 @@ internal fun UpdateProfileScreen(
         )
 
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
@@ -115,7 +118,7 @@ internal fun UpdateProfileScreen(
         ) {
             ProfileImageSection(
                 imageUri = state.profileImageUri,
-                onImageClicked = onProfileImageClicked
+                onImageClicked = onProfileImageClicked,
             )
 
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -154,7 +157,8 @@ internal fun UpdateProfileScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             GlimButton(
-                text = if (state.isLoading) {
+                text =
+                if (state.isLoading) {
                     stringResource(R.string.updating)
                 } else {
                     stringResource(R.string.update)
@@ -172,18 +176,19 @@ internal fun UpdateProfileScreen(
 @Composable
 fun UpdateProfileScreenPreview() {
     UpdateProfileScreen(
-        state = UpdateInfoUiState(
+        state =
+        UpdateInfoUiState(
             profileImageUri = null,
             name = "홍길동",
             nameError = null,
             email = "hong@example.com",
-            isLoading = false
+            isLoading = false,
         ),
         padding = PaddingValues(0.dp),
         onNameChanged = {},
         onProfileImageClicked = {},
         onSaveClicked = {},
-        onBackClick = {}
+        onBackClick = {},
     )
 }
 
@@ -191,18 +196,19 @@ fun UpdateProfileScreenPreview() {
 @Composable
 fun UpdateProfileScreenErrorPreview() {
     UpdateProfileScreen(
-        state = UpdateInfoUiState(
+        state =
+        UpdateInfoUiState(
             profileImageUri = null,
             name = "",
             nameError = R.string.error_name_empty,
             email = "hong@example.com",
-            isLoading = false
+            isLoading = false,
         ),
         padding = PaddingValues(0.dp),
         onNameChanged = {},
         onProfileImageClicked = {},
         onSaveClicked = {},
-        onBackClick = {}
+        onBackClick = {},
     )
 }
 
@@ -211,7 +217,7 @@ fun UpdateProfileScreenErrorPreview() {
 fun ProfileImageSectionPreview() {
     ProfileImageSection(
         imageUri = null,
-        onImageClicked = {}
+        onImageClicked = {},
     )
 }
 

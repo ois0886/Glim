@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LogoutResponse(
     @SerializedName("message")
-    val message: String
+    val message: String,
 )

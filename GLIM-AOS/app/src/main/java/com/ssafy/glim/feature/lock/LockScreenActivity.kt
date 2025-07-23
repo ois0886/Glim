@@ -72,25 +72,24 @@ class LockScreenActivity : ComponentActivity() {
                 val viewModel: LockViewModel = hiltViewModel()
                 val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
-
                 viewModel.collectSideEffect { effect ->
                     when (effect) {
-                        is LockSideEffect.Unlock         -> finish()
-                        is LockSideEffect.ShowToast  ->  Toast.makeText(this, this.getString(effect.messageRes), Toast.LENGTH_SHORT).show()
-                        is LockSideEffect.NavigateBook   -> Unit/* 북 디테일로 이동 */
-                        is LockSideEffect.NavigateQuotes -> Unit/* 글귀 화면으로 이동 */
+                        is LockSideEffect.Unlock -> finish()
+                        is LockSideEffect.ShowToast -> Toast.makeText(this, this.getString(effect.messageRes), Toast.LENGTH_SHORT).show()
+                        is LockSideEffect.NavigateBook -> Unit // 북 디테일로 이동
+                        is LockSideEffect.NavigateQuotes -> Unit // 글귀 화면으로 이동
                     }
                 }
 
                 LockScreenContent(
-                    state        = state,
-                    tick         = viewModel::tick,
-                    nextQuote    = viewModel::nextQuote,
-                    unlockMain   = viewModel::unlockMain,
-                    saveGlim     = viewModel::saveGlim,
+                    state = state,
+                    tick = viewModel::tick,
+                    nextQuote = viewModel::nextQuote,
+                    unlockMain = viewModel::unlockMain,
+                    saveGlim = viewModel::saveGlim,
                     favoriteGlim = viewModel::favoriteGlim,
-                    viewBook     = viewModel::viewBook,
-                    viewQuote    = viewModel::viewQuote,
+                    viewBook = viewModel::viewBook,
+                    viewQuote = viewModel::viewQuote,
                 )
             }
         }
@@ -100,13 +99,13 @@ class LockScreenActivity : ComponentActivity() {
 @Composable
 fun LockScreenContent(
     state: LockUiState,
-    tick:        () -> Unit,
-    nextQuote:   () -> Unit,
-    unlockMain:  () -> Unit,
-    saveGlim:    () -> Unit,
-    favoriteGlim:() -> Unit,
-    viewBook:    () -> Unit,
-    viewQuote:   () -> Unit,
+    tick: () -> Unit,
+    nextQuote: () -> Unit,
+    unlockMain: () -> Unit,
+    saveGlim: () -> Unit,
+    favoriteGlim: () -> Unit,
+    viewBook: () -> Unit,
+    viewQuote: () -> Unit,
 ) {
     LaunchedEffect(Unit) { tick() }
 
@@ -115,7 +114,8 @@ fun LockScreenContent(
     val dayFmt = DateTimeFormatter.ofPattern("EEE")
 
     Box(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .background(Color.Black)
             .navigationBarsPadding()
@@ -126,9 +126,9 @@ fun LockScreenContent(
                     onDragEnd = {
                         if (totalDragY < -100f) nextQuote()
                         totalDragY = 0f
-                    }
+                    },
                 )
-            }
+            },
     ) {
         val currentQuote = state.quotes.getOrNull(state.currentIndex)
         if (currentQuote != null) {
@@ -138,78 +138,80 @@ fun LockScreenContent(
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
                 error = painterResource(R.drawable.example_glim_2),
-                placeholder = painterResource(R.drawable.example_glim_2)
+                placeholder = painterResource(R.drawable.example_glim_2),
             )
         } else {
             Image(
                 painter = painterResource(R.drawable.example_glim_2),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
             )
         }
 
-
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .systemBarsPadding()
                 .padding(top = 4.dp, start = 16.dp, end = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             IconButton(onClick = saveGlim) {
                 Icon(
                     painter = painterResource(R.drawable.ic_download),
                     contentDescription = stringResource(R.string.save),
-                    tint = MainColor.copy(alpha = 0.8f)
+                    tint = MainColor.copy(alpha = 0.8f),
                 )
             }
             IconButton(onClick = favoriteGlim) {
                 Icon(
                     painter = painterResource(R.drawable.ic_favorite),
                     contentDescription = stringResource(R.string.like),
-                    tint = LightRed
+                    tint = LightRed,
                 )
             }
         }
 
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(top = 72.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = state.time.format(timeFmt),
                 style = MaterialTheme.typography.displayLarge,
-                color = Color.White
+                color = Color.White,
             )
             Spacer(Modifier.height(4.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Text(
                     text = state.time.format(dateFmt),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
+                    color = Color.White,
                 )
                 Spacer(Modifier.width(4.dp))
                 val fmtSec = state.time.format(dayFmt)
                 Text(
                     text = stringResource(R.string.time_format_date, fmtSec),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
         }
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-            ,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             SwipeButton(
                 isIcon = true,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .weight(1F)
                     .fillMaxWidth(),
                 text = stringResource(R.string.read_book),
@@ -217,24 +219,26 @@ fun LockScreenContent(
                 onSwipe = viewBook,
                 backgroundColor = LightBlue,
                 swipeDirection = SwipeDirection.RightToLeft,
-                paintRes = R.drawable.ic_library
+                paintRes = R.drawable.ic_library,
             )
-            Spacer(modifier =Modifier.weight(3F))
+            Spacer(modifier = Modifier.weight(3F))
             SwipeButton(
                 isIcon = true,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .weight(1F)
                     .fillMaxWidth(),
                 text = stringResource(R.string.read_glim),
                 isComplete = state.isComplete,
                 onSwipe = viewQuote,
                 backgroundColor = LightBlue,
-                paintRes = R.drawable.ic_reels
+                paintRes = R.drawable.ic_reels,
             )
         }
 
         SwipeButton(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .padding(horizontal = 36.dp, vertical = 48.dp),

@@ -1,7 +1,6 @@
 package com.ssafy.glim.feature.post
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.GlimInput
@@ -14,10 +13,12 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class PostViewModel @Inject constructor(
+class PostViewModel
+@Inject
+constructor(
     private val uploadGlimUseCase: UploadGlimUseCase,
     private val imageProcessor: ImageProcessor,
-    private val navigator: Navigator
+    private val navigator: Navigator,
 ) : ViewModel(), ContainerHost<PostState, PostSideEffect> {
     override val container: Container<PostState, PostSideEffect> = container(PostState())
 
@@ -91,10 +92,10 @@ class PostViewModel @Inject constructor(
         reduce {
             state.copy(
                 textPosition =
-                    currentPosition.copy(
-                        offsetX = currentPosition.offsetX + deltaX,
-                        offsetY = currentPosition.offsetY + deltaY,
-                    ),
+                currentPosition.copy(
+                    offsetX = currentPosition.offsetX + deltaX,
+                    offsetY = currentPosition.offsetY + deltaY,
+                ),
             )
         }
     }
@@ -144,7 +145,7 @@ class PostViewModel @Inject constructor(
 
     fun selectedBook(book: Book) =
         intent {
-            reduce { state.copy(book = book, showBottomSheet = false)}
+            reduce { state.copy(book = book, showBottomSheet = false) }
         }
 
     fun completeClick() =

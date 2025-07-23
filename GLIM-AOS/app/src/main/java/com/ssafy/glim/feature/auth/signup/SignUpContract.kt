@@ -3,7 +3,7 @@ package com.ssafy.glim.feature.auth.signup
 import androidx.annotation.StringRes
 
 data class SignUpUiState(
-    val currentStep: SignUpStep = SignUpStep.Auth,
+    val currentStep: SignUpStep = SignUpStep.Email,
     val email: String = "",
     val code: String = "",
     val password: String = "",
@@ -20,45 +20,51 @@ data class SignUpUiState(
     val isLoading: Boolean = false,
 ) {
     val isCurrentStepValid: Boolean
-        get() = when (currentStep) {
-            SignUpStep.Auth -> email.isNotBlank() &&
-                    emailError == null &&
+        get() =
+            when (currentStep) {
+                SignUpStep.Email -> email.isNotBlank() && emailError == null
+                SignUpStep.Code -> code.isNotBlank() && codeError == null
+                SignUpStep.Password ->
                     password.isNotBlank() &&
-                    confirmPassword.isNotBlank() &&
-                    passwordError == null &&
-                    confirmPasswordError == null
+                        confirmPassword.isNotBlank() &&
+                        passwordError == null &&
+                        confirmPasswordError == null
 
-            SignUpStep.Profile -> name.isNotBlank() &&
-                    birthDate.isNotBlank() &&
-                    gender != null &&
-                    nameError == null &&
-                    birthDateError == null
-
-            SignUpStep.Code -> code.isNotBlank() &&
-                    codeError == null
-        }
+                SignUpStep.Profile ->
+                    name.isNotBlank() &&
+                        birthDate.isNotBlank() &&
+                        gender != null &&
+                        nameError == null &&
+                        birthDateError == null
+            }
 }
 
 sealed interface SignUpSideEffect {
-    data class ShowToast(@StringRes val message: Int) : SignUpSideEffect
+    data class ShowToast(
+        @StringRes val message: Int,
+    ) : SignUpSideEffect
 }
 
 enum class SignUpStep(val progress: Float) {
-    Auth(0.33f),
-    Code(0.66f),
-    Profile(1f);
+    Email(0.25f),
+    Code(0.5f),
+    Password(0.75f),
+    Profile(1f),
+    ;
 
     fun next(): SignUpStep? =
         when (this) {
-            Auth -> Profile
-            Profile -> Code
-            Code -> null
+            Email -> Code
+            Code -> Password
+            Password -> Profile
+            Profile -> null
         }
 
     fun prev(): SignUpStep? =
         when (this) {
-            Code -> Profile
-            Profile -> Auth
-            Auth -> null
+            Profile -> Password
+            Password -> Code
+            Code -> Email
+            Email -> null
         }
 }

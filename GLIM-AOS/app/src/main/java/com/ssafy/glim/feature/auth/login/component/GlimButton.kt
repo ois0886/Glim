@@ -17,8 +17,8 @@ fun GlimButton(
         onClick = onClick,
         enabled = enabled,
         modifier =
-            modifier
-                .fillMaxWidth(),
+        modifier
+            .fillMaxWidth(),
     ) {
         Text(text = text)
     }

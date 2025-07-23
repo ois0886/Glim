@@ -18,7 +18,7 @@ class ReelsViewModel
 constructor(
     private val getGlimsUseCase: GetGlimsUseCase,
 //    private val toggleLikeUseCase: ToggleLikeUseCase
-    private val navigator: Navigator
+    private val navigator: Navigator,
 ) : ViewModel(), ContainerHost<ReelsState, ReelsSideEffect> {
     override val container: Container<ReelsState, ReelsSideEffect> = container(ReelsState())
 
@@ -104,7 +104,7 @@ constructor(
                     reduce {
                         state.copy(
                             glims = glims,
-                            currentGlimId = glims.firstOrNull()?.id ?: -1, // 첫 번째 글림의 ID 설정
+                            currentGlimId = glims.firstOrNull()?.id ?: -1,
                             isLoading = false,
                             hasMoreData = glims.size >= 10,
                         )

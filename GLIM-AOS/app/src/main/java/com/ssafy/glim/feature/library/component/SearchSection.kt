@@ -34,7 +34,9 @@ fun PopularSearchSection(
     onClick: (String) -> Unit,
 ) {
     SearchWordListSection(
-        stringResource(R.string.popular_search_query), queries, onClick
+        stringResource(R.string.popular_search_query),
+        queries,
+        onClick,
     )
 }
 
@@ -42,41 +44,42 @@ fun PopularSearchSection(
 fun RecentSearchSection(
     queries: List<SearchItem>,
     onClick: (String) -> Unit,
-    onDeleteClick: (SearchItem) -> Unit
+    onDeleteClick: (SearchItem) -> Unit,
 ) {
     LazyRow(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(queries) { item ->
-            Row (
-                modifier = Modifier
+            Row(
+                modifier =
+                Modifier
                     .background(
                         Color.LightGray.copy(alpha = 0.3f),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(16.dp),
                     )
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
-            ){
+            ) {
                 Text(
                     text = item.text,
                     style = MaterialTheme.typography.labelLarge,
                     modifier =
-                        Modifier
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                            .clickable { onClick(item.text) },
+                    Modifier
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .clickable { onClick(item.text) },
                     color = Color.Black,
                 )
                 Icon(
                     painter = painterResource(R.drawable.ic_cancel),
                     contentDescription = null,
-                    modifier = Modifier.clickable { onDeleteClick(item) }
+                    modifier = Modifier.clickable { onDeleteClick(item) },
                 )
             }
         }
-
     }
 }
 
@@ -85,8 +88,7 @@ private fun SearchWordListSection(
     title: String,
     searchWordList: List<SearchItem> = emptyList(),
     onClick: (String) -> Unit,
-
-    ) {
+) {
     Column(
         modifier = Modifier.padding(horizontal = 20.dp),
     ) {
@@ -122,25 +124,25 @@ fun SearchItemRow(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onItemClick() }
-                .padding(vertical = 4.dp),
+        Modifier
+            .fillMaxWidth()
+            .clickable { onItemClick() }
+            .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-            Text(
-                text = item.rankStatus.symbol,
-                style = MaterialTheme.typography.labelSmall,
-                color = item.rankStatus.color,
-            )
+        Text(
+            text = item.rankStatus.symbol,
+            style = MaterialTheme.typography.labelSmall,
+            color = item.rankStatus.color,
+        )
 
-            Text(
-                text = item.rank.toString(),
-                style = MaterialTheme.typography.labelLarge,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold
-            )
+        Text(
+            text = item.rank.toString(),
+            style = MaterialTheme.typography.labelLarge,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+        )
 
         Text(
             text = item.text,
@@ -154,12 +156,12 @@ fun SearchItemRow(
             style = MaterialTheme.typography.labelLarge,
             color = Color.Gray,
             modifier =
-                Modifier
-                    .background(
-                        color = Color.LightGray.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(12.dp),
-                    )
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
+            Modifier
+                .background(
+                    color = Color.LightGray.copy(alpha = 0.3f),
+                    shape = RoundedCornerShape(12.dp),
+                )
+                .padding(horizontal = 8.dp, vertical = 4.dp),
         )
     }
     Spacer(Modifier.height(8.dp))

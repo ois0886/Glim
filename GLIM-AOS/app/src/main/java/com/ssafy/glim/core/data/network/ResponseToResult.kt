@@ -5,7 +5,7 @@ import retrofit2.Response
 fun <T, R> Response<T>.toResult(
     tag: String,
     successMessage: String = "Request successful",
-    transform: (T) -> R
+    transform: (T) -> R,
 ): Result<R> {
     return handleResponse(tag, successMessage, transform)
 }

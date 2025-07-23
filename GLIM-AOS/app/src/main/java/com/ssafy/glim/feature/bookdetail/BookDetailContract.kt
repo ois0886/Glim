@@ -9,7 +9,7 @@ data class BookDetailState(
     val bookId: Long = 0,
     val bookDetail: BookDetail = BookDetail(),
     val isDescriptionExpanded: Boolean = false,
-    val isAuthorDescriptionExpanded: Boolean = false
+    val isAuthorDescriptionExpanded: Boolean = false,
 )
 
 data class BookDetail(
@@ -29,13 +29,18 @@ data class BookDetail(
     val marketUrl: String = "https://www.naver.com",
 ) {
     val priceText
-        get() = if (price > 0) "${
-            price.toString().toCommaSeparatedPrice()
-        }원" else "가격 정보 없음"
-
+        get() =
+            if (price > 0) {
+                "${
+                    price.toString().toCommaSeparatedPrice()
+                }원"
+            } else {
+                "가격 정보 없음"
+            }
 }
 
 sealed class BookDetailSideEffect {
     data class ShowToast(val message: String) : BookDetailSideEffect()
+
     data class OpenUrl(val url: String) : BookDetailSideEffect()
 }

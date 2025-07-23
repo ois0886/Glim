@@ -39,5 +39,4 @@ fun TextSizeControls(
             modifier = Modifier.size(16.dp),
         )
     }
-
 }

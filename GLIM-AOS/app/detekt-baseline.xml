@@ -1,0 +1,184 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>ArgumentListWrapping:LockScreenActivity.kt$LockScreenActivity$(effect.messageRes)</ID>
+    <ID>ArgumentListWrapping:LockScreenActivity.kt$LockScreenActivity$(this, this.getString(effect.messageRes), Toast.LENGTH_SHORT)</ID>
+    <ID>ArgumentListWrapping:SwipeSlider.kt$(0, 40, 40, 0)</ID>
+    <ID>ArgumentListWrapping:SwipeSlider.kt$(40, 0, 0, 40)</ID>
+    <ID>ArgumentListWrapping:SwipeSlider.kt$(if (swipeDirection == SwipeDirection.RightToLeft) RoundedCornerShape(0, 40, 40, 0) else RoundedCornerShape(40, 0, 0, 40))</ID>
+    <ID>ComposableParamOrder:BookDetailScreen.kt$BookDetailContent</ID>
+    <ID>ComposableParamOrder:EmailAuthInputContent.kt$EmailAuthInputContent</ID>
+    <ID>ComposableParamOrder:EmailInputTextField.kt$EmailInputTextField</ID>
+    <ID>ComposableParamOrder:EmailVerificationCodeInputContent.kt$EmailVerificationCodeInputContent</ID>
+    <ID>ComposableParamOrder:GlimButton.kt$GlimButton</ID>
+    <ID>ComposableParamOrder:LibraryScreen.kt$LibraryRoute</ID>
+    <ID>ComposableParamOrder:PasswordConfirmInputContent.kt$PasswordConfirmInputContent</ID>
+    <ID>ComposableParamOrder:PasswordInputTextField.kt$PasswordInputTextField</ID>
+    <ID>ComposableParamOrder:ReelsScreen.kt$GlimBookContent</ID>
+    <ID>ComposableParamOrder:SearchResult.kt$NoSearchResult</ID>
+    <ID>ComposableParamOrder:SwipeSlider.kt$SwipeButton</ID>
+    <ID>ComposableParamOrder:SwipeSlider.kt$SwipeIndicator</ID>
+    <ID>ComposableParamOrder:UserProfileInputContent.kt$UserProfileInputContent</ID>
+    <ID>CyclomaticComplexMethod:ResultExtension.kt$suspend inline fun &lt;T&gt; safeApiCall(crossinline apiCall: suspend () -&gt; T): Result&lt;T&gt;</ID>
+    <ID>CyclomaticComplexMethod:SignUpScreen.kt$@Composable private fun SignUpScreen( state: SignUpUiState, padding: PaddingValues, onEmailChanged: (String) -&gt; Unit, onCodeChanged: (String) -&gt; Unit, onPasswordChanged: (String) -&gt; Unit, onConfirmPasswordChanged: (String) -&gt; Unit, onNameChanged: (String) -&gt; Unit, onBirthYearChanged: (String) -&gt; Unit, onGenderSelected: (String) -&gt; Unit, onNextStep: () -&gt; Unit, onBackStep: () -&gt; Unit, )</ID>
+    <ID>CyclomaticComplexMethod:SignUpViewModel.kt$SignUpViewModel$fun onNextStep()</ID>
+    <ID>ForbiddenComment:AuthRepositoryImpl.kt$AuthRepositoryImpl$// TODO: 실제로는 dataSource.login(request) 호출</ID>
+    <ID>ForbiddenComment:AuthRepositoryImpl.kt$AuthRepositoryImpl$// TODO: 실제로는 dataSource.signUp(request) 호출</ID>
+    <ID>ForbiddenComment:AuthRepositoryImpl.kt$AuthRepositoryImpl$// TODO: 추가하기 private val dataSource: AuthRemoteDataSource,</ID>
+    <ID>ForbiddenComment:AuthRepositoryImpl.kt$AuthRepositoryImpl$// TODO: 토큰을 DataStore에 저장</ID>
+    <ID>ForbiddenComment:GlimListScreen.kt$// TODO: Toast(effect.message)</ID>
+    <ID>ForbiddenComment:LoginViewModel.kt$LoginViewModel$// TODO: 비밀번호 찾기 화면으로 이동</ID>
+    <ID>ForbiddenComment:LoginViewModel.kt$LoginViewModel$// TODO: 소셜 로그인 구현</ID>
+    <ID>ForbiddenComment:NetworkModule.kt$NetworkModule$// TODO: 이 부분 추후에 리팩토링 해야함</ID>
+    <ID>ForbiddenComment:ProfileViewModel.kt$ProfileViewModel$// TODO: 로그아웃 처리</ID>
+    <ID>ForbiddenComment:ProfileViewModel.kt$ProfileViewModel$// TODO: 서버에 좋아요 상태 업데이트</ID>
+    <ID>ForbiddenComment:ProfileViewModel.kt$ProfileViewModel$// TODO: 실제 API 호출로 교체</ID>
+    <ID>ForbiddenComment:ProfileViewModel.kt$ProfileViewModel$// TODO: 알림 설정 화면으로 이동</ID>
+    <ID>ForbiddenComment:ProfileViewModel.kt$ProfileViewModel$// TODO: 잠금 설정 화면으로 이동</ID>
+    <ID>ForbiddenComment:ProfileViewModel.kt$ProfileViewModel$// TODO: 회원탈퇴 처리</ID>
+    <ID>ForbiddenComment:ReelsViewModel.kt$ReelsViewModel$// TODO: API 호출</ID>
+    <ID>ForbiddenComment:SignUpViewModel.kt$SignUpViewModel$// TODO: 실제 인증 코드 검증 로직</ID>
+    <ID>FunctionParameterNaming:LibraryViewModel.kt$LibraryViewModel$Book: Book</ID>
+    <ID>FunctionParameterNaming:LibraryViewModel.kt$LibraryViewModel$Quote: Quote</ID>
+    <ID>LongMethod:BookDetailContent.kt$@Composable fun BookInfoSection(state: BookDetail)</ID>
+    <ID>LongMethod:BookDetailScreen.kt$@Composable fun BookDetailContent( modifier: Modifier = Modifier, book: BookDetail, isDescriptionExpanded: Boolean = false, isAuthorDescriptionExpanded: Boolean = false, onClickQuote: (Long) -&gt; Unit, openUrl: () -&gt; Unit, toggleBookDescriptionExpanded: () -&gt; Unit, toggleAuthorDescriptionExpanded: () -&gt; Unit, popBackStack: () -&gt; Unit, )</ID>
+    <ID>LongMethod:LibraryScreen.kt$@Composable fun LibraryRoute( modifier: Modifier = Modifier, padding: PaddingValues, popBackStack: () -&gt; Unit, onBookSelected: ((Book) -&gt; Unit)? = null, viewModel: LibraryViewModel = hiltViewModel(), )</ID>
+    <ID>LongMethod:LockScreenActivity.kt$@Composable fun LockScreenContent( state: LockUiState, tick: () -&gt; Unit, nextQuote: () -&gt; Unit, unlockMain: () -&gt; Unit, saveGlim: () -&gt; Unit, favoriteGlim: () -&gt; Unit, viewBook: () -&gt; Unit, viewQuote: () -&gt; Unit, )</ID>
+    <ID>LongMethod:LoginScreen.kt$@Composable internal fun LoginScreen( state: LoginUiState, padding: PaddingValues, onEmailChanged: (String) -&gt; Unit, onPasswordChanged: (String) -&gt; Unit, onLoginClicked: () -&gt; Unit, navigateToSignUp: () -&gt; Unit, navigateToForgotPassword: () -&gt; Unit, navigateToSocialLogin: (SocialProvider) -&gt; Unit, navigateToSignUpOnGuest: () -&gt; Unit, )</ID>
+    <ID>LongMethod:PostContent.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun PostContent( state: PostState, onTextChanged: (String) -&gt; Unit, onTextFocusChanged: (Boolean) -&gt; Unit, onBackgroundClick: () -&gt; Unit, onDragStart: () -&gt; Unit, onDragEnd: () -&gt; Unit, onDrag: (Float, Float) -&gt; Unit, onIncreaseFontSize: () -&gt; Unit, onDecreaseFontSize: () -&gt; Unit, onToggleBold: () -&gt; Unit, onToggleItalic: () -&gt; Unit, onTextExtractionClick: () -&gt; Unit, onBackgroundImageClick: () -&gt; Unit, onCompleteClick: () -&gt; Unit, onConfirmExit: () -&gt; Unit, onCancelExit: () -&gt; Unit, updateBottomSheetState: (Boolean) -&gt; Unit, selectedBook: (Book) -&gt; Unit, modifier: Modifier = Modifier, )</ID>
+    <ID>LongMethod:SignUpViewModel.kt$SignUpViewModel$fun onNextStep()</ID>
+    <ID>LongMethod:SwipeSlider.kt$@OptIn(ExperimentalWearMaterialApi::class) @Composable fun SwipeButton( isIcon: Boolean = false, modifier: Modifier = Modifier, text: String, isComplete: Boolean, swipeDirection: SwipeDirection = SwipeDirection.LeftToRight, doneImageVector: ImageVector = Icons.Rounded.Done, backgroundColor: Color = Color.Transparent, paintRes: Int = R.drawable.ic_favorite, onSwipe: () -&gt; Unit, )</ID>
+    <ID>LongMethod:UserProfileInputContent.kt$@Composable fun UserProfileInputContent( name: String, onNameChange: (String) -&gt; Unit, nameError: String? = null, birthYear: String, onBirthYearChange: (String) -&gt; Unit, birthYearError: String? = null, selectedGender: String?, onGenderSelect: (String) -&gt; Unit, )</ID>
+    <ID>LongParameterList:LibraryViewModel.kt$LibraryViewModel$( private val searchBooksUseCase: SearchBooksUseCase, private val searchQuotesUseCase: SearchQuotesUseCase, private val getPopularSearchQueriesUseCase: GetPopularSearchQueriesUseCase, private val getRecentSearchQueriesUseCase: GetRecentSearchQueriesUseCase, private val saveRecentSearchQueryUseCase: SaveRecentSearchQueryUseCase, private val deleteRecentSearchQueryUseCase: DeleteRecentSearchQueryUseCase, private val navigator: Navigator, )</ID>
+    <ID>MatchingDeclarationName:SearchResult.kt$SearchTab</ID>
+    <ID>MatchingDeclarationName:SocialButton.kt$SocialProvider</ID>
+    <ID>MatchingDeclarationName:SwipeSlider.kt$SwipeDirection</ID>
+    <ID>MaxLineLength:FakeBookRepositoryImpl.kt$FakeBookRepositoryImpl$"조남주는 1982년 서울에서 태어나, 고려대학교에서 국어국문학을 전공했다. 그녀의 첫 소설 '82년생 김지영'은 한국 사회에서 여성으로 살아가는 것의 현실을 담담하게 그려내며 큰 반향을 일으켰다. 이후에도 다양한 작품을 통해 사회적 이슈를 다루고 있다."</ID>
+    <ID>MaxLineLength:GlimShortCardContent.kt$imageVector = if (glimCard.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder</ID>
+    <ID>MaxLineLength:LockScreenActivity.kt$LockScreenActivity$is LockSideEffect.ShowToast -&gt; Toast.makeText(this, this.getString(effect.messageRes), Toast.LENGTH_SHORT).show()</ID>
+    <ID>MaxLineLength:SearchResult.kt$text = "'$searchQuery' 검색 결과 ${if (selectedTab == SearchTab.BOOKS) "${bookList.size}건" else "${quoteList.size}건"}"</ID>
+    <ID>MaxLineLength:SwipeSlider.kt$.</ID>
+    <ID>MaxLineLength:SwipeSlider.kt$val indicatorAlignment = if (swipeDirection == SwipeDirection.LeftToRight) Alignment.CenterStart else Alignment.CenterEnd</ID>
+    <ID>MaximumLineLength:FakeBookRepositoryImpl.kt$FakeBookRepositoryImpl$ </ID>
+    <ID>MaximumLineLength:GlimShortCardContent.kt$ </ID>
+    <ID>MaximumLineLength:LockScreenActivity.kt$LockScreenActivity$ </ID>
+    <ID>MaximumLineLength:SearchResult.kt$ </ID>
+    <ID>MaximumLineLength:SwipeSlider.kt$ </ID>
+    <ID>ModifierMissing:BookDetailContent.kt$BookDetailTopBar</ID>
+    <ID>ModifierMissing:BookDetailContent.kt$BookInfoSection</ID>
+    <ID>ModifierMissing:BookDetailContent.kt$QuoteCard</ID>
+    <ID>ModifierMissing:BookDetailScreen.kt$BookDetailScreen</ID>
+    <ID>ModifierMissing:EmailSection.kt$EmailSection</ID>
+    <ID>ModifierMissing:GenderSelectableButton.kt$GenderSelectableButton</ID>
+    <ID>ModifierMissing:GlimTopBar.kt$GlimTopBar</ID>
+    <ID>ModifierMissing:HomeScreen.kt$GlimHomeTitle</ID>
+    <ID>ModifierMissing:HomeScreen.kt$SectionTitle</ID>
+    <ID>ModifierMissing:LockScreenActivity.kt$LockScreenContent</ID>
+    <ID>ModifierMissing:ProfileImageSection.kt$ProfileImageSection</ID>
+    <ID>ModifierMissing:ProgressIndicatorBar.kt$ProgressIndicatorBar</ID>
+    <ID>ModifierMissing:SearchSection.kt$RecentSearchSection</ID>
+    <ID>ModifierMissing:SearchSection.kt$SearchItemRow</ID>
+    <ID>ModifierMissing:SocialButton.kt$SocialButton</ID>
+    <ID>ModifierMissing:TextSizeControls.kt$TextSizeControls</ID>
+    <ID>ModifierMissing:TextStyleControls.kt$TextStyleControls</ID>
+    <ID>ModifierMissing:UserProfileInputContent.kt$UserProfileInputContent</ID>
+    <ID>ModifierNotUsedAtRoot:EmailVerificationCodeInputContent.kt$modifier = modifier .fillMaxWidth()</ID>
+    <ID>ModifierReused:EmailVerificationCodeInputContent.kt$Column(modifier = modifier) { Text( text = stringResource(R.string.auth_greeting), style = MaterialTheme.typography.bodySmall.copy( color = Color.Gray, fontSize = 14.sp, ), ) Spacer(modifier = Modifier.height(4.dp)) Text( text = stringResource(R.string.verification_code_instruction), style = MaterialTheme.typography.bodyMedium.copy( fontSize = 16.sp, fontWeight = FontWeight.Medium, ), ) Spacer(modifier = Modifier.height(12.dp)) TextField( value = value, onValueChange = { input -&gt; if (input.all { it.isDigit() }) { onValueChange(input) } }, modifier = modifier .fillMaxWidth(), isError = error != null, keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), label = { Text( text = error ?: stringResource(id = R.string.verification_code_placeholder), color = if (error != null) { MaterialTheme.colorScheme.error } else { Color.Gray }, fontSize = 14.sp, ) }, singleLine = true, ) }</ID>
+    <ID>ModifierReused:EmailVerificationCodeInputContent.kt$TextField( value = value, onValueChange = { input -&gt; if (input.all { it.isDigit() }) { onValueChange(input) } }, modifier = modifier .fillMaxWidth(), isError = error != null, keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), label = { Text( text = error ?: stringResource(id = R.string.verification_code_placeholder), color = if (error != null) { MaterialTheme.colorScheme.error } else { Color.Gray }, fontSize = 14.sp, ) }, singleLine = true, )</ID>
+    <ID>ModifierWithoutDefault:BookInfoSection.kt$modifier</ID>
+    <ID>MultipleEmitters:SearchSection.kt$SearchItemRow</ID>
+    <ID>MultipleEmitters:TextSizeControls.kt$TextSizeControls</ID>
+    <ID>MultipleEmitters:TextStyleControls.kt$TextStyleControls</ID>
+    <ID>NoWildcardImports:SwipeSlider.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>PreviewPublic:BookDetailScreen.kt$BookDetailScreenPreview</ID>
+    <ID>PreviewPublic:EmailAuthInputContent.kt$PreviewEmailAuthInputContent_Empty</ID>
+    <ID>PreviewPublic:EmailAuthInputContent.kt$PreviewEmailAuthInputContent_WithError</ID>
+    <ID>PreviewPublic:EmailVerificationCodeInputContent.kt$PreviewEmailVerificationCodeInputContent_Empty</ID>
+    <ID>PreviewPublic:EmailVerificationCodeInputContent.kt$PreviewEmailVerificationCodeInputContent_WithError</ID>
+    <ID>PreviewPublic:LoginScreen.kt$PreviewLoginScreen_Empty</ID>
+    <ID>PreviewPublic:LoginScreen.kt$PreviewLoginScreen_Errors</ID>
+    <ID>PreviewPublic:LoginScreen.kt$PreviewLoginScreen_Loading</ID>
+    <ID>PreviewPublic:LoginScreen.kt$PreviewLoginScreen_Valid</ID>
+    <ID>PreviewPublic:PasswordConfirmInputContent.kt$PreviewPasswordConfirmInputContent_Default</ID>
+    <ID>PreviewPublic:PasswordConfirmInputContent.kt$PreviewPasswordConfirmInputContent_Errors</ID>
+    <ID>PreviewPublic:PasswordInputTextField.kt$PasswordInputTextFieldPreview</ID>
+    <ID>PreviewPublic:UpdateProfileScreen.kt$EmailSectionPreview</ID>
+    <ID>PreviewPublic:UpdateProfileScreen.kt$ProfileImageSectionPreview</ID>
+    <ID>PreviewPublic:UpdateProfileScreen.kt$UpdateProfileScreenErrorPreview</ID>
+    <ID>PreviewPublic:UpdateProfileScreen.kt$UpdateProfileScreenPreview</ID>
+    <ID>PreviewPublic:UserProfileInputContent.kt$UserProfileInputContentPreview</ID>
+    <ID>PreviewPublic:UserProfileInputContent.kt$UserProfileInputContentPreviewWithErrors</ID>
+    <ID>PrintStackTrace:ScreenCaptureManager.kt$ScreenCaptureManager$e</ID>
+    <ID>ReturnCount:StringExtensions.kt$fun String.validateBirthDateDetailed(): BirthDateValidation</ID>
+    <ID>SwallowedException:GlimListViewModel.kt$GlimListViewModel$e: Exception</ID>
+    <ID>SwallowedException:ImageProcessor.kt$ImageProcessor$e: Exception</ID>
+    <ID>SwallowedException:LibraryViewModel.kt$LibraryViewModel$e: Exception</ID>
+    <ID>SwallowedException:ProfileViewModel.kt$ProfileViewModel$e: Exception</ID>
+    <ID>SwallowedException:ReelsViewModel.kt$ReelsViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:GlimListViewModel.kt$GlimListViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:ImageProcessor.kt$ImageProcessor$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:LibraryViewModel.kt$LibraryViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:NetworkResponseHandler.kt$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:PostViewModel.kt$PostViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:ProfileViewModel.kt$ProfileViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:ReelsViewModel.kt$ReelsViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:ScreenCaptureManager.kt$ScreenCaptureManager$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:ScreenCaptureManager.kt$e: Exception</ID>
+    <ID>TooGenericExceptionThrown:AuthRepositoryImpl.kt$AuthRepositoryImpl$throw Exception("닉네임을 입력해주세요.")</ID>
+    <ID>TooGenericExceptionThrown:AuthRepositoryImpl.kt$AuthRepositoryImpl$throw Exception("비밀번호가 올바르지 않습니다.")</ID>
+    <ID>TooGenericExceptionThrown:AuthRepositoryImpl.kt$AuthRepositoryImpl$throw Exception("비밀번호는 6자 이상이어야 합니다.")</ID>
+    <ID>TooGenericExceptionThrown:AuthRepositoryImpl.kt$AuthRepositoryImpl$throw Exception("올바르지 않은 생년월일 형식입니다.")</ID>
+    <ID>TooGenericExceptionThrown:AuthRepositoryImpl.kt$AuthRepositoryImpl$throw Exception("올바르지 않은 인증 코드입니다.")</ID>
+    <ID>TooGenericExceptionThrown:AuthRepositoryImpl.kt$AuthRepositoryImpl$throw Exception("올바른 이메일을 입력해주세요.")</ID>
+    <ID>TooGenericExceptionThrown:AuthRepositoryImpl.kt$AuthRepositoryImpl$throw Exception("이미 가입된 이메일입니다.")</ID>
+    <ID>TooGenericExceptionThrown:AuthRepositoryImpl.kt$AuthRepositoryImpl$throw Exception("존재하지 않는 계정입니다.")</ID>
+    <ID>TooGenericExceptionThrown:NetworkResponseHandler.kt$throw Exception("Request failed with code: ${code()} message : ${errorBody()?.string()}")</ID>
+    <ID>TooGenericExceptionThrown:NetworkResponseHandler.kt$throw Exception("Response body is null")</ID>
+    <ID>TooManyFunctions:LibraryViewModel.kt$LibraryViewModel : ViewModelContainerHost</ID>
+    <ID>TooManyFunctions:PostViewModel.kt$PostViewModel : ViewModelContainerHost</ID>
+    <ID>TooManyFunctions:SignUpViewModel.kt$SignUpViewModel : ViewModelContainerHost</ID>
+    <ID>TooManyFunctions:StringExtensions.kt$com.ssafy.glim.core.common.extensions.StringExtensions.kt</ID>
+    <ID>UnstableCollections:HomeScreen.kt$List&lt;BookItem&gt;</ID>
+    <ID>UnstableCollections:HomeScreen.kt$List&lt;GlimInfo&gt;</ID>
+    <ID>UnstableCollections:SearchResult.kt$List&lt;Book&gt;</ID>
+    <ID>UnstableCollections:SearchResult.kt$List&lt;Quote&gt;</ID>
+    <ID>UnstableCollections:SearchSection.kt$List&lt;SearchItem&gt;</ID>
+    <ID>UnstableCollections:UploadGlimCardListSection.kt$List&lt;GlimShortCard&gt;</ID>
+    <ID>UnusedParameter:BookDetailViewModel.kt$BookDetailViewModel$quoteId: Long</ID>
+    <ID>UnusedParameter:GlimListScreen.kt$onTabChange: (GlimListType) -&gt; Unit</ID>
+    <ID>UnusedParameter:GlimListScreen.kt$padding: PaddingValues</ID>
+    <ID>UnusedParameter:HomeNavigation.kt$popBackStack: () -&gt; Unit</ID>
+    <ID>UnusedParameter:HomeViewModel.kt$HomeViewModel$bookId: String</ID>
+    <ID>UnusedParameter:LibraryScreen.kt$popBackStack: () -&gt; Unit</ID>
+    <ID>UnusedParameter:ProfileScreen.kt$popBackStack: () -&gt; Unit</ID>
+    <ID>UnusedParameter:QuoteRemoteDataSource.kt$QuoteRemoteDataSource$sort: String</ID>
+    <ID>UnusedParameter:ReelsScreen.kt$popBackStack: () -&gt; Unit</ID>
+    <ID>UnusedParameter:UpdateProfileScreen.kt$popBackStack: () -&gt; Unit</ID>
+    <ID>UnusedPrivateMember:GlimShortCardContent.kt$@Preview(showBackground = true) @Composable private fun PreviewGlimShortCardContent()</ID>
+    <ID>UnusedPrivateMember:GlimShortCardContent.kt$@Preview(showBackground = true) @Composable private fun PreviewGlimShortCardContentLiked()</ID>
+    <ID>UnusedPrivateMember:MyGlimsSection.kt$@Preview(showBackground = true) @Composable private fun PreviewMyGlimsSection()</ID>
+    <ID>UnusedPrivateMember:ProfileHeader.kt$@Preview(showBackground = true) @Composable private fun PreviewProfileHeader()</ID>
+    <ID>UnusedPrivateMember:ProfileScreen.kt$@Preview(showBackground = true) @Composable private fun PreviewEmptyGlimCards()</ID>
+    <ID>UnusedPrivateMember:ProfileScreen.kt$@Preview(showBackground = true) @Composable private fun PreviewLoadingState()</ID>
+    <ID>UnusedPrivateMember:ProfileScreen.kt$@Preview(showBackground = true) @Composable private fun PreviewProfileScreen()</ID>
+    <ID>UnusedPrivateMember:SettingsSection.kt$@Preview(showBackground = true) @Composable private fun PreviewSettingItem()</ID>
+    <ID>UnusedPrivateMember:SettingsSection.kt$@Preview(showBackground = true) @Composable private fun PreviewSettingsSection()</ID>
+    <ID>UnusedPrivateMember:SignUpScreen.kt$@Preview(name = "Step 1 - Email Input with Error", showBackground = true) @Composable private fun PreviewSignUpScreen_EmailStepWithError()</ID>
+    <ID>UnusedPrivateMember:SignUpScreen.kt$@Preview(name = "Step 1 - Email Input", showBackground = true) @Composable private fun PreviewSignUpScreen_EmailStep()</ID>
+    <ID>UnusedPrivateMember:SignUpScreen.kt$@Preview(name = "Step 2 - Code Input", showBackground = true) @Composable private fun PreviewSignUpScreen_CodeStep()</ID>
+    <ID>UnusedPrivateMember:SignUpScreen.kt$@Preview(name = "Step 3 - Password Input with Error", showBackground = true) @Composable private fun PreviewSignUpScreen_PasswordStepWithError()</ID>
+    <ID>UnusedPrivateMember:SignUpScreen.kt$@Preview(name = "Step 3 - Password Input", showBackground = true) @Composable private fun PreviewSignUpScreen_PasswordStep()</ID>
+    <ID>UnusedPrivateMember:SignUpScreen.kt$@Preview(name = "Step 4 - Profile Input", showBackground = true) @Composable private fun PreviewSignUpScreen_ProfileStep()</ID>
+    <ID>UnusedPrivateMember:UploadGlimCardListSection.kt$@Preview(showBackground = true) @Composable private fun PreviewUploadGlimCardListSection()</ID>
+    <ID>UnusedPrivateMember:WithdrawalButton.kt$@Preview(showBackground = true) @Composable private fun PreviewWithdrawalButton()</ID>
+    <ID>UnusedPrivateProperty:AuthRepositoryImpl.kt$AuthRepositoryImpl$val request = LoginRequest( email = email, password = password, )</ID>
+    <ID>UnusedPrivateProperty:AuthRepositoryImpl.kt$AuthRepositoryImpl$val request = SignUpRequest( email = email, nickname = nickname, password = password, gender = gender, birthDate = birthDateList, )</ID>
+    <ID>UnusedPrivateProperty:GlimListViewModel.kt$GlimListViewModel$private val navigator: Navigator</ID>
+    <ID>UnusedPrivateProperty:PostViewModel.kt$PostViewModel$private val navigator: Navigator</ID>
+    <ID>UnusedPrivateProperty:SignUpViewModel.kt$SignUpViewModel$private val certifyValidCodeUseCase: CertifyValidCodeUseCase</ID>
+    <ID>UnusedPrivateProperty:Theme.kt$// Dark Mode 대응 안 할 예정 private val DarkColorScheme = darkColorScheme( onPrimary = Color.Black, onSecondary = Color.Black, onTertiary = Color.Black, background = Color(0xFF1C1B1F), onBackground = Color(0xFFE6E1E5), surface = Color(0xFF1C1B1F), onSurface = Color(0xFFE6E1E5), surfaceVariant = Color(0xFF49454F), onSurfaceVariant = Color(0xFFCAC4D0), outline = Color(0xFF938F99), inverseSurface = Color(0xFFE6E1E5), inverseOnSurface = Color(0xFF313033), error = Color(0xFFF2B8B5), onError = Color(0xFF601410), errorContainer = Color(0xFF8C1D18), onErrorContainer = Color(0xFFF9DEDC), )</ID>
+    <ID>UseCheckOrError:PostViewModel.kt$PostViewModel$throw IllegalStateException("이미지를 불러올 수 없습니다.")</ID>
+    <ID>WildcardImport:SwipeSlider.kt$import androidx.compose.foundation.layout.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

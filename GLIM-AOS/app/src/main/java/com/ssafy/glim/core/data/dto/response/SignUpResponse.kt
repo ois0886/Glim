@@ -18,5 +18,5 @@ data class SignUpResponse(
     @SerializedName("gender")
     val gender: String,
     @SerializedName("status")
-    val status: String
+    val status: String,
 )

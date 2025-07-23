@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import com.ssafy.glim.core.domain.model.Glim
 import java.time.LocalDateTime
 
-
 data class LockUiState(
     val isLoading: Boolean = true,
     val time: LocalDateTime = LocalDateTime.now(),
@@ -12,12 +11,17 @@ data class LockUiState(
     val currentIndex: Int = 0,
     val page: Int = 0,
     val size: Int = 20,
-    val isComplete: Boolean = false
+    val isComplete: Boolean = false,
 )
 
 sealed interface LockSideEffect {
     data object Unlock : LockSideEffect
-    data class ShowToast(@StringRes val messageRes: Int) : LockSideEffect
+
+    data class ShowToast(
+        @StringRes val messageRes: Int,
+    ) : LockSideEffect
+
     data object NavigateQuotes : LockSideEffect
+
     data object NavigateBook : LockSideEffect
 }
