@@ -268,7 +268,7 @@ fun GlimBookContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                model = "", // 책 이미지 URL이 있다면 사용
+                model = "",
                 contentDescription = null,
                 modifier = Modifier.size(40.dp, 56.dp),
                 alpha = 0.8f,
