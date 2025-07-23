@@ -1,14 +1,14 @@
 package com.lovedbug.geulgwi.service;
 
-import com.lovedbug.geulgwi.repository.BookRepository;
-import lombok.RequiredArgsConstructor;
+import com.lovedbug.geulgwi.dto.resposne.SearchHistoryResponseDto;
 import org.springframework.stereotype.Service;
+import java.util.List;
+
 
 @Service
-@RequiredArgsConstructor
 public class SearchHistoryService {
 
-    private BookRepository bookRepository;
-
-
+    public List<SearchHistoryResponseDto> getSearchKeywordHistory(String keyword) {
+        return SearchHistoryResponseDto.toSearchHistoryDto(keyword);
+    }
 }

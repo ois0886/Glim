@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import com.lovedbug.geulgwi.entity.Book;
@@ -75,6 +76,33 @@ public class BookApiDocsTest extends RestDocsTestSupport {
                 .get("/api/v1/books/popular")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @DisplayName("키워드를_통해_인기_검색어를_검색한다")
+    @Test
+    void get_search_keyword_history() {
+        given(this.spec)
+            .filter(document("{class_name}/{method_name}",
+                pathParameters(
+                    parameterWithName("keyword").description("검색 키워드 (선택, 경로 변수)")
+                ),
+                responseFields(
+                    fieldWithPath("[].author1").description("1위 검색어"),
+                    fieldWithPath("[].author2").description("2위 검색어"),
+                    fieldWithPath("[].author3").description("3위 검색어"),
+                    fieldWithPath("[].author4").description("4위 검색어"),
+                    fieldWithPath("[].author5").description("5위 검색어"),
+                    fieldWithPath("[].author6").description("6위 검색어"),
+                    fieldWithPath("[].author7").description("7위 검색어"),
+                    fieldWithPath("[].author8").description("8위 검색어"),
+                    fieldWithPath("[].author9").description("9위 검색어"),
+                    fieldWithPath("[].author10").description("10위 검색어")
+                )
+            ))
+            .when()
+            .get("/api/v1/books/search/{keyword}", "작가")
+            .then()
+            .statusCode(200);
     }
 
     @DisplayName("도서_조회수를_1_증가시킨다")
