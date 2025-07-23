@@ -14,8 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class UpdateInfoViewModel
-@Inject
-constructor(
+@Inject constructor(
     private val navigator: Navigator,
     //private val updateProfileUseCase: UpdateProfileUseCase,
 ) : ViewModel(), ContainerHost<UpdateInfoUiState, UpdateInfoSideEffect> {
@@ -47,10 +46,6 @@ constructor(
 
     fun onProfileImageClicked() = intent {
         postSideEffect(UpdateInfoSideEffect.ShowImagePicker)
-    }
-
-    fun onPasswordChangeClicked() = intent {
-        navigator
     }
 
     fun onSaveClicked() = intent {

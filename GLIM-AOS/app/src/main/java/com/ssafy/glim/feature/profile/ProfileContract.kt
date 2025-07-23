@@ -1,5 +1,7 @@
 package com.ssafy.glim.feature.profile
 
+import androidx.annotation.StringRes
+
 data class ProfileUiState(
     val profileImageUrl: String? = null,
     val userName: String = "",
@@ -18,6 +20,6 @@ data class GlimShortCard(
 )
 
 sealed class ProfileSideEffect {
-    data class ShowToast(val message: String) : ProfileSideEffect()
-    data class ShowError(val message: String) : ProfileSideEffect()
+    data class ShowToast(@StringRes val messageRes: Int) : ProfileSideEffect()
+    data class ShowError(@StringRes val messageRes: Int) : ProfileSideEffect()
 }

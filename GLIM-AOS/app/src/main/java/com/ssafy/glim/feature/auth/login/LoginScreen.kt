@@ -50,9 +50,6 @@ internal fun LoginRoute(
     viewModel.collectSideEffect { effect ->
         when (effect) {
             is LoginSideEffect.ShowError ->
-                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-
-            is LoginSideEffect.ShowErrorRes ->
                 Toast.makeText(context, context.getString(effect.messageRes), Toast.LENGTH_SHORT)
                     .show()
         }
