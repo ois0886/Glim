@@ -12,7 +12,7 @@ import com.lovedbug.geulgwi.dto.ImageMetaData;
 @Component
 public class LocalImageHandler implements ImageHandler {
 
-    private final String STORAGE_ROOT = "uploads/images";
+    private final String STORAGE_ROOT = "/uploads/images";
 
     @Override
     public ImageMetaData saveImage(MultipartFile image) {
