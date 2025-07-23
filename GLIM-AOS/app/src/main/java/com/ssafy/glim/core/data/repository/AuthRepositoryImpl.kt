@@ -19,7 +19,7 @@ class AuthRepositoryImpl @Inject constructor(
     )
 
     private val mockValidAccounts = mapOf(
-        "test@example.com" to "password123",
+        "test@example.com" to "Password123!",
         "user@test.com" to "123456",
         "admin@sample.com" to "admin123"
     )
