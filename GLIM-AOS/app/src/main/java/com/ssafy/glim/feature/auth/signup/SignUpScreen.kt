@@ -34,7 +34,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 internal fun SignUpRoute(
     padding: PaddingValues,
-    viewModel: SignUpViewModel = hiltViewModel()
+    viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val state = viewModel.collectAsState().value
     val context = LocalContext.current
@@ -81,10 +81,11 @@ private fun SignUpScreen(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(padding.excludeSystemBars())
-            .imePadding()
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(padding.excludeSystemBars())
+                .imePadding(),
     ) {
         GlimTopBar(
             title = stringResource(R.string.login_signup),
@@ -98,9 +99,10 @@ private fun SignUpScreen(
         ProgressIndicatorBar(progress = state.currentStep.progress)
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(PaddingValues(16.dp)),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (state.currentStep) {
@@ -144,12 +146,13 @@ private fun SignUpScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             GlimButton(
-                text = when (state.currentStep) {
-                    SignUpStep.Email -> stringResource(R.string.signup_send_verification_code)
-                    SignUpStep.Code -> stringResource(R.string.signup_verify_code)
-                    SignUpStep.Password -> stringResource(R.string.signup_confirm)
-                    SignUpStep.Profile -> stringResource(R.string.login_signup)
-                },
+                text =
+                    when (state.currentStep) {
+                        SignUpStep.Email -> stringResource(R.string.signup_send_verification_code)
+                        SignUpStep.Code -> stringResource(R.string.signup_verify_code)
+                        SignUpStep.Password -> stringResource(R.string.signup_confirm)
+                        SignUpStep.Profile -> stringResource(R.string.login_signup)
+                    },
                 onClick = onNextStep,
                 enabled = state.isCurrentStepValid && !state.isLoading,
             )
@@ -161,11 +164,12 @@ private fun SignUpScreen(
 @Composable
 private fun PreviewSignUpScreen_EmailStep() {
     SignUpScreen(
-        state = SignUpUiState(
-            currentStep = SignUpStep.Email,
-            email = "user@example.com",
-            emailError = null,
-        ),
+        state =
+            SignUpUiState(
+                currentStep = SignUpStep.Email,
+                email = "user@example.com",
+                emailError = null,
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},
@@ -183,11 +187,12 @@ private fun PreviewSignUpScreen_EmailStep() {
 @Composable
 private fun PreviewSignUpScreen_EmailStepWithError() {
     SignUpScreen(
-        state = SignUpUiState(
-            currentStep = SignUpStep.Email,
-            email = "invalid-email",
-            emailError = R.string.error_email_invalid,
-        ),
+        state =
+            SignUpUiState(
+                currentStep = SignUpStep.Email,
+                email = "invalid-email",
+                emailError = R.string.error_email_invalid,
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},
@@ -205,11 +210,12 @@ private fun PreviewSignUpScreen_EmailStepWithError() {
 @Composable
 private fun PreviewSignUpScreen_CodeStep() {
     SignUpScreen(
-        state = SignUpUiState(
-            currentStep = SignUpStep.Code,
-            code = "123456",
-            codeError = null,
-        ),
+        state =
+            SignUpUiState(
+                currentStep = SignUpStep.Code,
+                code = "123456",
+                codeError = null,
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},
@@ -227,13 +233,14 @@ private fun PreviewSignUpScreen_CodeStep() {
 @Composable
 private fun PreviewSignUpScreen_PasswordStep() {
     SignUpScreen(
-        state = SignUpUiState(
-            currentStep = SignUpStep.Password,
-            password = "Aa1!aaaa",
-            confirmPassword = "Aa1!aaaa",
-            passwordError = null,
-            confirmPasswordError = null,
-        ),
+        state =
+            SignUpUiState(
+                currentStep = SignUpStep.Password,
+                password = "Aa1!aaaa",
+                confirmPassword = "Aa1!aaaa",
+                passwordError = null,
+                confirmPasswordError = null,
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},
@@ -251,13 +258,14 @@ private fun PreviewSignUpScreen_PasswordStep() {
 @Composable
 private fun PreviewSignUpScreen_PasswordStepWithError() {
     SignUpScreen(
-        state = SignUpUiState(
-            currentStep = SignUpStep.Password,
-            password = "short",
-            confirmPassword = "different",
-            passwordError = R.string.error_password_invalid,
-            confirmPasswordError = R.string.error_password_mismatch,
-        ),
+        state =
+            SignUpUiState(
+                currentStep = SignUpStep.Password,
+                password = "short",
+                confirmPassword = "different",
+                passwordError = R.string.error_password_invalid,
+                confirmPasswordError = R.string.error_password_mismatch,
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},
@@ -275,14 +283,15 @@ private fun PreviewSignUpScreen_PasswordStepWithError() {
 @Composable
 private fun PreviewSignUpScreen_ProfileStep() {
     SignUpScreen(
-        state = SignUpUiState(
-            currentStep = SignUpStep.Profile,
-            name = "인성",
-            birthDate = "1998",
-            gender = "남성",
-            nameError = null,
-            birthDateError = null,
-        ),
+        state =
+            SignUpUiState(
+                currentStep = SignUpStep.Profile,
+                name = "인성",
+                birthDate = "1998",
+                gender = "남성",
+                nameError = null,
+                birthDateError = null,
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onCodeChanged = {},

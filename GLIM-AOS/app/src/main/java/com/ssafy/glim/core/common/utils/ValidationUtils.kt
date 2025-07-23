@@ -12,6 +12,7 @@ import com.ssafy.glim.core.common.extensions.validateBirthDateDetailed
  */
 sealed class ValidationResult {
     object Valid : ValidationResult()
+
     data class Invalid(val errorMessageRes: Int) : ValidationResult()
 }
 
@@ -19,14 +20,13 @@ sealed class ValidationResult {
  * 유효성 검사 관련 유틸리티 클래스
  */
 object ValidationUtils {
-
     /**
      * 이메일 유효성 검사
      */
     fun validateEmail(
         email: String,
         emptyErrorRes: Int,
-        invalidErrorRes: Int
+        invalidErrorRes: Int,
     ): ValidationResult {
         return when {
             email.isBlank() -> ValidationResult.Invalid(emptyErrorRes)
@@ -41,7 +41,7 @@ object ValidationUtils {
     fun validatePassword(
         password: String,
         emptyErrorRes: Int,
-        invalidErrorRes: Int
+        invalidErrorRes: Int,
     ): ValidationResult {
         return when {
             password.isBlank() -> ValidationResult.Invalid(emptyErrorRes)
@@ -56,7 +56,7 @@ object ValidationUtils {
     fun validateCode(
         code: String,
         emptyErrorRes: Int,
-        invalidErrorRes: Int
+        invalidErrorRes: Int,
     ): ValidationResult {
         return when {
             code.isBlank() -> ValidationResult.Invalid(emptyErrorRes)
@@ -71,7 +71,7 @@ object ValidationUtils {
     fun validateName(
         name: String,
         emptyErrorRes: Int,
-        invalidErrorRes: Int
+        invalidErrorRes: Int,
     ): ValidationResult {
         return when {
             name.isBlank() -> ValidationResult.Invalid(emptyErrorRes)
@@ -90,7 +90,7 @@ object ValidationUtils {
         yearErrorRes: Int,
         monthErrorRes: Int,
         dayErrorRes: Int,
-        futureDateErrorRes: Int
+        futureDateErrorRes: Int,
     ): ValidationResult {
         return when {
             birthDate.isBlank() -> ValidationResult.Invalid(emptyErrorRes)
@@ -113,7 +113,7 @@ object ValidationUtils {
     fun validatePasswordConfirm(
         password: String,
         confirmPassword: String,
-        mismatchErrorRes: Int
+        mismatchErrorRes: Int,
     ): ValidationResult {
         return if (confirmPassword.isNotBlank() && password != confirmPassword) {
             ValidationResult.Invalid(mismatchErrorRes)
@@ -127,7 +127,7 @@ object ValidationUtils {
      */
     fun validateGender(
         gender: String?,
-        emptyErrorRes: Int
+        emptyErrorRes: Int,
     ): ValidationResult {
         return if (gender == null) {
             ValidationResult.Invalid(emptyErrorRes)

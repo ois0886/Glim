@@ -142,7 +142,7 @@ internal fun ReelsRoute(
                     it?.let {
                         viewModel.onBookInfoClick(it)
                     }
-                }
+                },
             )
         }
     }
@@ -156,7 +156,7 @@ fun GlimItem(
     onShareClick: () -> Unit = {},
     onMoreClick: () -> Unit = {},
     onCaptureClick: () -> Unit = {},
-    onBookInfoClick: (Long?) -> Unit
+    onBookInfoClick: (Long?) -> Unit,
 ) {
     Box(modifier = modifier) {
         AsyncImage(

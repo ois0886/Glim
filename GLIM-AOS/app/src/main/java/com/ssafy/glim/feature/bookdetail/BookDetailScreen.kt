@@ -80,10 +80,11 @@ fun BookDetailScreen(
         toggleBookDescriptionExpanded = viewModel::toggleBookDescriptionExpanded,
         toggleAuthorDescriptionExpanded = viewModel::toggleAuthorDescriptionExpanded,
         popBackStack = popBackStack,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = LightBrown)
-            .padding(padding)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(color = LightBrown)
+                .padding(padding),
     )
 }
 
@@ -97,32 +98,34 @@ fun BookDetailContent(
     openUrl: () -> Unit,
     toggleBookDescriptionExpanded: () -> Unit,
     toggleAuthorDescriptionExpanded: () -> Unit,
-    popBackStack : () -> Unit,
+    popBackStack: () -> Unit,
 ) {
     val listState = rememberLazyListState()
 
     val titleAlpha by animateFloatAsState(
-        targetValue = when {
-            listState.firstVisibleItemIndex > 0 -> 1f
-            else -> min(listState.firstVisibleItemScrollOffset / 200f, 1f)
-        },
-        label = "titleAlpha"
+        targetValue =
+            when {
+                listState.firstVisibleItemIndex > 0 -> 1f
+                else -> min(listState.firstVisibleItemScrollOffset / 200f, 1f)
+            },
+        label = "titleAlpha",
     )
 
     Column(modifier = modifier.navigationBarsPadding()) {
         BookDetailTopBar(
             title = book.title,
             alpha = titleAlpha,
-            onBackClick = popBackStack
+            onBackClick = popBackStack,
         )
         Box {
             LazyColumn(
                 state = listState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = Color.White
-                    ),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(
+                            color = Color.White,
+                        ),
             ) {
                 item {
                     BookInfoSection(book)
@@ -131,13 +134,13 @@ fun BookDetailContent(
                     Spacer(modifier = Modifier.height(24.dp))
                     HorizontalDivider(
                         thickness = 8.dp,
-                        color = Color(0xFFF7F7F7)
+                        color = Color(0xFFF7F7F7),
                     )
                 }
                 item {
                     Column(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         TitleWithAction(title = stringResource(R.string.relative_quote))
 
@@ -150,24 +153,24 @@ fun BookDetailContent(
                     Spacer(modifier = Modifier.height(24.dp))
                     HorizontalDivider(
                         thickness = 8.dp,
-                        color = Color(0xFFF7F7F7)
+                        color = Color(0xFFF7F7F7),
                     )
                 }
                 item {
                     Column(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         TitleWithAction(
                             title = stringResource(R.string.book_summary),
                             isExpanded = isDescriptionExpanded,
-                            action = toggleBookDescriptionExpanded
+                            action = toggleBookDescriptionExpanded,
                         )
                         Text(
                             text = book.description,
                             style = MaterialTheme.typography.bodyMedium,
                             maxLines = if (isDescriptionExpanded) Int.MAX_VALUE else 3,
-                            overflow = TextOverflow.Ellipsis
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                 }
@@ -175,25 +178,25 @@ fun BookDetailContent(
                     Spacer(modifier = Modifier.height(24.dp))
                     HorizontalDivider(
                         thickness = 8.dp,
-                        color = Color(0xFFF7F7F7)
+                        color = Color(0xFFF7F7F7),
                     )
                 }
                 item {
                     if (book.authorDescription != null) {
                         Column(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             TitleWithAction(
                                 title = stringResource(R.string.author_intro),
                                 isExpanded = isAuthorDescriptionExpanded,
-                                action = toggleAuthorDescriptionExpanded
+                                action = toggleAuthorDescriptionExpanded,
                             )
                             Text(
                                 text = book.authorDescription,
                                 style = MaterialTheme.typography.bodyMedium,
                                 maxLines = if (isAuthorDescriptionExpanded) Int.MAX_VALUE else 3,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
                             )
                         }
                     }
@@ -207,14 +210,15 @@ fun BookDetailContent(
                 onClick = openUrl,
                 containerColor = LightBrown,
                 contentColor = Color.White,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp),
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_forward),
                     contentDescription = stringResource(R.string.open_url),
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
         }
@@ -228,52 +232,51 @@ private fun TitleWithAction(
     action: () -> Unit = {},
     content: @Composable () -> Unit = {
         IconButton(
-            onClick = action
+            onClick = action,
         ) {
             Icon(
                 painter = painterResource(id = if (isExpanded) R.drawable.ic_arrow_down else R.drawable.ic_forward),
                 contentDescription = stringResource(R.string.more),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
         }
     },
-
-    ) {
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = title,
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         content()
     }
 }
 
-
 @Preview
 @Composable
 fun BookDetailScreenPreview() {
     BookDetailContent(
-        book = BookDetail(
-            title = "Sample Book Title",
-            subTitle = "Sample Subtitle",
-            author = "Author Name",
-            publisher = "Publisher Name",
-            publicationDate = "2023-10-01",
-            category = "Fiction",
-            price = 15000,
-            coverImageUrl = "https://example.com/cover.jpg"
-        ),
+        book =
+            BookDetail(
+                title = "Sample Book Title",
+                subTitle = "Sample Subtitle",
+                author = "Author Name",
+                publisher = "Publisher Name",
+                publicationDate = "2023-10-01",
+                category = "Fiction",
+                price = 15000,
+                coverImageUrl = "https://example.com/cover.jpg",
+            ),
         onClickQuote = {},
         openUrl = {},
         isDescriptionExpanded = true,
         isAuthorDescriptionExpanded = true,
         toggleBookDescriptionExpanded = {},
         toggleAuthorDescriptionExpanded = {},
-        popBackStack = {}
+        popBackStack = {},
     )
 }

@@ -14,5 +14,5 @@ data class SignUpRequest(
     @SerializedName("birthDate")
     val birthDate: List<Int>,
     @SerializedName("gender")
-    val gender: String
+    val gender: String,
 )

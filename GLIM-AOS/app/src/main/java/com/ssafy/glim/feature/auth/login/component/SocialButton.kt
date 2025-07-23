@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.ssafy.glim.R
 import com.ssafy.glim.ui.theme.GlimColor.GoogleColor
 import com.ssafy.glim.ui.theme.GlimColor.KakaoColor
 import com.ssafy.glim.ui.theme.GlimColor.NaverColor
-import com.ssafy.glim.R
 
 enum class SocialProvider { GOOGLE, KAKAO, NAVER }
 

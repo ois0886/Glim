@@ -9,16 +9,16 @@ class SignUpUseCase
         private val repository: AuthRepository,
     ) {
         operator fun invoke(
-            email : String,
+            email: String,
             nickname: String,
             password: String,
             gender: String,
-            birthDate: String
+            birthDate: String,
         ) = repository.signUp(
             email = email,
             nickname = nickname,
             password = password,
-            gender= gender,
-            birthDate = birthDate
+            gender = gender,
+            birthDate = birthDate,
         )
     }

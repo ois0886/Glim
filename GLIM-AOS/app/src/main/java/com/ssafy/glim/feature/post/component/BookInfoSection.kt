@@ -34,16 +34,18 @@ fun BookInfoSection(
             author = book.author,
             bookName = book.title,
             pageInfo = page,
-            onBookInfoClick = onBookInfoClick
+            onBookInfoClick = onBookInfoClick,
         )
-    }
-    else {
+    } else {
         AddBookContent(modifier, onBookInfoClick)
     }
 }
 
 @Composable
-private fun AddBookContent(modifier: Modifier, onBookClick: (Long?) -> Unit) {
+private fun AddBookContent(
+    modifier: Modifier,
+    onBookClick: (Long?) -> Unit,
+) {
     Row(
         modifier =
             modifier

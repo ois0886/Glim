@@ -5,11 +5,10 @@ import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.model.SearchItem
 import com.ssafy.glim.feature.library.component.SearchTab
 
-
 enum class SearchMode {
     POPULAR,
     RECENT,
-    RESULT
+    RESULT,
 }
 
 data class LibraryState(
@@ -27,5 +26,6 @@ data class LibraryState(
 
 sealed class LibrarySideEffect {
     data object NavigateBack : LibrarySideEffect()
+
     data class ShowToast(val message: String) : LibrarySideEffect()
 }
