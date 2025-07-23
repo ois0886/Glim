@@ -155,8 +155,8 @@ fun GlimCarousel(
     onItemClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
-    itemSize: DpSize = DpSize(width = 240.dp, height = 160.dp),
-    itemSpacing: Dp = 12.dp,
+    itemSize: DpSize = DpSize(width = 240.dp, height = 360.dp),
+    itemSpacing: Dp = 12.dp
 ) {
     LazyRow(
         modifier = modifier,
