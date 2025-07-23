@@ -14,11 +14,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
+import com.ssafy.glim.feature.auth.login.component.EmailInputTextField
 import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
 
 @Composable
-fun PasswordConfirmInputContent(
+fun AuthInputContent(
     modifier: Modifier = Modifier,
+    email: String,
+    onEmailChange: (String) -> Unit,
+    emailError: String? = null,
     password: String,
     onPasswordChange: (String) -> Unit,
     confirmPassword: String,
@@ -30,19 +34,34 @@ fun PasswordConfirmInputContent(
         Text(
             text = stringResource(R.string.auth_greeting),
             style =
-                MaterialTheme.typography.bodySmall.copy(
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                ),
+            MaterialTheme.typography.bodySmall.copy(
+                color = Color.Gray,
+                fontSize = 14.sp,
+            ),
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
+            text = stringResource(R.string.email_auth_instruction),
+            style =
+            MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+            ),
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        EmailInputTextField(
+            value = email,
+            onValueChange = onEmailChange,
+            error = emailError,
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
             text = stringResource(R.string.password_instruction),
             style =
-                MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                ),
+            MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+            ),
         )
         Spacer(modifier = Modifier.height(12.dp))
         PasswordInputTextField(
@@ -61,10 +80,10 @@ fun PasswordConfirmInputContent(
         Text(
             text = stringResource(R.string.password_hint),
             style =
-                MaterialTheme.typography.bodySmall.copy(
-                    color = Color.Gray,
-                    fontSize = 12.sp,
-                ),
+            MaterialTheme.typography.bodySmall.copy(
+                color = Color.Gray,
+                fontSize = 12.sp,
+            ),
         )
     }
 }
@@ -72,7 +91,10 @@ fun PasswordConfirmInputContent(
 @Preview(name = "PasswordConfirmInputContent - Default", showBackground = true)
 @Composable
 fun PreviewPasswordConfirmInputContent_Default() {
-    PasswordConfirmInputContent(
+    AuthInputContent(
+        email = "",
+        onEmailChange = {},
+        emailError = null,
         password = "",
         onPasswordChange = {},
         confirmPassword = "",
@@ -85,7 +107,10 @@ fun PreviewPasswordConfirmInputContent_Default() {
 @Preview(name = "PasswordConfirmInputContent - With Errors", showBackground = true)
 @Composable
 fun PreviewPasswordConfirmInputContent_Errors() {
-    PasswordConfirmInputContent(
+    AuthInputContent(
+        email = "superoh",
+        onEmailChange = {},
+        emailError = "이메일 형식에 일치하지 않습니다.",
         password = "123",
         onPasswordChange = {},
         confirmPassword = "1234",

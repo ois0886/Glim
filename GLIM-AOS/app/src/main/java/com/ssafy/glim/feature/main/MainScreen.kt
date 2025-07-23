@@ -31,7 +31,7 @@ import kotlinx.collections.immutable.toImmutableList
 internal fun MainScreen(navigator: MainNavController = rememberMainNavController()) {
     Scaffold(
         bottomBar = {
-            if(navigator.currentTab != MainTab.POST){
+            if (navigator.currentTab != MainTab.POST) {
                 MainBottomBar(
                     tabs = MainTab.entries.toImmutableList(),
                     currentTab = navigator.currentTab,

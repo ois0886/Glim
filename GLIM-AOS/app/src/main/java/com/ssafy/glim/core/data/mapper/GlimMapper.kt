@@ -11,6 +11,6 @@ fun GlimResponse.toDomain(): Glim {
         bookTitle = this.bookTitle,
         bookAuthor = this.author,
         bookImgUrl = this.bookCoverUrl,
-        isLike = false, //임시
+        isLike = false
     )
 }

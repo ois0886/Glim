@@ -10,12 +10,17 @@ data class UpdateInfoUiState(
     val isLoading: Boolean = false,
 ) {
     val isSaveEnabled: Boolean
-        get() = nameError == null &&
+        get() =
+            nameError == null &&
                 name.isNotBlank()
 }
 
 sealed interface UpdateInfoSideEffect {
-    data class ShowErrorRes(@StringRes val messageRes: Int) : UpdateInfoSideEffect
+    data class ShowErrorRes(
+        @StringRes val messageRes: Int,
+    ) : UpdateInfoSideEffect
+
     data object ShowImagePicker : UpdateInfoSideEffect
+
     data object ProfileUpdated : UpdateInfoSideEffect
 }

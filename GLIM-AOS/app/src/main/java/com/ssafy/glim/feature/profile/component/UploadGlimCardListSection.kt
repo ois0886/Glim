@@ -32,29 +32,29 @@ internal fun UploadGlimCardListSection(
     glimCards: List<GlimShortCard>,
     navigateToGlimUploadList: () -> Unit,
     onGlimLikeToggle: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = stringResource(R.string.profile_recent_articles),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = Color.Black,
             )
 
             Row(
                 modifier = Modifier.clickable { navigateToGlimUploadList() },
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = stringResource(R.string.profile_view_all),
-                    tint = Color.Gray
+                    tint = Color.Gray,
                 )
             }
         }
@@ -62,15 +62,15 @@ internal fun UploadGlimCardListSection(
         Spacer(modifier = Modifier.height(12.dp))
 
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             items(
                 items = glimCards,
-                key = { glimCard -> glimCard.id }
+                key = { glimCard -> glimCard.id },
             ) { glimCard ->
                 GlimShortCardContent(
                     glimCard = glimCard,
-                    onLikeToggle = { onGlimLikeToggle(glimCard.id) }
+                    onLikeToggle = { onGlimLikeToggle(glimCard.id) },
                 )
             }
         }
@@ -80,35 +80,36 @@ internal fun UploadGlimCardListSection(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewUploadGlimCardListSection() {
-    val mockGlimCards = listOf(
-        GlimShortCard(
-            id = "1",
-            title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
-            timestamp = "P.51",
-            likeCount = 1247,
-            isLiked = false
-        ),
-        GlimShortCard(
-            id = "2",
-            title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
-            timestamp = "P.51",
-            likeCount = 856,
-            isLiked = true
-        ),
-        GlimShortCard(
-            id = "3",
-            title = "새로운 시작은 언제나 두렵지만, 그래도 나아가야 한다.",
-            timestamp = "P.42",
-            likeCount = 523,
-            isLiked = false
+    val mockGlimCards =
+        listOf(
+            GlimShortCard(
+                id = "1",
+                title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
+                timestamp = "P.51",
+                likeCount = 1247,
+                isLiked = false,
+            ),
+            GlimShortCard(
+                id = "2",
+                title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
+                timestamp = "P.51",
+                likeCount = 856,
+                isLiked = true,
+            ),
+            GlimShortCard(
+                id = "3",
+                title = "새로운 시작은 언제나 두렵지만, 그래도 나아가야 한다.",
+                timestamp = "P.42",
+                likeCount = 523,
+                isLiked = false,
+            ),
         )
-    )
 
     MaterialTheme {
         UploadGlimCardListSection(
             glimCards = mockGlimCards,
             navigateToGlimUploadList = {},
-            onGlimLikeToggle = {}
+            onGlimLikeToggle = {},
         )
     }
 }

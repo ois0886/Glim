@@ -40,13 +40,14 @@ import com.ssafy.glim.ui.theme.GlimColor.LightBrown
 fun BookDetailTopBar(
     title: String,
     alpha: Float,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .background(LightBrown),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(onClick = onBackClick) {
             Icon(
@@ -61,10 +62,11 @@ fun BookDetailTopBar(
             fontWeight = FontWeight.Bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
+            modifier =
+            Modifier
                 .alpha(alpha)
                 .weight(1f)
-                .padding(end = 16.dp)
+                .padding(end = 16.dp),
         )
     }
 }
@@ -72,33 +74,34 @@ fun BookDetailTopBar(
 @Composable
 fun BookInfoSection(state: BookDetail) {
     Row(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .background(
                 brush =
-                    Brush.linearGradient(
-                        colors = listOf(LightBrown, LightBrown.copy(alpha = 0.0f)),
-                        start = Offset(0f, 0f),
-                        end = Offset(0f, Float.POSITIVE_INFINITY),
-                    ),
+                Brush.linearGradient(
+                    colors = listOf(LightBrown, LightBrown.copy(alpha = 0.0f)),
+                    start = Offset(0f, 0f),
+                    end = Offset(0f, Float.POSITIVE_INFINITY),
+                ),
             )
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
     ) {
         AsyncImage(
             model = state.coverImageUrl,
             contentDescription = stringResource(R.string.book_cover),
-            modifier = Modifier
+            modifier =
+            Modifier
                 .size(80.dp, 120.dp),
             contentScale = ContentScale.Crop,
             placeholder = painterResource(id = R.drawable.ic_image),
-            error = painterResource(id = R.drawable.ic_image)
+            error = painterResource(id = R.drawable.ic_image),
         )
 
         Spacer(modifier = Modifier.width(20.dp))
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 text = state.subTitle,
@@ -107,12 +110,12 @@ fun BookInfoSection(state: BookDetail) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = state.title,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 Text(
@@ -126,7 +129,7 @@ fun BookInfoSection(state: BookDetail) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = state.author,
@@ -142,7 +145,7 @@ fun BookInfoSection(state: BookDetail) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = state.publisher,
@@ -152,36 +155,41 @@ fun BookInfoSection(state: BookDetail) {
                 Text(
                     text = stringResource(R.string.price) + " ${state.priceText}",
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
     }
 }
 
-
 @Composable
-fun QuoteCard(quote: Quote, onClickCard: (Long) -> Unit) {
+fun QuoteCard(
+    quote: Quote,
+    onClickCard: (Long) -> Unit,
+) {
     Card(
-        modifier = Modifier
+        modifier =
+        Modifier
             .clickable { onClickCard(quote.id) },
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
+        colors =
+        CardDefaults.cardColors(
+            containerColor = Color.White,
         ),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Text(
             text = quote.text,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         )
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = quote.page.toString(),
@@ -193,7 +201,7 @@ fun QuoteCard(quote: Quote, onClickCard: (Long) -> Unit) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_favorite),
                 contentDescription = stringResource(R.string.like),
-                modifier = Modifier.padding(end = 4.dp)
+                modifier = Modifier.padding(end = 4.dp),
             )
 
             Text(

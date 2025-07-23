@@ -27,30 +27,30 @@ internal fun SettingsSection(
     navigateToAccountSettings: () -> Unit,
     navigateToNotificationSettings: () -> Unit,
     onLogOutClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         SettingItem(
             title = stringResource(R.string.settings_personal_info),
-            onClick = navigateToEditProfile
+            onClick = navigateToEditProfile,
         )
 
         SettingItem(
             title = stringResource(R.string.settings_account),
-            onClick = navigateToAccountSettings
+            onClick = navigateToAccountSettings,
         )
 
         SettingItem(
             title = stringResource(R.string.settings_notification),
-            onClick = navigateToNotificationSettings
+            onClick = navigateToNotificationSettings,
         )
 
         SettingItem(
             title = stringResource(R.string.settings_logout),
-            onClick = onLogOutClick
+            onClick = onLogOutClick,
         )
     }
 }
@@ -59,26 +59,27 @@ internal fun SettingsSection(
 internal fun SettingItem(
     title: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
+        modifier =
+        modifier
             .fillMaxWidth()
             .clickable { onClick() }
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = title,
             fontSize = 16.sp,
-            color = Color.Black
+            color = Color.Black,
         )
 
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = stringResource(R.string.content_description_navigate),
-            tint = Color.Gray
+            tint = Color.Gray,
         )
     }
 }
@@ -91,7 +92,7 @@ private fun PreviewSettingsSection() {
             navigateToEditProfile = {},
             navigateToAccountSettings = {},
             navigateToNotificationSettings = {},
-            onLogOutClick = {}
+            onLogOutClick = {},
         )
     }
 }
@@ -102,7 +103,7 @@ private fun PreviewSettingItem() {
     MaterialTheme {
         SettingItem(
             title = "개인정보 변경",
-            onClick = {}
+            onClick = {},
         )
     }
 }

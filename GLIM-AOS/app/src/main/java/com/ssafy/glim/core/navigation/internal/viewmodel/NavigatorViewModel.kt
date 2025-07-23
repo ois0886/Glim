@@ -10,23 +10,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class NavigatorViewModel
-    @Inject
-    constructor(
-        navigator: InternalNavigator,
-    ) : ViewModel() {
-        val sideEffect by lazy(LazyThreadSafetyMode.NONE) {
-            navigator.channel.receiveAsFlow()
-                .map { navigator ->
-                    when (navigator) {
-                        is InternalRoute.Navigate ->
-                            RouteSideEffect.Navigate(
-                                navigator.route,
-                                navigator.saveState,
-                                navigator.launchSingleTop,
-                            )
+@Inject
+constructor(
+    navigator: InternalNavigator,
+) : ViewModel() {
+    val sideEffect by lazy(LazyThreadSafetyMode.NONE) {
+        navigator.channel.receiveAsFlow()
+            .map { navigator ->
+                when (navigator) {
+                    is InternalRoute.Navigate ->
+                        RouteSideEffect.Navigate(
+                            navigator.route,
+                            navigator.saveState,
+                            navigator.launchSingleTop,
+                        )
 
-                        InternalRoute.NavigateBack -> RouteSideEffect.NavigateBack
-                    }
+                    InternalRoute.NavigateBack -> RouteSideEffect.NavigateBack
                 }
-        }
+            }
     }
+}

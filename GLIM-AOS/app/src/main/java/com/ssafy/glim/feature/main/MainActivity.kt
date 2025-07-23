@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
 import com.ssafy.glim.core.navigation.LaunchedNavigator
+import com.ssafy.glim.core.service.LockServiceManager
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.net.toUri
@@ -23,13 +24,13 @@ private const val REQ_CODE_OVERLAY_PERMISSION: Int = 0
 
 object PermissionUtil {
     fun onObtainingPermissionOverlayWindow(context: Activity) {
-        val intent = Intent(
-            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-            ("package:" + context.packageName).toUri()
-        )
+        val intent =
+            Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                ("package:" + context.packageName).toUri(),
+            )
         context.startActivityForResult(intent, REQ_CODE_OVERLAY_PERMISSION)
     }
-
 
     fun alertPermissionCheck(context: Context?): Boolean {
         return !Settings.canDrawOverlays(context)

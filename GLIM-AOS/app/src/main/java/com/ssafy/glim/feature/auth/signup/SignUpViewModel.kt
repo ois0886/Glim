@@ -3,13 +3,19 @@ package com.ssafy.glim.feature.auth.signup
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.extensions.extractDigits
+import com.ssafy.glim.core.common.extensions.formatBirthDate
+import com.ssafy.glim.core.common.extensions.formatGender
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
+import com.ssafy.glim.core.common.utils.toErrorRes
 import com.ssafy.glim.core.domain.usecase.auth.CertifyValidCodeUseCase
 import com.ssafy.glim.core.domain.usecase.auth.SignUpUseCase
 import com.ssafy.glim.core.navigation.Navigator
+import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 
@@ -156,7 +162,7 @@ constructor(
             is ValidationResult.Invalid -> validationResult.errorMessageRes
         }
 
-        reduce { state.copy(birthYear = filteredBirth, birthYearError = error) }
+        reduce { state.copy(birthDate = filteredBirth, birthDateError = error) }
     }
 
     fun onGenderSelected(gender: String) = intent {
@@ -165,125 +171,117 @@ constructor(
 
     fun onNextStep() = intent {
         when (state.currentStep) {
-            SignUpStep.Email -> {
-                val validation = ValidationUtils.validateEmail(
-                    email = state.email,
-                    emptyErrorRes = R.string.error_email_empty,
-                    invalidErrorRes = R.string.error_email_invalid
-                )
+            SignUpStep.Auth -> validateAuthStep()
+            SignUpStep.Profile -> validateProfileStep()
+            SignUpStep.Code -> validateCodeStep()
+        }
+    }
 
-                when (validation) {
-                    is ValidationResult.Valid -> moveToNextStep()
-                    is ValidationResult.Invalid -> {
-                        postSideEffect(SignUpSideEffect.ShowToast(validation.errorMessageRes))
-                        reduce { state.copy(emailError = validation.errorMessageRes) }
-                    }
-                }
-            }
+    private fun validateAuthStep() = intent {
+        val emailError = ValidationUtils.validateEmail(
+            email = state.email,
+            emptyErrorRes = R.string.error_email_empty,
+            invalidErrorRes = R.string.error_email_invalid
+        ).toErrorRes()
 
-            SignUpStep.Code -> {
-                val validation = ValidationUtils.validateCode(
-                    code = state.code,
-                    emptyErrorRes = R.string.error_code_empty,
-                    invalidErrorRes = R.string.error_code_invalid
-                )
+        val passwordError = ValidationUtils.validatePassword(
+            password = state.password,
+            emptyErrorRes = R.string.error_password_empty,
+            invalidErrorRes = R.string.error_password_invalid
+        ).toErrorRes()
 
-                when (validation) {
-                    is ValidationResult.Valid -> certifyValidCode()
-                    is ValidationResult.Invalid -> {
-                        postSideEffect(SignUpSideEffect.ShowToast(validation.errorMessageRes))
-                        reduce { state.copy(codeError = validation.errorMessageRes) }
-                    }
-                }
-            }
+        val confirmError = ValidationUtils.validatePasswordConfirm(
+            password = state.password,
+            confirmPassword = state.confirmPassword,
+            mismatchErrorRes = R.string.error_password_mismatch
+        ).toErrorRes()
 
-            SignUpStep.Password -> {
-                val passwordValidation = ValidationUtils.validatePassword(
-                    password = state.password,
-                    emptyErrorRes = R.string.error_password_empty,
-                    invalidErrorRes = R.string.error_password_invalid
-                )
+        if (emailError != null || passwordError != null || confirmError != null) {
+            showAuthErrors(emailError, passwordError, confirmError)
+        } else {
+            moveToNextStep()
+        }
+    }
 
-                val confirmValidation = ValidationUtils.validatePasswordConfirm(
-                    password = state.password,
-                    confirmPassword = state.confirmPassword,
-                    mismatchErrorRes = R.string.error_password_mismatch
-                )
+    private fun validateProfileStep() = intent {
+        val nameError = ValidationUtils.validateName(
+            name = state.name,
+            emptyErrorRes = R.string.error_name_empty,
+            invalidErrorRes = R.string.error_name_invalid
+        ).toErrorRes()
 
-                val passwordError = when (passwordValidation) {
-                    is ValidationResult.Valid -> null
-                    is ValidationResult.Invalid -> passwordValidation.errorMessageRes
-                }
+        val birthDateError = ValidationUtils.validateBirthDate(
+            birthDate = state.birthDate,
+            emptyErrorRes = R.string.error_birth_empty,
+            formatErrorRes = R.string.error_birth_format,
+            yearErrorRes = R.string.error_birth_year,
+            monthErrorRes = R.string.error_birth_month,
+            dayErrorRes = R.string.error_birth_day,
+            futureDateErrorRes = R.string.error_birth_future
+        ).toErrorRes()
 
-                val confirmError = when (confirmValidation) {
-                    is ValidationResult.Valid -> null
-                    is ValidationResult.Invalid -> confirmValidation.errorMessageRes
-                }
+        val genderError = ValidationUtils.validateGender(
+            gender = state.gender,
+            emptyErrorRes = R.string.error_gender_empty
+        ).toErrorRes()
 
-                if (passwordError != null || confirmError != null) {
-                    val errorRes = passwordError ?: confirmError!!
-                    postSideEffect(SignUpSideEffect.ShowToast(errorRes))
-                    reduce {
-                        state.copy(
-                            passwordError = passwordError,
-                            confirmPasswordError = confirmError,
-                        )
-                    }
-                } else {
-                    moveToNextStep()
-                }
-            }
+        if (nameError != null || birthDateError != null || genderError != null) {
+            showProfileErrors(nameError, birthDateError, genderError)
+        } else {
+            moveToNextStep()
+        }
+    }
 
-            SignUpStep.Profile -> {
-                val nameValidation = ValidationUtils.validateName(
-                    name = state.name,
-                    emptyErrorRes = R.string.error_name_empty,
-                    invalidErrorRes = R.string.error_name_invalid
-                )
+    private fun validateCodeStep() = intent {
+        val codeValidation = ValidationUtils.validateCode(
+            code = state.code,
+            emptyErrorRes = R.string.error_code_empty,
+            invalidErrorRes = R.string.error_code_invalid
+        )
 
-                val birthDateValidation = ValidationUtils.validateBirthDate(
-                    birthDate = state.birthYear,
-                    emptyErrorRes = R.string.error_birth_empty,
-                    formatErrorRes = R.string.error_birth_format,
-                    yearErrorRes = R.string.error_birth_year,
-                    monthErrorRes = R.string.error_birth_month,
-                    dayErrorRes = R.string.error_birth_day,
-                    futureDateErrorRes = R.string.error_birth_future
-                )
+        when (codeValidation) {
+            is ValidationResult.Valid -> certifyValidCode()
+            is ValidationResult.Invalid -> showCodeError(codeValidation.errorMessageRes)
+        }
+    }
 
-                val genderValidation = ValidationUtils.validateGender(
-                    gender = state.gender,
-                    emptyErrorRes = R.string.error_gender_empty
-                )
+    private fun showAuthErrors(
+        emailError: Int?,
+        passwordError: Int?,
+        confirmError: Int?
+    ) = intent {
+        val firstError = emailError ?: passwordError ?: confirmError!!
+        postSideEffect(SignUpSideEffect.ShowToast(firstError))
 
-                val nameError = when (nameValidation) {
-                    is ValidationResult.Valid -> null
-                    is ValidationResult.Invalid -> nameValidation.errorMessageRes
-                }
+        reduce {
+            state.copy(
+                emailError = emailError,
+                passwordError = passwordError,
+                confirmPasswordError = confirmError
+            )
+        }
+    }
 
-                val birthDateError = when (birthDateValidation) {
-                    is ValidationResult.Valid -> null
-                    is ValidationResult.Invalid -> birthDateValidation.errorMessageRes
-                }
+    private fun showProfileErrors(
+        nameError: Int?,
+        birthDateError: Int?,
+        genderError: Int?
+    ) = intent {
+        val firstError = nameError ?: birthDateError ?: genderError!!
+        postSideEffect(SignUpSideEffect.ShowToast(firstError))
 
-                val genderError = when (genderValidation) {
-                    is ValidationResult.Valid -> null
-                    is ValidationResult.Invalid -> genderValidation.errorMessageRes
-                }
+        reduce {
+            state.copy(
+                nameError = nameError,
+                birthDateError = birthDateError
+            )
+        }
+    }
 
-                if (nameError != null || birthDateError != null || genderError != null) {
-                    val errorRes = nameError ?: birthDateError ?: genderError!!
-                    postSideEffect(SignUpSideEffect.ShowToast(errorRes))
-                    reduce {
-                        state.copy(
-                            nameError = nameError,
-                            birthYearError = birthDateError,
-                        )
-                    }
-                } else {
-                    // TODO: 회원가입 완료 처리
-                }
-            }
+    private fun showCodeError(errorRes: Int) = intent {
+        postSideEffect(SignUpSideEffect.ShowToast(errorRes))
+        reduce {
+            state.copy(codeError = errorRes)
         }
     }
 
@@ -294,8 +292,7 @@ constructor(
     }
 
     private fun certifyValidCode() = intent {
-        moveToNextStep()
-
+        performSignUp()
         // TODO: 실제 인증 코드 검증 로직
         /*
         certifyValidCodeUseCase(state.code)
@@ -305,7 +302,7 @@ constructor(
             .catch { exception ->
                 reduce { state.copy(isLoading = false) }
                 val errorMessage = exception.message ?: "코드 인증에 실패했습니다."
-                postSideEffect(SignUpSideEffect.ShowToast(errorMessage))
+                postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_verification_failed))
                 reduce { state.copy(codeError = R.string.error_code_verification_failed) }
             }
             .collect { result ->
@@ -313,16 +310,46 @@ constructor(
                 if (result.isSuccess) {
                     moveToNextStep()
                 } else {
-                    postSideEffect(SignUpSideEffect.ShowToastRes(R.string.error_code_incorrect))
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_incorrect))
                     reduce { state.copy(codeError = R.string.error_code_incorrect) }
                 }
             }
-        */
+         */
     }
 
     private fun moveToNextStep() = intent {
         state.currentStep.next()?.let { next ->
             reduce { state.copy(currentStep = next) }
         }
+    }
+
+    private fun performSignUp() = intent {
+        val formattedBirthDate = state.birthDate.formatBirthDate()
+        val genderData = checkNotNull(state.gender) { "Data must not be null at this point" }
+        genderData.formatGender()
+
+        signUpUseCase(
+            email = state.email,
+            nickname = state.name,
+            password = state.password,
+            gender = genderData,
+            birthDate = formattedBirthDate
+        )
+            .onStart {
+                reduce { state.copy(isLoading = true) }
+            }
+            .catch { exception ->
+                reduce { state.copy(isLoading = false) }
+                postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
+            }
+            .collect { result ->
+                reduce { state.copy(isLoading = false) }
+                if (result.isSuccess) {
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_success))
+                    navigator.navigate(route = Route.Login, launchSingleTop = true)
+                } else {
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
+                }
+            }
     }
 }

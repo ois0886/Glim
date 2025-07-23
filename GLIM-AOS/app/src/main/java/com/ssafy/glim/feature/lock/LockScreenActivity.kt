@@ -101,7 +101,6 @@ class LockScreenActivity : ComponentActivity() {
                 val viewModel: LockViewModel = hiltViewModel()
                 val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
-
                 viewModel.collectSideEffect { effect ->
                     when (effect) {
                         is LockSideEffect.Unlock -> finish()
@@ -177,7 +176,8 @@ fun LockScreenContent(
     val dayFmt = DateTimeFormatter.ofPattern("EEE")
 
     Box(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
             .navigationBarsPadding()
             .background(Color.Black)
@@ -193,9 +193,9 @@ fun LockScreenContent(
                             totalDragY >  100f -> prevQuote()
                         }
                         totalDragY = 0f
-                    }
+                    },
                 )
-            }
+            },
     ) {
         val currentQuote = state.quotes.getOrNull(state.currentIndex)
         if (currentQuote != null) {
@@ -237,63 +237,65 @@ fun LockScreenContent(
                 painter = painterResource(R.drawable.example_glim_2),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
             )
         }
 
-
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .systemBarsPadding()
                 .padding(top = 4.dp, start = 16.dp, end = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             IconButton(onClick = saveGlim) {
                 Icon(
                     painter = painterResource(R.drawable.ic_download),
                     contentDescription = stringResource(R.string.save),
-                    tint = MainColor.copy(alpha = 0.8f)
+                    tint = MainColor.copy(alpha = 0.8f),
                 )
             }
             IconButton(onClick = favoriteGlim) {
                 Icon(
                     painter = painterResource(R.drawable.ic_favorite),
                     contentDescription = stringResource(R.string.like),
-                    tint = LightRed
+                    tint = LightRed,
                 )
             }
         }
 
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .padding(top = 72.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = state.time.format(timeFmt),
                 style = MaterialTheme.typography.displayLarge,
-                color = Color.White
+                color = Color.White,
             )
             Spacer(Modifier.height(4.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Text(
                     text = state.time.format(dateFmt),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
+                    color = Color.White,
                 )
                 Spacer(Modifier.width(4.dp))
                 val fmtSec = state.time.format(dayFmt)
                 Text(
                     text = stringResource(R.string.time_format_date, fmtSec),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
         }
         Row(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 24.dp)
                 .fillMaxWidth(),
@@ -301,7 +303,8 @@ fun LockScreenContent(
         ) {
             SwipeButton(
                 isIcon = true,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .weight(1F)
                     .fillMaxWidth(),
                 text = stringResource(R.string.read_book),
@@ -309,12 +312,13 @@ fun LockScreenContent(
                 onSwipe = viewBook,
                 backgroundColor = Gray.copy(alpha = 0.4f),
                 swipeDirection = SwipeDirection.RightToLeft,
-                paintRes = R.drawable.ic_library
+                paintRes = R.drawable.ic_library,
             )
             Spacer(modifier = Modifier.weight(3F))
             SwipeButton(
                 isIcon = true,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .weight(1F)
                     .fillMaxWidth(),
                 text = stringResource(R.string.read_glim),
@@ -326,7 +330,8 @@ fun LockScreenContent(
         }
 
         SwipeButton(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .navigationBarsPadding()

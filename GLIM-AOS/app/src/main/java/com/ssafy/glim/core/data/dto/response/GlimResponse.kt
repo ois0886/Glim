@@ -7,5 +7,5 @@ data class GlimResponse(
     val bookId: Long,
     val bookTitle: String,
     val author: String,
-    val bookCoverUrl: String
+    val bookCoverUrl: String,
 )
