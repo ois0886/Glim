@@ -5,7 +5,5 @@ data class GlimInfo(
     val text: String,
     val title: String,
     val author: String,
-    val background: String = ""
+    val background: String = "",
 )
-
-

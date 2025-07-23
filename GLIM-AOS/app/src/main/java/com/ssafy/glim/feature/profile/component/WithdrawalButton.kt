@@ -16,17 +16,17 @@ import com.ssafy.glim.R
 @Composable
 internal fun WithdrawalButton(
     onWithdrawalClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     TextButton(
         onClick = onWithdrawalClick,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Text(
             text = stringResource(R.string.settings_withdrawal),
             fontSize = 14.sp,
             color = Color.Gray,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -36,7 +36,7 @@ internal fun WithdrawalButton(
 private fun PreviewWithdrawalButton() {
     MaterialTheme {
         WithdrawalButton(
-            onWithdrawalClick = {}
+            onWithdrawalClick = {},
         )
     }
 }

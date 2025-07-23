@@ -28,7 +28,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 internal fun ProfileRoute(
     padding: PaddingValues,
     popBackStack: () -> Unit,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
     val context = LocalContext.current
@@ -39,7 +39,7 @@ internal fun ProfileRoute(
                 Toast.makeText(
                     context,
                     context.getString(sideEffect.messageRes),
-                    Toast.LENGTH_SHORT
+                    Toast.LENGTH_SHORT,
                 ).show()
             }
 
@@ -47,7 +47,7 @@ internal fun ProfileRoute(
                 Toast.makeText(
                     context,
                     context.getString(sideEffect.messageRes),
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG,
                 ).show()
             }
         }
@@ -63,7 +63,7 @@ internal fun ProfileRoute(
         onLogOutClick = viewModel::onLogOutClick,
         onWithdrawalClick = viewModel::onWithdrawalClick,
         onGlimLikeToggle = viewModel::onGlimLikeToggle,
-        modifier = Modifier.padding(padding)
+        modifier = Modifier.padding(padding),
     )
 }
 
@@ -78,19 +78,20 @@ private fun ProfileScreen(
     onLogOutClick: () -> Unit,
     onWithdrawalClick: () -> Unit,
     onGlimLikeToggle: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
+        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         item {
             ProfileHeader(
                 profileImageUrl = state.profileImageUrl,
-                userName = state.userName
+                userName = state.userName,
             )
         }
 
@@ -99,7 +100,7 @@ private fun ProfileScreen(
                 navigateToGlimUploadList = navigateToGlimUploadList,
                 navigateToGlimLikedList = navigateToGlimLikedList,
                 publishedGlimCount = state.publishedGlimCount,
-                likedGlimCount = state.likedGlimCount
+                likedGlimCount = state.likedGlimCount,
             )
         }
 
@@ -107,7 +108,7 @@ private fun ProfileScreen(
             UploadGlimCardListSection(
                 glimCards = state.glimShortCards,
                 navigateToGlimUploadList = navigateToGlimUploadList,
-                onGlimLikeToggle = onGlimLikeToggle
+                onGlimLikeToggle = onGlimLikeToggle,
             )
         }
 
@@ -116,7 +117,7 @@ private fun ProfileScreen(
                 navigateToEditProfile = navigateToEditProfile,
                 navigateToAccountSettings = navigateToLockSettings,
                 navigateToNotificationSettings = navigateToNotificationSettings,
-                onLogOutClick = onLogOutClick
+                onLogOutClick = onLogOutClick,
             )
         }
 
@@ -129,29 +130,31 @@ private fun ProfileScreen(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewProfileScreen() {
-    val mockState = ProfileUiState(
-        profileImageUrl = null,
-        userName = "박성준",
-        publishedGlimCount = 24,
-        likedGlimCount = 8,
-        isLoading = false,
-        glimShortCards = listOf(
-            GlimShortCard(
-                id = "1",
-                title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
-                timestamp = "P.51",
-                likeCount = 1247,
-                isLiked = false
-            ),
-            GlimShortCard(
-                id = "2",
-                title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
-                timestamp = "P.51",
-                likeCount = 856,
-                isLiked = true
-            )
+    val mockState =
+        ProfileUiState(
+            profileImageUrl = null,
+            userName = "박성준",
+            publishedGlimCount = 24,
+            likedGlimCount = 8,
+            isLoading = false,
+            glimShortCards =
+                listOf(
+                    GlimShortCard(
+                        id = "1",
+                        title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
+                        timestamp = "P.51",
+                        likeCount = 1247,
+                        isLiked = false,
+                    ),
+                    GlimShortCard(
+                        id = "2",
+                        title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
+                        timestamp = "P.51",
+                        likeCount = 856,
+                        isLiked = true,
+                    ),
+                ),
         )
-    )
 
     MaterialTheme {
         ProfileScreen(
@@ -163,7 +166,7 @@ private fun PreviewProfileScreen() {
             navigateToNotificationSettings = {},
             onLogOutClick = {},
             onWithdrawalClick = {},
-            onGlimLikeToggle = {}
+            onGlimLikeToggle = {},
         )
     }
 }
@@ -171,14 +174,15 @@ private fun PreviewProfileScreen() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewEmptyGlimCards() {
-    val mockState = ProfileUiState(
-        profileImageUrl = null,
-        userName = "박성준",
-        publishedGlimCount = 0,
-        likedGlimCount = 0,
-        isLoading = false,
-        glimShortCards = emptyList()
-    )
+    val mockState =
+        ProfileUiState(
+            profileImageUrl = null,
+            userName = "박성준",
+            publishedGlimCount = 0,
+            likedGlimCount = 0,
+            isLoading = false,
+            glimShortCards = emptyList(),
+        )
 
     MaterialTheme {
         ProfileScreen(
@@ -190,7 +194,7 @@ private fun PreviewEmptyGlimCards() {
             navigateToNotificationSettings = {},
             onLogOutClick = {},
             onWithdrawalClick = {},
-            onGlimLikeToggle = {}
+            onGlimLikeToggle = {},
         )
     }
 }
@@ -198,14 +202,15 @@ private fun PreviewEmptyGlimCards() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewLoadingState() {
-    val mockState = ProfileUiState(
-        profileImageUrl = null,
-        userName = "",
-        publishedGlimCount = 0,
-        likedGlimCount = 0,
-        isLoading = true,
-        glimShortCards = emptyList()
-    )
+    val mockState =
+        ProfileUiState(
+            profileImageUrl = null,
+            userName = "",
+            publishedGlimCount = 0,
+            likedGlimCount = 0,
+            isLoading = true,
+            glimShortCards = emptyList(),
+        )
 
     MaterialTheme {
         ProfileScreen(
@@ -217,7 +222,7 @@ private fun PreviewLoadingState() {
             navigateToNotificationSettings = {},
             onLogOutClick = {},
             onWithdrawalClick = {},
-            onGlimLikeToggle = {}
+            onGlimLikeToggle = {},
         )
     }
 }

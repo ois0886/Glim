@@ -14,11 +14,9 @@ sealed interface Route {
 
     @Serializable
     data class BookDetail(val bookId: Long) : BottomTabRoute
-
 }
 
 sealed interface GlimRoute : Route {
-
     @Serializable
     data object Liked : GlimRoute
 

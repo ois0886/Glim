@@ -107,5 +107,5 @@ dependencies {
     implementation(libs.gson)
 
     // DataStore
-    implementation (libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.preferences)
 }

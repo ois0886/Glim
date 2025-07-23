@@ -12,5 +12,5 @@ data class SearchItem(
 enum class RankStatus(val symbol: String, val color: Color) {
     UP("▲", Color.Red),
     DOWN("▼", Color.Blue),
-    MAINTAIN("―", Color.Black);
+    MAINTAIN("―", Color.Black),
 }

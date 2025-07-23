@@ -61,15 +61,16 @@ fun PasswordInputTextField(
         trailingIcon = {
             IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                 Icon(
-                    imageVector = if (isPasswordVisible) {
-                        Icons.Filled.VisibilityOff
-                    } else {
-                        Icons.Filled.Visibility
-                    },
+                    imageVector =
+                        if (isPasswordVisible) {
+                            Icons.Filled.VisibilityOff
+                        } else {
+                            Icons.Filled.Visibility
+                        },
                     contentDescription = if (isPasswordVisible) "비밀번호 숨기기" else "비밀번호 보기",
                 )
             }
-        }
+        },
     )
 }
 

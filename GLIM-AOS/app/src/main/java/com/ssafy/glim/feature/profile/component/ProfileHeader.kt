@@ -9,14 +9,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,57 +36,61 @@ import com.ssafy.glim.R
 internal fun ProfileHeader(
     profileImageUrl: String?,
     userName: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         SubcomposeAsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(profileImageUrl)
-                .crossfade(true)
-                .build(),
+            model =
+                ImageRequest.Builder(LocalContext.current)
+                    .data(profileImageUrl)
+                    .crossfade(true)
+                    .build(),
             contentDescription = stringResource(R.string.content_description_profile_image),
-            modifier = Modifier
-                .size(80.dp)
-                .clip(CircleShape),
+            modifier =
+                Modifier
+                    .size(80.dp)
+                    .clip(CircleShape),
             contentScale = ContentScale.Crop,
             loading = {
                 Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(
-                            color = Color.Gray.copy(alpha = 0.1f),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .size(80.dp)
+                            .background(
+                                color = Color.Gray.copy(alpha = 0.1f),
+                                shape = CircleShape,
+                            ),
+                    contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
                         color = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 2.dp
+                        strokeWidth = 2.dp,
                     )
                 }
             },
             error = {
                 Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(
-                            color = Color.Gray.copy(alpha = 0.2f),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .size(80.dp)
+                            .background(
+                                color = Color.Gray.copy(alpha = 0.2f),
+                                shape = CircleShape,
+                            ),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = stringResource(R.string.content_description_profile_image),
                         tint = Color.Gray,
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(48.dp),
                     )
                 }
-            }
+            },
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -97,13 +98,13 @@ internal fun ProfileHeader(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = userName,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = Color.Black,
             )
         }
     }
@@ -115,7 +116,7 @@ private fun PreviewProfileHeader() {
     MaterialTheme {
         ProfileHeader(
             profileImageUrl = null,
-            userName = "박성준"
+            userName = "박성준",
         )
     }
 }

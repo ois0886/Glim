@@ -1,7 +1,6 @@
 package com.ssafy.glim.feature.lock.component
 
 import androidx.compose.animation.AnimatedVisibility
-
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -9,12 +8,12 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,7 +43,7 @@ import kotlin.math.roundToInt
 // 드래그 방향 지정
 enum class SwipeDirection {
     LeftToRight,
-    RightToLeft
+    RightToLeft,
 }
 
 @Composable
@@ -54,10 +53,11 @@ private fun SwipeIndicator(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .size(36.dp)
-            .clip(CircleShape)
-            .background(Color.Transparent)
+        modifier =
+            modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(Color.Transparent),
     ) {
         Icon(
             imageVector = Icons.Rounded.Check,
@@ -71,7 +71,7 @@ private fun SwipeIndicator(
 @OptIn(ExperimentalWearMaterialApi::class)
 @Composable
 fun SwipeButton(
-    isIcon : Boolean = false,
+    isIcon: Boolean = false,
     modifier: Modifier = Modifier,
     text: String,
     isComplete: Boolean,
@@ -85,16 +85,17 @@ fun SwipeButton(
     val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
     val maxWidthPx = with(LocalDensity.current) { screenWidthDp.toPx() }
     // 스와이프 방향에 따른 앵커 설정
-    val anchors = when (swipeDirection) {
-        SwipeDirection.LeftToRight -> mapOf(0f to 0, maxWidthPx to 1)
-        SwipeDirection.RightToLeft -> mapOf(0f to 0, -maxWidthPx to 1)
-    }
+    val anchors =
+        when (swipeDirection) {
+            SwipeDirection.LeftToRight -> mapOf(0f to 0, maxWidthPx to 1)
+            SwipeDirection.RightToLeft -> mapOf(0f to 0, -maxWidthPx to 1)
+        }
     val swipeableState = rememberSwipeableState(0)
     var swipeComplete by remember { mutableStateOf(false) }
     val alpha: Float by animateFloatAsState(
         targetValue = if (swipeComplete) 0f else 1f,
         animationSpec = tween(durationMillis = 300),
-        label = ""
+        label = "",
     )
 
     LaunchedEffect(swipeableState.currentValue) {
@@ -109,56 +110,70 @@ fun SwipeButton(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .clip(if(swipeDirection == SwipeDirection.RightToLeft) RoundedCornerShape(0,40,40,0) else RoundedCornerShape(40,0,0,40))
-            .background(backgroundColor)
-            .swipeable(
-                state = swipeableState,
-                anchors = anchors,
-                thresholds = { _, _ -> FractionalThreshold(0.3f) },
-                orientation = Orientation.Horizontal
-            )
-            .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
-            .then(
-                if (swipeComplete) Modifier.width(64.dp)
-                else Modifier.fillMaxWidth()
-            )
-            .height(64.dp),
+        modifier =
+            modifier
+                .clip(
+                    if (swipeDirection == SwipeDirection.RightToLeft) RoundedCornerShape(
+                        0,
+                        40,
+                        40,
+                        0,
+                    ) else RoundedCornerShape(40, 0, 0, 40),
+                )
+                .background(backgroundColor)
+                .swipeable(
+                    state = swipeableState,
+                    anchors = anchors,
+                    thresholds = { _, _ -> FractionalThreshold(0.3f) },
+                    orientation = Orientation.Horizontal,
+                )
+                .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
+                .then(
+                    if (swipeComplete) {
+                        Modifier.width(64.dp)
+                    } else {
+                        Modifier.fillMaxWidth()
+                    },
+                )
+                .height(64.dp),
     ) {
         // 인디케이터
         SwipeIndicator(
-            modifier = Modifier
-                .align(indicatorAlignment)
-                .alpha(alpha),
+            modifier =
+                Modifier
+                    .align(indicatorAlignment)
+                    .alpha(alpha),
             backgroundColor = backgroundColor,
         )
         // 텍스트
-        if(!isIcon) {
+        if (!isIcon) {
             Text(
                 text = text,
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(alpha)
-                    .padding(horizontal = 40.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .alpha(alpha)
+                        .padding(horizontal = 40.dp),
             )
-        }
-        else{
-            Icon(
-                painter = painterResource(paintRes) ,
-                contentDescription = "",
-                tint = LightGray300,
-            )
-        }
+        } else
+            {
+                Icon(
+                    painter = painterResource(paintRes),
+                    contentDescription = "",
+                    tint = LightGray300,
+                )
+            }
         // 진행 인디케이터
         AnimatedVisibility(visible = swipeComplete && !isComplete) {
             CircularProgressIndicator(
                 color = Color.Transparent,
                 strokeWidth = 1.dp,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(4.dp)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(4.dp),
             )
         }
         // 완료 아이콘

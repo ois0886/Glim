@@ -37,14 +37,13 @@ import com.ssafy.glim.feature.library.component.RecentSearchSection
 import com.ssafy.glim.feature.library.component.SearchResultSection
 import org.orbitmvi.orbit.compose.collectAsState
 
-
 @Composable
 fun LibraryRoute(
     modifier: Modifier = Modifier,
     padding: PaddingValues,
     popBackStack: () -> Unit,
     onBookSelected: ((Book) -> Unit)? = null,
-    viewModel: LibraryViewModel = hiltViewModel()
+    viewModel: LibraryViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -116,19 +115,22 @@ fun LibraryRoute(
                 Icon(
                     painter = painterResource(R.drawable.ic_search),
                     contentDescription = null,
-                    modifier = Modifier.clickable {
-                        viewModel.onSearchExecuted()
-                    }
+                    modifier =
+                        Modifier.clickable {
+                            viewModel.onSearchExecuted()
+                        },
                 )
             },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    viewModel.onSearchExecuted()
-                }
-            )
+            keyboardOptions =
+                KeyboardOptions(
+                    imeAction = ImeAction.Search,
+                ),
+            keyboardActions =
+                KeyboardActions(
+                    onSearch = {
+                        viewModel.onSearchExecuted()
+                    },
+                ),
         )
 
         when (state.searchMode) {
@@ -153,7 +155,7 @@ fun LibraryRoute(
                     },
                     onDeleteClick = { searchItem ->
                         viewModel.onRecentSearchItemDelete(searchItem)
-                    }
+                    },
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 PopularSearchSection(
@@ -171,10 +173,13 @@ fun LibraryRoute(
                     bookList = state.searchBooks,
                     quoteList = state.searchQuotes,
                     onBookClick = {
-                        if (onBookSelected == null) viewModel.onBookClicked(it)
-                        else onBookSelected(it)
+                        if (onBookSelected == null) {
+                            viewModel.onBookClicked(it)
+                        } else {
+                            onBookSelected(it)
+                        }
                     },
-                    onQuoteClick = { viewModel.onQuoteClicked(it) }
+                    onQuoteClick = { viewModel.onQuoteClicked(it) },
                 )
             }
         }

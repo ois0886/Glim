@@ -24,5 +24,5 @@ data class LoginResponse(
     @SerializedName("expired")
     val expired: Boolean,
     @SerializedName("authorizationHeader")
-    val authorizationHeader: String
+    val authorizationHeader: String,
 )

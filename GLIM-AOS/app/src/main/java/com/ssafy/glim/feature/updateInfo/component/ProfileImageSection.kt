@@ -24,76 +24,81 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.ssafy.glim.R
 
-
 @Composable
 fun ProfileImageSection(
     imageUri: String?,
-    onImageClicked: () -> Unit
+    onImageClicked: () -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .size(160.dp),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .size(160.dp),
+        contentAlignment = Alignment.Center,
     ) {
         SubcomposeAsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUri)
-                .crossfade(true)
-                .build(),
+            model =
+                ImageRequest.Builder(LocalContext.current)
+                    .data(imageUri)
+                    .crossfade(true)
+                    .build(),
             contentDescription = stringResource(R.string.content_description_profile_image),
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape),
+            modifier =
+                Modifier
+                    .size(120.dp)
+                    .clip(CircleShape),
             contentScale = ContentScale.Crop,
             loading = {
                 Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(
-                            color = Color.Gray.copy(alpha = 0.1f)
-                        ),
+                    modifier =
+                        Modifier
+                            .size(80.dp)
+                            .background(
+                                color = Color.Gray.copy(alpha = 0.1f),
+                            ),
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
                         color = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 2.dp
+                        strokeWidth = 2.dp,
                     )
                 }
             },
             error = {
                 Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(
-                            color = Color.Gray.copy(alpha = 0.2f)
-                        ),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .size(80.dp)
+                            .background(
+                                color = Color.Gray.copy(alpha = 0.2f),
+                            ),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = stringResource(R.string.content_description_profile_image),
                         tint = Color.Gray,
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(48.dp),
                     )
                 }
-            }
+            },
         )
 
         Box(
-            modifier = Modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary)
-                .align(Alignment.BottomCenter)
-                .clickable { onImageClicked() },
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .align(Alignment.BottomCenter)
+                    .clickable { onImageClicked() },
+            contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = Icons.Default.ImageSearch,
                 contentDescription = stringResource(R.string.content_description_profile_image),
                 tint = Color.White,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
             )
         }
     }

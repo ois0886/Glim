@@ -13,24 +13,23 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthService {
-
     @POST("api/v1/members")
     suspend fun signUp(
-        @Body request: SignUpRequest
+        @Body request: SignUpRequest,
     ): Response<SignUpResponse>
 
     @POST("api/v1/auth/login")
     suspend fun login(
-        @Body request: LoginRequest
+        @Body request: LoginRequest,
     ): Response<LoginResponse>
 
     @POST("api/v1/auth/refresh")
     suspend fun refreshToken(
-        @Header("Authorization") authorization: String
+        @Header("Authorization") authorization: String,
     ): Response<RefreshTokenResponse>
 
     @POST("api/v1/auth/logout")
     suspend fun logout(
-        @Body request: LogoutRequest
+        @Body request: LogoutRequest,
     ): Response<LogoutResponse>
 }

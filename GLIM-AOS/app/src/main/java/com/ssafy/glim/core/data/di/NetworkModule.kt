@@ -1,18 +1,13 @@
 package com.ssafy.glim.core.data.di
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import com.ssafy.glim.core.data.datastore.SearchHistoryDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
 import javax.inject.Singleton
 
 // TODO: 이 부분 추후에 리팩토링 해야함
@@ -45,7 +40,4 @@ class NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
-
-
 }

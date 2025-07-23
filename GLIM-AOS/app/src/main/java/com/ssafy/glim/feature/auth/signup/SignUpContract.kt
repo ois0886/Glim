@@ -20,33 +20,37 @@ data class SignUpUiState(
     val isLoading: Boolean = false,
 ) {
     val isCurrentStepValid: Boolean
-        get() = when (currentStep) {
-            SignUpStep.Email -> email.isNotBlank() && emailError == null
-            SignUpStep.Code -> code.isNotBlank() && codeError == null
-            SignUpStep.Password ->
-                password.isNotBlank() &&
+        get() =
+            when (currentStep) {
+                SignUpStep.Email -> email.isNotBlank() && emailError == null
+                SignUpStep.Code -> code.isNotBlank() && codeError == null
+                SignUpStep.Password ->
+                    password.isNotBlank() &&
                         confirmPassword.isNotBlank() &&
                         passwordError == null &&
                         confirmPasswordError == null
 
-            SignUpStep.Profile ->
-                name.isNotBlank() &&
+                SignUpStep.Profile ->
+                    name.isNotBlank() &&
                         birthDate.isNotBlank() &&
                         gender != null &&
                         nameError == null &&
                         birthDateError == null
-        }
+            }
 }
 
 sealed interface SignUpSideEffect {
-    data class ShowToast(@StringRes val message: Int) : SignUpSideEffect
+    data class ShowToast(
+        @StringRes val message: Int,
+    ) : SignUpSideEffect
 }
 
 enum class SignUpStep(val progress: Float) {
     Email(0.25f),
     Code(0.5f),
     Password(0.75f),
-    Profile(1f);
+    Profile(1f),
+    ;
 
     fun next(): SignUpStep? =
         when (this) {

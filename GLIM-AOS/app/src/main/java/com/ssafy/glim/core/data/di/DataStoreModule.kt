@@ -15,20 +15,17 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
-
     @Provides
     @Singleton
     fun provideSearchHistoryPreferencesDataStore(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): DataStore<Preferences> {
         return context.searchHistoryDataStore
     }
 
     @Provides
     @Singleton
-    fun provideSearchHistoryDataStore(
-        dataStore: DataStore<Preferences>
-    ): SearchHistoryDataStore {
+    fun provideSearchHistoryDataStore(dataStore: DataStore<Preferences>): SearchHistoryDataStore {
         return SearchHistoryDataStore(dataStore)
     }
 }
