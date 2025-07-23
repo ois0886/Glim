@@ -29,9 +29,8 @@ public class QuoteController {
 
     @GetMapping("{isbn}")
     public ResponseEntity<List<QuoteResponseDto>> getQuotesByIsbn(@PathVariable String isbn){
-        List<QuoteResponseDto> quoteList = quoteService.getPublicQuotesByIsbn(isbn);
 
-        return ResponseEntity.ok(quoteList);
+        return ResponseEntity.ok(quoteService.getPublicQuotesByIsbn(isbn));
     }
 
     @PostMapping("")
