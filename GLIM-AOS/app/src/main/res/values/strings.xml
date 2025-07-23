@@ -2,6 +2,7 @@
     <string name="app_name">글:림</string>
 
     <string name="login_title">로그인</string>
+    <string name="login_failed">로그인 실패</string>
     <string name="login_subtitle">로그인하고\n풍부하게 감성을 채워보세요.</string>
     <string name="login_loading">로딩중</string>
     <string name="login_button">로그인</string>
@@ -9,6 +10,8 @@
     <string name="login_forgot_password">비밀번호를 잊어버렸나요?</string>
     <string name="login_sns_title">SNS 간편 로그인</string>
     <string name="login_guest">비회원으로 둘러보기</string>
+
+    <string name="social_login_message">소셜 로그인은 준비중입니다.</string>
 
     <string name="login_email_placeholder">이메일을 입력해주세요.</string>
     <string name="login_password_placeholder">비밀번호를 입력해주세요.</string>
@@ -69,8 +72,7 @@
     <string name="settings_logout">로그아웃</string>
     <string name="settings_withdrawal">회원 탈퇴하기</string>
     <!-- 메시지 -->
-    <string name="logout_success">로그아웃되었습니다</string>
-    <string name="error_load_profile_failed">프로필 정보를 불러오는데 실패했습니다</string>
+    <string name="success_update_profile">프로필 정보를 수정하였습니다.</string>
 
     <!-- 접근성 -->
     <string name="content_description_profile_image">프로필 이미지</string>
@@ -111,6 +113,9 @@
     <string name="updating">변경 중</string>
     <string name="update">변경</string>
     <string name="profile_label_email">이메일 </string>
+
+    <string name="signup_success">회원가입이 완료되었습니다.</string>
+    <string name="signup_failed">회원가입에 실패했습니다.</string>
     <string name="profile_update_success">프로필이 변경되었습니다.</string>
     <string name="saved">저장했습니다!</string>
     <string name="i_love_it">좋아요!</string>
@@ -119,5 +124,17 @@
     <string name="read_book">도서 보기</string>
     <string name="read_glim">글귀 보기</string>
     <string name="lock_screen_slide_description"><![CDATA[밀어서 잠금 해제 >>]]></string>
+
+    <string name="logout_success">로그아웃되었습니다.</string>
+    <string name="withdrawal_message">회원탈퇴 처리</string>
+    <string name="lock_settings_message">잠금 설정 화면으로 이동</string>
+    <string name="notification_settings_message">알림 설정 화면으로 이동</string>
+    <string name="like_added_message">좋아요를 눌렀습니다.</string>
+    <string name="like_removed_message">좋아요를 취소했습니다.</string>
+    <string name="error_load_profile_failed">프로필 정보를 불러오는데 실패했습니다.</string>
+
+    <string name="signup_send_verification_code">인증번호 전송</string>
+    <string name="signup_verify_code">인증완료</string>
+    <string name="signup_confirm">확인</string>
 
 </resources>

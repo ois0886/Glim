@@ -31,7 +31,7 @@ internal fun MyGlimsSection(
     ) {
         MyGlimsItem(
             count = publishedGlimCount,
-            label = stringResource(R.string.profile_liked_articles),
+            label = stringResource(R.string.profile_recent_articles),
             onClick = navigateToGlimUploadList
         )
 

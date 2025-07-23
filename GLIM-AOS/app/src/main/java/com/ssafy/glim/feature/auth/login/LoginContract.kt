@@ -18,6 +18,5 @@ data class LoginUiState(
 }
 
 sealed interface LoginSideEffect {
-    data class ShowError(val message: String) : LoginSideEffect
-    data class ShowErrorRes(@StringRes val messageRes: Int) : LoginSideEffect
+    data class ShowError(@StringRes val messageRes: Int) : LoginSideEffect
 }

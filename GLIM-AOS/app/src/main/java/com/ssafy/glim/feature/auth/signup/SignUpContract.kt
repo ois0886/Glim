@@ -9,14 +9,14 @@ data class SignUpUiState(
     val password: String = "",
     val confirmPassword: String = "",
     val name: String = "",
-    val birthYear: String = "",
+    val birthDate: String = "",
     val gender: String? = null,
     @StringRes val emailError: Int? = null,
     @StringRes val codeError: Int? = null,
     @StringRes val passwordError: Int? = null,
     @StringRes val confirmPasswordError: Int? = null,
     @StringRes val nameError: Int? = null,
-    @StringRes val birthYearError: Int? = null,
+    @StringRes val birthDateError: Int? = null,
     val isLoading: Boolean = false,
 ) {
     val isCurrentStepValid: Boolean
@@ -31,10 +31,10 @@ data class SignUpUiState(
 
             SignUpStep.Profile ->
                 name.isNotBlank() &&
-                        birthYear.isNotBlank() &&
+                        birthDate.isNotBlank() &&
                         gender != null &&
                         nameError == null &&
-                        birthYearError == null
+                        birthDateError == null
         }
 }
 
