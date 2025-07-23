@@ -1,8 +1,12 @@
 package com.ssafy.glim.core.data.di
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import com.ssafy.glim.core.data.datastore.SearchHistoryDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -41,4 +45,7 @@ class NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
+
+
 }

@@ -1,10 +1,8 @@
 package com.ssafy.glim.feature.library
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
-import com.ssafy.glim.core.domain.model.SearchItem
 import com.ssafy.glim.core.domain.usecase.book.SearchBooksUseCase
 import com.ssafy.glim.core.domain.usecase.quote.SearchQuotesUseCase
 import com.ssafy.glim.core.domain.usecase.search.DeleteRecentSearchQueryUseCase
@@ -14,7 +12,6 @@ import com.ssafy.glim.core.domain.usecase.search.SaveRecentSearchQueryUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
-import com.ssafy.glim.feature.library.component.SearchTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -86,9 +83,7 @@ class LibraryViewModel @Inject constructor(
                     searchMode = SearchMode.RESULT,
                 )
             }
-            saveRecentSearchQueryUseCase(query).collect {
-                postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
-            }
+            saveRecentSearchQueryUseCase(query)
         }
     }
 
@@ -101,9 +96,7 @@ class LibraryViewModel @Inject constructor(
                 searchMode = SearchMode.RESULT,
             )
         }
-        saveRecentSearchQueryUseCase(query).collect {
-            postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
-        }
+        saveRecentSearchQueryUseCase(query)
     }
 
     // 최근 검색어 항목 클릭
@@ -115,22 +108,20 @@ class LibraryViewModel @Inject constructor(
                 searchMode = SearchMode.RESULT,
             )
         }
-        saveRecentSearchQueryUseCase(query).collect {
-            postSideEffect(LibrarySideEffect.ShowToast("검색어가 저장되었습니다."))
-        }
+        saveRecentSearchQueryUseCase(query)
     }
 
     // 최근 검색어 삭제 - 수정된 버전
-    fun onRecentSearchItemDelete(searchItem: SearchItem) = intent {
+    fun onRecentSearchItemDelete(searchQuery: String) = intent {
         reduce {
             state.copy(
                 recentSearchItems = state.recentSearchItems.filter {
-                    !(it.text == searchItem.text && it.type == searchItem.type)
+                    it != searchQuery
                 },
                 error = null
             )
         }
-        deleteRecentSearchQueryUseCase(searchItem.text).collect { }
+        deleteRecentSearchQueryUseCase(searchQuery)
     }
 
     // 책 아이템 클릭

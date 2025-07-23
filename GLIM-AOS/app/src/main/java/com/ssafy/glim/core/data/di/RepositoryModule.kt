@@ -1,6 +1,7 @@
 package com.ssafy.glim.core.data.di
 
 import com.ssafy.glim.core.data.repository.AuthRepositoryImpl
+import com.ssafy.glim.core.data.repository.SearchQueryRepositoryImpl
 import com.ssafy.glim.core.data.repository.fake.FakeBookRepositoryImpl
 import com.ssafy.glim.core.data.repository.fake.FakeGlimRepositoryImpl
 import com.ssafy.glim.core.data.repository.fake.FakeQuoteRepositoryImpl
@@ -37,6 +38,6 @@ interface RepositoryModule {
 
     @Singleton
     @Binds
-    fun bindSearchQueryRepository(repository: FakeSearchQueryRepositoryImpl): SearchQueryRepository
+    fun bindSearchQueryRepository(repository: SearchQueryRepositoryImpl): SearchQueryRepository
 
 }

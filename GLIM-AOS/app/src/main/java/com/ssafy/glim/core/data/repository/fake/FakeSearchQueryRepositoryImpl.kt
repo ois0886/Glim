@@ -3,6 +3,7 @@ package com.ssafy.glim.core.data.repository.fake
 import com.ssafy.glim.core.domain.model.RankStatus
 import com.ssafy.glim.core.domain.model.SearchItem
 import com.ssafy.glim.core.domain.repository.SearchQueryRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -109,18 +110,18 @@ constructor() : SearchQueryRepository {
         emit(popularSearchQueries)
     }
 
-    override fun getRecentSearchQueries() = flow {
-        emit(recentSearchQueries)
+    override fun getRecentSearchQueries(): Flow<List<String>> = flow {
+        emit(recentSearchQueries.map{it.text})
     }
 
-    override fun saveRecentSearchQuery(query: String) = flow {
+    override suspend fun saveRecentSearchQuery(query: String)  {
         recentSearchQueries.removeIf { it.text == query }
         recentSearchQueries.add(0, SearchItem(text = query))
-        emit(Unit)
+        Unit
     }
 
-    override fun deleteRecentSearchQuery(query: String) = flow {
+    override suspend fun deleteRecentSearchQuery(query: String) {
         recentSearchQueries.removeIf { it.text == query }
-        emit(Unit)
+        Unit
     }
 }
