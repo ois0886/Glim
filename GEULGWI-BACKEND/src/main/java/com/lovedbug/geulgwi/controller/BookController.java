@@ -1,7 +1,5 @@
 package com.lovedbug.geulgwi.controller;
 
-import com.lovedbug.geulgwi.dto.resposne.SearchHistoryResponseDto;
-import com.lovedbug.geulgwi.service.SearchHistoryService;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +15,6 @@ import com.lovedbug.geulgwi.service.BookService;
 public class BookController {
 
     private final BookService bookService;
-    private final SearchHistoryService searchHistoryService;
 
     @GetMapping("")
     public ResponseEntity<List<AladdinBookDto>> getBooksByKeyword(
@@ -38,15 +35,6 @@ public class BookController {
         return ResponseEntity
             .ok()
             .body(bookService.getBestSellerBooks(listQueryType, page));
-    }
-
-    @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<SearchHistoryResponseDto>> getSearchHistory(
-        @PathVariable(name= "keyword") String keyword) {
-
-        return ResponseEntity
-            .ok()
-            .body(searchHistoryService.getSearchKeywordHistory(keyword));
     }
 
     @PatchMapping("/{id}/views")
