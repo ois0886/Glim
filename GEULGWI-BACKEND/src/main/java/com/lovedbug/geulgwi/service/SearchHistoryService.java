@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public class SearchHistoryService {
 
-    public List<SearchHistoryResponseDto> getSearchKeywordHistory(String keyword) {
-        return SearchHistoryResponseDto.toSearchHistoryDto(keyword);
+    public List<SearchHistoryResponseDto> getSearchPopularHistory() {
+        return List.of(SearchHistoryResponseDto.toSearchDto());
     }
 }
