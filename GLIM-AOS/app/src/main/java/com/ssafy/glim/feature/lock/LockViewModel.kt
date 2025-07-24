@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.lock
 
-import androidx.compose.runtime.currentComposer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.R
@@ -46,10 +45,11 @@ constructor(
         if (nextIdx >= state.quotes.size - 5) loadQuotes()
         reduce { state.copy(currentIndex = nextIdx) }
     }
-    fun prevQuote() = intent{
+    fun prevQuote() = intent {
         var prevIdx = state.currentIndex - 1
-        if(prevIdx<0)
+        if (prevIdx < 0) {
             prevIdx = 0
+        }
         reduce { state.copy(currentIndex = prevIdx) }
     }
     fun unlockMain() = intent {

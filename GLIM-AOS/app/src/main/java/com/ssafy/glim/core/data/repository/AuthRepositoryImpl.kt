@@ -32,7 +32,6 @@ class AuthRepositoryImpl @Inject constructor(
         birthDate: String
     ): Flow<Result<Unit>> = flow {
         val result = runCatching {
-
             val birthDateResult = birthDate.toBirthDateList()
             if (birthDateResult.isFailure) {
                 throw Exception("올바르지 않은 생년월일 형식입니다.")
@@ -84,7 +83,6 @@ class AuthRepositoryImpl @Inject constructor(
         password: String
     ): Flow<Result<Unit>> = flow {
         val result = runCatching {
-
             val request = LoginRequest(
                 email = email,
                 password = password

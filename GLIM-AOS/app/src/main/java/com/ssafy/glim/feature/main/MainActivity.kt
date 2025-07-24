@@ -52,10 +52,9 @@ class MainActivity : ComponentActivity() {
             LaunchedNavigator(navigator.navController)
             val initialRoute = intent.getStringExtra("nav_route")
             LaunchedEffect(initialRoute) {
-                if(initialRoute == "book"){
+                if (initialRoute == "book") {
                     navigator.navController.navigate(Route.BookDetail(1))
-                }
-                else if(initialRoute == "glim"){
+                } else if (initialRoute == "glim") {
                     navigator.navigate(MainTab.REELS)
                 }
             }

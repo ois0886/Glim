@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -110,7 +109,7 @@ class LockScreenActivity : ComponentActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        is LockSideEffect.NavigateBook ->{
+                        is LockSideEffect.NavigateBook -> {
                             this.startActivity(
                                 Intent(this, MainActivity::class.java).apply {
                                     putExtra("nav_route", "book")
@@ -190,7 +189,7 @@ fun LockScreenContent(
                     onDragEnd = {
                         when {
                             totalDragY < -100f -> nextQuote()
-                            totalDragY >  100f -> prevQuote()
+                            totalDragY > 100f -> prevQuote()
                         }
                         totalDragY = 0f
                     },
