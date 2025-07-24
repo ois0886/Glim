@@ -7,21 +7,17 @@ import com.ssafy.glim.core.common.extensions.formatBirthDate
 import com.ssafy.glim.core.common.extensions.formatGender
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
+import com.ssafy.glim.core.common.utils.toErrorRes
 import com.ssafy.glim.core.domain.usecase.auth.CertifyValidCodeUseCase
 import com.ssafy.glim.core.domain.usecase.auth.SignUpUseCase
 import com.ssafy.glim.core.navigation.Navigator
-import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 
 @HiltViewModel
-internal class SignUpViewModel
-@Inject
-constructor(
+internal class SignUpViewModel @Inject constructor(
     private val navigator: Navigator,
     private val signUpUseCase: SignUpUseCase,
     private val certifyValidCodeUseCase: CertifyValidCodeUseCase,
@@ -170,125 +166,132 @@ constructor(
 
     fun onNextStep() = intent {
         when (state.currentStep) {
-            SignUpStep.Email -> {
-                val validation = ValidationUtils.validateEmail(
-                    email = state.email,
-                    emptyErrorRes = R.string.error_email_empty,
-                    invalidErrorRes = R.string.error_email_invalid
-                )
+            SignUpStep.Email -> validateEmailStep()
+            SignUpStep.Code -> validateCodeStep()
+            SignUpStep.Password -> validatePasswordStep()
+            SignUpStep.Profile -> validateProfileStep()
+        }
+    }
 
-                when (validation) {
-                    is ValidationResult.Valid -> moveToNextStep()
-                    is ValidationResult.Invalid -> {
-                        postSideEffect(SignUpSideEffect.ShowToast(validation.errorMessageRes))
-                        reduce { state.copy(emailError = validation.errorMessageRes) }
-                    }
-                }
-            }
+    private fun validateEmailStep() = intent {
+        val validation = ValidationUtils.validateEmail(
+            email = state.email,
+            emptyErrorRes = R.string.error_email_empty,
+            invalidErrorRes = R.string.error_email_invalid
+        )
 
-            SignUpStep.Code -> {
-                val validation = ValidationUtils.validateCode(
-                    code = state.code,
-                    emptyErrorRes = R.string.error_code_empty,
-                    invalidErrorRes = R.string.error_code_invalid
-                )
+        when (validation) {
+            is ValidationResult.Valid -> moveToNextStep()
+            is ValidationResult.Invalid -> handleEmailValidationError(validation.errorMessageRes)
+        }
+    }
 
-                when (validation) {
-                    is ValidationResult.Valid -> certifyValidCode()
-                    is ValidationResult.Invalid -> {
-                        postSideEffect(SignUpSideEffect.ShowToast(validation.errorMessageRes))
-                        reduce { state.copy(codeError = validation.errorMessageRes) }
-                    }
-                }
-            }
+    private fun handleEmailValidationError(errorRes: Int) = intent {
+        postSideEffect(SignUpSideEffect.ShowToast(errorRes))
+        reduce { state.copy(emailError = errorRes) }
+    }
 
-            SignUpStep.Password -> {
-                val passwordValidation = ValidationUtils.validatePassword(
-                    password = state.password,
-                    emptyErrorRes = R.string.error_password_empty,
-                    invalidErrorRes = R.string.error_password_invalid
-                )
+    private fun validateCodeStep() = intent {
+        val validation = ValidationUtils.validateCode(
+            code = state.code,
+            emptyErrorRes = R.string.error_code_empty,
+            invalidErrorRes = R.string.error_code_invalid
+        )
 
-                val confirmValidation = ValidationUtils.validatePasswordConfirm(
-                    password = state.password,
-                    confirmPassword = state.confirmPassword,
-                    mismatchErrorRes = R.string.error_password_mismatch
-                )
+        when (validation) {
+            is ValidationResult.Valid -> certifyValidCode()
+            is ValidationResult.Invalid -> handleCodeValidationError(validation.errorMessageRes)
+        }
+    }
 
-                val passwordError = when (passwordValidation) {
-                    is ValidationResult.Valid -> null
-                    is ValidationResult.Invalid -> passwordValidation.errorMessageRes
-                }
+    private fun handleCodeValidationError(errorRes: Int) = intent {
+        postSideEffect(SignUpSideEffect.ShowToast(errorRes))
+        reduce { state.copy(codeError = errorRes) }
+    }
 
-                val confirmError = when (confirmValidation) {
-                    is ValidationResult.Valid -> null
-                    is ValidationResult.Invalid -> confirmValidation.errorMessageRes
-                }
+    // ========== Password 단계 검증 ==========
+    private fun validatePasswordStep() = intent {
+        val passwordValidation = ValidationUtils.validatePassword(
+            password = state.password,
+            emptyErrorRes = R.string.error_password_empty,
+            invalidErrorRes = R.string.error_password_invalid
+        )
 
-                if (passwordError != null || confirmError != null) {
-                    val errorRes = passwordError ?: confirmError!!
-                    postSideEffect(SignUpSideEffect.ShowToast(errorRes))
-                    reduce {
-                        state.copy(
-                            passwordError = passwordError,
-                            confirmPasswordError = confirmError,
-                        )
-                    }
-                } else {
-                    moveToNextStep()
-                }
-            }
+        val confirmValidation = ValidationUtils.validatePasswordConfirm(
+            password = state.password,
+            confirmPassword = state.confirmPassword,
+            mismatchErrorRes = R.string.error_password_mismatch
+        )
 
-            SignUpStep.Profile -> {
-                val nameValidation = ValidationUtils.validateName(
-                    name = state.name,
-                    emptyErrorRes = R.string.error_name_empty,
-                    invalidErrorRes = R.string.error_name_invalid
-                )
+        val passwordError = passwordValidation.toErrorRes()
+        val confirmError = confirmValidation.toErrorRes()
 
-                val birthDateValidation = ValidationUtils.validateBirthDate(
-                    birthDate = state.birthDate,
-                    emptyErrorRes = R.string.error_birth_empty,
-                    formatErrorRes = R.string.error_birth_format,
-                    yearErrorRes = R.string.error_birth_year,
-                    monthErrorRes = R.string.error_birth_month,
-                    dayErrorRes = R.string.error_birth_day,
-                    futureDateErrorRes = R.string.error_birth_future
-                )
+        if (passwordError != null || confirmError != null) {
+            handlePasswordValidationErrors(passwordError, confirmError)
+        } else {
+            moveToNextStep()
+        }
+    }
 
-                val genderValidation = ValidationUtils.validateGender(
-                    gender = state.gender,
-                    emptyErrorRes = R.string.error_gender_empty
-                )
+    private fun handlePasswordValidationErrors(
+        passwordError: Int?,
+        confirmError: Int?
+    ) = intent {
+        val firstError = passwordError ?: confirmError!!
+        postSideEffect(SignUpSideEffect.ShowToast(firstError))
+        reduce {
+            state.copy(
+                passwordError = passwordError,
+                confirmPasswordError = confirmError,
+            )
+        }
+    }
 
-                val nameError = when (nameValidation) {
-                    is ValidationResult.Valid -> null
-                    is ValidationResult.Invalid -> nameValidation.errorMessageRes
-                }
+    private fun validateProfileStep() = intent {
+        val nameValidation = ValidationUtils.validateName(
+            name = state.name,
+            emptyErrorRes = R.string.error_name_empty,
+            invalidErrorRes = R.string.error_name_invalid
+        )
 
-                val birthDateError = when (birthDateValidation) {
-                    is ValidationResult.Valid -> null
-                    is ValidationResult.Invalid -> birthDateValidation.errorMessageRes
-                }
+        val birthDateValidation = ValidationUtils.validateBirthDate(
+            birthDate = state.birthDate,
+            emptyErrorRes = R.string.error_birth_empty,
+            formatErrorRes = R.string.error_birth_format,
+            yearErrorRes = R.string.error_birth_year,
+            monthErrorRes = R.string.error_birth_month,
+            dayErrorRes = R.string.error_birth_day,
+            futureDateErrorRes = R.string.error_birth_future
+        )
 
-                val genderError = when (genderValidation) {
-                    is ValidationResult.Valid -> null
-                    is ValidationResult.Invalid -> genderValidation.errorMessageRes
-                }
+        val genderValidation = ValidationUtils.validateGender(
+            gender = state.gender,
+            emptyErrorRes = R.string.error_gender_empty
+        )
 
-                if (nameError != null || birthDateError != null || genderError != null) {
-                    val errorRes = nameError ?: birthDateError ?: genderError!!
-                    postSideEffect(SignUpSideEffect.ShowToast(errorRes))
-                    reduce {
-                        state.copy(
-                            nameError = nameError,
-                            birthDateError = birthDateError,
-                        )
-                    }
-                } else {
-                    performSignUp()
-                }
-            }
+        val nameError = nameValidation.toErrorRes()
+        val birthDateError = birthDateValidation.toErrorRes()
+        val genderError = genderValidation.toErrorRes()
+
+        if (nameError != null || birthDateError != null || genderError != null) {
+            handleProfileValidationErrors(nameError, birthDateError, genderError)
+        } else {
+            performSignUp()
+        }
+    }
+
+    private fun handleProfileValidationErrors(
+        nameError: Int?,
+        birthDateError: Int?,
+        genderError: Int?
+    ) = intent {
+        val firstError = nameError ?: birthDateError ?: genderError!!
+        postSideEffect(SignUpSideEffect.ShowToast(firstError))
+        reduce {
+            state.copy(
+                nameError = nameError,
+                birthDateError = birthDateError,
+            )
         }
     }
 
@@ -335,29 +338,5 @@ constructor(
         val formattedBirthDate = state.birthDate.formatBirthDate()
         val genderData = checkNotNull(state.gender) { "Data must not be null at this point" }
         genderData.formatGender()
-
-        signUpUseCase(
-            email = state.email,
-            nickname = state.name,
-            password = state.password,
-            gender = genderData,
-            birthDate = formattedBirthDate
-        )
-            .onStart {
-                reduce { state.copy(isLoading = true) }
-            }
-            .catch { exception ->
-                reduce { state.copy(isLoading = false) }
-                postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
-            }
-            .collect { result ->
-                reduce { state.copy(isLoading = false) }
-                if (result.isSuccess) {
-                    postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_success))
-                    navigator.navigate(route = Route.Login, launchSingleTop = true)
-                } else {
-                    postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
-                }
-            }
     }
 }

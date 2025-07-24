@@ -1,20 +1,25 @@
 package com.ssafy.glim.core.domain.repository
 
-import kotlinx.coroutines.flow.Flow
+import com.ssafy.glim.core.data.dto.token.AuthToken
 
 interface AuthRepository {
-    fun login(
-        email: String,
-        password: String,
-    ): Flow<Result<Unit>>
 
-    fun signUp(
+    suspend fun signUp(
         email: String,
         nickname: String,
         password: String,
         gender: String,
         birthDate: String,
-    ): Flow<Result<Unit>>
+    )
 
-    fun sendVerificationCode(code: String): Flow<Result<Unit>>
+    suspend fun login(
+        email: String,
+        password: String,
+    )
+
+    suspend fun refreshToken(): AuthToken
+
+    suspend fun verifyEmail(email: String)
+
+    suspend fun resendVerificationEmail(email: String)
 }

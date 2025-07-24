@@ -10,9 +10,11 @@ data class User(
 )
 
 enum class Gender {
-    MALE, FEMALE
+    MALE,
+    FEMALE
 }
 
 enum class UserStatus {
-    ACTIVE, INACTIVE
+    ACTIVE,
+    INACTIVE
 }
