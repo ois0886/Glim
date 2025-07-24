@@ -40,23 +40,20 @@
             font-size: 16px;
             line-height: 1.8;
         }
-        .verification-button {
+        .verification-code {
             text-align: center;
             margin: 40px 0;
         }
-        .btn {
+        .code {
             display: inline-block;
-            padding: 15px 30px;
+            padding: 20px 40px;
             background-color: #3498db;
             color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 18px;
+            font-size: 32px;
             font-weight: bold;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #2980b9;
+            letter-spacing: 8px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
         }
         .info-box {
             background-color: #ecf0f1;
@@ -73,12 +70,9 @@
             color: #7f8c8d;
             text-align: center;
         }
-        .url-text {
-            word-break: break-all;
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 3px;
-            margin: 10px 0;
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -86,30 +80,27 @@
     <div class="container">
         <div class="header">
             <div class="logo">{{appName}}</div>
-            <h1 class="title">이메일 인증을 완료해주세요</h1>
+            <h1 class="title">이메일 인증번호</h1>
         </div>
 
         <div class="content">
             <p>안녕하세요, <strong>{{email}}</strong>님!</p>
             <p>{{appName}} 서비스에 가입해주셔서 진심으로 감사합니다.</p>
-            <p>아래 버튼을 클릭하여 이메일 인증을 완료해주세요:</p>
+            <p>아래 <span class="highlight">6자리 인증번호</span>를 입력하여 이메일 인증을 완료해주세요:</p>
         </div>
 
-        <div class="verification-button">
-            <a href="{{verificationUrl}}" class="btn">이메일 인증하기</a>
+        <div class="verification-code">
+            <div class="code">{{verificationCode}}</div>
         </div>
 
         <div class="info-box">
             <p><strong>📌 참고사항</strong></p>
             <ul>
-                <li>이 링크는 <strong>{{expirationMinutes}}분</strong> 후에 만료됩니다.</li>
-                <li>만료된 경우 재발송을 요청하실 수 있습니다.</li>
-                <li>버튼이 작동하지 않는 경우, 아래 URL을 복사하여 브라우저에 직접 입력해주세요.</li>
+                <li>이 인증번호는 <strong>{{expirationMinutes}}분</strong> 후에 만료됩니다.</li>
+                <li>만료된 경우 인증번호 재발송을 요청하실 수 있습니다.</li>
+                <li>인증번호는 정확히 입력해야 합니다.</li>
+                <li>보안을 위해 인증번호를 타인과 공유하지 마세요.</li>
             </ul>
-        </div>
-
-        <div class="url-text">
-            {{verificationUrl}}
         </div>
 
         <div class="footer">
