@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmailVerificationResponseDto {
-    private String token;
-    private boolean verified;
+
     private String message;
+    private String email;
+    private String verificationCode;
 }
