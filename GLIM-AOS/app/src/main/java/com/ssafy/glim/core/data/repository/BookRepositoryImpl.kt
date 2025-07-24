@@ -10,9 +10,21 @@ class BookRepositoryImpl @Inject constructor(
     private val bookRemoteDataSource: BookRemoteDataSource
 ) : BookRepository {
 
-    override suspend fun searchBooks(query: String): List<Book> =
-        bookRemoteDataSource.getBooks(query).map { it.toDomain() }
+    private val books = mutableListOf<Book>()
+
+    override suspend fun searchBooks(query: String): List<Book> {
+        books.clear()
+
+        val searchedBooks = bookRemoteDataSource.getBooks(query).map { it.toDomain() }
+        books.addAll(searchedBooks)
+
+        return books
+    }
 
     override suspend fun updateBookViewCount(isbn: Long) =
         bookRemoteDataSource.updateBookViewCount(isbn)
+
+    override fun getBookDetail(bookId: Long) = books.first {
+        it.itemId == bookId
+    }
 }

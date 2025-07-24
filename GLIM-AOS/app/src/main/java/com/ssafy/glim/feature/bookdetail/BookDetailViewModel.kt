@@ -2,6 +2,7 @@ package com.ssafy.glim.feature.bookdetail
 
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.usecase.book.GetBookDetailUseCase
 import com.ssafy.glim.core.domain.usecase.book.UpdateBookViewCountUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.feature.main.MainTab
@@ -13,26 +14,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookDetailViewModel @Inject constructor(
+    private val getBookDetailUseCase: GetBookDetailUseCase,
     private val updateBookViewCountUseCase: UpdateBookViewCountUseCase,
     private val navigator: Navigator
 ) : ViewModel(), ContainerHost<BookDetailState, BookDetailSideEffect> {
 
     override val container: Container<BookDetailState, BookDetailSideEffect> = container(BookDetailState())
 
-    fun loadBookDetail(book: Book) = intent {
-        reduce {
-            state.copy(
-                bookDetail = book
-            )
-        }
-    }
-
-    fun initBookId(bookId: Long) = intent {
-        reduce {
-            state.copy(
-                bookId = bookId
-            )
-        }
+    fun initBook(bookId: Long) = intent {
+        runCatching { getBookDetailUseCase(bookId) }
+            .onSuccess {
+                reduce {
+                    state.copy(
+                        bookDetail = it,
+                        isLoading = false
+                    )
+                }
+            }
+            .onFailure {
+                postSideEffect(BookDetailSideEffect.ShowToast("책 정보를 불러오는데 실패했습니다."))
+            }
     }
 
     fun onClickQuote(quoteId: Long) = intent {

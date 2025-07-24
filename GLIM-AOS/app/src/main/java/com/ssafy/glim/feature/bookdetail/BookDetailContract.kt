@@ -8,7 +8,6 @@ import com.ssafy.glim.core.domain.model.QuoteSummary
 data class BookDetailState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val bookId: Long = 0,
     val bookDetail: Book = Book(),
     val quoteSummaries: List<QuoteSummary> = emptyList(),
     val isDescriptionExpanded: Boolean = false,

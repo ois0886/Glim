@@ -56,7 +56,7 @@ fun BookDetailScreen(
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.initBookId(bookId)
+        viewModel.initBook(bookId)
     }
 
     viewModel.collectSideEffect {

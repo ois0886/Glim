@@ -12,9 +12,9 @@ class SearchQueryRepositoryImpl
 constructor(
     private val searchHistoryDataStore: SearchHistoryDataStore,
 ) : SearchQueryRepository {
-    override fun getPopularSearchQueries(): Flow<List<SearchItem>> =
-        flow {
-        }
+    override fun getPopularSearchQueries(): List<SearchItem> {
+        TODO("Not yet implemented")
+    }
 
     override fun getRecentSearchQueries(): Flow<List<String>> = searchHistoryDataStore.getSearchHistory()
 

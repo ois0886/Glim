@@ -1,4 +1,10 @@
 package com.ssafy.glim.core.domain.usecase.book
 
-class GetBookDetailUseCase {
+import com.ssafy.glim.core.domain.repository.BookRepository
+import javax.inject.Inject
+
+class GetBookDetailUseCase @Inject constructor(
+    private val bookRepository: BookRepository
+) {
+    suspend operator fun invoke(bookId: Long) = bookRepository.getBookDetail(bookId)
 }

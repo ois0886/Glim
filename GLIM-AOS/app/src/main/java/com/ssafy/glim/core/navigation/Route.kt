@@ -14,7 +14,7 @@ sealed interface Route {
     data object UpdateInfo : Route
 
     @Serializable
-    data class BookDetail(val book: Book) : BottomTabRoute
+    data class BookDetail(val bookId: Long) : BottomTabRoute
 }
 
 sealed interface GlimRoute : Route {

@@ -205,11 +205,11 @@ fun QuoteItem(
                     Icon(
                         painter =
                         painterResource(
-//                                if (quote.isLike) {
-//                                    R.drawable.ic_favorite_fill
-//                                } else {
-                            R.drawable.ic_favorite
-//                                },
+                                if (quote.isLike) {
+                                    R.drawable.ic_favorite_fill
+                                } else {
+                                    R.drawable.ic_favorite
+                                },
                         ),
                         contentDescription = stringResource(R.string.like),
                         tint = if (quote.isLike) Color.Red else Color.White,
