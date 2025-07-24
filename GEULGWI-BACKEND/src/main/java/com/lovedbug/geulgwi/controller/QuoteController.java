@@ -27,7 +27,7 @@ public class QuoteController {
         return ResponseEntity.ok(quoteService.getQuotes(pageable));
     }
 
-    @GetMapping("{isbn}")
+    @GetMapping("/{isbn}")
     public ResponseEntity<List<QuoteResponseDto>> getQuotesByIsbn(@PathVariable String isbn){
 
         return ResponseEntity.ok(quoteService.getPublicQuotesByIsbn(isbn));
