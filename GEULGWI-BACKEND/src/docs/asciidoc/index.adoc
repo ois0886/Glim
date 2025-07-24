@@ -35,17 +35,6 @@ include::{snippets}/book_api_docs_test/get_books_by_keyword/http-response.adoc[]
 
 include::{snippets}/book_api_docs_test/get_books_by_keyword/response-fields.adoc[]
 
-=== 키워드로 인기 검색어 조회
-
-include::{snippets}/book_api_docs_test/get_search_keyword_history/http-request.adoc[]
-
-==== 응답
-
-include::{snippets}/book_api_docs_test/get_search_keyword_history/http-response.adoc[]
-
-include::{snippets}/book_api_docs_test/get_search_keyword_history/response-fields.adoc[]
-
-
 === 인기있는 도서 검색
 
 ==== 요청
@@ -108,7 +97,6 @@ include::{snippets}/quote_api_docs_test/create_quote/http-request.adoc[]
 
 include::{snippets}/quote_api_docs_test/create_quote/request-parts.adoc[]
 
-
 ==== 응답
 
 include::{snippets}/quote_api_docs_test/create_quote/http-response.adoc[]
@@ -123,10 +111,21 @@ include::{snippets}/quote_api_docs_test/increase_quote_view_count/http-request.a
 
 include::{snippets}/quote_api_docs_test/increase_quote_view_count/path-parameters.adoc[]
 
-
 ==== 응답
 
 include::{snippets}/quote_api_docs_test/increase_quote_view_count/http-response.adoc[]
+
+== 검색 API
+
+=== 인기 검색어 조회
+
+include::{snippets}/search_api_docs_test/get_search_popular_history/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/search_api_docs_test/get_search_popular_history/http-response.adoc[]
+
+include::{snippets}/search_api_docs_test/get_search_popular_history/response-fields.adoc[]
 
 == 회원 API
 
