@@ -111,3 +111,13 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio
+
+
+### postgres-data 백업
+postgres-data/
+
+### 환경 변수 파일
+.env
+
+### postgres-data 백업
+upload-images/
