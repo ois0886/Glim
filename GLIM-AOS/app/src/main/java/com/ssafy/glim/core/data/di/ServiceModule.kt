@@ -2,6 +2,7 @@ package com.ssafy.glim.core.data.di
 
 import com.ssafy.glim.core.data.service.AuthService
 import com.ssafy.glim.core.data.service.QuoteService
+import com.ssafy.glim.core.data.service.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,4 +20,8 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideQuoteService(retrofit: Retrofit): QuoteService = retrofit.create(QuoteService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideUserService(retrofit: Retrofit): UserService = retrofit.create(UserService::class.java)
 }
