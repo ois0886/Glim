@@ -75,11 +75,15 @@ constructor(
 
         val emailError = if (emailValidation is ValidationResult.Invalid) {
             emailValidation.errorMessageRes
-        } else null
+        } else {
+            null
+        }
 
         val passwordError = if (passwordValidation is ValidationResult.Invalid) {
             passwordValidation.errorMessageRes
-        } else null
+        } else {
+            null
+        }
 
         if (emailError != null || passwordError != null) {
             reduce { state.copy(emailError = emailError, passwordError = passwordError) }
@@ -97,7 +101,6 @@ constructor(
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
             navigateToHome()
-
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
             postSideEffect(LoginSideEffect.ShowError(R.string.login_failed))

@@ -312,7 +312,6 @@ internal class SignUpViewModel @Inject constructor(
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
             moveToNextStep()
-
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
             postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_verification_failed))
@@ -345,7 +344,6 @@ internal class SignUpViewModel @Inject constructor(
             reduce { state.copy(isLoading = false) }
             postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_success))
             navigator.navigate(route = Route.Login, launchSingleTop = true)
-
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
             postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))

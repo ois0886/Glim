@@ -50,5 +50,4 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun resendVerificationEmail(email: String) =
         dataSource.resendVerificationEmail(email)
-
 }

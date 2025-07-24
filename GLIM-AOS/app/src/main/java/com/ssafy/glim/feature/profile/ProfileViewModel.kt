@@ -103,7 +103,6 @@ class ProfileViewModel @Inject constructor(
                 )
             }
             postSideEffect(ProfileSideEffect.ShowToast(R.string.profile_update_success))
-
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
             postSideEffect(ProfileSideEffect.ShowError(R.string.profile_update_failed))
@@ -130,7 +129,6 @@ class ProfileViewModel @Inject constructor(
             postSideEffect(ProfileSideEffect.ShowToast(R.string.withdrawal_success))
             // TODO: 토큰 삭제 등
             navigator.navigate(Route.Login)
-
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
             postSideEffect(ProfileSideEffect.ShowToast(R.string.withdrawal_failed))
