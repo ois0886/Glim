@@ -77,6 +77,18 @@ include::{snippets}/quote_api_docs_test/get_quotes_order_by_condition/http-respo
 
 include::{snippets}/quote_api_docs_test/get_quotes_order_by_condition/response-fields.adoc[]
 
+=== 특정 도서의 isbn으로 글귀 목록 조회
+
+==== 요청
+
+include::{snippets}/quote_api_docs_test/get_public_quotes_by_isbn/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/quote_api_docs_test/get_public_quotes_by_isbn/http-response.adoc[]
+
+include::{snippets}/quote_api_docs_test/get_public_quotes_by_isbn/response-fields.adoc[]
+
 === 글귀 생성
 
 ==== 요청
@@ -84,7 +96,6 @@ include::{snippets}/quote_api_docs_test/get_quotes_order_by_condition/response-f
 include::{snippets}/quote_api_docs_test/create_quote/http-request.adoc[]
 
 include::{snippets}/quote_api_docs_test/create_quote/request-parts.adoc[]
-
 
 ==== 응답
 
@@ -100,10 +111,21 @@ include::{snippets}/quote_api_docs_test/increase_quote_view_count/http-request.a
 
 include::{snippets}/quote_api_docs_test/increase_quote_view_count/path-parameters.adoc[]
 
-
 ==== 응답
 
 include::{snippets}/quote_api_docs_test/increase_quote_view_count/http-response.adoc[]
+
+== 검색 API
+
+=== 인기 검색어 조회
+
+include::{snippets}/search_api_docs_test/get_search_popular_history/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/search_api_docs_test/get_search_popular_history/http-response.adoc[]
+
+include::{snippets}/search_api_docs_test/get_search_popular_history/response-fields.adoc[]
 
 == 회원 API
 

@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.controller;
 
+import com.lovedbug.geulgwi.dto.resposne.QuoteResponseDto;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,12 @@ public class QuoteController {
         @PageableDefault(size = 10, sort = "views", direction = Sort.Direction.DESC) Pageable pageable) {
 
         return ResponseEntity.ok(quoteService.getQuotes(pageable));
+    }
+
+    @GetMapping("/{isbn}")
+    public ResponseEntity<List<QuoteResponseDto>> getQuotesByIsbn(@PathVariable String isbn){
+
+        return ResponseEntity.ok(quoteService.getPublicQuotesByIsbn(isbn));
     }
 
     @PostMapping("")
