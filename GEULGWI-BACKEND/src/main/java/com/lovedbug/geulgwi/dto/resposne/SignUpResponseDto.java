@@ -13,5 +13,4 @@ public class SignUpResponseDto {
     private String email;
     private String nickname;
     private String message;
-    private boolean emailVerificationSent;
 }

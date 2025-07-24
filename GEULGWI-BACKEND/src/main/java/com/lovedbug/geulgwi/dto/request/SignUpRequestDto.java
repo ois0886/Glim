@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @NoArgsConstructor
@@ -15,6 +15,6 @@ public class SignUpRequestDto {
     private String email;
     private String password;
     private String nickname;
-    private LocalDate birthDate;
+    private LocalDateTime birthDate;
     private MemberGender gender;
 }

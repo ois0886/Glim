@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @NoArgsConstructor
@@ -28,7 +28,7 @@ public class MemberDto {
     private String nickname;
 
     @Column(name="birth_date")
-    private LocalDate birthDate;
+    private LocalDateTime birthDate;
 
     @Column(name="gender")
     private MemberGender gender;
