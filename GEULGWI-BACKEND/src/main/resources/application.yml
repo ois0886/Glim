@@ -58,6 +58,6 @@ jwt:
   secret: ${JWT_SECRET}
 
 app:
-  name: my-app
+  name: 글귀
   frontend:
     url: ${FRONTEND_URL}
