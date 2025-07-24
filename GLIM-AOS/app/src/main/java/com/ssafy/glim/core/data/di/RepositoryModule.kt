@@ -45,5 +45,4 @@ interface RepositoryModule {
     @Singleton
     @Binds
     fun bindCurationRepository(repository: CurationRepositoryImpl): CurationRepository
-
 }

@@ -12,11 +12,15 @@ fun CurationItemResponse.toDomain(): Curation {
     val typeEnum = CurationType.valueOf(this.curationType)
     val books = if (typeEnum == CurationType.BOOK) {
         this.contents.map { it.toBook() }
-    } else emptyList()
+    } else {
+        emptyList()
+    }
 
     val glims = if (typeEnum == CurationType.QUOTE) {
         this.contents.map { it.toQuote() }
-    } else emptyList()
+    } else {
+        emptyList()
+    }
 
     return Curation(
         id = this.curationItemId,
@@ -56,4 +60,3 @@ private fun CurationContentResponse.toQuote(): Quote =
         quoteImageName = imageName ?: "",
         quoteViews = 0L,
     )
-

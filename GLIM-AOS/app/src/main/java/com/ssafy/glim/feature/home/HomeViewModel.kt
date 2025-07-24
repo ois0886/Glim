@@ -48,12 +48,12 @@ class HomeViewModel @Inject constructor(
                 val sections = curations.map { curation ->
                     when (curation.type) {
                         CurationType.QUOTE -> HomeSectionUiModel.QuoteSection(
-                            id    = curation.id?.toString().orEmpty(),
+                            id = curation.id?.toString().orEmpty(),
                             title = curation.title,
                             quotes = curation.contents.quote
                         )
-                        CurationType.BOOK  -> HomeSectionUiModel.BookSection(
-                            id    = curation.id?.toString().orEmpty(),
+                        CurationType.BOOK -> HomeSectionUiModel.BookSection(
+                            id = curation.id?.toString().orEmpty(),
                             title = curation.title,
                             books = curation.contents.book
                         )
@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         isLoading = false,
-                        sections  = sections
+                        sections = sections
                     )
                 }
             }
@@ -71,6 +71,5 @@ class HomeViewModel @Inject constructor(
                 reduce { state.copy(isLoading = false) }
                 postSideEffect(HomeSideEffect.ShowError(throwable.message ?: "알 수 없는 에러"))
             }
-
     }
 }

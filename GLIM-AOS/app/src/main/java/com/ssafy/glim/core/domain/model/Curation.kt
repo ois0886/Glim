@@ -7,4 +7,3 @@ data class Curation(
     val type: CurationType,
     val contents: CurationContent
 )
-
