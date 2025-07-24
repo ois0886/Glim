@@ -2,6 +2,7 @@ package com.ssafy.glim.core.data.di
 
 import com.ssafy.glim.core.data.service.AuthService
 import com.ssafy.glim.core.data.service.BookService
+import com.ssafy.glim.core.data.service.CurationService
 import com.ssafy.glim.core.data.service.QuoteService
 import dagger.Module
 import dagger.Provides
@@ -30,4 +31,10 @@ object ServiceModule {
     fun provideBookService(
         retrofit: Retrofit,
     ): BookService = retrofit.create(BookService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCurationService(
+        retrofit: Retrofit,
+    ): CurationService = retrofit.create(CurationService::class.java)
 }
