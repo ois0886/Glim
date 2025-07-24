@@ -115,6 +115,7 @@ private fun SignUpScreen(
                         confirmPasswordError = state.confirmPasswordError?.let { stringResource(it) },
                     )
 
+
                 SignUpStep.Profile ->
                     UserProfileInputContent(
                         name = state.name,
