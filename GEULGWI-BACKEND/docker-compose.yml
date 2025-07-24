@@ -28,9 +28,38 @@ services:
       - "8080:8080"
     volumes:
       - ./upload-images:/upload/image
-      - - ./backend-logs:/logs
+      - ./backend-logs:/logs
     depends_on:
       - postgres
+    networks:
+      - geulgwi-net
+
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: ["-config.file=/etc/loki/local-config.yaml"]
+    networks:
+      - geulgwi-net
+
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: promtail
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/promtail-config.yml
+      - ./backend-logs:/logs
+    command: ["-config.file=/etc/promtail/promtail-config.yml"]
+    networks:
+      - geulgwi-net
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    depends_on:
+      - loki
     networks:
       - geulgwi-net
 

@@ -1,6 +1,6 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <property name="LOG_PATH" value="logs"/>
+    <property name="LOG_PATH" value="/logs"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
