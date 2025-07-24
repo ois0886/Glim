@@ -33,5 +33,4 @@ interface RepositoryModule {
     @Singleton
     @Binds
     fun bindSearchQueryRepository(repository: SearchQueryRepositoryImpl): SearchQueryRepository
-
 }

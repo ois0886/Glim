@@ -1,7 +1,6 @@
 package com.ssafy.glim.feature.bookdetail
 
 import androidx.lifecycle.ViewModel
-import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.usecase.book.GetBookDetailUseCase
 import com.ssafy.glim.core.domain.usecase.book.UpdateBookViewCountUseCase
 import com.ssafy.glim.core.navigation.Navigator
@@ -30,6 +29,7 @@ class BookDetailViewModel @Inject constructor(
                         isLoading = false
                     )
                 }
+                increaseViewCount(bookId)
             }
             .onFailure {
                 postSideEffect(BookDetailSideEffect.ShowToast("책 정보를 불러오는데 실패했습니다."))
@@ -58,5 +58,15 @@ class BookDetailViewModel @Inject constructor(
                 isAuthorDescriptionExpanded = !state.isAuthorDescriptionExpanded
             )
         }
+    }
+
+    private fun increaseViewCount(bookId: Long) = intent {
+        runCatching { updateBookViewCountUseCase(bookId) }
+            .onSuccess {
+                // 성공적으로 조회수 증가
+            }
+            .onFailure {
+                postSideEffect(BookDetailSideEffect.ShowToast("조회수 증가에 실패했습니다."))
+            }
     }
 }

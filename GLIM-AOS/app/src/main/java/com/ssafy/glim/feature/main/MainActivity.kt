@@ -3,13 +3,11 @@ package com.ssafy.glim.feature.main
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import com.ssafy.glim.core.navigation.LaunchedNavigator
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +25,6 @@ object PermissionUtil {
         )
         context.startActivityForResult(intent, REQ_CODE_OVERLAY_PERMISSION)
     }
-
 
     fun alertPermissionCheck(context: Context?): Boolean {
         return !Settings.canDrawOverlays(context)

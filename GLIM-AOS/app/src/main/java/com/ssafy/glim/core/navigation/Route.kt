@@ -1,6 +1,5 @@
 package com.ssafy.glim.core.navigation
 
-import com.ssafy.glim.core.domain.model.Book
 import kotlinx.serialization.Serializable
 
 sealed interface Route {

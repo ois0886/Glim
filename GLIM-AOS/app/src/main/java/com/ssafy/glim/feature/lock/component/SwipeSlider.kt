@@ -41,7 +41,6 @@ import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import com.ssafy.glim.R
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 // 드래그 방향 지정
@@ -62,7 +61,6 @@ private fun SwipeIndicator(
             .clip(CircleShape)
             .background(Color.Transparent),
     ) {
-
     }
 }
 
@@ -94,7 +92,7 @@ fun SwipeButton(
         animationSpec = tween(durationMillis = 300),
         label = "",
     )
-    val offsetX       = swipeableState.currentValue.toFloat()
+    val offsetX = swipeableState.currentValue.toFloat()
 
     LaunchedEffect(swipeableState.currentValue) {
         if (swipeableState.currentValue == 1) {

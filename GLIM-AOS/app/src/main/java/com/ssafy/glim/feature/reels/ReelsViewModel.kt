@@ -1,10 +1,13 @@
 package com.ssafy.quote.feature.reels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
 import com.ssafy.glim.core.domain.usecase.quote.UpdateQuoteViewCountUseCase
 import com.ssafy.glim.core.navigation.Navigator
+import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -22,26 +25,26 @@ constructor(
 
     fun toggleLike() =
         intent {
-//            val updatedQuotes =
-//                state.quotes.map { quote ->
-//                    if (quote.quoteId == state.currentQuoteId) {
-//                        val newIsLike = !quote.isLike
-//                        quote.copy(
-//                            isLike = newIsLike,
-//                            likes = if (newIsLike) quote.likes + 1 else quote.likes - 1,
-//                        )
-//                    } else {
-//                        quote
-//                    }
-//                }
-//
-//            reduce { state.copy(quotes = updatedQuotes) }
-//
-//            // 서버에 실제 업데이트
-//            viewModelScope.launch {
-//                // TODO: API 호출
-//                // toggleLikeUseCase(state.currentQuoteId)
-//            }
+            val updatedQuotes =
+                state.quotes.map { quote ->
+                    if (quote.quoteId == state.currentQuoteId) {
+                        val newIsLike = !quote.isLike
+                        quote.copy(
+                            isLike = newIsLike,
+                            likes = if (newIsLike) quote.likes + 1 else quote.likes - 1,
+                        )
+                    } else {
+                        quote
+                    }
+                }
+
+            reduce { state.copy(quotes = updatedQuotes) }
+
+            // 서버에 실제 업데이트
+            viewModelScope.launch {
+                // TODO: API 호출
+                // toggleLikeUseCase(state.currentQuoteId)
+            }
         }
 
     fun onPageChanged(page: Int) =
@@ -90,7 +93,7 @@ constructor(
 
     fun onBookInfoClick(bookId: Long) =
         intent {
-//            navigator.navigate(Route.BookDetail(bookId))
+            navigator.navigate(Route.BookDetail(bookId))
         }
 
     private fun loadInitialQuotes() =

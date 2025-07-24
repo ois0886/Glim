@@ -4,7 +4,6 @@ import com.ssafy.glim.core.data.datastore.SearchHistoryDataStore
 import com.ssafy.glim.core.domain.model.SearchItem
 import com.ssafy.glim.core.domain.repository.SearchQueryRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class SearchQueryRepositoryImpl

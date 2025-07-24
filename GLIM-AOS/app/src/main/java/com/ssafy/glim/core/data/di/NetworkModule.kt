@@ -12,8 +12,8 @@ import javax.inject.Singleton
 import com.ssafy.glim.BuildConfig
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
-
 private val baseUrl = BuildConfig.BASE_URL.toHttpUrl()
+
 // TODO: 이 부분 추후에 리팩토링 해야함
 @Module
 @InstallIn(SingletonComponent::class)

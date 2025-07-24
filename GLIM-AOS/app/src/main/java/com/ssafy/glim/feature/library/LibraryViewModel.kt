@@ -16,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
-import retrofit2.http.HEAD
 import javax.inject.Inject
 
 @HiltViewModel
@@ -127,15 +126,14 @@ constructor(
             reduce {
                 state.copy(
                     recentSearchItems =
-                        state.recentSearchItems.filter {
-                            it != searchQuery
-                        },
+                    state.recentSearchItems.filter {
+                        it != searchQuery
+                    },
                     error = null,
                 )
             }
             deleteRecentSearchQueryUseCase(searchQuery)
         }
-
 
     // 책 아이템 클릭
     fun onBookClicked(book: Book) =
@@ -222,6 +220,4 @@ constructor(
         intent {
             reduce { state.copy(searchMode = searchMode) }
         }
-
-
 }
