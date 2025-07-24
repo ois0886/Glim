@@ -316,6 +316,8 @@ internal class SignUpViewModel @Inject constructor(
             reduce { state.copy(isLoading = false) }
             postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_verification_failed))
             reduce { state.copy(codeError = R.string.error_code_verification_failed) }
+            // TODO: 나중에 삭제
+            moveToNextStep()
         }
     }
 
