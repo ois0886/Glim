@@ -1,3 +1,5 @@
+// 수정된 SignUpViewModel - runCatching 사용
+
 package com.ssafy.glim.feature.auth.signup
 
 import androidx.lifecycle.ViewModel
@@ -8,19 +10,20 @@ import com.ssafy.glim.core.common.extensions.formatGender
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.common.utils.toErrorRes
-import com.ssafy.glim.core.domain.usecase.auth.CertifyValidCodeUseCase
 import com.ssafy.glim.core.domain.usecase.auth.SignUpUseCase
+import com.ssafy.glim.core.domain.usecase.auth.VerifyEmailUseCase
 import com.ssafy.glim.core.navigation.Navigator
+import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
+import javax.inject.Inject
 
 @HiltViewModel
 internal class SignUpViewModel @Inject constructor(
     private val navigator: Navigator,
     private val signUpUseCase: SignUpUseCase,
-    private val certifyValidCodeUseCase: CertifyValidCodeUseCase,
+    private val verifyEmailUseCase: VerifyEmailUseCase,
 ) : ViewModel(), ContainerHost<SignUpUiState, SignUpSideEffect> {
 
     override val container = container<SignUpUiState, SignUpSideEffect>(SignUpUiState())
@@ -164,6 +167,7 @@ internal class SignUpViewModel @Inject constructor(
         reduce { state.copy(gender = gender) }
     }
 
+    // 단계별 검증 함수들
     fun onNextStep() = intent {
         when (state.currentStep) {
             SignUpStep.Email -> validateEmailStep()
@@ -209,7 +213,6 @@ internal class SignUpViewModel @Inject constructor(
         reduce { state.copy(codeError = errorRes) }
     }
 
-    // ========== Password 단계 검증 ==========
     private fun validatePasswordStep() = intent {
         val passwordValidation = ValidationUtils.validatePassword(
             password = state.password,
@@ -302,30 +305,19 @@ internal class SignUpViewModel @Inject constructor(
     }
 
     private fun certifyValidCode() = intent {
-        moveToNextStep()
+        reduce { state.copy(isLoading = true) }
 
-        // TODO: 실제 인증 코드 검증 로직
-        /*
-        certifyValidCodeUseCase(state.code)
-            .onStart {
-                reduce { state.copy(isLoading = true) }
-            }
-            .catch { exception ->
-                reduce { state.copy(isLoading = false) }
-                val errorMessage = exception.message ?: "코드 인증에 실패했습니다."
-                postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_verification_failed))
-                reduce { state.copy(codeError = R.string.error_code_verification_failed) }
-            }
-            .collect { result ->
-                reduce { state.copy(isLoading = false) }
-                if (result.isSuccess) {
-                    moveToNextStep()
-                } else {
-                    postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_incorrect))
-                    reduce { state.copy(codeError = R.string.error_code_incorrect) }
-                }
-            }
-         */
+        runCatching {
+            verifyEmailUseCase(state.email)
+        }.onSuccess {
+            reduce { state.copy(isLoading = false) }
+            moveToNextStep()
+
+        }.onFailure { exception ->
+            reduce { state.copy(isLoading = false) }
+            postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_verification_failed))
+            reduce { state.copy(codeError = R.string.error_code_verification_failed) }
+        }
     }
 
     private fun moveToNextStep() = intent {
@@ -337,6 +329,26 @@ internal class SignUpViewModel @Inject constructor(
     private fun performSignUp() = intent {
         val formattedBirthDate = state.birthDate.formatBirthDate()
         val genderData = checkNotNull(state.gender) { "Data must not be null at this point" }
-        genderData.formatGender()
+        val formattedGender = genderData.formatGender()
+
+        reduce { state.copy(isLoading = true) }
+
+        runCatching {
+            signUpUseCase(
+                email = state.email,
+                nickname = state.name,
+                password = state.password,
+                gender = formattedGender,
+                birthDate = formattedBirthDate
+            )
+        }.onSuccess {
+            reduce { state.copy(isLoading = false) }
+            postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_success))
+            navigator.navigate(route = Route.Login, launchSingleTop = true)
+
+        }.onFailure { exception ->
+            reduce { state.copy(isLoading = false) }
+            postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
+        }
     }
 }

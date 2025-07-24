@@ -117,6 +117,7 @@
     <string name="signup_success">회원가입이 완료되었습니다.</string>
     <string name="signup_failed">회원가입에 실패했습니다.</string>
     <string name="profile_update_success">프로필이 변경되었습니다.</string>
+    <string name="profile_update_failed">프로필이 변경이 실패되었습니다.</string>
     <string name="saved">저장했습니다!</string>
     <string name="i_love_it">좋아요!</string>
     <string name="save">저장</string>
@@ -126,7 +127,8 @@
     <string name="lock_screen_slide_description"><![CDATA[밀어서 잠금 해제 >>]]></string>
 
     <string name="logout_success">로그아웃되었습니다.</string>
-    <string name="withdrawal_message">회원탈퇴 처리</string>
+    <string name="withdrawal_success">성공적으로 회원 탈퇴하였습니다.</string>
+    <string name="withdrawal_failed">회원 탈퇴 실패하였습니다.</string>
     <string name="lock_settings_message">잠금 설정 화면으로 이동</string>
     <string name="notification_settings_message">알림 설정 화면으로 이동</string>
     <string name="like_added_message">좋아요를 눌렀습니다.</string>

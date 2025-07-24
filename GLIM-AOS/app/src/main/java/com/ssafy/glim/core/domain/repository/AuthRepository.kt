@@ -1,7 +1,5 @@
 package com.ssafy.glim.core.domain.repository
 
-import com.ssafy.glim.core.data.dto.token.AuthToken
-
 interface AuthRepository {
 
     suspend fun signUp(
@@ -17,7 +15,7 @@ interface AuthRepository {
         password: String,
     )
 
-    suspend fun refreshToken(): AuthToken
+    suspend fun refreshToken()
 
     suspend fun verifyEmail(email: String)
 
