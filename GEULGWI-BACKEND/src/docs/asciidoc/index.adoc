@@ -141,17 +141,17 @@ include::{snippets}/member_api_docs_test/create_member/http-response.adoc[]
 
 include::{snippets}/member_api_docs_test/create_member/response-fields.adoc[]
 
-=== 사용자 등록 이메일로 조회
+=== 사용자 등록번호로 조회
 
 ==== 요청
 
-include::{snippets}/member_api_docs_test/get_member_by_email/http-request.adoc[]
+include::{snippets}/member_api_docs_test/get_member_by_id/http-request.adoc[]
 
 ==== 응답
 
-include::{snippets}/member_api_docs_test/get_member_by_email/http-response.adoc[]
+include::{snippets}/member_api_docs_test/get_member_by_id/http-response.adoc[]
 
-include::{snippets}/member_api_docs_test/get_member_by_email/response-fields.adoc[]
+include::{snippets}/member_api_docs_test/get_member_by_id/response-fields.adoc[]
 
 === 등록된 모든 사용자 조회
 
@@ -165,7 +165,7 @@ include::{snippets}/member_api_docs_test/get_all_members/http-response.adoc[]
 
 include::{snippets}/member_api_docs_test/get_all_members/response-fields.adoc[]
 
-=== 활성화 상태인 사용자 조회
+=== 활성 상태인 사용자 조회
 
 ==== 요청
 
@@ -177,7 +177,7 @@ include::{snippets}/member_api_docs_test/get_active_member_by_id/http-response.a
 
 include::{snippets}/member_api_docs_test/get_active_member_by_id/response-fields.adoc[]
 
-=== 활성화 상태인 모든 사용자 조회
+=== 활성 상태인 모든 사용자 조회
 
 ==== 요청
 
@@ -219,25 +219,25 @@ include::{snippets}/member_api_docs_test/soft_delete_member/response-fields.adoc
 
 ==== 요청
 
-include::{snippets}/auth_api_docs_test/verify_email_test/http-request.adoc[]
+include::{snippets}/auth_api_docs_test/verify_email_code_test/http-request.adoc[]
 
 ==== 응답
 
-include::{snippets}/auth_api_docs_test/verify_email_test/http-response.adoc[]
+include::{snippets}/auth_api_docs_test/verify_email_code_test/http-response.adoc[]
 
-include::{snippets}/auth_api_docs_test/verify_email_test/response-fields.adoc[]
+include::{snippets}/auth_api_docs_test/verify_email_code_test/response-fields.adoc[]
 
 === 인증 이메일 재전송
 
 ==== 요청
 
-include::{snippets}/auth_api_docs_test/resend_verification_email_test/http-request.adoc[]
+include::{snippets}/auth_api_docs_test/resend_verify_email_code_test/http-request.adoc[]
 
 ==== 응답
 
-include::{snippets}/auth_api_docs_test/resend_verification_email_test/http-response.adoc[]
+include::{snippets}/auth_api_docs_test/resend_verify_email_code_test/http-response.adoc[]
 
-include::{snippets}/auth_api_docs_test/resend_verification_email_test/response-fields.adoc[]
+include::{snippets}/auth_api_docs_test/resend_verify_email_code_test/response-fields.adoc[]
 
 === 사용자 로그인 
 
@@ -262,15 +262,3 @@ include::{snippets}/auth_api_docs_test/refresh_token_test/http-request.adoc[]
 include::{snippets}/auth_api_docs_test/refresh_token_test/http-response.adoc[]
 
 include::{snippets}/auth_api_docs_test/refresh_token_test/response-fields.adoc[]
-
-=== 사용자 로그아웃
-
-==== 요청
-
-include::{snippets}/auth_api_docs_test/logout_test/http-request.adoc[]
-
-==== 응답
-
-include::{snippets}/auth_api_docs_test/logout_test/http-response.adoc[]
-
-include::{snippets}/auth_api_docs_test/logout_test/response-fields.adoc[]
