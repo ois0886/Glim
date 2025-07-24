@@ -164,7 +164,7 @@ fun String.formatGender(): String {
  * 문자열을 쉼표로 구분된 가격 형식으로 변환합니다.
  */
 fun String.toCommaSeparatedPrice(): String {
-    return this.replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,") + "원"
+    return this.replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
 }
 
 fun String.toBirthDateList(): Result<List<Int>> {
