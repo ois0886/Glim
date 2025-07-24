@@ -37,6 +37,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 	implementation 'org.flywaydb:flyway-core:10.13.0'
 	implementation 'org.flywaydb:flyway-database-postgresql:10.13.0'
 //	implementation 'com.vladmihalcea:hibernate-types-60:2.21.1'
@@ -44,7 +45,6 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation platform('org.springframework.cloud:spring-cloud-dependencies:2025.0.0')
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-
 
 	compileOnly 'org.projectlombok:lombok'
 	
