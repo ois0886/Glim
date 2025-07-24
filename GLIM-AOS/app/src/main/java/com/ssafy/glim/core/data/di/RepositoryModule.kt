@@ -1,14 +1,13 @@
 package com.ssafy.glim.core.data.di
 
 import com.ssafy.glim.core.data.repository.AuthRepositoryImpl
+import com.ssafy.glim.core.data.repository.BookRepositoryImpl
 import com.ssafy.glim.core.data.repository.CurationRepositoryImpl
-import com.ssafy.glim.core.data.repository.fake.FakeBookRepositoryImpl
-import com.ssafy.glim.core.data.repository.fake.FakeGlimRepositoryImpl
-import com.ssafy.glim.core.data.repository.fake.FakeQuoteRepositoryImpl
+import com.ssafy.glim.core.data.repository.QuoteRepositoryImpl
+import com.ssafy.glim.core.data.repository.SearchQueryRepositoryImpl
 import com.ssafy.glim.core.domain.repository.AuthRepository
 import com.ssafy.glim.core.domain.repository.BookRepository
 import com.ssafy.glim.core.domain.repository.CurationRepository
-import com.ssafy.glim.core.domain.repository.GlimRepository
 import com.ssafy.glim.core.domain.repository.QuoteRepository
 import com.ssafy.glim.core.domain.repository.SearchQueryRepository
 import dagger.Binds
@@ -20,9 +19,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface RepositoryModule {
-    @Singleton
-    @Binds
-    fun bindGlimRepository(repository: FakeGlimRepositoryImpl): GlimRepository
 
     @Singleton
     @Binds
@@ -30,15 +26,15 @@ interface RepositoryModule {
 
     @Singleton
     @Binds
-    fun bindBookRepository(repository: FakeBookRepositoryImpl): BookRepository
+    fun bindBookRepository(repository: BookRepositoryImpl): BookRepository
 
     @Singleton
     @Binds
-    fun bindQuoteRepository(repository: FakeQuoteRepositoryImpl): QuoteRepository
+    fun bindQuoteRepository(repository: QuoteRepositoryImpl): QuoteRepository
 
     @Singleton
     @Binds
-    fun bindSearchQueryRepository(repository: FakeSearchQueryRepositoryImpl): SearchQueryRepository
+    fun bindSearchQueryRepository(repository: SearchQueryRepositoryImpl): SearchQueryRepository
 
     @Singleton
     @Binds
