@@ -5,7 +5,6 @@ import com.ssafy.glim.core.domain.model.GlimInput
 import kotlinx.coroutines.flow.Flow
 
 interface GlimRepository {
-
     fun getGlimData(): Flow<List<Glim>>
 
     fun saveGlimData(data: GlimInput): Flow<Boolean>

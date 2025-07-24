@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -58,10 +57,10 @@ internal fun MainBottomBar(
             ) {
                 Row(
                     modifier =
-                        Modifier
-                            .navigationBarsPadding()
-                            .fillMaxWidth()
-                            .height(64.dp),
+                    Modifier
+                        .navigationBarsPadding()
+                        .fillMaxWidth()
+                        .height(64.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     tabs.forEach { tab ->
@@ -79,7 +78,6 @@ internal fun MainBottomBar(
                 }
             }
         }
-
     }
 }
 
@@ -92,16 +90,16 @@ private fun RowScope.MainBottomBarItem(
 ) {
     Box(
         modifier =
-            Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .selectable(
-                    selected = selected,
-                    indication = null,
-                    role = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = onClick,
-                ),
+        Modifier
+            .weight(1f)
+            .fillMaxHeight()
+            .selectable(
+                selected = selected,
+                indication = null,
+                role = null,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onClick,
+            ),
         contentAlignment = Alignment.Center,
     ) {
         Column(

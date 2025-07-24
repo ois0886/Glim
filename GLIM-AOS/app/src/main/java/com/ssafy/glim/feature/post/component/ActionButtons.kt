@@ -29,10 +29,10 @@ fun ActionButtons(
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxHeight()
-                .padding(vertical = 16.dp, horizontal = 8.dp)
-                .systemBarsPadding(),
+        modifier
+            .fillMaxHeight()
+            .padding(vertical = 16.dp, horizontal = 8.dp)
+            .systemBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End,
     ) {

@@ -12,11 +12,13 @@ data class LoginUiState(
     val isLoginEnabled: Boolean
         get() =
             emailError == null &&
-                    passwordError == null &&
-                    email.isNotBlank() &&
-                    password.isNotBlank()
+                passwordError == null &&
+                email.isNotBlank() &&
+                password.isNotBlank()
 }
 
 sealed interface LoginSideEffect {
-    data class ShowError(@StringRes val messageRes: Int) : LoginSideEffect
+    data class ShowError(
+        @StringRes val messageRes: Int,
+    ) : LoginSideEffect
 }

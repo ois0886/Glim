@@ -37,14 +37,13 @@ import com.ssafy.glim.feature.library.component.RecentSearchSection
 import com.ssafy.glim.feature.library.component.SearchResultSection
 import org.orbitmvi.orbit.compose.collectAsState
 
-
 @Composable
 fun LibraryRoute(
     modifier: Modifier = Modifier,
     padding: PaddingValues,
     popBackStack: () -> Unit,
     onBookSelected: ((Book) -> Unit)? = null,
-    viewModel: LibraryViewModel = hiltViewModel()
+    viewModel: LibraryViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -56,10 +55,10 @@ fun LibraryRoute(
 
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(padding),
+        modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(padding),
     ) {
         if (state.searchMode == SearchMode.POPULAR) {
             Column(
@@ -95,40 +94,43 @@ fun LibraryRoute(
                 )
             },
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 8.dp)
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused && state.searchMode == SearchMode.POPULAR) {
-                            viewModel.updateSearchMode(SearchMode.RECENT)
-                        }
-                    },
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 8.dp)
+                .onFocusChanged { focusState ->
+                    if (focusState.isFocused && state.searchMode == SearchMode.POPULAR) {
+                        viewModel.updateSearchMode(SearchMode.RECENT)
+                    }
+                },
             shape = RoundedCornerShape(8.dp),
             colors =
-                OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.LightGray,
-                    unfocusedBorderColor = Color.LightGray,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                ),
+            OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.LightGray,
+                unfocusedBorderColor = Color.LightGray,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+            ),
             singleLine = true,
             suffix = {
                 Icon(
                     painter = painterResource(R.drawable.ic_search),
                     contentDescription = null,
-                    modifier = Modifier.clickable {
+                    modifier =
+                    Modifier.clickable {
                         viewModel.onSearchExecuted()
-                    }
+                    },
                 )
             },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
+            keyboardOptions =
+            KeyboardOptions(
+                imeAction = ImeAction.Search,
             ),
-            keyboardActions = KeyboardActions(
+            keyboardActions =
+            KeyboardActions(
                 onSearch = {
                     viewModel.onSearchExecuted()
-                }
-            )
+                },
+            ),
         )
 
         when (state.searchMode) {
@@ -153,7 +155,7 @@ fun LibraryRoute(
                     },
                     onDeleteClick = { searchItem ->
                         viewModel.onRecentSearchItemDelete(searchItem)
-                    }
+                    },
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 PopularSearchSection(
@@ -171,10 +173,13 @@ fun LibraryRoute(
                     bookList = state.searchBooks,
                     quoteList = state.searchQuotes,
                     onBookClick = {
-                        if (onBookSelected == null) viewModel.onBookClicked(it)
-                        else onBookSelected(it)
+                        if (onBookSelected == null) {
+                            viewModel.onBookClicked(it)
+                        } else {
+                            onBookSelected(it)
+                        }
                     },
-                    onQuoteClick = { viewModel.onQuoteClicked(it) }
+                    onQuoteClick = { viewModel.onQuoteClicked(it) },
                 )
             }
         }

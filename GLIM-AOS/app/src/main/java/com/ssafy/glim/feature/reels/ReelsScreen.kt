@@ -114,17 +114,17 @@ internal fun ReelsRoute(
         VerticalPager(
             state = pagerState,
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding.excludeSystemBars())
-                    .drawWithCache {
-                        onDrawWithContent {
-                            graphicsLayer.record {
-                                this@onDrawWithContent.drawContent()
-                            }
-                            drawLayer(graphicsLayer)
+            Modifier
+                .fillMaxSize()
+                .padding(padding.excludeSystemBars())
+                .drawWithCache {
+                    onDrawWithContent {
+                        graphicsLayer.record {
+                            this@onDrawWithContent.drawContent()
                         }
-                    },
+                        drawLayer(graphicsLayer)
+                    }
+                },
         ) { page ->
             val glim = state.glims[page]
 
@@ -142,7 +142,7 @@ internal fun ReelsRoute(
                     it?.let {
                         viewModel.onBookInfoClick(it)
                     }
-                }
+                },
             )
         }
     }
@@ -156,7 +156,7 @@ fun GlimItem(
     onShareClick: () -> Unit = {},
     onMoreClick: () -> Unit = {},
     onCaptureClick: () -> Unit = {},
-    onBookInfoClick: (Long?) -> Unit
+    onBookInfoClick: (Long?) -> Unit,
 ) {
     Box(modifier = modifier) {
         AsyncImage(
@@ -179,11 +179,11 @@ fun GlimItem(
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .padding(vertical = 16.dp, horizontal = 8.dp)
-                    .systemBarsPadding()
-                    .align(Alignment.BottomEnd),
+            Modifier
+                .fillMaxHeight()
+                .padding(vertical = 16.dp, horizontal = 8.dp)
+                .systemBarsPadding()
+                .align(Alignment.BottomEnd),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             IconButton(onClick = onCaptureClick) {
@@ -201,13 +201,13 @@ fun GlimItem(
                 IconButton(onClick = onLikeClick) {
                     Icon(
                         painter =
-                            painterResource(
-                                if (glim.isLike) {
-                                    R.drawable.ic_favorite_fill
-                                } else {
-                                    R.drawable.ic_favorite
-                                },
-                            ),
+                        painterResource(
+                            if (glim.isLike) {
+                                R.drawable.ic_favorite_fill
+                            } else {
+                                R.drawable.ic_favorite
+                            },
+                        ),
                         contentDescription = stringResource(R.string.like),
                         tint = if (glim.isLike) Color.Red else Color.White,
                     )
@@ -247,23 +247,23 @@ fun GlimBookContent(
 ) {
     Surface(
         modifier =
-            modifier
-                .background(
-                    brush =
-                        Brush.linearGradient(
-                            colors = listOf(Color(0x001C1B1F), Color(0xFF1C1B1F)),
-                            start = Offset(0f, 0f),
-                            end = Offset(0f, Float.POSITIVE_INFINITY),
-                        ),
+        modifier
+            .background(
+                brush =
+                Brush.linearGradient(
+                    colors = listOf(Color(0x001C1B1F), Color(0xFF1C1B1F)),
+                    start = Offset(0f, 0f),
+                    end = Offset(0f, Float.POSITIVE_INFINITY),
                 ),
+            ),
         color = Color.Transparent,
     ) {
         Row(
             modifier =
-                Modifier
-                    .padding(16.dp)
-                    .padding(end = 80.dp)
-                    .clickable { onBookInfoClick(bookId) },
+            Modifier
+                .padding(16.dp)
+                .padding(end = 80.dp)
+                .clickable { onBookInfoClick(bookId) },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

@@ -18,7 +18,7 @@ class ReelsViewModel
 constructor(
     private val getGlimsUseCase: GetGlimsUseCase,
 //    private val toggleLikeUseCase: ToggleLikeUseCase
-    private val navigator: Navigator
+    private val navigator: Navigator,
 ) : ViewModel(), ContainerHost<ReelsState, ReelsSideEffect> {
     override val container: Container<ReelsState, ReelsSideEffect> = container(ReelsState())
 

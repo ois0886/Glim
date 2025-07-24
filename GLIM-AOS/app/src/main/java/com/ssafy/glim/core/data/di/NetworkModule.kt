@@ -9,7 +9,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import com.ssafy.glim.BuildConfig
+import okhttp3.HttpUrl.Companion.toHttpUrl
 
+
+private val baseUrl = BuildConfig.BASE_URL.toHttpUrl()
 // TODO: 이 부분 추후에 리팩토링 해야함
 @Module
 @InstallIn(SingletonComponent::class)
@@ -35,7 +39,7 @@ class NetworkModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

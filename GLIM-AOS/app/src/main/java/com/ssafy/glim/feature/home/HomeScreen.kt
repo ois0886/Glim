@@ -87,12 +87,13 @@ private fun HomeScreen(
     padding: PaddingValues,
     homeUiState: HomeUiState,
     onGlimClick: () -> Unit,
-    onBookClick: (String) -> Unit
+    onBookClick: (String) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
-            .padding(padding)
+            .padding(padding),
     ) {
         item {
             GlimHomeTitle()
@@ -103,14 +104,14 @@ private fun HomeScreen(
                     SectionTitle(section.title)
                     GlimCarousel(
                         glims = section.glims,
-                        onItemClick = onGlimClick
+                        onItemClick = onGlimClick,
                     )
                 }
                 is HomeSectionUiModel.BookSection -> {
                     SectionTitle(section.title)
                     BookCarousel(
                         books = section.books,
-                        onItemClick = onBookClick
+                        onItemClick = onBookClick,
                     )
                 }
             }
@@ -121,24 +122,27 @@ private fun HomeScreen(
 @Composable
 fun GlimHomeTitle() {
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 16.dp)
+            .padding(horizontal = 16.dp, vertical = 16.dp),
     ) {
         Text(
             text = stringResource(R.string.today_glim),
-            style = MaterialTheme.typography.headlineMedium.copy(
+            style =
+            MaterialTheme.typography.headlineMedium.copy(
                 fontSize = 32.sp,
-                fontWeight = FontWeight.Bold
-            )
+                fontWeight = FontWeight.Bold,
+            ),
         )
         Spacer(Modifier.height(16.dp))
         Text(
             text = stringResource(R.string.glim_home_description),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 16.sp
+            style =
+            MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 16.sp,
             ),
-            color = LightGray600
+            color = LightGray600,
         )
     }
 }
@@ -147,11 +151,12 @@ fun GlimHomeTitle() {
 fun SectionTitle(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.titleMedium.copy(
+        style =
+        MaterialTheme.typography.titleMedium.copy(
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         ),
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp),
     )
 }
 
@@ -179,19 +184,20 @@ fun GlimCarousel(
     LazyRow(
         modifier = modifier,
         contentPadding = contentPadding,
-        horizontalArrangement = Arrangement.spacedBy(itemSpacing)
+        horizontalArrangement = Arrangement.spacedBy(itemSpacing),
     ) {
         items(glims) { glim ->
             Column(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .width(itemSize.width)
                     .clickable { onItemClick() },
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.Start,
             ) {
                 Card(
                     modifier = Modifier.size(itemSize),
                     shape = RoundedCornerShape(12.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 ) {
                     SubcomposeAsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -233,16 +239,16 @@ fun GlimCarousel(
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = LightGray900
+                        color = LightGray900,
                     ),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = glim.bookAuthor,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.sp,
-                        color = LightGray700
+                        color = LightGray700,
                     ),
                 )
             }
@@ -257,7 +263,7 @@ fun BookCarousel(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
     itemWidth: Dp = 100.dp,
-    itemSpacing: Dp = 12.dp
+    itemSpacing: Dp = 12.dp,
 ) {
     val context = LocalContext.current
     val imageLoader = context.imageLoader
@@ -275,11 +281,12 @@ fun BookCarousel(
         LazyRow(
         modifier = modifier,
         contentPadding = contentPadding,
-        horizontalArrangement = Arrangement.spacedBy(itemSpacing)
+        horizontalArrangement = Arrangement.spacedBy(itemSpacing),
     ) {
         items(books) { book ->
             Column(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .width(itemWidth)
                     .clickable { onItemClick(book.id.toString()) },
                 horizontalAlignment = Alignment.Start
@@ -287,7 +294,7 @@ fun BookCarousel(
                 Card(
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    modifier = Modifier.size(itemWidth)
+                    modifier = Modifier.size(itemWidth),
                 ) {
                     SubcomposeAsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -326,13 +333,14 @@ fun BookCarousel(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = book.title,
-                    style = MaterialTheme.typography.bodySmall.copy(
+                    style =
+                    MaterialTheme.typography.bodySmall.copy(
                         fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     ),
                     textAlign = TextAlign.Center,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         }

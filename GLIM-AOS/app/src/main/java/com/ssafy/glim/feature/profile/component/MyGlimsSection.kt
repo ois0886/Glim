@@ -23,22 +23,22 @@ internal fun MyGlimsSection(
     navigateToGlimLikedList: () -> Unit,
     publishedGlimCount: Int,
     likedGlimCount: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         MyGlimsItem(
             count = publishedGlimCount,
             label = stringResource(R.string.profile_recent_articles),
-            onClick = navigateToGlimUploadList
+            onClick = navigateToGlimUploadList,
         )
 
         MyGlimsItem(
             count = likedGlimCount,
             label = stringResource(R.string.profile_liked_articles),
-            onClick = navigateToGlimLikedList
+            onClick = navigateToGlimLikedList,
         )
     }
 }
@@ -48,23 +48,23 @@ private fun MyGlimsItem(
     count: Int,
     label: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.clickable { onClick() },
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = count.toString(),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = Color.Black,
         )
 
         Text(
             text = label,
             fontSize = 14.sp,
-            color = Color.Gray
+            color = Color.Gray,
         )
     }
 }
@@ -77,7 +77,7 @@ private fun PreviewMyGlimsSection() {
             navigateToGlimUploadList = {},
             navigateToGlimLikedList = {},
             publishedGlimCount = 24,
-            likedGlimCount = 8
+            likedGlimCount = 8,
         )
     }
 }

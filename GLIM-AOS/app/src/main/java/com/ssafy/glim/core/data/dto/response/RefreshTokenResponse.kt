@@ -22,5 +22,5 @@ data class RefreshTokenResponse(
     @SerializedName("expired")
     val expired: Boolean,
     @SerializedName("authorizationHeader")
-    val authorizationHeader: String
+    val authorizationHeader: String,
 )

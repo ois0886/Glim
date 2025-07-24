@@ -25,13 +25,15 @@ class HomeViewModel @Inject constructor(
     private val _errorFlow = MutableSharedFlow<Throwable>()
     val errorFlow get() = _errorFlow.asSharedFlow()
 
-    fun navigateToGlim() = viewModelScope.launch {
-        navigator.navigate(MainTab.REELS.route)
-    }
+    fun navigateToGlim() =
+        viewModelScope.launch {
+            navigator.navigate(MainTab.REELS.route)
+        }
 
-    fun navigateToBookDetail(bookId: String) = viewModelScope.launch {
-        // 책 상세 정보로 navigate :  navigator.navigate()
-    }
+    fun navigateToBookDetail(bookId: String) =
+        viewModelScope.launch {
+            // 책 상세 정보로 navigate :  navigator.navigate()
+        }
 
     init {
         loadCurationData()

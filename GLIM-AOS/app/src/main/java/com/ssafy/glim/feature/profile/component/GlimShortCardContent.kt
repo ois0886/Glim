@@ -36,20 +36,22 @@ import com.ssafy.glim.feature.profile.GlimShortCard
 internal fun GlimShortCardContent(
     glimCard: GlimShortCard,
     onLikeToggle: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
+        modifier =
+        modifier
             .width(280.dp)
             .height(120.dp),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
     ) {
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = glimCard.title,
@@ -57,43 +59,44 @@ internal fun GlimShortCardContent(
                 color = Color.Black,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                lineHeight = 20.sp
+                lineHeight = 20.sp,
             )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = glimCard.timestamp,
                     fontSize = 12.sp,
-                    color = Color.Gray
+                    color = Color.Gray,
                 )
 
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(
                         onClick = onLikeToggle,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     ) {
                         Icon(
                             imageVector = if (glimCard.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = if (glimCard.isLiked) {
+                            contentDescription =
+                            if (glimCard.isLiked) {
                                 stringResource(R.string.content_description_unlike)
                             } else {
                                 stringResource(R.string.content_description_like)
                             },
                             tint = if (glimCard.isLiked) Color.Red else Color.Gray,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(16.dp),
                         )
                     }
 
                     Text(
                         text = glimCard.likeCount.toString(),
                         fontSize = 12.sp,
-                        color = Color.Gray
+                        color = Color.Gray,
                     )
                 }
             }
@@ -104,18 +107,19 @@ internal fun GlimShortCardContent(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewGlimShortCardContent() {
-    val mockGlimCard = GlimShortCard(
-        id = "1",
-        title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
-        timestamp = "P.51",
-        likeCount = 1247,
-        isLiked = false
-    )
+    val mockGlimCard =
+        GlimShortCard(
+            id = "1",
+            title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
+            timestamp = "P.51",
+            likeCount = 1247,
+            isLiked = false,
+        )
 
     MaterialTheme {
         GlimShortCardContent(
             glimCard = mockGlimCard,
-            onLikeToggle = {}
+            onLikeToggle = {},
         )
     }
 }
@@ -123,18 +127,19 @@ private fun PreviewGlimShortCardContent() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewGlimShortCardContentLiked() {
-    val mockGlimCard = GlimShortCard(
-        id = "2",
-        title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
-        timestamp = "P.51",
-        likeCount = 856,
-        isLiked = true
-    )
+    val mockGlimCard =
+        GlimShortCard(
+            id = "2",
+            title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
+            timestamp = "P.51",
+            likeCount = 856,
+            isLiked = true,
+        )
 
     MaterialTheme {
         GlimShortCardContent(
             glimCard = mockGlimCard,
-            onLikeToggle = {}
+            onLikeToggle = {},
         )
     }
 }
