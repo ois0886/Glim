@@ -1,7 +1,9 @@
 package com.ssafy.glim.feature.home
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,15 +19,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -39,9 +44,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.SubcomposeAsyncImage
+import coil.imageLoader
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.ssafy.glim.R
-import com.ssafy.glim.feature.home.model.BookItem
-import com.ssafy.glim.feature.home.model.GlimInfo
+import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.model.Glim
+import com.ssafy.glim.core.ui.ImageCustomLoader
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.ui.theme.GlimColor.LightGray600
 import com.ssafy.glim.ui.theme.GlimColor.LightGray700
@@ -58,8 +68,9 @@ internal fun HomeRoute(
 
     viewModel.collectSideEffect { effect ->
         when (effect) {
-            is HomeSideEffect.ShowError ->
+            is HomeSideEffect.ShowError -> {
                 Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -151,13 +162,25 @@ fun SectionTitle(text: String) {
 
 @Composable
 fun GlimCarousel(
-    glims: List<GlimInfo>,
+    glims: List<Glim>,
     onItemClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
     itemSize: DpSize = DpSize(width = 240.dp, height = 360.dp),
     itemSpacing: Dp = 12.dp
 ) {
+    val context = LocalContext.current
+    val imageLoader = context.imageLoader
+    LaunchedEffect(glims) {
+        glims.forEach { quote ->
+            val request = ImageRequest.Builder(context)
+                .data(quote.imgUrl)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .build()
+            imageLoader.enqueue(request)
+        }
+    }
     LazyRow(
         modifier = modifier,
         contentPadding = contentPadding,
@@ -176,27 +199,44 @@ fun GlimCarousel(
                     shape = RoundedCornerShape(12.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 ) {
-                    Box {
-                        Image(
-                            painter =
-                            if (glim.background == "1") {
-                                painterResource(R.drawable.example_glim_3)
-                            } else if (glim.background == "2") {
-                                painterResource(R.drawable.example_glim_4)
-                            } else {
-                                painterResource(R.drawable.example_glim_1)
-                            },
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.size(itemSize),
-                        )
-                    }
+                    SubcomposeAsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(glim.imgUrl)
+                            .crossfade(true)
+                            .diskCachePolicy(CachePolicy.ENABLED)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
+                            .build(),
+                        contentDescription = null,
+                        modifier = Modifier.size(itemSize),
+                        contentScale = ContentScale.Crop,
+                        imageLoader = imageLoader,
+                        loading = {
+                            ImageCustomLoader(Modifier)
+                        },
+                        error = {
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .background(
+                                        color = Gray.copy(alpha = 0.2f),
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.example_glim_4),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                        }
+                    )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = glim.title,
-                    style =
-                    MaterialTheme.typography.bodyMedium.copy(
+                    text = glim.bookTitle,
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = LightGray900,
@@ -205,9 +245,8 @@ fun GlimCarousel(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = glim.author,
-                    style =
-                    MaterialTheme.typography.bodyMedium.copy(
+                    text = glim.bookAuthor,
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.sp,
                         color = LightGray700,
                     ),
@@ -219,14 +258,27 @@ fun GlimCarousel(
 
 @Composable
 fun BookCarousel(
-    books: List<BookItem>,
+    books: List<Book>,
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
     itemWidth: Dp = 100.dp,
     itemSpacing: Dp = 12.dp,
 ) {
-    LazyRow(
+    val context = LocalContext.current
+    val imageLoader = context.imageLoader
+    LaunchedEffect(books) {
+        books.forEach { book ->
+            val request = ImageRequest.Builder(context)
+                .data(book.coverImageUrl)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .build()
+            imageLoader.enqueue(request)
+        }
+    }
+
+        LazyRow(
         modifier = modifier,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(itemSpacing),
@@ -236,26 +288,46 @@ fun BookCarousel(
                 modifier =
                 Modifier
                     .width(itemWidth)
-                    .clickable { onItemClick(book.id) },
-                horizontalAlignment = Alignment.Start,
+                    .clickable { onItemClick(book.id.toString()) },
+                horizontalAlignment = Alignment.Start
             ) {
                 Card(
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                     modifier = Modifier.size(itemWidth),
                 ) {
-                    Image(
-                        painter =
-                        if (book.bookCover == "1") {
-                            painterResource(R.drawable.example_glim_3)
-                        } else if (book.bookCover == "2") {
-                            painterResource(R.drawable.example_glim_4)
-                        } else {
-                            painterResource(R.drawable.example_glim_2)
-                        },
-                        contentDescription = book.title,
-                        contentScale = ContentScale.Crop,
+                    SubcomposeAsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(book.coverImageUrl)
+                            .crossfade(true)
+                            .diskCachePolicy(CachePolicy.ENABLED)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
+                            .build(),
+                        contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
+                        imageLoader = imageLoader,
+                        loading = {
+                            ImageCustomLoader(Modifier)
+                        },
+                        error = {
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .background(
+                                        color = Gray.copy(alpha = 0.2f),
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.example_glim_4),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
