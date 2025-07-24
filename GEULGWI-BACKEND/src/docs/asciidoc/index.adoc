@@ -227,18 +227,6 @@ include::{snippets}/auth_api_docs_test/verify_email_code_test/http-response.adoc
 
 include::{snippets}/auth_api_docs_test/verify_email_code_test/response-fields.adoc[]
 
-=== 인증 이메일 재전송
-
-==== 요청
-
-include::{snippets}/auth_api_docs_test/resend_verify_email_code_test/http-request.adoc[]
-
-==== 응답
-
-include::{snippets}/auth_api_docs_test/resend_verify_email_code_test/http-response.adoc[]
-
-include::{snippets}/auth_api_docs_test/resend_verify_email_code_test/response-fields.adoc[]
-
 === 사용자 로그인 
 
 ==== 요청
