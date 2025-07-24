@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.glim.R
+import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.model.Glim
 import com.ssafy.glim.feature.home.model.BookItem
 import com.ssafy.glim.feature.home.model.GlimInfo
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
