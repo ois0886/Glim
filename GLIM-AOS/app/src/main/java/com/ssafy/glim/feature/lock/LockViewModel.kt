@@ -1,10 +1,9 @@
 package com.ssafy.glim.feature.lock
 
-import androidx.compose.runtime.currentComposer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.R
-import com.ssafy.glim.core.domain.usecase.quote.GetGlimsUseCase
+import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,7 +16,7 @@ import javax.inject.Inject
 class LockViewModel
 @Inject
 constructor(
-    private val getGlimsUseCase: GetGlimsUseCase,
+    private val getQuotesUseCase: GetQuotesUseCase,
 ) : ViewModel(), ContainerHost<LockUiState, LockSideEffect> {
     override val container =
         container<LockUiState, LockSideEffect>(
@@ -46,10 +45,11 @@ constructor(
         if (nextIdx >= state.quotes.size - 5) loadQuotes()
         reduce { state.copy(currentIndex = nextIdx) }
     }
-    fun prevQuote() = intent{
+    fun prevQuote() = intent {
         var prevIdx = state.currentIndex - 1
-        if(prevIdx<0)
+        if (prevIdx < 0) {
             prevIdx = 0
+        }
         reduce { state.copy(currentIndex = prevIdx) }
     }
     fun unlockMain() = intent {
@@ -80,11 +80,11 @@ constructor(
     private fun loadQuotes() =
         intent {
             val page = state.page
-            getGlimsUseCase(page, state.size)
-                .collect { list ->
+            runCatching { getQuotesUseCase(page, state.size) }
+                .onSuccess {
                     reduce {
                         state.copy(
-                            quotes = state.quotes + list,
+                            quotes = state.quotes + it,
                             page = page + 1,
                         )
                     }

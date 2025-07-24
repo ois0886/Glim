@@ -1,35 +1,33 @@
 package com.ssafy.glim.core.data.datasource.remote
 
-import com.ssafy.glim.core.data.dto.response.GlimResponse
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.ssafy.glim.core.data.dto.response.QuoteResponse
+import com.ssafy.glim.core.data.service.QuoteService
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
-class QuoteRemoteDataSource
-@Inject
-constructor() {
-    private val all =
-        List(50) { idx ->
-            GlimResponse(
-                quoteId = idx.toLong(),
-                quoteImageName = "https://picsum.photos/seed/glim_$idx/800/1400",
-                bookTitle = "Quote Title #$idx",
-                author = "Author $idx",
-                bookId = 0,
-                bookCoverUrl = "",
-                quoteViews = 0,
-            )
-        }
-
-    fun fetchQuotes(
+class QuoteRemoteDataSource @Inject constructor(
+    private val quoteService: QuoteService
+) {
+    suspend fun getQuotes(
         page: Int,
-        size: Int,
-        sort: String,
-    ): Flow<List<GlimResponse>> =
-        flow {
-            val from = page * size
-            val to = (from + size).coerceAtMost(all.size)
-            val slice = if (from < to) all.subList(from, to) else emptyList()
-            emit(slice)
-        }
+        size: Int = 10,
+        sort: String
+    ): List<QuoteResponse> = quoteService.getQuotes(
+        page = page,
+        size = size,
+        sort = sort
+    )
+
+    suspend fun createQuote(
+        quoteData: RequestBody,
+        quoteImage: MultipartBody.Part?
+    ) = quoteService.createQuote(
+        quoteData = quoteData,
+        quoteImage = quoteImage
+    )
+
+    suspend fun updateQuoteViewCount(
+        quoteId: Long
+    ) = quoteService.updateQuoteViewCount(quoteId)
 }

@@ -1,13 +1,13 @@
 package com.ssafy.glim.feature.lock
 
 import androidx.annotation.StringRes
-import com.ssafy.glim.core.domain.model.Glim
+import com.ssafy.glim.core.domain.model.Quote
 import java.time.LocalDateTime
 
 data class LockUiState(
     val isLoading: Boolean = true,
     val time: LocalDateTime = LocalDateTime.now(),
-    val quotes: List<Glim> = emptyList(),
+    val quotes: List<Quote> = emptyList(),
     val currentIndex: Int = 0,
     val page: Int = 0,
     val size: Int = 20,

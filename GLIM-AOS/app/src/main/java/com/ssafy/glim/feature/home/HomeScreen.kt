@@ -1,6 +1,5 @@
-package com.ssafy.glim.feature.home
+package com.ssafy.quote.feature.home
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,8 +49,10 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.core.domain.model.Glim
+import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.ImageCustomLoader
+import com.ssafy.glim.feature.home.HomeSideEffect
+import com.ssafy.glim.feature.home.HomeUiState
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.ui.theme.GlimColor.LightGray600
 import com.ssafy.glim.ui.theme.GlimColor.LightGray700
@@ -77,7 +78,7 @@ internal fun HomeRoute(
     HomeScreen(
         padding = padding,
         homeUiState = homeUiState,
-        onGlimClick = viewModel::navigateToGlim,
+        onQuoteClick = viewModel::navigateToQuote,
         onBookClick = viewModel::navigateToBookDetail,
     )
 }
@@ -86,7 +87,7 @@ internal fun HomeRoute(
 private fun HomeScreen(
     padding: PaddingValues,
     homeUiState: HomeUiState,
-    onGlimClick: () -> Unit,
+    onQuoteClick: () -> Unit,
     onBookClick: (String) -> Unit,
 ) {
     LazyColumn(
@@ -96,15 +97,15 @@ private fun HomeScreen(
             .padding(padding),
     ) {
         item {
-            GlimHomeTitle()
+            QuoteHomeTitle()
         }
         items(homeUiState.sections) { section ->
             when (section) {
-                is HomeSectionUiModel.GlimSection -> {
+                is HomeSectionUiModel.QuoteSection -> {
                     SectionTitle(section.title)
-                    GlimCarousel(
-                        glims = section.glims,
-                        onItemClick = onGlimClick,
+                    QuoteCarousel(
+                        quotes = section.quotes,
+                        onItemClick = onQuoteClick,
                     )
                 }
                 is HomeSectionUiModel.BookSection -> {
@@ -120,7 +121,7 @@ private fun HomeScreen(
 }
 
 @Composable
-fun GlimHomeTitle() {
+fun QuoteHomeTitle() {
     Column(
         modifier =
         Modifier
@@ -161,8 +162,8 @@ fun SectionTitle(text: String) {
 }
 
 @Composable
-fun GlimCarousel(
-    glims: List<Glim>,
+fun QuoteCarousel(
+    quotes: List<Quote>,
     onItemClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
@@ -171,10 +172,10 @@ fun GlimCarousel(
 ) {
     val context = LocalContext.current
     val imageLoader = context.imageLoader
-    LaunchedEffect(glims) {
-        glims.forEach { quote ->
+    LaunchedEffect(quotes) {
+        quotes.forEach { quote ->
             val request = ImageRequest.Builder(context)
-                .data(quote.imgUrl)
+                .data(quote.quoteImageName)
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .memoryCachePolicy(CachePolicy.ENABLED)
                 .build()
@@ -186,7 +187,7 @@ fun GlimCarousel(
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(itemSpacing),
     ) {
-        items(glims) { glim ->
+        items(quotes) { quote ->
             Column(
                 modifier =
                 Modifier
@@ -201,7 +202,7 @@ fun GlimCarousel(
                 ) {
                     SubcomposeAsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(glim.imgUrl)
+                            .data(quote.quoteImageName)
                             .crossfade(true)
                             .diskCachePolicy(CachePolicy.ENABLED)
                             .memoryCachePolicy(CachePolicy.ENABLED)
@@ -235,7 +236,7 @@ fun GlimCarousel(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = glim.bookTitle,
+                    text = quote.bookTitle,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -245,7 +246,7 @@ fun GlimCarousel(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = glim.bookAuthor,
+                    text = quote.author,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.sp,
                         color = LightGray700,
@@ -270,7 +271,7 @@ fun BookCarousel(
     LaunchedEffect(books) {
         books.forEach { book ->
             val request = ImageRequest.Builder(context)
-                .data(book.coverImageUrl)
+                .data(book.cover)
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .memoryCachePolicy(CachePolicy.ENABLED)
                 .build()
@@ -288,7 +289,7 @@ fun BookCarousel(
                 modifier =
                 Modifier
                     .width(itemWidth)
-                    .clickable { onItemClick(book.id.toString()) },
+                    .clickable { onItemClick(book.itemId.toString()) },
                 horizontalAlignment = Alignment.Start
             ) {
                 Card(
@@ -298,7 +299,7 @@ fun BookCarousel(
                 ) {
                     SubcomposeAsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(book.coverImageUrl)
+                            .data(book.cover)
                             .crossfade(true)
                             .diskCachePolicy(CachePolicy.ENABLED)
                             .memoryCachePolicy(CachePolicy.ENABLED)

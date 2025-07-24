@@ -2,6 +2,7 @@ package com.ssafy.glim.feature.bookdetail
 
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.usecase.book.GetBookDetailUseCase
+import com.ssafy.glim.core.domain.usecase.book.UpdateBookViewCountUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,63 +12,61 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class BookDetailViewModel
-@Inject
-constructor(
+class BookDetailViewModel @Inject constructor(
     private val getBookDetailUseCase: GetBookDetailUseCase,
-    private val navigator: Navigator,
+    private val updateBookViewCountUseCase: UpdateBookViewCountUseCase,
+    private val navigator: Navigator
 ) : ViewModel(), ContainerHost<BookDetailState, BookDetailSideEffect> {
+
     override val container: Container<BookDetailState, BookDetailSideEffect> = container(BookDetailState())
 
-    init {
-        loadBookDetail()
-    }
-
-    private fun loadBookDetail() =
-        intent {
-            getBookDetailUseCase(state.bookId).collect {
+    fun initBook(bookId: Long) = intent {
+        runCatching { getBookDetailUseCase(bookId) }
+            .onSuccess {
                 reduce {
                     state.copy(
                         bookDetail = it,
+                        isLoading = false
                     )
                 }
+                increaseViewCount(bookId)
             }
-        }
-
-    fun initBookId(bookId: Long) =
-        intent {
-            reduce {
-                state.copy(
-                    bookId = bookId,
-                )
+            .onFailure {
+                postSideEffect(BookDetailSideEffect.ShowToast("책 정보를 불러오는데 실패했습니다."))
             }
-        }
+    }
 
-    fun onClickQuote(quoteId: Long) =
-        intent {
-            navigator.navigate(MainTab.REELS.route)
-        }
+    fun onClickQuote(quoteId: Long) = intent {
+        navigator.navigate(MainTab.REELS.route)
+    }
 
-    fun openUrl() =
-        intent {
-            postSideEffect(BookDetailSideEffect.OpenUrl(state.bookDetail.marketUrl))
-        }
+    fun openUrl() = intent {
+        postSideEffect(BookDetailSideEffect.OpenUrl(state.bookDetail.link))
+    }
 
-    fun toggleBookDescriptionExpanded() =
-        intent {
-            reduce {
-                state.copy(
-                    isDescriptionExpanded = !state.isDescriptionExpanded,
-                )
+    fun toggleBookDescriptionExpanded() = intent {
+        reduce {
+            state.copy(
+                isDescriptionExpanded = !state.isDescriptionExpanded
+            )
+        }
+    }
+
+    fun toggleAuthorDescriptionExpanded() = intent {
+        reduce {
+            state.copy(
+                isAuthorDescriptionExpanded = !state.isAuthorDescriptionExpanded
+            )
+        }
+    }
+
+    private fun increaseViewCount(bookId: Long) = intent {
+        runCatching { updateBookViewCountUseCase(bookId) }
+            .onSuccess {
+                // 성공적으로 조회수 증가
             }
-        }
-
-    fun toggleAuthorDescriptionExpanded() =
-        intent {
-            reduce {
-                state.copy(
-                    isAuthorDescriptionExpanded = !state.isAuthorDescriptionExpanded,
-                )
+            .onFailure {
+                postSideEffect(BookDetailSideEffect.ShowToast("조회수 증가에 실패했습니다."))
             }
-        }
+    }
 }

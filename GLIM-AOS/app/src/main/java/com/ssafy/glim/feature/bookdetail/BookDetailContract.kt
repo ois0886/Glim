@@ -1,15 +1,17 @@
 package com.ssafy.glim.feature.bookdetail
 
 import com.ssafy.glim.core.common.extensions.toCommaSeparatedPrice
+import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.core.domain.model.QuoteSummary
 
 data class BookDetailState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val bookId: Long = 0,
-    val bookDetail: BookDetail = BookDetail(),
+    val bookDetail: Book = Book(),
+    val quoteSummaries: List<QuoteSummary> = emptyList(),
     val isDescriptionExpanded: Boolean = false,
-    val isAuthorDescriptionExpanded: Boolean = false,
+    val isAuthorDescriptionExpanded: Boolean = false
 )
 
 data class BookDetail(
@@ -29,18 +31,16 @@ data class BookDetail(
     val marketUrl: String = "https://www.naver.com",
 ) {
     val priceText
-        get() =
-            if (price > 0) {
-                "${
-                    price.toString().toCommaSeparatedPrice()
-                }원"
-            } else {
-                "가격 정보 없음"
-            }
+        get() = if (price > 0) {
+            "${
+                price.toString().toCommaSeparatedPrice()
+            }원"
+        } else {
+            "가격 정보 없음"
+        }
 }
 
 sealed class BookDetailSideEffect {
     data class ShowToast(val message: String) : BookDetailSideEffect()
-
     data class OpenUrl(val url: String) : BookDetailSideEffect()
 }

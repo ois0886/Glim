@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.reels
+package com.ssafy.quote.feature.reels
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -46,9 +46,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.ssafy.glim.R
-import com.ssafy.glim.core.domain.model.Glim
+import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.DarkThemeScreen
 import com.ssafy.glim.feature.main.excludeSystemBars
+import com.ssafy.glim.feature.reels.rememberCaptureAction
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -74,14 +75,14 @@ internal fun ReelsRoute(
                 Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
             }
 
-            is ReelsSideEffect.ShareGlim -> {
+            is ReelsSideEffect.ShareQuote -> {
                 // 공유 기능 구현
-                // shareGlim(context, sideEffect.glim)
+                // shareQuote(context, sideEffect.quote)
             }
 
             is ReelsSideEffect.ShowMoreOptions -> {
                 // 더보기 옵션 표시
-                // showMoreOptions(context, sideEffect.glim)
+                // showMoreOptions(context, sideEffect.quote)
             }
 
             is ReelsSideEffect.CaptureSuccess -> {
@@ -92,16 +93,18 @@ internal fun ReelsRoute(
             is ReelsSideEffect.CaptureError -> {
                 Toast.makeText(context, sideEffect.error, Toast.LENGTH_SHORT).show()
             }
+
+            else -> Unit
         }
     }
 
-    val pagerState = rememberPagerState(pageCount = { state.glims.size })
+    val pagerState = rememberPagerState(pageCount = { state.quotes.size })
     val graphicsLayer = rememberGraphicsLayer()
 
     val captureAction =
         rememberCaptureAction(
             graphicsLayer = graphicsLayer,
-            fileName = "Glim_${System.currentTimeMillis()}.jpg",
+            fileName = "Quote_${System.currentTimeMillis()}.jpg",
         )
 
     LaunchedEffect(pagerState) {
@@ -126,55 +129,55 @@ internal fun ReelsRoute(
                     }
                 },
         ) { page ->
-            val glim = state.glims[page]
+            val quote = state.quotes[page]
 
-            GlimItem(
-                glim = glim,
+            QuoteItem(
+                quote = quote,
                 modifier = Modifier.fillMaxSize(),
                 onLikeClick = { viewModel.toggleLike() },
                 onShareClick = { viewModel.onShareClick() },
                 onMoreClick = { },
                 onCaptureClick = {
                     captureAction()
-                    viewModel.onCaptureClick("Glim_${System.currentTimeMillis()}.jpg")
+                    viewModel.onCaptureClick("Quote_${System.currentTimeMillis()}.jpg")
                 },
                 onBookInfoClick = {
                     it?.let {
                         viewModel.onBookInfoClick(it)
                     }
-                },
+                }
             )
         }
     }
 }
 
 @Composable
-fun GlimItem(
-    glim: Glim,
+fun QuoteItem(
+    quote: Quote,
     modifier: Modifier = Modifier,
     onLikeClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
     onMoreClick: () -> Unit = {},
     onCaptureClick: () -> Unit = {},
-    onBookInfoClick: (Long?) -> Unit,
+    onBookInfoClick: (Long?) -> Unit
 ) {
     Box(modifier = modifier) {
         AsyncImage(
-            model = glim.imgUrl,
+            model = quote.quoteImageName,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
             error = painterResource(R.drawable.example_glim_2),
         )
 
-        GlimBookContent(
+        QuoteBookContent(
             modifier = Modifier.align(Alignment.BottomEnd),
-            bookId = glim.bookId,
-            author = glim.bookAuthor,
-            bookName = glim.bookTitle,
-            pageInfo = glim.pageInfo,
+            bookId = quote.bookId,
+            author = quote.author,
+            bookName = quote.bookTitle,
+            page = quote.page,
         ) {
-            onBookInfoClick(glim.bookId)
+            onBookInfoClick(quote.bookId)
         }
 
         Column(
@@ -202,18 +205,18 @@ fun GlimItem(
                     Icon(
                         painter =
                         painterResource(
-                            if (glim.isLike) {
+                            if (quote.isLike) {
                                 R.drawable.ic_favorite_fill
                             } else {
                                 R.drawable.ic_favorite
                             },
                         ),
                         contentDescription = stringResource(R.string.like),
-                        tint = if (glim.isLike) Color.Red else Color.White,
+                        tint = if (quote.isLike) Color.Red else Color.White,
                     )
                 }
                 Text(
-                    "${glim.likes}",
+                    "${quote.likes}",
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                 )
@@ -237,12 +240,12 @@ fun GlimItem(
 }
 
 @Composable
-fun GlimBookContent(
+fun QuoteBookContent(
     modifier: Modifier = Modifier,
     bookId: Long,
     author: String,
     bookName: String,
-    pageInfo: String,
+    page: Int,
     onBookInfoClick: (Long?) -> Unit = {},
 ) {
     Surface(
@@ -289,7 +292,7 @@ fun GlimBookContent(
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "$bookName ($pageInfo)",
+                    text = "$bookName ($page)",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,

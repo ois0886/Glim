@@ -1,6 +1,6 @@
-package com.ssafy.glim.core.domain.model
+package com.ssafy.glim.core.data.dto.response
 
-data class Quote(
+data class QuoteResponse(
     val author: String,
     val bookCoverUrl: String,
     val bookId: Long,
@@ -9,7 +9,5 @@ data class Quote(
     val publisher: Any,
     val quoteId: Long,
     val quoteImageName: String,
-    val quoteViews: Any,
-    val isLike: Boolean = false,
-    val likes: Long = 0L,
+    val quoteViews: Any
 )
