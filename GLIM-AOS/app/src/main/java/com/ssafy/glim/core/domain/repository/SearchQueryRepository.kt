@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface SearchQueryRepository {
 
-    fun getPopularSearchQueries(): Flow<List<SearchItem>>
+    fun getPopularSearchQueries(): List<SearchItem>
 
-    fun getRecentSearchQueries(): Flow<List<SearchItem>>
+    fun getRecentSearchQueries(): List<SearchItem>
 
-    fun saveRecentSearchQuery(query: String): Flow<Unit>
+    fun saveRecentSearchQuery(query: String)
 
-    fun deleteRecentSearchQuery(query: String): Flow<Unit>
+    fun deleteRecentSearchQuery(query: String)
 }

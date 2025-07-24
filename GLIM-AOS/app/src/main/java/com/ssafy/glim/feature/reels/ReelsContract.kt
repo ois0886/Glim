@@ -1,20 +1,20 @@
-package com.ssafy.glim.feature.reels
+package com.ssafy.quote.feature.reels
 
-import com.ssafy.glim.core.domain.model.Glim
+import com.ssafy.glim.core.domain.model.Quote
 
 // ReelsContract.kt
 data class ReelsState(
-    val glims: List<Glim> = emptyList(),
-    val currentGlimId: Long = -1,
+    val quotes: List<Quote> = emptyList(),
+    val currentQuoteId: Long = -1,
     val currentPage: Int = 0,
     val isLoading: Boolean = false,
     val error: String? = null,
     val hasMoreData: Boolean = true,
 ) {
-    val currentGlim: Glim?
+    val currentQuote: Quote?
         get() =
-            if (currentPage >= 0 && currentPage < glims.size) {
-                glims[currentPage]
+            if (currentPage >= 0 && currentPage < quotes.size) {
+                quotes[currentPage]
             } else {
                 null
             }
@@ -24,9 +24,9 @@ data class ReelsState(
 sealed class ReelsSideEffect {
     data class ShowToast(val message: String) : ReelsSideEffect()
 
-    data class ShareGlim(val glim: Glim) : ReelsSideEffect()
+    data class ShareQuote(val quote: Quote) : ReelsSideEffect()
 
-    data class ShowMoreOptions(val glim: Glim) : ReelsSideEffect()
+    data class ShowMoreOptions(val quote: Quote) : ReelsSideEffect()
 
     data class CaptureSuccess(val fileName: String) : ReelsSideEffect()
 

@@ -133,7 +133,7 @@ fun LockScreenContent(
         val currentQuote = state.quotes.getOrNull(state.currentIndex)
         if (currentQuote != null) {
             AsyncImage(
-                model = currentQuote.imgUrl,
+                model = currentQuote.quoteImageName,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,

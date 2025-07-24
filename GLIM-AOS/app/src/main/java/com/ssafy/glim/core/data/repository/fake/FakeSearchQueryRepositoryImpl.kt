@@ -105,22 +105,19 @@ constructor() : SearchQueryRepository {
         ),
     )
 
-    override fun getPopularSearchQueries() = flow {
-        emit(popularSearchQueries)
+    override fun getPopularSearchQueries(): List<SearchItem> {
+        TODO("Not yet implemented")
     }
 
-    override fun getRecentSearchQueries() = flow {
-        emit(recentSearchQueries)
+    override fun getRecentSearchQueries(): List<SearchItem> {
+        TODO("Not yet implemented")
     }
 
-    override fun saveRecentSearchQuery(query: String) = flow {
-        recentSearchQueries.removeIf { it.text == query }
-        recentSearchQueries.add(0, SearchItem(text = query))
-        emit(Unit)
+    override fun saveRecentSearchQuery(query: String) {
+        TODO("Not yet implemented")
     }
 
-    override fun deleteRecentSearchQuery(query: String) = flow {
-        recentSearchQueries.removeIf { it.text == query }
-        emit(Unit)
+    override fun deleteRecentSearchQuery(query: String) {
+        TODO("Not yet implemented")
     }
 }

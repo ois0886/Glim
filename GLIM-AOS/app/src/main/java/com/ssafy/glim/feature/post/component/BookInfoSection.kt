@@ -18,22 +18,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.feature.reels.GlimBookContent
+import com.ssafy.quote.feature.reels.QuoteBookContent
 
 @Composable
 fun BookInfoSection(
     modifier: Modifier = Modifier,
     book: Book? = null,
-    page: String = "",
+    page: Int = 0,
     onBookInfoClick: (Long?) -> Unit,
 ) {
     if (book != null) {
-        GlimBookContent(
+        QuoteBookContent(
             modifier = modifier,
-            bookId = book.id,
+            bookId = book.itemId,
             author = book.author,
             bookName = book.title,
-            pageInfo = page,
+            page = page,
             onBookInfoClick = onBookInfoClick
         )
     }

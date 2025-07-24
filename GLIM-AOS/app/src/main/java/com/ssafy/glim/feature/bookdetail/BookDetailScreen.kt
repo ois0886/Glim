@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
+import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.ui.theme.GlimColor.LightBrown
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -73,6 +75,7 @@ fun BookDetailScreen(
 
     BookDetailContent(
         book = state.bookDetail,
+        quotes = state.quoteSummaries,
         isDescriptionExpanded = state.isDescriptionExpanded,
         isAuthorDescriptionExpanded = state.isAuthorDescriptionExpanded,
         onClickQuote = viewModel::onClickQuote,
@@ -90,7 +93,8 @@ fun BookDetailScreen(
 @Composable
 fun BookDetailContent(
     modifier: Modifier = Modifier,
-    book: BookDetail,
+    book: Book,
+    quotes: List<QuoteSummary>,
     isDescriptionExpanded: Boolean = false,
     isAuthorDescriptionExpanded: Boolean = false,
     onClickQuote: (Long) -> Unit,
@@ -141,7 +145,7 @@ fun BookDetailContent(
                     ) {
                         TitleWithAction(title = stringResource(R.string.relative_quote))
 
-                        for (quote in book.quotes) {
+                        for (quote in quotes) {
                             QuoteCard(quote) { onClickQuote(it) }
                         }
                     }
@@ -179,23 +183,21 @@ fun BookDetailContent(
                     )
                 }
                 item {
-                    if (book.authorDescription != null) {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            TitleWithAction(
-                                title = stringResource(R.string.author_intro),
-                                isExpanded = isAuthorDescriptionExpanded,
-                                action = toggleAuthorDescriptionExpanded
-                            )
-                            Text(
-                                text = book.authorDescription,
-                                style = MaterialTheme.typography.bodyMedium,
-                                maxLines = if (isAuthorDescriptionExpanded) Int.MAX_VALUE else 3,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
+                    Column(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TitleWithAction(
+                            title = stringResource(R.string.author_intro),
+                            isExpanded = isAuthorDescriptionExpanded,
+                            action = toggleAuthorDescriptionExpanded
+                        )
+                        Text(
+                            text = book.description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            maxLines = if (isAuthorDescriptionExpanded) Int.MAX_VALUE else 3,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
                 item {
@@ -251,29 +253,4 @@ private fun TitleWithAction(
         )
         content()
     }
-}
-
-
-@Preview
-@Composable
-fun BookDetailScreenPreview() {
-    BookDetailContent(
-        book = BookDetail(
-            title = "Sample Book Title",
-            subTitle = "Sample Subtitle",
-            author = "Author Name",
-            publisher = "Publisher Name",
-            publicationDate = "2023-10-01",
-            category = "Fiction",
-            price = 15000,
-            coverImageUrl = "https://example.com/cover.jpg"
-        ),
-        onClickQuote = {},
-        openUrl = {},
-        isDescriptionExpanded = true,
-        isAuthorDescriptionExpanded = true,
-        toggleBookDescriptionExpanded = {},
-        toggleAuthorDescriptionExpanded = {},
-        popBackStack = {}
-    )
 }

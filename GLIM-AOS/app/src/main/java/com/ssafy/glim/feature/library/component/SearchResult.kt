@@ -231,7 +231,7 @@ private fun BookCard(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "${book.author} • ${book.publisher} • ${book.publicationDate}",
+                    text = "${book.author} • ${book.publisher} • ${book.pubDate}",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
@@ -264,8 +264,9 @@ private fun QuoteCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            // TODO: quote 텍스트 추가
             Text(
-                text = "\"${quote.text}\"",
+                text = "",
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black,
                 lineHeight = 24.sp
@@ -294,8 +295,9 @@ private fun QuoteCard(
                         modifier = Modifier.size(16.dp),
                         tint = Color.Gray
                     )
+                    // TODO: 좋아요 개수 추가
                     Text(
-                        text = quote.likes.toString(),
+                        text = "",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray
                     )

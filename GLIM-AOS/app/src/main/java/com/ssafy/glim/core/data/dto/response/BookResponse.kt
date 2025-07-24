@@ -25,5 +25,4 @@ data class BookResponse(
     val salesPoint: Long,
     val stockStatus: String,
     val title: String
-
 )

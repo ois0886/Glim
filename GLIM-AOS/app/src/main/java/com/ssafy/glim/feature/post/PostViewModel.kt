@@ -1,11 +1,9 @@
 package com.ssafy.glim.feature.post
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.core.domain.model.GlimInput
-import com.ssafy.glim.core.domain.usecase.glim.UploadGlimUseCase
+import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
@@ -15,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val uploadGlimUseCase: UploadGlimUseCase,
+    val createQuoteUseCase: CreateQuoteUseCase,
     private val imageProcessor: ImageProcessor,
     private val navigator: Navigator
 ) : ViewModel(), ContainerHost<PostState, PostSideEffect> {
@@ -144,7 +142,7 @@ class PostViewModel @Inject constructor(
 
     fun selectedBook(book: Book) =
         intent {
-            reduce { state.copy(book = book, showBottomSheet = false)}
+            reduce { state.copy(book = book, showBottomSheet = false) }
         }
 
     fun completeClick() =
@@ -156,17 +154,23 @@ class PostViewModel @Inject constructor(
                             ?: throw IllegalStateException("이미지를 불러올 수 없습니다.")
 
                     state.book?.let {
-                        uploadGlimUseCase(
-                            GlimInput(bitmap, it.id),
-                        ).collect { isSuccess ->
-                            if (isSuccess) {
+                        runCatching {
+                            createQuoteUseCase(
+                                content = state.recognizedText,
+                                isbn = it.isbn,
+                                book = it,
+                                bitmap = bitmap
+                            )
+                        }
+                            .onSuccess {
                                 postSideEffect(PostSideEffect.ShowToast("글림이 성공적으로 업로드되었습니다."))
                                 postSideEffect(PostSideEffect.NavigateBack)
-                            } else {
+                            }
+                            .onFailure {
                                 postSideEffect(PostSideEffect.ShowToast("글림 업로드에 실패했습니다."))
                             }
-                        }
                     }
+
                 } catch (e: Exception) {
                     postSideEffect(PostSideEffect.ShowToast("업로드 중 오류가 발생했습니다: ${e.message}"))
                 }

@@ -1,26 +1,27 @@
 package com.ssafy.glim.core.domain.repository
 
 import android.graphics.Bitmap
-import com.ssafy.glim.core.data.dto.request.BookCreateData
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.core.domain.model.Glim
 import com.ssafy.glim.core.domain.model.Quote
-import kotlinx.coroutines.flow.Flow
 
 interface QuoteRepository {
 
-    fun searchQuotes(query: String): Flow<List<Quote>>
+    fun searchQuotes(query: String): List<Quote>
 
-    fun getGlims(
+    suspend fun getQuotes(
         page: Int = 0,
         size: Int = 10,
         sort: String
-    ) : Flow<List<Glim>>
+    ) : List<Quote>
 
-    fun createGlim(
+    suspend fun createQuote(
         content: String,
-        bookId: Long,
+        isbn: String,
         book: Book,
         bitmap: Bitmap
-    ): Flow<Result<Unit>>
+    )
+
+    suspend fun updateQuoteViewCount(
+        quoteId: Long
+    )
 }

@@ -33,7 +33,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ssafy.glim.R
-import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.ui.theme.GlimColor.LightBrown
 
 @Composable
@@ -70,7 +71,7 @@ fun BookDetailTopBar(
 }
 
 @Composable
-fun BookInfoSection(state: BookDetail) {
+fun BookInfoSection(book: Book) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -86,7 +87,7 @@ fun BookInfoSection(state: BookDetail) {
 
     ) {
         AsyncImage(
-            model = state.coverImageUrl,
+            model = book.cover,
             contentDescription = stringResource(R.string.book_cover),
             modifier = Modifier
                 .size(80.dp, 120.dp),
@@ -100,23 +101,20 @@ fun BookInfoSection(state: BookDetail) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text(
-                text = state.subTitle,
-                style = MaterialTheme.typography.labelMedium,
-            )
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = state.title,
+                    text = book.title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = state.category,
+                    text = book.categoryName,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -129,12 +127,12 @@ fun BookInfoSection(state: BookDetail) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = state.author,
+                    text = book.author,
                     style = MaterialTheme.typography.bodySmall,
                 )
 
                 Text(
-                    text = stringResource(R.string.publication_date) + " ${state.publicationDate}",
+                    text = stringResource(R.string.publication_date) + " ${book.pubDate}",
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -145,12 +143,12 @@ fun BookInfoSection(state: BookDetail) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = state.publisher,
+                    text = book.publisher,
                     style = MaterialTheme.typography.bodySmall,
                 )
 
                 Text(
-                    text = stringResource(R.string.price) + " ${state.priceText}",
+                    text = stringResource(R.string.price) + " ${book.priceText}",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -161,10 +159,10 @@ fun BookInfoSection(state: BookDetail) {
 
 
 @Composable
-fun QuoteCard(quote: Quote, onClickCard: (Long) -> Unit) {
+fun QuoteCard(quote: QuoteSummary, onClickCard: (Long) -> Unit) {
     Card(
         modifier = Modifier
-            .clickable { onClickCard(quote.id) },
+            .clickable { onClickCard(quote.quoteId) },
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),
@@ -172,7 +170,7 @@ fun QuoteCard(quote: Quote, onClickCard: (Long) -> Unit) {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Text(
-            text = quote.text,
+            text = quote.content,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(16.dp)
         )
@@ -197,7 +195,7 @@ fun QuoteCard(quote: Quote, onClickCard: (Long) -> Unit) {
             )
 
             Text(
-                text = quote.likes.toString(),
+                text = quote.views.toString(),
                 style = MaterialTheme.typography.bodyMedium,
             )
         }

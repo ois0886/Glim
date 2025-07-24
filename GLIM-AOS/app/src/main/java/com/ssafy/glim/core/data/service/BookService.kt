@@ -4,19 +4,20 @@ import com.ssafy.glim.core.data.dto.response.BookResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface BookService {
 
-    @GET
+    @GET("api/v1/books")
     suspend fun getBooks(
         @Query ("keyword") keyword: String,
         @Query("page") page: Int,
         @Query("searchQueryType") searchQueryType: String,
-    ): Response<List<BookResponse>>
+    ): List<BookResponse>
 
-    @PATCH
+    @PATCH("api/v1/books/{id}/views")
     suspend fun updateViewCount(
-        @Query("id") bookId: Long,
-    ): Response<Unit>
+        @Path("id") bookId: Long,
+    )
 }

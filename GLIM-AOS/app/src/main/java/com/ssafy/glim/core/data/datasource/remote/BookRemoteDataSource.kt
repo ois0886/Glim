@@ -12,7 +12,7 @@ class BookRemoteDataSource @Inject constructor(
         queryType: String = "KEYWORD",
     ) = bookService.getBooks(keyword, page, queryType)
 
-    suspend fun updateViewCount(
+    suspend fun updateBookViewCount(
         bookId: Long,
     ) = bookService.updateViewCount(bookId)
 }

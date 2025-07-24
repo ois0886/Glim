@@ -5,12 +5,25 @@ import com.ssafy.glim.core.domain.model.Book
 
 fun BookResponse.toDomain(): Book {
     return Book(
-        id = this.id,
-        title = this.title,
-        author = this.author,
-        publisher = this.publisher,
-        publishedDate = this.publishedDate,
-        description = this.description,
-        thumbnailUrl = this.thumbnailUrl
+        adult = adult,
+        author = author,
+        categoryId = categoryId,
+        categoryName = categoryName,
+        cover = cover,
+        description = description,
+        fixedPrice = fixedPrice,
+        isbn = isbn,
+        itemId = itemId,
+        link = link,
+        priceSales = priceSales,
+        priceStandard = priceStandard,
+        pubDate = pubDate,
+        publisher = publisher,
+        stockStatus = stockStatus,
+        title = title
     )
+}
+
+fun List<BookResponse>.toDomain(): List<Book> {
+    return map { it.toDomain() }
 }

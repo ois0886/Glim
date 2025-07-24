@@ -1,5 +1,6 @@
 package com.ssafy.glim.core.navigation
 
+import com.ssafy.glim.core.domain.model.Book
 import kotlinx.serialization.Serializable
 
 sealed interface Route {
@@ -13,7 +14,7 @@ sealed interface Route {
     data object UpdateInfo : Route
 
     @Serializable
-    data class BookDetail(val bookId: Long) : BottomTabRoute
+    data class BookDetail(val book: Book) : BottomTabRoute
 
 }
 
