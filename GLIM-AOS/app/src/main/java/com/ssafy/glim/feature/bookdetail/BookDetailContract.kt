@@ -32,10 +32,13 @@ data class BookDetail(
     val marketUrl: String = "https://www.naver.com",
 ) {
     val priceText
-        get() = if (price > 0) "${
-            price.toString().toCommaSeparatedPrice()
-        }원" else "가격 정보 없음"
-
+        get() = if (price > 0) {
+            "${
+                price.toString().toCommaSeparatedPrice()
+            }원"
+        } else {
+            "가격 정보 없음"
+        }
 }
 
 sealed class BookDetailSideEffect {

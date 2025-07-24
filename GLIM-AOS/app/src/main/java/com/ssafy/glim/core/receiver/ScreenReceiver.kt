@@ -7,7 +7,7 @@ import com.ssafy.glim.feature.lock.LockScreenActivity
 
 object ScreenReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        when(intent.action) {
+        when (intent.action) {
             Intent.ACTION_SCREEN_ON -> {
                 navigateToLock(context)
             }

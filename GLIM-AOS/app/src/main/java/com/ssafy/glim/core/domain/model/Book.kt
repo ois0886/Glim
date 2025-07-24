@@ -23,9 +23,13 @@ data class Book(
     val publisher: String = "",
     val stockStatus: String = "",
     val title: String = "",
-){
+) {
     val priceText
-        get() = if (priceStandard > 0) "${
-            priceStandard.toString().toCommaSeparatedPrice()
-        }원" else "가격 정보 없음"
+        get() = if (priceStandard > 0) {
+            "${
+                priceStandard.toString().toCommaSeparatedPrice()
+            }원"
+        } else {
+            "가격 정보 없음"
+        }
 }

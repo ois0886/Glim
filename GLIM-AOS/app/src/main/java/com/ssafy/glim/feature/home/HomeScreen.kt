@@ -172,7 +172,7 @@ fun GlimCarousel(
                 ) {
                     Box {
                         Image(
-                            painter = if(glim.background == "1") painterResource(R.drawable.example_glim_3) else if(glim.background == "2") painterResource(R.drawable.example_glim_4) else painterResource(R.drawable.example_glim_1),
+                            painter = if (glim.background == "1") painterResource(R.drawable.example_glim_3) else if (glim.background == "2") painterResource(R.drawable.example_glim_4) else painterResource(R.drawable.example_glim_1),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(itemSize)
@@ -229,7 +229,7 @@ fun BookCarousel(
                     modifier = Modifier.size(itemWidth)
                 ) {
                     Image(
-                        painter = if(book.bookCover == "1") painterResource(R.drawable.example_glim_3) else if(book.bookCover == "2") painterResource(R.drawable.example_glim_4) else painterResource(R.drawable.example_glim_2),
+                        painter = if (book.bookCover == "1") painterResource(R.drawable.example_glim_3) else if (book.bookCover == "2") painterResource(R.drawable.example_glim_4) else painterResource(R.drawable.example_glim_2),
                         contentDescription = book.title,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()

@@ -15,7 +15,6 @@ sealed interface Route {
 
     @Serializable
     data class BookDetail(val book: Book) : BottomTabRoute
-
 }
 
 sealed interface GlimRoute : Route {

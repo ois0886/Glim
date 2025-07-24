@@ -13,8 +13,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.syntax.IntentContext
-import org.orbitmvi.orbit.syntax.Syntax
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
@@ -49,19 +47,19 @@ class HomeViewModel @Inject constructor(
         // 3) 더미 데이터 생성
         val todayQuotes = listOf(
             GlimInfo("q1", "이젠 더이상 둥글지도 않아…", "채식주의자", "한강", background = "1"),
-            GlimInfo("q2", "어떤 기억은 시간이 흐른다고 사라지는 것이 아니라…", "소년이 온다", "한강",background = "2")
+            GlimInfo("q2", "어떤 기억은 시간이 흐른다고 사라지는 것이 아니라…", "소년이 온다", "한강", background = "2")
         )
         val hangangQuotes = listOf(
-            GlimInfo("q3", "그녀는 바람이었다…", "작별하지 않는다", "한강",background = "3")
+            GlimInfo("q3", "그녀는 바람이었다…", "작별하지 않는다", "한강", background = "3")
         )
         val bestSellers = listOf(
             BookItem("b1", "회람의 시간", bookCover = "1"),
-            BookItem("b2", "작별하지 않는다",bookCover = "2"),
-            BookItem("b3", "소년이 온다",bookCover = "4")
+            BookItem("b2", "작별하지 않는다", bookCover = "2"),
+            BookItem("b3", "소년이 온다", bookCover = "4")
         )
         val rainyDayBooks = listOf(
-            BookItem("b4", "바람이 분다, 가라",bookCover = "5"),
-            BookItem("b5", "흰",bookCover = "3")
+            BookItem("b4", "바람이 분다, 가라", bookCover = "5"),
+            BookItem("b5", "흰", bookCover = "3")
         )
         val sections = listOf(
             HomeSectionUiModel.GlimSection("today_quote", "오늘의 추천 글귀", todayQuotes),

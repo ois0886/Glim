@@ -11,7 +11,7 @@ data class UpdateInfoUiState(
 ) {
     val isSaveEnabled: Boolean
         get() = nameError == null &&
-                name.isNotBlank()
+            name.isNotBlank()
 }
 
 sealed interface UpdateInfoSideEffect {

@@ -1,7 +1,6 @@
 package com.ssafy.glim.core.domain.repository
 
 import com.ssafy.glim.core.domain.model.SearchItem
-import kotlinx.coroutines.flow.Flow
 
 interface SearchQueryRepository {
 

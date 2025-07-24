@@ -37,7 +37,6 @@ import com.ssafy.glim.feature.library.component.RecentSearchSection
 import com.ssafy.glim.feature.library.component.SearchResultSection
 import org.orbitmvi.orbit.compose.collectAsState
 
-
 @Composable
 fun LibraryRoute(
     modifier: Modifier = Modifier,
@@ -56,10 +55,10 @@ fun LibraryRoute(
 
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(padding),
+        modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(padding),
     ) {
         if (state.searchMode == SearchMode.POPULAR) {
             Column(
@@ -95,22 +94,22 @@ fun LibraryRoute(
                 )
             },
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 8.dp)
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused && state.searchMode == SearchMode.POPULAR) {
-                            viewModel.updateSearchMode(SearchMode.RECENT)
-                        }
-                    },
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 8.dp)
+                .onFocusChanged { focusState ->
+                    if (focusState.isFocused && state.searchMode == SearchMode.POPULAR) {
+                        viewModel.updateSearchMode(SearchMode.RECENT)
+                    }
+                },
             shape = RoundedCornerShape(8.dp),
             colors =
-                OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.LightGray,
-                    unfocusedBorderColor = Color.LightGray,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                ),
+            OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.LightGray,
+                unfocusedBorderColor = Color.LightGray,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+            ),
             singleLine = true,
             suffix = {
                 Icon(
@@ -171,8 +170,11 @@ fun LibraryRoute(
                     bookList = state.searchBooks,
                     quoteList = state.searchQuotes,
                     onBookClick = {
-                        if (onBookSelected == null) viewModel.onBookClicked(it)
-                        else onBookSelected(it)
+                        if (onBookSelected == null) {
+                            viewModel.onBookClicked(it)
+                        } else {
+                            onBookSelected(it)
+                        }
                     },
                     onQuoteClick = { viewModel.onQuoteClicked(it) }
                 )

@@ -46,11 +46,11 @@ fun String.isValidName(): Boolean {
  */
 sealed class BirthDateValidation {
     object Valid : BirthDateValidation()
-    object InvalidFormat : BirthDateValidation()        // 8자리 숫자가 아님
-    object InvalidYear : BirthDateValidation()          // 연도 범위 오류 (1900~현재년도)
-    object InvalidMonth : BirthDateValidation()         // 월 범위 오류 (1~12)
-    object InvalidDay : BirthDateValidation()           // 일 범위 오류 (월별 최대일수 초과)
-    object FutureDate : BirthDateValidation()           // 미래 날짜
+    object InvalidFormat : BirthDateValidation() // 8자리 숫자가 아님
+    object InvalidYear : BirthDateValidation() // 연도 범위 오류 (1900~현재년도)
+    object InvalidMonth : BirthDateValidation() // 월 범위 오류 (1~12)
+    object InvalidDay : BirthDateValidation() // 일 범위 오류 (월별 최대일수 초과)
+    object FutureDate : BirthDateValidation() // 미래 날짜
 }
 
 /**
@@ -87,9 +87,9 @@ fun String.validateBirthDateDetailed(): BirthDateValidation {
 
         // 월별 최대 일수 검사
         val maxDaysInMonth = when (month) {
-            2 -> if (isLeapYear(year)) 29 else 28  // 2월 (윤년 고려)
-            4, 6, 9, 11 -> 30  // 4, 6, 9, 11월은 30일
-            else -> 31  // 1, 3, 5, 7, 8, 10, 12월은 31일
+            2 -> if (isLeapYear(year)) 29 else 28 // 2월 (윤년 고려)
+            4, 6, 9, 11 -> 30 // 4, 6, 9, 11월은 30일
+            else -> 31 // 1, 3, 5, 7, 8, 10, 12월은 31일
         }
 
         if (day > maxDaysInMonth) {
@@ -106,7 +106,6 @@ fun String.validateBirthDateDetailed(): BirthDateValidation {
         }
 
         return BirthDateValidation.Valid
-
     } catch (_: Exception) {
         return BirthDateValidation.InvalidFormat
     }
@@ -129,7 +128,7 @@ fun String.extractDigits(maxLength: Int): String {
 }
 
 /**
-    * 문자열을 쉼표로 구분된 가격 형식으로 변환합니다.
+ * 문자열을 쉼표로 구분된 가격 형식으로 변환합니다.
  */
 fun String.toCommaSeparatedPrice(): String {
     return this.replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,") + "원"

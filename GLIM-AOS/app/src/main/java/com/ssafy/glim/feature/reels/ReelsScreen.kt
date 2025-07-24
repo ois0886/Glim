@@ -51,8 +51,6 @@ import com.ssafy.glim.core.ui.DarkThemeScreen
 import com.ssafy.glim.feature.main.excludeSystemBars
 import com.ssafy.glim.feature.reels.rememberCaptureAction
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
-import com.ssafy.quote.feature.reels.ReelsSideEffect
-import com.ssafy.quote.feature.reels.ReelsViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -119,17 +117,17 @@ internal fun ReelsRoute(
         VerticalPager(
             state = pagerState,
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding.excludeSystemBars())
-                    .drawWithCache {
-                        onDrawWithContent {
-                            graphicsLayer.record {
-                                this@onDrawWithContent.drawContent()
-                            }
-                            drawLayer(graphicsLayer)
+            Modifier
+                .fillMaxSize()
+                .padding(padding.excludeSystemBars())
+                .drawWithCache {
+                    onDrawWithContent {
+                        graphicsLayer.record {
+                            this@onDrawWithContent.drawContent()
                         }
-                    },
+                        drawLayer(graphicsLayer)
+                    }
+                },
         ) { page ->
             val quote = state.quotes[page]
 
@@ -184,11 +182,11 @@ fun QuoteItem(
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .padding(vertical = 16.dp, horizontal = 8.dp)
-                    .systemBarsPadding()
-                    .align(Alignment.BottomEnd),
+            Modifier
+                .fillMaxHeight()
+                .padding(vertical = 16.dp, horizontal = 8.dp)
+                .systemBarsPadding()
+                .align(Alignment.BottomEnd),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             IconButton(onClick = onCaptureClick) {
@@ -206,13 +204,13 @@ fun QuoteItem(
                 IconButton(onClick = onLikeClick) {
                     Icon(
                         painter =
-                            painterResource(
+                        painterResource(
 //                                if (quote.isLike) {
 //                                    R.drawable.ic_favorite_fill
 //                                } else {
-                                    R.drawable.ic_favorite
+                            R.drawable.ic_favorite
 //                                },
-                            ),
+                        ),
                         contentDescription = stringResource(R.string.like),
                         tint = if (quote.isLike) Color.Red else Color.White,
                     )
@@ -252,23 +250,23 @@ fun QuoteBookContent(
 ) {
     Surface(
         modifier =
-            modifier
-                .background(
-                    brush =
-                        Brush.linearGradient(
-                            colors = listOf(Color(0x001C1B1F), Color(0xFF1C1B1F)),
-                            start = Offset(0f, 0f),
-                            end = Offset(0f, Float.POSITIVE_INFINITY),
-                        ),
+        modifier
+            .background(
+                brush =
+                Brush.linearGradient(
+                    colors = listOf(Color(0x001C1B1F), Color(0xFF1C1B1F)),
+                    start = Offset(0f, 0f),
+                    end = Offset(0f, Float.POSITIVE_INFINITY),
                 ),
+            ),
         color = Color.Transparent,
     ) {
         Row(
             modifier =
-                Modifier
-                    .padding(16.dp)
-                    .padding(end = 80.dp)
-                    .clickable { onBookInfoClick(bookId) },
+            Modifier
+                .padding(16.dp)
+                .padding(end = 80.dp)
+                .clickable { onBookInfoClick(bookId) },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

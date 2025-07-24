@@ -122,6 +122,5 @@ constructor(
                 .onFailure {
                     reduce { state.copy(isLoading = false, error = it.message) }
                 }
-
         }
 }

@@ -7,7 +7,7 @@ import jakarta.inject.Inject
 
 class LockServiceManager @Inject constructor(
     @ApplicationContext val applicationContext: Context
-): BaseForegroundServiceManager<LockService>(
+) : BaseForegroundServiceManager<LockService>(
     context = applicationContext,
     targetClass = LockService::class.java,
 )

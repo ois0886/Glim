@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class BookRemoteDataSource @Inject constructor(
     private val bookService: BookService
-){
+) {
     suspend fun getBooks(
         keyword: String,
         page: Int = 1,

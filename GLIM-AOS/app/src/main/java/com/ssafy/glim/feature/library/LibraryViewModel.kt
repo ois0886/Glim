@@ -164,8 +164,7 @@ class LibraryViewModel @Inject constructor(
                     )
                 }
             }
-        }
-
+    }
 
     // 검색 수행
     private fun performSearch(query: String) = intent {
@@ -183,7 +182,6 @@ class LibraryViewModel @Inject constructor(
                         )
                     }
                 }
-
 
             // 글귀 검색
             runCatching { searchQuotesUseCase(query) }

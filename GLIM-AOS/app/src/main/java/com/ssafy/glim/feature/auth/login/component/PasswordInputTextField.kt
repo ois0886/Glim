@@ -43,18 +43,18 @@ fun PasswordInputTextField(
         isError = error != null,
         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         modifier =
-            modifier
-                .fillMaxWidth()
-                .background(Color.Transparent),
+        modifier
+            .fillMaxWidth()
+            .background(Color.Transparent),
         label = {
             Text(
                 text = labelText,
                 color =
-                    if (error != null) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        Color.Gray
-                    },
+                if (error != null) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    Color.Gray
+                },
                 fontSize = 14.sp,
             )
         },

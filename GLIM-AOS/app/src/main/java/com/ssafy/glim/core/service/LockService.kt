@@ -24,7 +24,11 @@ class LockService : Service() {
         return null
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int
+    ): Int {
         createNotificationChannel()
         startForeground(SERVICE_ID, createNotificationBuilder())
         startLockReceiver()

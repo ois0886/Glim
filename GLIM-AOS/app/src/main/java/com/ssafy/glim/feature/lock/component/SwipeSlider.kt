@@ -71,7 +71,7 @@ private fun SwipeIndicator(
 @OptIn(ExperimentalWearMaterialApi::class)
 @Composable
 fun SwipeButton(
-    isIcon : Boolean = false,
+    isIcon: Boolean = false,
     modifier: Modifier = Modifier,
     text: String,
     isComplete: Boolean,
@@ -110,7 +110,7 @@ fun SwipeButton(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .clip(if(swipeDirection == SwipeDirection.RightToLeft) RoundedCornerShape(0,40,40,0) else RoundedCornerShape(40,0,0,40))
+            .clip(if (swipeDirection == SwipeDirection.RightToLeft) RoundedCornerShape(0, 40, 40, 0) else RoundedCornerShape(40, 0, 0, 40))
             .background(backgroundColor)
             .swipeable(
                 state = swipeableState,
@@ -120,8 +120,11 @@ fun SwipeButton(
             )
             .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
             .then(
-                if (swipeComplete) Modifier.width(64.dp)
-                else Modifier.fillMaxWidth()
+                if (swipeComplete) {
+                    Modifier.width(64.dp)
+                } else {
+                    Modifier.fillMaxWidth()
+                }
             )
             .height(64.dp),
     ) {
@@ -133,7 +136,7 @@ fun SwipeButton(
             backgroundColor = backgroundColor,
         )
         // 텍스트
-        if(!isIcon) {
+        if (!isIcon) {
             Text(
                 text = text,
                 color = Color.White,
@@ -143,10 +146,9 @@ fun SwipeButton(
                     .alpha(alpha)
                     .padding(horizontal = 40.dp)
             )
-        }
-        else{
+        } else {
             Icon(
-                painter = painterResource(paintRes) ,
+                painter = painterResource(paintRes),
                 contentDescription = "",
                 tint = LightGray300,
             )

@@ -62,7 +62,9 @@ constructor(
 
         val nameError = if (nameValidation is ValidationResult.Invalid) {
             nameValidation.errorMessageRes
-        } else null
+        } else {
+            null
+        }
 
         if (nameError != null) {
             return@intent

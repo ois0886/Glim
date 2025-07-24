@@ -6,7 +6,6 @@ import com.ssafy.glim.core.data.datasource.remote.BookRemoteDataSource
 import com.ssafy.glim.core.data.service.AuthService
 import com.ssafy.glim.core.data.service.BookService
 import com.ssafy.glim.core.data.service.QuoteService
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

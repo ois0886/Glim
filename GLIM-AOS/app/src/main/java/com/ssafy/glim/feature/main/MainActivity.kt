@@ -28,7 +28,6 @@ object PermissionUtil {
         context.startActivityForResult(intent, REQ_CODE_OVERLAY_PERMISSION)
     }
 
-
     fun alertPermissionCheck(context: Context?): Boolean {
         return !Settings.canDrawOverlays(context)
     }
@@ -38,6 +37,7 @@ object PermissionUtil {
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var lockServiceManager: LockServiceManager
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun startLockService() {
         lockServiceManager.start()

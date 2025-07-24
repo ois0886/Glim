@@ -25,7 +25,6 @@ class BookDetailViewModel @Inject constructor(
                 bookDetail = book
             )
         }
-
     }
 
     fun initBookId(bookId: Long) = intent {

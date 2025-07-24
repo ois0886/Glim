@@ -5,7 +5,6 @@ import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.model.SearchItem
 import com.ssafy.glim.feature.library.component.SearchTab
 
-
 enum class SearchMode {
     POPULAR,
     RECENT,

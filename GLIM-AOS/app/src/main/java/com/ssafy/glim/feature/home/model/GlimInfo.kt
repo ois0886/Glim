@@ -7,5 +7,3 @@ data class GlimInfo(
     val author: String,
     val background: String = ""
 )
-
-

@@ -79,9 +79,11 @@ private fun SignUpScreen(
         onBackStep()
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(padding.excludeSystemBars())) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding.excludeSystemBars())
+    ) {
         GlimTopBar(
             title = stringResource(R.string.login_signup),
             showBack = state.currentStep != SignUpStep.Email,

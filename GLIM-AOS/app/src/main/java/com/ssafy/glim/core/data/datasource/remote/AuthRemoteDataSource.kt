@@ -5,6 +5,4 @@ import javax.inject.Inject
 
 class AuthRemoteDataSource @Inject constructor(
     service: AuthService,
-) {
-
-}
+)

@@ -317,7 +317,7 @@ constructor(
                     reduce { state.copy(codeError = R.string.error_code_incorrect) }
                 }
             }
-        */
+         */
     }
 
     private fun moveToNextStep() = intent {

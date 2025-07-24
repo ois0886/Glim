@@ -4,8 +4,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -15,8 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -45,20 +41,20 @@ fun EditableTextField(
 ) {
     Column(
         modifier =
-            modifier
-                .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDragStart = {
-                            onDragStart()
-                        },
-                        onDragEnd = {
-                            onDragEnd()
-                        },
-                    ) { _, dragAmount ->
-                        onDrag(dragAmount.x, dragAmount.y)
-                    }
-                },
+        modifier
+            .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragStart = {
+                        onDragStart()
+                    },
+                    onDragEnd = {
+                        onDragEnd()
+                    },
+                ) { _, dragAmount ->
+                    onDrag(dragAmount.x, dragAmount.y)
+                }
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (isFocused && !isDragging) {
@@ -75,34 +71,34 @@ fun EditableTextField(
             value = text,
             onValueChange = onTextChange,
             textStyle =
-                MaterialTheme.typography.bodyMedium.copy(
-                    textAlign = TextAlign.Center,
-                    lineHeight = 40.sp,
-                    fontSize = textStyle.fontSizeUnit,
-                    fontWeight = textStyle.fontWeight,
-                    fontStyle = textStyle.fontStyle,
-                ),
+            MaterialTheme.typography.bodyMedium.copy(
+                textAlign = TextAlign.Center,
+                lineHeight = 40.sp,
+                fontSize = textStyle.fontSizeUnit,
+                fontWeight = textStyle.fontWeight,
+                fontStyle = textStyle.fontStyle,
+            ),
             colors =
-                TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                ),
+            TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            ),
             readOnly = isDragging,
             modifier =
-                Modifier
-                    .onFocusChanged { focusState ->
-                        onFocusChanged(focusState.isFocused)
-                    }.border(
-                        width = 1.dp,
-                        color =
-                            when {
-                                isDragging -> Color.Yellow
-                                isFocused -> Color.White
-                                else -> Color.Transparent
-                            },
-                    ),
+            Modifier
+                .onFocusChanged { focusState ->
+                    onFocusChanged(focusState.isFocused)
+                }.border(
+                    width = 1.dp,
+                    color =
+                    when {
+                        isDragging -> Color.Yellow
+                        isFocused -> Color.White
+                        else -> Color.Transparent
+                    },
+                ),
         )
     }
 }

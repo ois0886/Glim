@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import com.ssafy.glim.core.domain.model.Quote
 import java.time.LocalDateTime
 
-
 data class LockUiState(
     val isLoading: Boolean = true,
     val time: LocalDateTime = LocalDateTime.now(),

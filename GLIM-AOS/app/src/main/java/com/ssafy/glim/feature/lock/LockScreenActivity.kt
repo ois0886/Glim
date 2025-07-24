@@ -72,25 +72,24 @@ class LockScreenActivity : ComponentActivity() {
                 val viewModel: LockViewModel = hiltViewModel()
                 val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
-
                 viewModel.collectSideEffect { effect ->
                     when (effect) {
-                        is LockSideEffect.Unlock         -> finish()
-                        is LockSideEffect.ShowToast  ->  Toast.makeText(this, this.getString(effect.messageRes), Toast.LENGTH_SHORT).show()
-                        is LockSideEffect.NavigateBook   -> Unit/* 북 디테일로 이동 */
-                        is LockSideEffect.NavigateQuotes -> Unit/* 글귀 화면으로 이동 */
+                        is LockSideEffect.Unlock -> finish()
+                        is LockSideEffect.ShowToast -> Toast.makeText(this, this.getString(effect.messageRes), Toast.LENGTH_SHORT).show()
+                        is LockSideEffect.NavigateBook -> Unit /* 북 디테일로 이동 */
+                        is LockSideEffect.NavigateQuotes -> Unit /* 글귀 화면으로 이동 */
                     }
                 }
 
                 LockScreenContent(
-                    state        = state,
-                    tick         = viewModel::tick,
-                    nextQuote    = viewModel::nextQuote,
-                    unlockMain   = viewModel::unlockMain,
-                    saveGlim     = viewModel::saveGlim,
+                    state = state,
+                    tick = viewModel::tick,
+                    nextQuote = viewModel::nextQuote,
+                    unlockMain = viewModel::unlockMain,
+                    saveGlim = viewModel::saveGlim,
                     favoriteGlim = viewModel::favoriteGlim,
-                    viewBook     = viewModel::viewBook,
-                    viewQuote    = viewModel::viewQuote,
+                    viewBook = viewModel::viewBook,
+                    viewQuote = viewModel::viewQuote,
                 )
             }
         }
@@ -100,13 +99,13 @@ class LockScreenActivity : ComponentActivity() {
 @Composable
 fun LockScreenContent(
     state: LockUiState,
-    tick:        () -> Unit,
-    nextQuote:   () -> Unit,
-    unlockMain:  () -> Unit,
-    saveGlim:    () -> Unit,
-    favoriteGlim:() -> Unit,
-    viewBook:    () -> Unit,
-    viewQuote:   () -> Unit,
+    tick: () -> Unit,
+    nextQuote: () -> Unit,
+    unlockMain: () -> Unit,
+    saveGlim: () -> Unit,
+    favoriteGlim: () -> Unit,
+    viewBook: () -> Unit,
+    viewQuote: () -> Unit,
 ) {
     LaunchedEffect(Unit) { tick() }
 
@@ -149,7 +148,6 @@ fun LockScreenContent(
             )
         }
 
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -185,7 +183,7 @@ fun LockScreenContent(
                 color = Color.White
             )
             Spacer(Modifier.height(4.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Text(
                     text = state.time.format(dateFmt),
                     style = MaterialTheme.typography.bodyLarge,
@@ -203,8 +201,7 @@ fun LockScreenContent(
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-            ,
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             SwipeButton(
@@ -219,7 +216,7 @@ fun LockScreenContent(
                 swipeDirection = SwipeDirection.RightToLeft,
                 paintRes = R.drawable.ic_library
             )
-            Spacer(modifier =Modifier.weight(3F))
+            Spacer(modifier = Modifier.weight(3F))
             SwipeButton(
                 isIcon = true,
                 modifier = Modifier

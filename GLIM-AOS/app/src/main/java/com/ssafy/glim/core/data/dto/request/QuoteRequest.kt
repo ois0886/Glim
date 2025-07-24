@@ -19,7 +19,7 @@ data class QuoteRequest(
 @Serializable
 data class BookCreateData(
     val title: String, // o
-    val author: String,// o
+    val author: String, // o
     val translator: String, // x
     val category: String, // ㅁ  categoryName 추정
     val categoryNumber: Long, // ㅁ  categoryId 추정
@@ -36,13 +36,13 @@ fun Book.toRequestDto() = BookCreateData(
     title = this.title,
     author = this.author,
     translator = "",
-    category =  "",
-    categoryNumber =  0L,
-    publisher =  "",
-    description =  "",
+    category = "",
+    categoryNumber = 0L,
+    publisher = "",
+    description = "",
     isbn = this.isbn,
     isbn13 = "",
-    publishedDate =  "",
+    publishedDate = "",
     coverUrl = "",
     linkUrl = ""
 )

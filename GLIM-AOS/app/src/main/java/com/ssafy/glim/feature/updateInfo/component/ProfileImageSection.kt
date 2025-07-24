@@ -24,7 +24,6 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.ssafy.glim.R
 
-
 @Composable
 fun ProfileImageSection(
     imageUri: String?,

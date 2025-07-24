@@ -13,8 +13,6 @@ class BookRepositoryImpl @Inject constructor(
     override suspend fun searchBooks(query: String): List<Book> =
         bookRemoteDataSource.getBooks(query).map { it.toDomain() }
 
-
-    override suspend fun  updateBookViewCount(isbn: Long) =
+    override suspend fun updateBookViewCount(isbn: Long) =
         bookRemoteDataSource.updateBookViewCount(isbn)
 }
-

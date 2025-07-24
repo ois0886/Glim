@@ -3,7 +3,6 @@ package com.ssafy.glim.core.data.repository.fake
 import com.ssafy.glim.core.domain.model.RankStatus
 import com.ssafy.glim.core.domain.model.SearchItem
 import com.ssafy.glim.core.domain.repository.SearchQueryRepository
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class FakeSearchQueryRepositoryImpl@Inject

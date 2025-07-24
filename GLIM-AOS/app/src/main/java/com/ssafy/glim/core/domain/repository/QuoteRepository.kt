@@ -12,7 +12,7 @@ interface QuoteRepository {
         page: Int = 0,
         size: Int = 10,
         sort: String
-    ) : List<Quote>
+    ): List<Quote>
 
     suspend fun createQuote(
         content: String,

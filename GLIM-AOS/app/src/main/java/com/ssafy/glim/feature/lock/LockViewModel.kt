@@ -20,7 +20,6 @@ class LockViewModel @Inject constructor(
     override val container = container<LockUiState, LockSideEffect>(
         initialState = LockUiState()
     ) {
-
     }
 
     init {

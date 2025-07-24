@@ -7,7 +7,6 @@ import com.ssafy.glim.core.navigation.GlimRoute
 import com.ssafy.glim.feature.glimlist.GlimListRoute
 import com.ssafy.glim.feature.glimlist.GlimListType
 
-
 fun NavGraphBuilder.glimListNavGraph(
     popBackStack: () -> Unit,
     padding: PaddingValues

@@ -38,7 +38,11 @@ class QuoteRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getQuotes(page: Int, size: Int, sort: String) =
+    override suspend fun getQuotes(
+        page: Int,
+        size: Int,
+        sort: String
+    ) =
         quoteRemoteDataSource.getQuotes(page, size, sort)
             .map { it.toDomain() }
 
@@ -53,5 +57,3 @@ class QuoteRepositoryImpl @Inject constructor(
         quality = 85
     )
 }
-
-
