@@ -1,0 +1,47 @@
+[
+  {
+    "memberId": 1,
+    "nickname": "책벌레김씨",
+    "email": "bookworm@email.com",
+    "birthDate": "1990-01-15",
+    "gender": "MALE",
+    "status": "ACTIVE",
+    "role": "Admin"
+  },
+  {
+    "memberId": 2,
+    "nickname": "문학소녀",
+    "email": "literature@email.com",
+    "birthDate": "1992-02-20",
+    "gender": "FEMALE",
+    "status": "ACTIVE",
+    "role": "User"
+  },
+  {
+    "memberId": 3,
+    "nickname": "시인의마음",
+    "email": "poet@email.com",
+    "birthDate": "1985-03-10",
+    "gender": "MALE",
+    "status": "INACTIVE",
+    "role": "User"
+  },
+  {
+    "memberId": 4,
+    "nickname": "독서광",
+    "email": "reader@email.com",
+    "birthDate": "1998-01-05",
+    "gender": "FEMALE",
+    "status": "ACTIVE",
+    "role": "User"
+  },
+  {
+    "memberId": 5,
+    "nickname": "글귀수집가",
+    "email": "collector@email.com",
+    "birthDate": "1991-02-28",
+    "gender": "MALE",
+    "status": "ACTIVE",
+    "role": "User"
+  }
+]

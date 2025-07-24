@@ -1,0 +1,25 @@
+{
+  "ageData": [
+    { "age": "10-19", "count": 150 },
+    { "age": "20-29", "count": 450 },
+    { "age": "30-39", "count": 300 },
+    { "age": "40-49", "count": 120 },
+    { "age": "50+", "count": 50 }
+  ],
+  "genderData": [
+    { "name": "여성", "value": 630, "color": "#ec4899" },
+    { "name": "남성", "value": 390, "color": "#3b82f6" },
+    { "name": "기타", "value": 50, "color": "#a855f7" }
+  ],
+  "locationData": [
+    { "rank": 1, "city": "서울", "users": 450, "percentage": "42.1%" },
+    { "rank": 2, "city": "경기", "users": 280, "percentage": "26.2%" },
+    { "rank": 3, "city": "부산", "users": 95, "percentage": "8.9%" },
+    { "rank": 4, "city": "인천", "users": 70, "percentage": "6.5%" },
+    { "rank": 5, "city": "대구", "users": 55, "percentage": "5.1%" }
+  ],
+  "deviceData": [
+    { "name": "모바일", "value": 700, "color": "#f59e0b" },
+    { "name": "웹", "value": 370, "color": "#10b981" }
+  ]
+}
