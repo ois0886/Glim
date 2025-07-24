@@ -15,11 +15,3 @@ management:
     web:
       exposure:
         include: health, info
-
-logging:
-  file:
-    path: /logs
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
-  level:
-    root: INFO
