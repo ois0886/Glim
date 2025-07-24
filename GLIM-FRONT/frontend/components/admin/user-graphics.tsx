@@ -1,186 +1,177 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/admin/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/admin/ui/chart"
-import { Bar, BarChart, CartesianGrid, Pie, PieChart, XAxis, YAxis, Tooltip, Legend, Cell } from "recharts"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/admin/ui/table"
-import { Users, MapPin, BarChart3 } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/admin/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select";
+import { ResponsiveSunburst } from '@nivo/sunburst';
+import { Users, UserPlus, ArrowUp, ArrowDown } from "lucide-react";
 
-interface AgeData {
-  age: string;
-  count: number;
-}
-
-interface GenderData {
-  name: string;
+// 데이터 구조에 따른 타입 정의
+interface DistributionGroup {
+  group: string;
   value: number;
-  color: string;
+  details?: { [key: string]: { [key: string]: number } };
 }
 
-interface LocationData {
-  rank: number;
-  city: string;
-  users: number;
-  percentage: string;
+interface GraphicsData {
+  totalUsers: number;
+  newUserStats: { count: number; change: number };
+  activeUsers: { count: number; change: number };
+  distribution: {
+    age: DistributionGroup[];
+    gender: DistributionGroup[];
+    device: DistributionGroup[];
+  };
+  monthlyGrowth: { month: string; users: number }[];
 }
 
-interface DeviceData {
-  name: string;
-  value: number;
-  color: string;
-}
+// Nivo Sunburst 차트 데이터 형식으로 변환하는 함수
+const transformDataForSunburst = (data: GraphicsData) => {
+  if (!data) return { id: 'root', children: [] };
 
-export function UserDemographics() {
-  const [ageData, setAgeData] = useState<AgeData[]>([]);
-  const [genderData, setGenderData] = useState<GenderData[]>([]);
-  const [locationData, setLocationData] = useState<LocationData[]>([]);
-  const [deviceData, setDeviceData] = useState<DeviceData[]>([]);
+  const genderChildren = data.distribution.gender.map(g => ({
+    id: g.group,
+    value: g.value,
+    children: [
+      { id: `${g.group}_age_root`, children: Object.keys(g.details.age).map(ageGroup => ({
+        id: ageGroup,
+        value: g.details.age[ageGroup],
+        children: [
+          { id: `${g.group}_${ageGroup}_device_root`, children: Object.keys(g.details.device).map(deviceGroup => ({
+            id: deviceGroup,
+            value: g.details.device[deviceGroup]
+          }))}
+        ]
+      }))}
+    ]
+  }));
+
+  return {
+    id: 'root',
+    children: genderChildren,
+  };
+};
+
+export function UserGraphics() {
+  const [data, setData] = useState<GraphicsData | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/user-graphics.json");
-        if (!response.ok) {
-          throw new Error('사용자 통계 데이터를 불러오는데 실패했습니다.');
-        }
-        const data = await response.json();
-        setAgeData(data.ageData);
-        setGenderData(data.genderData);
-        setLocationData(data.locationData);
-        setDeviceData(data.deviceData);
+        const response = await fetch('/user-graphics.json');
+        if (!response.ok) throw new Error('Failed to fetch data');
+        const jsonData = await response.json();
+        setData(jsonData);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching user graphics data:", error);
       }
     };
-
     fetchData();
   }, []);
 
+  if (!data) {
+    return <div>Loading...</div>; // 또는 스켈레톤 UI
+  }
+
+  const sunburstData = transformDataForSunburst(data);
+
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Card className="lg:col-span-2">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold tracking-tight">사용자 통계</h2>
+        <Select defaultValue="all-time">
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="기간 선택" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all-time">전체 기간</SelectItem>
+            <SelectItem value="monthly">최근 30일</SelectItem>
+            <SelectItem value="weekly">최근 7일</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">총 사용자</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{data.totalUsers.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">시스템에 등록된 전체 사용자 수</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">신규 사용자 (30일)</CardTitle>
+            <UserPlus className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">+{data.newUserStats.count}</div>
+            <p className={`text-xs ${data.newUserStats.change > 0 ? 'text-green-500' : 'text-red-500'} flex items-center`}>
+                {data.newUserStats.change > 0 ? <ArrowUp className="h-3 w-3 mr-1"/> : <ArrowDown className="h-3 w-3 mr-1"/>}
+                {data.newUserStats.change}%
+            </p>
+          </CardContent>
+        </Card>
+         <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">활성 사용자 (30일)</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{data.activeUsers.count.toLocaleString()}</div>
+             <p className={`text-xs ${data.activeUsers.change > 0 ? 'text-green-500' : 'text-red-500'} flex items-center`}>
+                {data.activeUsers.change > 0 ? <ArrowUp className="h-3 w-3 mr-1"/> : <ArrowDown className="h-3 w-3 mr-1"/>}
+                {data.activeUsers.change}%
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
-            연령대별 사용자 분포
-          </CardTitle>
-          <CardDescription>서비스를 이용하는 사용자들의 연령대 분포입니다.</CardDescription>
+          <CardTitle>사용자 분포 요약 (성별 &gt; 연령 &gt; 디바이스)</CardTitle>
+          <CardDescription>클릭하여 계층을 탐색하세요.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <ChartContainer config={{}} className="h-[300px] w-full">
-            <BarChart data={ageData} margin={{ top: 20, right: 20, left: -5, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="age" tickLine={false} axisLine={false} />
-              <YAxis />
-              <Tooltip
-                cursor={{ fill: 'hsl(var(--muted))' }}
-                content={<ChartTooltipContent
-                  formatter={(value) => `${value.toLocaleString()}명`}
-                  labelFormatter={(label) => `${label}세`}
-                />}
-              />
-              <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ChartContainer>
+        <CardContent className="h-[500px]">
+          <ResponsiveSunburst
+            data={sunburstData}
+            id="id"
+            value="value"
+            cornerRadius={2}
+            borderWidth={1}
+            borderColor={{ theme: 'background' }}
+            colors={{ scheme: 'nivo' }}
+            childColor={{ from: 'color', modifiers: [ [ 'brighter', 0.4 ] ] }}
+            enableArcLabels={true}
+            arcLabelsSkipAngle={10}
+            arcLabelsTextColor={{ from: 'color', modifiers: [ [ 'darker', 1.4 ] ] }}
+            tooltipFormat={value => `${value.toLocaleString()}명`}
+          />
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
-            성별 분포
-          </CardTitle>
-          <CardDescription>사용자들의 성별 비율을 나타냅니다.</CardDescription>
+          <CardTitle>월별 사용자 증가 추이</CardTitle>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={{}} className="h-[300px] w-full">
-            <PieChart>
-              <Tooltip
-                cursor={{ fill: 'hsl(var(--muted))' }}
-                content={<ChartTooltipContent
-                  formatter={(value, name, props) => {
-                    const total = genderData.reduce((acc, cur) => acc + cur.value, 0);
-                    return [`${value.toLocaleString()}명 (${((Number(value) / total) * 100).toFixed(1)}%)`, name];
-                  }}
-                  nameKey="name"
-                />}
-              />
-              <Pie data={genderData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
-                {genderData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Legend />
-            </PieChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
-            접속 기기 분포
-          </CardTitle>
-          <CardDescription>사용자들이 주로 접속하는 기기 유형입니다.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={{}} className="h-[300px] w-full">
-            <PieChart>
-              <Tooltip
-                cursor={{ fill: 'hsl(var(--muted))' }}
-                content={<ChartTooltipContent
-                  formatter={(value, name, props) => {
-                    const total = deviceData.reduce((acc, cur) => acc + cur.value, 0);
-                    return [`${value.toLocaleString()}명 (${((Number(value) / total) * 100).toFixed(1)}%)`, name];
-                  }}
-                  nameKey="name"
-                />}
-              />
-              <Pie data={deviceData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
-                {deviceData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Legend />
-            </PieChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
-
-      <Card className="lg:col-span-3">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
-            지역별 사용자 순위
-          </CardTitle>
-          <CardDescription>사용자들이 가장 많이 접속하는 지역 순위입니다.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[80px]">순위</TableHead>
-                <TableHead>지역</TableHead>
-                <TableHead className="text-right">사용자 수</TableHead>
-                <TableHead className="text-right">비율</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {locationData.map((loc) => (
-                <TableRow key={loc.rank}>
-                  <TableCell className="font-medium">{loc.rank}</TableCell>
-                  <TableCell>{loc.city}</TableCell>
-                  <TableCell className="text-right">{loc.users.toLocaleString()}명</TableCell>
-                  <TableCell className="text-right">{loc.percentage}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+            {/* BarChart는 Recharts를 사용하므로, 필요시 Recharts import를 다시 추가해야 합니다. */}
+            {/* 현재는 Nivo Sunburst에 집중하기 위해 BarChart는 주석 처리합니다. */}
+            {/* <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={data.monthlyGrowth}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip formatter={(value) => `${value.toLocaleString()}명`} />
+                    <Bar dataKey="users" fill="#8884d8" name="월별 총 사용자" />
+                </BarChart>
+            </ResponsiveContainer> */}
+            <p className="text-muted-foreground">월별 사용자 증가 추이 차트는 Nivo Sunburst 차트 구현을 위해 임시로 비활성화되었습니다.</p>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

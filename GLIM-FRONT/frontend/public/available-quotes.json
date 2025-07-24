@@ -1,0 +1,32 @@
+[
+  {
+    "quoteId": 1,
+    "bookTitle": "The Alchemist",
+    "author": "Paulo Coelho",
+    "quoteViews": 1200
+  },
+  {
+    "quoteId": 2,
+    "bookTitle": "1984",
+    "author": "George Orwell",
+    "quoteViews": 950
+  },
+  {
+    "quoteId": 3,
+    "bookTitle": "To Kill a Mockingbird",
+    "author": "Harper Lee",
+    "quoteViews": 1500
+  },
+  {
+    "quoteId": 4,
+    "bookTitle": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "quoteViews": 800
+  },
+  {
+    "quoteId": 5,
+    "bookTitle": "Pride and Prejudice",
+    "author": "Jane Austen",
+    "quoteViews": 1100
+  }
+]

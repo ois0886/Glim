@@ -1,22 +1,20 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/admin/ui/card"
 import { Button } from "@/components/admin/ui/button"
-import { Badge } from "@/components/admin/ui/badge"
 import { Input } from "@/components/admin/ui/input"
+import { Textarea } from "@/components/admin/ui/textarea"
 import { Checkbox } from "@/components/admin/ui/checkbox"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/admin/ui/tabs"
-import { Search, Star, Heart, TrendingUp, Pin, PinOff, ArrowUp, ArrowDown } from "lucide-react"
+import { Search, Star, Pin, PinOff, ArrowUp, ArrowDown, Loader2 } from "lucide-react"
 
-// API 데이터 구조에 기반한 인터페이스 정의
+// 데이터 타입 정의
 interface Quote {
   quoteId: number;
   bookTitle: string;
   author: string;
-  quoteViews: number | null;
-  isPinned?: boolean;
-  order?: number;
 }
 
 interface Book {
@@ -24,12 +22,19 @@ interface Book {
   title: string;
   author: string;
   cover: string;
-  isPinned?: boolean;
-  order?: number;
 }
 
+// 제네릭 아이템 타입
+type Item = Quote | Book;
+
 export function CurationEditor() {
+  // 상태 관리
+  const [curationTitle, setCurationTitle] = useState("")
+  const [curationContent, setCurationContent] = useState("")
+  const [curationTarget, setCurationTarget] = useState("")
+  const [isSaving, setIsSaving] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
+
   const [availableQuotes, setAvailableQuotes] = useState<Quote[]>([])
   const [featuredQuotes, setFeaturedQuotes] = useState<Quote[]>([])
   const [selectedQuotes, setSelectedQuotes] = useState<number[]>([])
@@ -38,313 +43,250 @@ export function CurationEditor() {
   const [featuredBooks, setFeaturedBooks] = useState<Book[]>([])
   const [selectedBooks, setSelectedBooks] = useState<number[]>([])
 
-  // 글귀 및 도서 데이터 로드
+  // 데이터 로딩
   useEffect(() => {
-    const fetchQuotes = async () => {
+    const fetchData = async (url: string, setter: React.Dispatch<React.SetStateAction<any[]>>) => {
       try {
-        const response = await fetch('http://localhost:50871/api/v1/quotes');
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Failed to fetch ${url}`);
         const data = await response.json();
-        setAvailableQuotes(data);
+        setter(data);
       } catch (error) {
-        console.error("Error fetching quotes:", error);
+        console.error("데이터 로딩 오류:", error);
       }
     };
-
-    const fetchBooks = async () => {
-      try {
-        const response = await fetch('http://localhost:50858/api/v1/books/popular');
-        const data = await response.json();
-        setAvailableBooks(data);
-      } catch (error) {
-        console.error("Error fetching books:", error);
-      }
-    };
-
-    fetchQuotes();
-    fetchBooks();
+    fetchData('/available-quotes.json', setAvailableQuotes);
+    fetchData('/available-books.json', setAvailableBooks);
   }, []);
 
-  // 검색 필터링 로직
-  const filteredQuotes = availableQuotes.filter(
-    (quote) =>
-      quote.bookTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      quote.author.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
-
-  const filteredBooks = availableBooks.filter(
-    (book) =>
-      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
-
-  // 글귀 선택 및 추천 로직
-  const handleQuoteSelection = (quoteId: number) => {
-    setSelectedQuotes((prev) => (prev.includes(quoteId) ? prev.filter((id) => id !== quoteId) : [...prev, quoteId]))
-  }
-
-  const handlePinQuotes = () => {
-    const quotesToPin = availableQuotes.filter((quote) => selectedQuotes.includes(quote.quoteId));
-    const newFeaturedQuotes = [...featuredQuotes, ...quotesToPin.map(q => ({...q, isPinned: true, order: featuredQuotes.length + 1}))];
-    setFeaturedQuotes(newFeaturedQuotes.sort((a, b) => a.order! - b.order!));
-    setAvailableQuotes(availableQuotes.filter((quote) => !selectedQuotes.includes(quote.quoteId)));
-    setSelectedQuotes([]);
+  // 아이템 관리 핸들러 (제네릭)
+  const handleSelection = (id: number, selected: number[], setSelected: React.Dispatch<React.SetStateAction<number[]>>) => {
+    setSelected(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   };
 
-  const handleUnpinQuote = (quoteId: number) => {
-    const quoteToUnpin = featuredQuotes.find(q => q.quoteId === quoteId);
-    if(quoteToUnpin) {
-        setAvailableQuotes([...availableQuotes, {...quoteToUnpin, isPinned: false, order: undefined}]);
-        setFeaturedQuotes(featuredQuotes.filter(q => q.quoteId !== quoteId));
+  const handleAddItem = <T extends Item>(
+    available: T[], setAvailable: React.Dispatch<React.SetStateAction<T[]>>,
+    featured: T[], setFeatured: React.Dispatch<React.SetStateAction<T[]>>,
+    selected: number[], setSelected: React.Dispatch<React.SetStateAction<number[]>>,
+    idKey: keyof T
+  ) => {
+    const toAdd = available.filter(item => selected.includes(item[idKey] as number));
+    setFeatured(prev => [...prev, ...toAdd]);
+    setAvailable(prev => prev.filter(item => !selected.includes(item[idKey] as number)));
+    setSelected([]);
+  };
+
+  const handleRemoveItem = <T extends Item>(
+    id: number,
+    available: T[], setAvailable: React.Dispatch<React.SetStateAction<T[]>>,
+    featured: T[], setFeatured: React.Dispatch<React.SetStateAction<T[]>>,
+    idKey: keyof T
+  ) => {
+    const toRemove = featured.find(item => item[idKey] === id);
+    if (toRemove) {
+      setFeatured(prev => prev.filter(item => item[idKey] !== id));
+      setAvailable(prev => [...prev, toRemove]);
     }
   };
 
-  // 도서 선택 및 추천 로직
-  const handleBookSelection = (bookId: number) => {
-    setSelectedBooks((prev) => (prev.includes(bookId) ? prev.filter((id) => id !== bookId) : [...prev, bookId]))
-  }
-
-  const handlePinBooks = () => {
-    const booksToPin = availableBooks.filter((book) => selectedBooks.includes(book.itemId));
-    const newFeaturedBooks = [...featuredBooks, ...booksToPin.map(b => ({...b, isPinned: true, order: featuredBooks.length + 1}))];
-    setFeaturedBooks(newFeaturedBooks.sort((a, b) => a.order! - b.order!));
-    setAvailableBooks(availableBooks.filter((book) => !selectedBooks.includes(book.itemId)));
-    setSelectedBooks([]);
-  };
-
-  const handleUnpinBook = (bookId: number) => {
-    const bookToUnpin = featuredBooks.find(b => b.itemId === bookId);
-    if(bookToUnpin) {
-        setAvailableBooks([...availableBooks, {...bookToUnpin, isPinned: false, order: undefined}]);
-        setFeaturedBooks(featuredBooks.filter(b => b.itemId !== bookId));
-    }
-  };
-  
-  // 순서 변경 로직
-  const moveFeaturedItem = <T extends { order?: number }>(items: T[], index: number, direction: 'up' | 'down'): T[] => {
+  const moveItem = <T,>(items: T[], index: number, direction: 'up' | 'down'): T[] => {
     const newItems = [...items];
     const item = newItems[index];
     const swapIndex = direction === 'up' ? index - 1 : index + 1;
-
     if (swapIndex < 0 || swapIndex >= newItems.length) return newItems;
-
-    const swapItem = newItems[swapIndex];
-    [newItems[index], newItems[swapIndex]] = [swapItem, item]; // Swap positions
-    
-    // Update order property
-    newItems[index].order = index + 1;
-    newItems[swapIndex].order = swapIndex + 1;
-
-    return newItems.sort((a, b) => a.order! - b.order!); // Re-sort to ensure correctness
+    [newItems[index], newItems[swapIndex]] = [newItems[swapIndex], item];
+    return newItems;
   };
 
+  // 큐레이션 저장
+  const handleSaveCuration = () => {
+    setIsSaving(true);
+    const curationData = { curationTitle, curationContent, curationTarget, featuredQuotes, featuredBooks };
+    console.log("--- 큐레이션 저장 데이터 ---", JSON.stringify(curationData, null, 2));
+    setTimeout(() => {
+      setIsSaving(false);
+      alert("큐레이션이 성공적으로 저장되었습니다! (콘솔 확인)");
+    }, 1500);
+  };
+
+  // 검색 필터링
+  const filteredQuotes = useMemo(() => availableQuotes.filter(q => 
+    q.bookTitle.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    q.author.toLowerCase().includes(searchTerm.toLowerCase())
+  ), [availableQuotes, searchTerm]);
+
+  const filteredBooks = useMemo(() => availableBooks.filter(b => 
+    b.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    b.author.toLowerCase().includes(searchTerm.toLowerCase())
+  ), [availableBooks, searchTerm]);
+
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">큐레이션 편집</h2>
-        <p className="text-muted-foreground">메인 앱 피드에 표시될 추천 인용구와 책을 선택하고 관리합니다.</p>
+    <div className="space-y-6 p-4 md:p-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold tracking-tight">통합 큐레이션 편집기</h2>
+        <Button onClick={handleSaveCuration} disabled={isSaving}>
+          {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+          {isSaving ? '저장 중...' : '큐레이션 저장'}
+        </Button>
       </div>
+
+      <CurationInfoCard {...{ curationTitle, setCurationTitle, curationContent, setCurationContent, curationTarget, setCurationTarget }} />
 
       <Tabs defaultValue="quotes" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="quotes">추천 인용구</TabsTrigger>
-          <TabsTrigger value="books">추천 도서</TabsTrigger>
+          <TabsTrigger value="quotes">추천 인용구 관리</TabsTrigger>
+          <TabsTrigger value="books">추천 도서 관리</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="quotes" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Pin className="w-5 h-5" />
-                  현재 추천 인용구
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {featuredQuotes.map((quote, index) => (
-                    <div key={quote.quoteId} className="p-4 border rounded-lg bg-muted/50">
-                      <div className="flex items-start justify-between mb-2">
-                        <Badge variant="outline" className="bg-blue-50 text-blue-700">
-                          #{quote.order}
-                        </Badge>
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => setFeaturedQuotes(moveFeaturedItem(featuredQuotes, index, 'up'))}><ArrowUp className="w-4 h-4" /></Button>
-                          <Button variant="ghost" size="sm" onClick={() => setFeaturedQuotes(moveFeaturedItem(featuredQuotes, index, 'down'))}><ArrowDown className="w-4 h-4" /></Button>
-                          <Button variant="ghost" size="sm" onClick={() => handleUnpinQuote(quote.quoteId)}><PinOff className="w-4 h-4" /></Button>
-                        </div>
-                      </div>
-                      <p className="text-sm leading-relaxed mb-2">{quote.bookTitle}</p>
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>{quote.author}</span>
-                        <div className="flex items-center gap-1">
-                          <Heart className="w-3 h-3 text-red-500" />
-                          {quote.quoteViews}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>인용구 선택</CardTitle>
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="인용구, 저자, 책 제목으로 검색..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-8"
-                  />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {filteredQuotes.map((quote) => (
-                    <div key={quote.quoteId} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/50">
-                      <Checkbox
-                        checked={selectedQuotes.includes(quote.quoteId)}
-                        onCheckedChange={() => handleQuoteSelection(quote.quoteId)}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm leading-relaxed mb-1">{quote.bookTitle}</p>
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span>{quote.author}</span>
-                          <div className="flex items-center gap-1">
-                            <Heart className="w-3 h-3 text-red-500" />
-                            {quote.quoteViews}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-2 mt-4">
-                  <Button onClick={handlePinQuotes} disabled={selectedQuotes.length === 0} className="flex-1">
-                    <Pin className="w-4 h-4 mr-2" />
-                    선택한 인용구 추가 ({selectedQuotes.length})
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="books" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="w-5 h-5" />
-                  현재 추천 도서
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {featuredBooks.map((book, index) => (
-                    <div key={book.itemId} className="p-4 border rounded-lg bg-muted/50">
-                      <div className="flex items-start justify-between mb-2">
-                        <Badge variant="outline" className="bg-green-50 text-green-700">
-                          #{book.order}
-                        </Badge>
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => setFeaturedBooks(moveFeaturedItem(featuredBooks, index, 'up'))}><ArrowUp className="w-4 h-4" /></Button>
-                          <Button variant="ghost" size="sm" onClick={() => setFeaturedBooks(moveFeaturedItem(featuredBooks, index, 'down'))}><ArrowDown className="w-4 h-4" /></Button>
-                          <Button variant="ghost" size="sm" onClick={() => handleUnpinBook(book.itemId)}><PinOff className="w-4 h-4" /></Button>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <img src={book.cover} alt={book.title} className="w-16 h-auto rounded-md"/>
-                        <div>
-                            <h4 className="font-medium mb-1">{book.title}</h4>
-                            <p className="text-sm text-muted-foreground">{book.author}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>도서 선택</CardTitle>
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="책 제목, 저자로 검색..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-8"
-                  />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {filteredBooks.map((book) => (
-                    <div key={book.itemId} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/50">
-                      <Checkbox
-                        checked={selectedBooks.includes(book.itemId)}
-                        onCheckedChange={() => handleBookSelection(book.itemId)}
-                      />
-                      <div className="flex-1 min-w-0 flex items-center gap-4">
-                        <img src={book.cover} alt={book.title} className="w-12 h-auto rounded-md"/>
-                        <div>
-                            <h4 className="font-medium">{book.title}</h4>
-                            <p className="text-sm text-muted-foreground">{book.author}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-2 mt-4">
-                  <Button onClick={handlePinBooks} disabled={selectedBooks.length === 0} className="flex-1">
-                    <Star className="w-4 h-4 mr-2" />
-                    선택한 도서 추가 ({selectedBooks.length})
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
+        
+        <ContentTab 
+            type="quotes"
+            featuredItems={featuredQuotes}
+            availableItems={filteredQuotes}
+            selectedItems={selectedQuotes}
+            onSelectionChange={(id) => handleSelection(id, selectedQuotes, setSelectedQuotes)}
+            onAdd={() => handleAddItem(availableQuotes, setAvailableQuotes, featuredQuotes, setFeaturedQuotes, selectedQuotes, setSelectedQuotes, 'quoteId')}
+            onRemove={(id) => handleRemoveItem(id, availableQuotes, setAvailableQuotes, featuredQuotes, setFeaturedQuotes, 'quoteId')}
+            onMove={(index, dir) => setFeaturedQuotes(moveItem(featuredQuotes, index, dir))}
+            setSearchTerm={setSearchTerm}
+            searchTerm={searchTerm}
+        />
+        <ContentTab 
+            type="books"
+            featuredItems={featuredBooks}
+            availableItems={filteredBooks}
+            selectedItems={selectedBooks}
+            onSelectionChange={(id) => handleSelection(id, selectedBooks, setSelectedBooks)}
+            onAdd={() => handleAddItem(availableBooks, setAvailableBooks, featuredBooks, setFeaturedBooks, selectedBooks, setSelectedBooks, 'itemId')}
+            onRemove={(id) => handleRemoveItem(id, availableBooks, setAvailableBooks, featuredBooks, setFeaturedBooks, 'itemId')}
+            onMove={(index, dir) => setFeaturedBooks(moveItem(featuredBooks, index, dir))}
+            setSearchTerm={setSearchTerm}
+            searchTerm={searchTerm}
+        />
       </Tabs>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">추천 인용구</CardTitle>
-            <Star className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{featuredQuotes.length}</div>
-            <p className="text-xs text-muted-foreground">현재 활성화됨</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">추천 도서</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{featuredBooks.length}</div>
-            <p className="text-xs text-muted-foreground">현재 활성화됨</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">평균 참여도</CardTitle>
-            <Heart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">85.2%</div>
-            <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+5.1%</span> 지난 주 대비
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <StatsCards featuredQuotesCount={featuredQuotes.length} featuredBooksCount={featuredBooks.length} />
     </div>
   )
 }
+
+// --- 하위 컴포넌트들 ---
+
+const CurationInfoCard = ({ curationTitle, setCurationTitle, curationContent, setCurationContent, curationTarget, setCurationTarget }) => (
+  <Card>
+    <CardHeader><CardTitle>큐레이션 정보</CardTitle></CardHeader>
+    <CardContent className="space-y-4">
+      <div>
+        <label htmlFor="curationTitle" className="block text-sm font-medium text-gray-700 mb-1">큐레이션 제목</label>
+        <Input id="curationTitle" placeholder="큐레이션의 제목을 입력하세요..." value={curationTitle} onChange={(e) => setCurationTitle(e.target.value)} />
+      </div>
+      <div>
+        <label htmlFor="curationContent" className="block text-sm font-medium text-gray-700 mb-1">큐레이션 소개글</label>
+        <Textarea id="curationContent" placeholder="독자들을 위한 소개글을 작성하세요..." value={curationContent} onChange={(e) => setCurationContent(e.target.value)} rows={4} />
+      </div>
+      <div>
+        <label htmlFor="curationTarget" className="block text-sm font-medium text-gray-700 mb-1">발행 위치</label>
+        <Select onValueChange={setCurationTarget} value={curationTarget}>
+          <SelectTrigger className="w-full md:w-[240px]"><SelectValue placeholder="발행할 위치를 선택하세요" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="main_feed">메인 피드</SelectItem>
+            <SelectItem value="newsletter">뉴스레터</SelectItem>
+            <SelectItem value="social_media">소셜 미디어</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const ContentTab = ({ type, featuredItems, availableItems, selectedItems, onSelectionChange, onAdd, onRemove, onMove, setSearchTerm, searchTerm }) => {
+    const typeText = type === 'quotes' ? '인용구' : '도서';
+    return (
+        <TabsContent value={type} className="space-y-4">
+            <div className="grid gap-6 md:grid-cols-2">
+            <FeaturedItemsList type={type} items={featuredItems} onRemove={onRemove} onMove={onMove} typeText={typeText} />
+            <AvailableItemsList type={type} items={availableItems} selectedItems={selectedItems} onSelectionChange={onSelectionChange} onAdd={onAdd} setSearchTerm={setSearchTerm} searchTerm={searchTerm} typeText={typeText} />
+            </div>
+        </TabsContent>
+    );
+};
+
+const FeaturedItemsList = ({ type, items, onRemove, onMove, typeText }) => (
+  <Card>
+    <CardHeader><CardTitle className="flex items-center gap-2">{type === 'quotes' ? <Pin className="w-5 h-5" /> : <Star className="w-5 h-5" />} 선택된 {typeText} ({items.length})</CardTitle></CardHeader>
+    <CardContent className="space-y-3 max-h-[500px] overflow-y-auto">
+      {items.length === 0 && <p className="text-center text-muted-foreground py-4">오른쪽에서 {typeText}를 추가하세요.</p>}
+      {items.map((item, index) => (
+        <div key={type === 'quotes' ? item.quoteId : item.itemId} className="p-3 border rounded-lg bg-muted/40 flex items-center justify-between">
+          <div className="flex-1 min-w-0">
+            {type === 'quotes' ? <p className='font-semibold'>{`"${item.bookTitle}"`}</p> : <h4 className="font-semibold">{item.title}</h4>}
+            <p className="text-sm text-muted-foreground">- {item.author}</p>
+          </div>
+          <div className="flex gap-1 ml-2">
+            <Button variant="ghost" size="icon" onClick={() => onMove(index, 'up')} disabled={index === 0}><ArrowUp className="w-4 h-4" /></Button>
+            <Button variant="ghost" size="icon" onClick={() => onMove(index, 'down')} disabled={index === items.length - 1}><ArrowDown className="w-4 h-4" /></Button>
+            <Button variant="outline" size="icon" onClick={() => onRemove(type === 'quotes' ? item.quoteId : item.itemId)}><PinOff className="w-4 h-4 text-red-500" /></Button>
+          </div>
+        </div>
+      ))}
+    </CardContent>
+  </Card>
+);
+
+const AvailableItemsList = ({ type, items, selectedItems, onSelectionChange, onAdd, setSearchTerm, searchTerm, typeText }) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>{typeText} 검색 및 추가</CardTitle>
+      <div className="relative mt-2">
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Input placeholder={`제목, 저자로 검색...`} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-9" />
+      </div>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-3 max-h-[420px] overflow-y-auto pr-2">
+        {items.map(item => (
+          <div key={type === 'quotes' ? item.quoteId : item.itemId} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+            <Checkbox 
+              id={`${type}-${type === 'quotes' ? item.quoteId : item.itemId}`}
+              checked={selectedItems.includes(type === 'quotes' ? item.quoteId : item.itemId)}
+              onCheckedChange={() => onSelectionChange(type === 'quotes' ? item.quoteId : item.itemId)}
+            />
+            <label htmlFor={`${type}-${type === 'quotes' ? item.quoteId : item.itemId}`} className="flex-1 min-w-0 cursor-pointer">
+              {type === 'quotes' ? <p className='font-semibold'>{`"${item.bookTitle}"`}</p> : <h4 className="font-semibold">{item.title}</h4>}
+              <p className="text-sm text-muted-foreground">- {item.author}</p>
+            </label>
+          </div>
+        ))}
+      </div>
+      <Button onClick={onAdd} disabled={selectedItems.length === 0} className="w-full mt-4">
+        {type === 'quotes' ? <Pin className="w-4 h-4 mr-2" /> : <Star className="w-4 h-4 mr-2" />}
+        선택한 {typeText} 추가 ({selectedItems.length})
+      </Button>
+    </CardContent>
+  </Card>
+);
+
+const StatsCards = ({ featuredQuotesCount, featuredBooksCount }) => (
+  <div className="grid gap-4 md:grid-cols-2">
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">추천 인용구 수</CardTitle>
+        <Pin className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{featuredQuotesCount}개</div>
+        <p className="text-xs text-muted-foreground">현재 큐레이션에 포함됨</p>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">추천 도서 수</CardTitle>
+        <Star className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{featuredBooksCount}권</div>
+        <p className="text-xs text-muted-foreground">현재 큐레이션에 포함됨</p>
+      </CardContent>
+    </Card>
+  </div>
+);

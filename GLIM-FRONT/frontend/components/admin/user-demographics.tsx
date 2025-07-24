@@ -1,10 +1,11 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/admin/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/admin/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/admin/ui/select"
 import { Badge } from "@/components/admin/ui/badge"
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts"
 
+// 기존 데이터 유지
 const ageData = [
   { name: "10대", value: 15, count: 450 },
   { name: "20대", value: 35, count: 1050 },
@@ -31,7 +32,27 @@ const deviceData = [
   { name: "태블릿", value: 5, count: 150 },
 ]
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
+// 각 데이터셋별 색상 팔레트 정의
+const COLORS = {
+  gender: ["#FF69B4", "#87CEEB"], // 여성, 남성
+  age: ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"], // 10대, 20대, 30대, 40대, 50대 이상
+  device: ["#8884d8", "#82ca9d", "#ffc658"], // 모바일, 데스크톱, 태블릿
+}
+
+// 커스텀 범례 컴포넌트
+const CustomLegend = ({ title, data, colors }) => (
+  <div className="mt-2">
+    <h4 className="font-semibold text-sm mb-1">{title}</h4>
+    <div className="flex flex-wrap gap-x-4 gap-y-1">
+      {data.map((entry, index) => (
+        <div key={`legend-${title}-${index}`} className="flex items-center text-xs">
+          <span className="w-3 h-3 mr-1.5 rounded-full" style={{ backgroundColor: colors[index % colors.length] }} />
+          <span>{entry.name}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+)
 
 export function UserDemographics() {
   return (
@@ -79,7 +100,7 @@ export function UserDemographics() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">활성 사용자</CardTitle>
-            </CardHeader>
+          </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">2,340</div>
             <p className="text-xs text-muted-foreground">
@@ -98,145 +119,96 @@ export function UserDemographics() {
         </Card>
       </div>
 
-      {/* 연령 및 성별 분포 */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>연령별 분포</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between mb-4">
-              <ResponsiveContainer width="60%" height={200}>
-                <PieChart>
-                  <Pie
-                    data={ageData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={40}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {ageData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, "비율"]} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="space-y-2">
-                {ageData.map((entry, index) => (
-                  <div key={entry.name} className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                    <span className="text-sm">{entry.name}</span>
-                    <Badge variant="outline">{entry.value}%</Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* 통합 동심원 도넛 차트 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>사용자 분포 요약</CardTitle>
+          <CardDescription>성별, 연령, 디바이스별 사용자 분포를 나타냅니다.</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-6 md:grid-cols-2 items-center">
+          <div className="w-full h-[350px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                <Tooltip formatter={(value) => [`${value}%`, "비율"]} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>성별 분포</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between mb-4">
-              <ResponsiveContainer width="60%" height={200}>
-                <PieChart>
-                  <Pie
-                    data={genderData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={40}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {genderData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, "비율"]} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="space-y-2">
-                {genderData.map((entry, index) => (
-                  <div key={entry.name} className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                    <span className="text-sm">{entry.name}</span>
-                    <Badge variant="outline">{entry.value}%</Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                {/* 가장 안쪽 링: 성별 */}
+                <Pie
+                  data={genderData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={60}
+                  fill="#8884d8"
+                  paddingAngle={2}
+                >
+                  {genderData.map((entry, index) => (
+                    <Cell key={`cell-gender-${index}`} fill={COLORS.gender[index % COLORS.gender.length]} />
+                  ))}
+                </Pie>
 
-      {/* 월별 성장 및 디바이스 분포 */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>월별 사용자 증가</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={monthlyGrowth}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="newUsers" fill="#8884d8" name="신규 사용자" />
-                <Bar dataKey="totalUsers" fill="#82ca9d" name="총 사용자" />
-              </BarChart>
+                {/* 가운데 링: 연령 */}
+                <Pie
+                  data={ageData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={70}
+                  outerRadius={100}
+                  fill="#82ca9d"
+                  paddingAngle={2}
+                >
+                  {ageData.map((entry, index) => (
+                    <Cell key={`cell-age-${index}`} fill={COLORS.age[index % COLORS.age.length]} />
+                  ))}
+                </Pie>
+
+                {/* 가장 바깥쪽 링: 디바이스 */}
+                <Pie
+                  data={deviceData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={110}
+                  outerRadius={140}
+                  fill="#ffc658"
+                  paddingAngle={2}
+                >
+                  {deviceData.map((entry, index) => (
+                    <Cell key={`cell-device-${index}`} fill={COLORS.device[index % COLORS.device.length]} />
+                  ))}
+                </Pie>
+              </PieChart>
             </ResponsiveContainer>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="flex flex-col gap-4">
+            <CustomLegend title="성별 분포" data={genderData} colors={COLORS.gender} />
+            <CustomLegend title="연령별 분포" data={ageData} colors={COLORS.age} />
+            <CustomLegend title="디바이스별 접속" data={deviceData} colors={COLORS.device} />
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>디바이스별 접속</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {deviceData.map((device, index) => (
-                <div key={device.name} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-4 h-4 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                    <span className="font-medium">{device.name}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">{device.count.toLocaleString()}명</span>
-                    <Badge variant="outline">{device.value}%</Badge>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6">
-              <ResponsiveContainer width="100%" height={200}>
-                <PieChart>
-                  <Pie
-                    data={deviceData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={40}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {deviceData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, "비율"]} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* 월별 사용자 증가 추이 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>월별 사용자 증가</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={monthlyGrowth}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="newUsers" fill="#8884d8" name="신규 사용자" />
+              <Bar dataKey="totalUsers" fill="#82ca9d" name="총 사용자" />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
     </div>
   )
 }

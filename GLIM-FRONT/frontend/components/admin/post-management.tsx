@@ -140,8 +140,7 @@ export function PostManagement() {
             </TableHeader>
             <TableBody>
               {filteredQuotes.map((quote) => (
-                <TableRow key={quote.quoteId}>
-                  <TableCell className="font-mono">{quote.quoteId}</TableCell>
+                <TableRow key={quote.quoteId}><TableCell className="font-mono">{quote.quoteId}</TableCell>
                   <TableCell>
                     {/* <img src={`http://localhost:50871${quote.bookCoverUrl}`} alt={quote.bookTitle} className="w-16 h-auto" /> */}
                     {/* 이미지 대신 텍스트로 대체 */}

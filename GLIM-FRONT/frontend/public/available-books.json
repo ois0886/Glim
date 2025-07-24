@@ -1,0 +1,32 @@
+[
+  {
+    "itemId": 101,
+    "title": "Sapiens: A Brief History of Humankind",
+    "author": "Yuval Noah Harari",
+    "cover": "/placeholder.jpg"
+  },
+  {
+    "itemId": 102,
+    "title": "The Silent Patient",
+    "author": "Alex Michaelides",
+    "cover": "/placeholder.jpg"
+  },
+  {
+    "itemId": 103,
+    "title": "Educated",
+    "author": "Tara Westover",
+    "cover": "/placeholder.jpg"
+  },
+  {
+    "itemId": 104,
+    "title": "Becoming",
+    "author": "Michelle Obama",
+    "cover": "/placeholder.jpg"
+  },
+  {
+    "itemId": 105,
+    "title": "The Midnight Library",
+    "author": "Matt Haig",
+    "cover": "/placeholder.jpg"
+  }
+]

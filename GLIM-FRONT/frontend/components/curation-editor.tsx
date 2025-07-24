@@ -1,126 +1,70 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Search, Star, Heart, TrendingUp, Pin, PinOff, ArrowUp, ArrowDown } from "lucide-react"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Search, Star, Heart, TrendingUp, Pin, PinOff, ArrowUp, ArrowDown, Loader2 } from "lucide-react"
 
-const featuredQuotes = [
-  {
-    id: "F001",
-    content: "인생은 책과 같다. 바보들은 그것을 훑어보고, 현명한 사람들은 그것을 주의 깊게 읽는다.",
-    author: "장 폴 리히터",
-    book: "인생론",
-    likes: 245,
-    isPinned: true,
-    order: 1,
-  },
-  {
-    id: "F002",
-    content: "독서는 완성된 사람을 만들고, 담화는 재빠른 사람을 만들며, 쓰기는 정확한 사람을 만든다.",
-    author: "프랜시스 베이컨",
-    book: "수필집",
-    likes: 189,
-    isPinned: true,
-    order: 2,
-  },
-  {
-    id: "F003",
-    content: "좋은 책을 읽는 것은 과거 몇 세기의 가장 훌륭한 사람들과 대화하는 것과 같다.",
-    author: "르네 데카르트",
-    book: "방법서설",
-    likes: 156,
-    isPinned: true,
-    order: 3,
-  },
-]
+interface Quote {
+  id: string
+  content: string
+  author: string
+  book: string
+  likes: number
+  isPinned: boolean
+  order?: number
+}
 
-const availableQuotes = [
-  {
-    id: "Q001",
-    content: "책을 읽지 않는 사람은 읽을 줄 모르는 사람보다 나을 것이 없다.",
-    author: "마크 트웨인",
-    book: "톰 소여의 모험",
-    likes: 123,
-    isPinned: false,
-  },
-  {
-    id: "Q002",
-    content: "책은 청춘에게는 음식이요, 노년에게는 오락이며, 잠자리에서는 장식이요, 고독할 때는 동반자이다.",
-    author: "키케로",
-    book: "키케로 명언집",
-    likes: 198,
-    isPinned: false,
-  },
-  {
-    id: "Q003",
-    content: "진정한 대학은 책들의 집합체이다.",
-    author: "토마스 칼라일",
-    book: "영웅숭배론",
-    likes: 87,
-    isPinned: false,
-  },
-  {
-    id: "Q004",
-    content: "책은 인류가 남긴 가장 조용하고 지속적인 친구이다.",
-    author: "찰스 W. 엘리엇",
-    book: "교육론",
-    likes: 145,
-    isPinned: false,
-  },
-]
-
-const featuredBooks = [
-  {
-    id: "B001",
-    title: "데미안",
-    author: "헤르만 헤세",
-    description: "성장과 자아 발견의 고전 소설",
-    isPinned: true,
-    order: 1,
-  },
-  {
-    id: "B002",
-    title: "어린 왕자",
-    author: "생텍쥐페리",
-    description: "순수함과 사랑에 대한 철학적 동화",
-    isPinned: true,
-    order: 2,
-  },
-]
-
-const availableBooks = [
-  {
-    id: "B003",
-    title: "1984",
-    author: "조지 오웰",
-    description: "디스토피아 사회를 그린 정치 소설",
-    isPinned: false,
-  },
-  {
-    id: "B004",
-    title: "위대한 개츠비",
-    author: "F. 스콧 피츠제럴드",
-    description: "아메리칸 드림의 허상을 다룬 작품",
-    isPinned: false,
-  },
-  {
-    id: "B005",
-    title: "호밀밭의 파수꾼",
-    author: "J.D. 샐린저",
-    description: "청소년의 방황과 성장을 그린 소설",
-    isPinned: false,
-  },
-]
+interface Book {
+  id: string
+  title: string
+  author: string
+  description: string
+  isPinned: boolean
+  order?: number
+}
 
 export function CurationEditor() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedQuotes, setSelectedQuotes] = useState<string[]>([])
   const [selectedBooks, setSelectedBooks] = useState<string[]>([])
+  const [curationTitle, setCurationTitle] = useState("이번 주, 당신의 마음을 울릴 문장들")
+  const [curationContent, setCurationContent] = useState(
+    "지친 일상에 위로와 영감을 선사할 책 속의 문장과 특별한 도서들을 만나보세요.",
+  )
+  const [curationDestination, setCurationDestination] = useState("main")
+
+  const [featuredQuotes, setFeaturedQuotes] = useState<Quote[]>([])
+  const [availableQuotes, setAvailableQuotes] = useState<Quote[]>([])
+  const [featuredBooks, setFeaturedBooks] = useState<Book[]>([])
+  const [availableBooks, setAvailableBooks] = useState<Book[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/data/curation.json")
+        if (!response.ok) throw new Error("데이터를 불러오지 못했습니다.")
+        const data = await response.json()
+        setFeaturedQuotes(data.featuredQuotes)
+        setAvailableQuotes(data.availableQuotes)
+        setFeaturedBooks(data.featuredBooks)
+        setAvailableBooks(data.availableBooks)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
 
   const filteredQuotes = availableQuotes.filter(
     (quote) =>
@@ -144,11 +88,129 @@ export function CurationEditor() {
     setSelectedBooks((prev) => (prev.includes(bookId) ? prev.filter((id) => id !== bookId) : [...prev, bookId]))
   }
 
+  const handleAddQuotes = () => {
+    const quotesToAdd = availableQuotes.filter((q) => selectedQuotes.includes(q.id))
+    if (quotesToAdd.length === 0) return
+
+    const newFeaturedQuotes = [
+      ...featuredQuotes,
+      ...quotesToAdd.map((q, index) => ({
+        ...q,
+        isPinned: true,
+        order: featuredQuotes.length + index + 1,
+      })),
+    ]
+    setFeaturedQuotes(newFeaturedQuotes.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)))
+
+    const newAvailableQuotes = availableQuotes.filter((q) => !selectedQuotes.includes(q.id))
+    setAvailableQuotes(newAvailableQuotes)
+
+    setSelectedQuotes([])
+  }
+
+  const handleRemoveQuote = (quoteId: string) => {
+    const quoteToRemove = featuredQuotes.find((q) => q.id === quoteId)
+    if (!quoteToRemove) return
+
+    const newFeaturedQuotes = featuredQuotes.filter((q) => q.id !== quoteId).map((q, index) => ({ ...q, order: index + 1 }))
+    setFeaturedQuotes(newFeaturedQuotes)
+
+    setAvailableQuotes([...availableQuotes, { ...quoteToRemove, isPinned: false, order: undefined }])
+  }
+
+  const handleAddBooks = () => {
+    const booksToAdd = availableBooks.filter((b) => selectedBooks.includes(b.id))
+    if (booksToAdd.length === 0) return
+
+    const newFeaturedBooks = [
+      ...featuredBooks,
+      ...booksToAdd.map((b, index) => ({
+        ...b,
+        isPinned: true,
+        order: featuredBooks.length + index + 1,
+      })),
+    ]
+    setFeaturedBooks(newFeaturedBooks.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)))
+
+    setAvailableBooks(availableBooks.filter((b) => !selectedBooks.includes(b.id)))
+    setSelectedBooks([])
+  }
+
+  const handleRemoveBook = (bookId: string) => {
+    const bookToRemove = featuredBooks.find((b) => b.id === bookId)
+    if (!bookToRemove) return
+
+    const newFeaturedBooks = featuredBooks.filter((b) => b.id !== bookId).map((b, index) => ({ ...b, order: index + 1 }))
+    setFeaturedBooks(newFeaturedBooks)
+
+    setAvailableBooks([...availableBooks, { ...bookToRemove, isPinned: false, order: undefined }])
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+        <span className="ml-2">데이터를 불러오는 중...</span>
+      </div>
+    )
+  }
+
+  if (error) {
+    return <div className="text-center text-red-500">오류: {error}</div>
+  }
+
   return (
     <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>큐레이션 정보</CardTitle>
+          <p className="text-muted-foreground">큐레이션의 제목, 소개글, 발행 위치를 편집합니다.</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <label htmlFor="curation-title" className="block text-sm font-medium mb-1">
+              큐레이션 제목
+            </label>
+            <Input
+              id="curation-title"
+              value={curationTitle}
+              onChange={(e) => setCurationTitle(e.target.value)}
+              placeholder="예: 이번 주를 위한 문장들"
+            />
+          </div>
+          <div>
+            <label htmlFor="curation-content" className="block text-sm font-medium mb-1">
+              큐레이션 소개글
+            </label>
+            <Textarea
+              id="curation-content"
+              value={curationContent}
+              onChange={(e) => setCurationContent(e.target.value)}
+              placeholder="큐레이션에 대한 설명을 입력하세요."
+              rows={3}
+            />
+          </div>
+          <div>
+            <label htmlFor="curation-destination" className="block text-sm font-medium mb-1">
+              발행 위치
+            </label>
+            <Select value={curationDestination} onValueChange={setCurationDestination}>
+              <SelectTrigger id="curation-destination">
+                <SelectValue placeholder="발행 위치를 선택하세요" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="main">메인 페이지</SelectItem>
+                <SelectItem value="social">소셜 미디어</SelectItem>
+                <SelectItem value="newsletter">뉴스레터</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">큐레이션 편집</h2>
-        <p className="text-muted-foreground">메인 앱 피드에 표시될 추천 인용구와 책을 선택하고 관리합니다.</p>
+        <h2 className="text-2xl font-bold tracking-tight">큐레이션 콘텐츠 편집</h2>
+        <p className="text-muted-foreground">큐레이션에 포함될 추천 인용구와 책을 선택하고 관리합니다.</p>
       </div>
 
       <Tabs defaultValue="quotes" className="space-y-4">
@@ -182,7 +244,7 @@ export function CurationEditor() {
                           <Button variant="ghost" size="sm">
                             <ArrowDown className="w-4 h-4" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" onClick={() => handleRemoveQuote(quote.id)}>
                             <PinOff className="w-4 h-4" />
                           </Button>
                         </div>
@@ -241,7 +303,7 @@ export function CurationEditor() {
                   ))}
                 </div>
                 <div className="flex gap-2 mt-4">
-                  <Button disabled={selectedQuotes.length === 0} className="flex-1">
+                  <Button onClick={handleAddQuotes} disabled={selectedQuotes.length === 0} className="flex-1">
                     <Pin className="w-4 h-4 mr-2" />
                     선택한 인용구 추가 ({selectedQuotes.length})
                   </Button>
@@ -276,7 +338,7 @@ export function CurationEditor() {
                           <Button variant="ghost" size="sm">
                             <ArrowDown className="w-4 h-4" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" onClick={() => handleRemoveBook(book.id)}>
                             <PinOff className="w-4 h-4" />
                           </Button>
                         </div>
@@ -321,7 +383,7 @@ export function CurationEditor() {
                   ))}
                 </div>
                 <div className="flex gap-2 mt-4">
-                  <Button disabled={selectedBooks.length === 0} className="flex-1">
+                  <Button onClick={handleAddBooks} disabled={selectedBooks.length === 0} className="flex-1">
                     <Star className="w-4 h-4 mr-2" />
                     선택한 도서 추가 ({selectedBooks.length})
                   </Button>
