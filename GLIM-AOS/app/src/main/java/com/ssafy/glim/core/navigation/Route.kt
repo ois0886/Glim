@@ -17,6 +17,7 @@ sealed interface Route {
 }
 
 sealed interface GlimRoute : Route {
+
     @Serializable
     data object Liked : GlimRoute
 

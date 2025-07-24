@@ -163,7 +163,7 @@ fun LockScreenContent(
     LaunchedEffect(state.quotes) {
         state.quotes.forEach { quote ->
             val request = ImageRequest.Builder(context)
-                .data(quote.imgUrl)
+                .data(quote.quoteImageName)
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .memoryCachePolicy(CachePolicy.ENABLED)
                 .build()
@@ -200,7 +200,7 @@ fun LockScreenContent(
         if (currentQuote != null) {
             SubcomposeAsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(currentQuote.imgUrl)
+                    .data(currentQuote.quoteImageName)
                     .crossfade(true)
                     .diskCachePolicy(CachePolicy.ENABLED)
                     .memoryCachePolicy(CachePolicy.ENABLED)

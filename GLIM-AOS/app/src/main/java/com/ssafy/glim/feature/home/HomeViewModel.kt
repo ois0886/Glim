@@ -1,10 +1,12 @@
-package com.ssafy.glim.feature.home
+package com.ssafy.quote.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.core.domain.model.CurationType
 import com.ssafy.glim.core.domain.usecase.curation.GetMainCurationsUseCase
 import com.ssafy.glim.core.navigation.Navigator
+import com.ssafy.glim.feature.home.HomeSideEffect
+import com.ssafy.glim.feature.home.HomeUiState
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +27,7 @@ class HomeViewModel @Inject constructor(
     private val _errorFlow = MutableSharedFlow<Throwable>()
     val errorFlow get() = _errorFlow.asSharedFlow()
 
-    fun navigateToGlim() =
+    fun navigateToQuote() =
         viewModelScope.launch {
             navigator.navigate(MainTab.REELS.route)
         }
@@ -45,10 +47,10 @@ class HomeViewModel @Inject constructor(
             .onSuccess { curations ->
                 val sections = curations.map { curation ->
                     when (curation.type) {
-                        CurationType.QUOTE -> HomeSectionUiModel.GlimSection(
+                        CurationType.QUOTE -> HomeSectionUiModel.QuoteSection(
                             id    = curation.id?.toString().orEmpty(),
                             title = curation.title,
-                            glims = curation.contents.glim
+                            quotes = curation.contents.quote
                         )
                         CurationType.BOOK  -> HomeSectionUiModel.BookSection(
                             id    = curation.id?.toString().orEmpty(),

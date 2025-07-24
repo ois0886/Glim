@@ -6,7 +6,7 @@ import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Curation
 import com.ssafy.glim.core.domain.model.CurationContent
 import com.ssafy.glim.core.domain.model.CurationType
-import com.ssafy.glim.core.domain.model.Glim
+import com.ssafy.glim.core.domain.model.Quote
 
 fun CurationItemResponse.toDomain(): Curation {
     val typeEnum = CurationType.valueOf(this.curationType)
@@ -15,7 +15,7 @@ fun CurationItemResponse.toDomain(): Curation {
     } else emptyList()
 
     val glims = if (typeEnum == CurationType.QUOTE) {
-        this.contents.map { it.toGlim() }
+        this.contents.map { it.toQuote() }
     } else emptyList()
 
     return Curation(
@@ -25,33 +25,35 @@ fun CurationItemResponse.toDomain(): Curation {
         type = typeEnum,
         contents = CurationContent(
             book = books,
-            glim = glims
+            quote = glims
         )
     )
 }
 
 private fun CurationContentResponse.toBook(): Book =
     Book(
-        id = this.bookId ?: -1L,
+        itemId = this.bookId ?: -1L,
         title = this.bookTitle,
         author = this.author,
         publisher = this.publisher,
-        publicationDate = "",
+        pubDate = "",
         isbn = "",
         description = "",
-        coverImageUrl = this.bookCoverUrl
+        cover = this.bookCoverUrl ?: "",
     )
 
-private fun CurationContentResponse.toGlim(): Glim =
-    Glim(
-        id = this.quoteId ?: -1L,
-        bookId = this.bookId ?: -1L,
-        imgUrl = this.imageName.orEmpty(),
+private fun CurationContentResponse.toQuote(): Quote =
+    Quote(
+        bookId = bookId ?: -1L,
         isLike = false,
         likes = 0L,
-        bookTitle = this.bookTitle,
-        bookAuthor = this.author,
-        bookImgUrl = this.bookCoverUrl.orEmpty(),
-        pageInfo = ""
+        bookTitle = bookTitle,
+        author = author,
+        bookCoverUrl = bookCoverUrl ?: "",
+        page = 0,
+        publisher = publisher,
+        quoteId = quoteId ?: -1L,
+        quoteImageName = imageName ?: "",
+        quoteViews = 0L,
     )
 

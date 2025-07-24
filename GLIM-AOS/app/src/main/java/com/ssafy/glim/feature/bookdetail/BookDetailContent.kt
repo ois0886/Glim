@@ -33,21 +33,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ssafy.glim.R
-import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.ui.theme.GlimColor.LightBrown
 
 @Composable
 fun BookDetailTopBar(
     title: String,
     alpha: Float,
-    onBackClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     Row(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .background(LightBrown),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onBackClick) {
             Icon(
@@ -62,20 +62,18 @@ fun BookDetailTopBar(
             fontWeight = FontWeight.Bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier =
-            Modifier
+            modifier = Modifier
                 .alpha(alpha)
                 .weight(1f)
-                .padding(end = 16.dp),
+                .padding(end = 16.dp)
         )
     }
 }
 
 @Composable
-fun BookInfoSection(state: BookDetail) {
+fun BookInfoSection(book: Book) {
     Row(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .background(
                 brush =
@@ -85,41 +83,36 @@ fun BookInfoSection(state: BookDetail) {
                     end = Offset(0f, Float.POSITIVE_INFINITY),
                 ),
             )
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
         AsyncImage(
-            model = state.coverImageUrl,
+            model = book.cover,
             contentDescription = stringResource(R.string.book_cover),
-            modifier =
-            Modifier
+            modifier = Modifier
                 .size(80.dp, 120.dp),
             contentScale = ContentScale.Crop,
             placeholder = painterResource(id = R.drawable.ic_image),
-            error = painterResource(id = R.drawable.ic_image),
+            error = painterResource(id = R.drawable.ic_image)
         )
 
         Spacer(modifier = Modifier.width(20.dp))
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text(
-                text = state.subTitle,
-                style = MaterialTheme.typography.labelMedium,
-            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = state.title,
+                    text = book.title,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = state.category,
+                    text = book.categoryName,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -129,15 +122,15 @@ fun BookInfoSection(state: BookDetail) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = state.author,
+                    text = book.author,
                     style = MaterialTheme.typography.bodySmall,
                 )
 
                 Text(
-                    text = stringResource(R.string.publication_date) + " ${state.publicationDate}",
+                    text = stringResource(R.string.publication_date) + " ${book.pubDate}",
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -145,17 +138,17 @@ fun BookInfoSection(state: BookDetail) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = state.publisher,
+                    text = book.publisher,
                     style = MaterialTheme.typography.bodySmall,
                 )
 
                 Text(
-                    text = stringResource(R.string.price) + " ${state.priceText}",
+                    text = stringResource(R.string.price) + " ${book.priceText}",
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
@@ -163,33 +156,27 @@ fun BookInfoSection(state: BookDetail) {
 }
 
 @Composable
-fun QuoteCard(
-    quote: Quote,
-    onClickCard: (Long) -> Unit,
-) {
+fun QuoteCard(quote: QuoteSummary, onClickCard: (Long) -> Unit) {
     Card(
-        modifier =
-        Modifier
-            .clickable { onClickCard(quote.id) },
-        colors =
-        CardDefaults.cardColors(
-            containerColor = Color.White,
+        modifier = Modifier
+            .clickable { onClickCard(quote.quoteId) },
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
         ),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Text(
-            text = quote.text,
+            text = quote.content,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(16.dp)
         )
         Row(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = quote.page.toString(),
@@ -201,11 +188,11 @@ fun QuoteCard(
             Icon(
                 painter = painterResource(id = R.drawable.ic_favorite),
                 contentDescription = stringResource(R.string.like),
-                modifier = Modifier.padding(end = 4.dp),
+                modifier = Modifier.padding(end = 4.dp)
             )
 
             Text(
-                text = quote.likes.toString(),
+                text = quote.views.toString(),
                 style = MaterialTheme.typography.bodyMedium,
             )
         }

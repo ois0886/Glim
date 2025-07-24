@@ -55,6 +55,7 @@ constructor(
                         )
                     }
                 }
+
                 SearchMode.RESULT -> {
                     reduce {
                         state.copy(
@@ -64,6 +65,7 @@ constructor(
                         )
                     }
                 }
+
                 SearchMode.POPULAR -> {
                     postSideEffect(LibrarySideEffect.NavigateBack)
                 }
@@ -134,13 +136,13 @@ constructor(
         }
 
     // 책 아이템 클릭
-    fun onBookClicked(Book: Book) =
+    fun onBookClicked(book: Book) =
         intent {
-            navigator.navigate(Route.BookDetail(bookId = Book.id))
+            navigator.navigate(Route.BookDetail(bookId = book.itemId))
         }
 
     // 글귀 아이템 클릭
-    fun onQuoteClicked(Quote: Quote) =
+    fun onQuoteClicked(quote: Quote) =
         intent {
             navigator.navigate(BottomTabRoute.Reels)
         }
@@ -149,15 +151,16 @@ constructor(
     private fun loadPopularSearchItems() =
         intent {
             reduce { state.copy(isLoading = true) }
-            getPopularSearchQueriesUseCase().collect { items ->
-                reduce {
-                    state.copy(
-                        popularSearchItems = items,
-                        isLoading = false,
-                        error = null,
-                    )
+            runCatching { getPopularSearchQueriesUseCase() }
+                .onSuccess {
+                    reduce {
+                        state.copy(
+                            popularSearchItems = it,
+                            isLoading = false,
+                            error = null,
+                        )
+                    }
                 }
-            }
         }
 
     // 최근 검색어 로드
@@ -180,31 +183,33 @@ constructor(
             try {
                 loadRecentSearchItems()
                 // 책 검색
-                searchBooksUseCase(query).collect { books ->
-                    reduce {
-                        state.copy(
-                            searchBooks = books,
-                            isLoading = false,
-                            error = null,
-                        )
+                runCatching { searchBooksUseCase(query) }
+                    .onSuccess {
+                        reduce {
+                            state.copy(
+                                searchBooks = it,
+                                isLoading = false,
+                                error = null,
+                            )
+                        }
                     }
-                }
 
                 // 글귀 검색
-                searchQuotesUseCase(query).collect { quotes ->
-                    reduce {
-                        state.copy(
-                            searchQuotes = quotes,
-                            isLoading = false,
-                            error = null,
-                        )
+                runCatching { searchQuotesUseCase(query) }
+                    .onSuccess {
+                        reduce {
+                            state.copy(
+                                searchQuotes = it,
+                                isLoading = false,
+                                error = null
+                            )
+                        }
                     }
-                }
             } catch (e: Exception) {
                 reduce {
                     state.copy(
                         isLoading = false,
-                        error = "검색 중 오류가 발생했습니다.",
+                        error = "검색 중 오류가 발생했습니다."
                     )
                 }
                 postSideEffect(LibrarySideEffect.ShowToast("검색 중 오류가 발생했습니다."))
