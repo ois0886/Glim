@@ -12,19 +12,21 @@ abstract class BaseForegroundServiceManager<T : Service>(
     val targetClass: Class<T>,
 ) {
     @RequiresApi(Build.VERSION_CODES.O)
-    fun start() = synchronized(this) {
-        val intent = Intent(context, targetClass)
+    fun start() =
+        synchronized(this) {
+            val intent = Intent(context, targetClass)
 
-        if (!context.isServiceRunning(targetClass)) {
-            context.startForegroundService(intent)
+            if (!context.isServiceRunning(targetClass)) {
+                context.startForegroundService(intent)
+            }
         }
-    }
 
-    fun stop() = synchronized(this) {
-        val intent = Intent(context, targetClass)
+    fun stop() =
+        synchronized(this) {
+            val intent = Intent(context, targetClass)
 
-        if (context.isServiceRunning(targetClass)) {
-            context.stopService(intent)
+            if (context.isServiceRunning(targetClass)) {
+                context.stopService(intent)
+            }
         }
-    }
 }

@@ -8,5 +8,5 @@ class CertifyValidCodeUseCase
 constructor(
     private val repository: AuthRepository,
 ) {
-    operator fun invoke(code: String) = repository.sendVerificationCode(code)
+    operator fun invoke(code: String) = repository.sendVerificationCode(code = code)
 }

@@ -9,13 +9,13 @@ import com.ssafy.glim.feature.glimlist.GlimListType
 
 fun NavGraphBuilder.glimListNavGraph(
     popBackStack: () -> Unit,
-    padding: PaddingValues
+    padding: PaddingValues,
 ) {
     composable<GlimRoute.Liked> { backStackEntry ->
         GlimListRoute(
             padding = padding,
             popBackStack = popBackStack,
-            listType = GlimListType.LIKED
+            listType = GlimListType.LIKED,
         )
     }
 
@@ -23,7 +23,7 @@ fun NavGraphBuilder.glimListNavGraph(
         GlimListRoute(
             padding = padding,
             popBackStack = popBackStack,
-            listType = GlimListType.UPLOADED
+            listType = GlimListType.UPLOADED,
         )
     }
 }

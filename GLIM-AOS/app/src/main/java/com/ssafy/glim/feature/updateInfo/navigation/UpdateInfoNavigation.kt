@@ -8,7 +8,7 @@ import com.ssafy.glim.feature.updateInfo.UpdateProfileRoute
 
 fun NavGraphBuilder.updateInfoNavGraph(
     popBackStack: () -> Unit,
-    padding: PaddingValues
+    padding: PaddingValues,
 ) {
     composable<Route.UpdateInfo> { backStackEntry ->
         UpdateProfileRoute(

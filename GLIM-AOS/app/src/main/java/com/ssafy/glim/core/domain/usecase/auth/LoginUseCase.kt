@@ -8,5 +8,8 @@ class LoginUseCase
 constructor(
     private val repository: AuthRepository,
 ) {
-    operator fun invoke() = repository.login()
+    operator fun invoke(
+        email: String,
+        password: String,
+    ) = repository.login(email = email, password = password)
 }

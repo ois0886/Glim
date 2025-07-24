@@ -50,9 +50,6 @@ internal fun LoginRoute(
     viewModel.collectSideEffect { effect ->
         when (effect) {
             is LoginSideEffect.ShowError ->
-                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-
-            is LoginSideEffect.ShowErrorRes ->
                 Toast.makeText(context, context.getString(effect.messageRes), Toast.LENGTH_SHORT)
                     .show()
         }
@@ -84,9 +81,10 @@ internal fun LoginScreen(
     navigateToSignUpOnGuest: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxSize()
-            .padding(padding.excludeSystemBars())
+            .padding(padding.excludeSystemBars()),
     ) {
         GlimTopBar(
             title = stringResource(id = R.string.login_title),
@@ -96,7 +94,8 @@ internal fun LoginScreen(
             titleSize = 20.sp,
         )
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -127,7 +126,8 @@ internal fun LoginScreen(
             Spacer(Modifier.height(24.dp))
 
             GlimButton(
-                text = if (state.isLoading) {
+                text =
+                if (state.isLoading) {
                     stringResource(R.string.login_loading)
                 } else {
                     stringResource(R.string.login_button)
@@ -202,11 +202,12 @@ fun PreviewLoginScreen_Empty() {
 @Composable
 fun PreviewLoginScreen_Errors() {
     LoginScreen(
-        state = LoginUiState(
+        state =
+        LoginUiState(
             email = "invalid-email",
             password = "short",
             emailError = R.string.error_email_invalid,
-            passwordError = R.string.error_password_invalid
+            passwordError = R.string.error_password_invalid,
         ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
@@ -223,7 +224,8 @@ fun PreviewLoginScreen_Errors() {
 @Composable
 fun PreviewLoginScreen_Valid() {
     LoginScreen(
-        state = LoginUiState(
+        state =
+        LoginUiState(
             email = "user@example.com",
             password = "Aa1!abcd",
         ),
@@ -242,7 +244,8 @@ fun PreviewLoginScreen_Valid() {
 @Composable
 fun PreviewLoginScreen_Loading() {
     LoginScreen(
-        state = LoginUiState(
+        state =
+        LoginUiState(
             email = "user@example.com",
             password = "Aa1!abcd",
             isLoading = true,

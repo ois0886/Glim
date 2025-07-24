@@ -18,7 +18,7 @@ fun EmailSection(email: String) {
     Column {
         Text(
             text = stringResource(R.string.profile_label_email),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -29,7 +29,7 @@ fun EmailSection(email: String) {
             readOnly = true,
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            textStyle = MaterialTheme.typography.bodyLarge
+            textStyle = MaterialTheme.typography.bodyLarge,
         )
 
         Spacer(modifier = Modifier.height(8.dp))

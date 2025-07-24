@@ -36,45 +36,47 @@ fun PopularSearchSection(
     SearchWordListSection(
         stringResource(R.string.popular_search_query),
         queries,
-        onClick
+        onClick,
     )
 }
 
 @Composable
 fun RecentSearchSection(
-    queries: List<SearchItem>,
+    queries: List<String>,
     onClick: (String) -> Unit,
-    onDeleteClick: (SearchItem) -> Unit
+    onDeleteClick: (String) -> Unit,
 ) {
     LazyRow(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(queries) { item ->
             Row(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .background(
                         Color.LightGray.copy(alpha = 0.3f),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(16.dp),
                     )
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = item.text,
+                    text = item,
                     style = MaterialTheme.typography.labelLarge,
                     modifier =
                     Modifier
                         .padding(horizontal = 8.dp, vertical = 4.dp)
-                        .clickable { onClick(item.text) },
+                        .clickable { onClick(item) },
                     color = Color.Black,
                 )
                 Icon(
                     painter = painterResource(R.drawable.ic_cancel),
                     contentDescription = null,
-                    modifier = Modifier.clickable { onDeleteClick(item) }
+                    modifier = Modifier.clickable { onDeleteClick(item) },
                 )
             }
         }
@@ -139,7 +141,7 @@ fun SearchItemRow(
             text = item.rank.toString(),
             style = MaterialTheme.typography.labelLarge,
             color = Color.Black,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
 
         Text(

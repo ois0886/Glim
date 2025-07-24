@@ -1,3 +1,9 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+val props = Properties().apply {
+    FileInputStream(rootProject.file("local.properties")).use { load(it) }
+}
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -11,7 +17,9 @@ plugins {
 android {
     namespace = "com.ssafy.glim"
     compileSdk = 35
-
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.ssafy.glim"
         minSdk = 26
@@ -20,6 +28,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val url: String = props.getProperty("BASE_URL")
+        buildConfigField("String", "BASE_URL", "\"$url\"")
     }
 
     buildTypes {
@@ -105,4 +116,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.gson)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
 }

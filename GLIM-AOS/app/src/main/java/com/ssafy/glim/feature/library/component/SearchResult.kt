@@ -40,7 +40,7 @@ import com.ssafy.glim.core.domain.model.Quote
 
 enum class SearchTab(val displayName: String) {
     BOOKS("도서"),
-    QUOTES("글귀")
+    QUOTES("글귀"),
 }
 
 @Composable
@@ -50,14 +50,15 @@ fun SearchResultSection(
     quoteList: List<Quote>,
     modifier: Modifier = Modifier,
     onBookClick: (Book) -> Unit = {},
-    onQuoteClick: (Quote) -> Unit = {}
+    onQuoteClick: (Quote) -> Unit = {},
 ) {
     var selectedTab by remember { mutableStateOf(SearchTab.BOOKS) }
 
     Column(
-        modifier = modifier
+        modifier =
+        modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color.White),
     ) {
         // 탭 메뉴
 //        TabRow(
@@ -105,7 +106,7 @@ fun SearchResultSection(
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Normal,
             color = Color.Black,
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp)
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp),
         )
 
         // 탭별 컨텐츠
@@ -113,13 +114,13 @@ fun SearchResultSection(
             SearchTab.BOOKS -> {
                 BookListContent(
                     books = bookList,
-                    onBookClick = { onBookClick(it) }
+                    onBookClick = { onBookClick(it) },
                 )
             }
             SearchTab.QUOTES -> {
                 QuoteListContent(
                     quotes = quoteList,
-                    onQuoteClick = onQuoteClick
+                    onQuoteClick = onQuoteClick,
                 )
             }
         }
@@ -129,24 +130,24 @@ fun SearchResultSection(
 @Composable
 private fun BookListContent(
     books: List<Book>,
-    onBookClick: (Book) -> Unit
+    onBookClick: (Book) -> Unit,
 ) {
     if (books.isEmpty()) {
         NoSearchResult(
             message = stringResource(R.string.no_search_result),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
     }
 
     LazyColumn(
         Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
         contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(books) { book ->
             BookCard(
                 book = book,
-                onClick = { onBookClick(book) }
+                onClick = { onBookClick(book) },
             )
         }
     }
@@ -155,24 +156,24 @@ private fun BookListContent(
 @Composable
 private fun QuoteListContent(
     quotes: List<Quote>,
-    onQuoteClick: (Quote) -> Unit
+    onQuoteClick: (Quote) -> Unit,
 ) {
     if (quotes.isEmpty()) {
         NoSearchResult(
             message = stringResource(R.string.no_search_result),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
     }
 
     LazyColumn(
         Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
         contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(quotes) { quote ->
             QuoteCard(
                 quote = quote,
-                onClick = { onQuoteClick(quote) }
+                onClick = { onQuoteClick(quote) },
             )
         }
     }
@@ -181,46 +182,48 @@ private fun QuoteListContent(
 @Composable
 private fun BookCard(
     book: Book,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // 책 아이콘/이미지
             Box(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .size(80.dp)
                     .background(
                         color = Color.LightGray.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     painter = painterResource(R.drawable.icon_post),
                     contentDescription = null,
                     modifier = Modifier.size(32.dp),
-                    tint = Color.Gray
+                    tint = Color.Gray,
                 )
             }
 
             // 책 정보
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = book.title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black,
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -228,7 +231,7 @@ private fun BookCard(
                 Text(
                     text = "${book.author} • ${book.publisher} • ${book.pubDate}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
+                    color = Color.Gray,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -237,7 +240,7 @@ private fun BookCard(
                     text = book.description,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Black,
-                    lineHeight = 20.sp
+                    lineHeight = 20.sp,
                 )
             }
         }
@@ -247,24 +250,25 @@ private fun BookCard(
 @Composable
 private fun QuoteCard(
     quote: Quote,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
+        modifier =
+        Modifier
             .fillMaxWidth()
             .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             // TODO: quote 텍스트 추가
             Text(
                 text = "",
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black,
-                lineHeight = 24.sp
+                lineHeight = 24.sp,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -272,29 +276,29 @@ private fun QuoteCard(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "${quote.bookTitle} (${quote.page})",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
+                    color = Color.Gray,
                 )
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_image),
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
-                        tint = Color.Gray
+                        tint = Color.Gray,
                     )
                     // TODO: 좋아요 개수 추가
                     Text(
                         text = "",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
+                        color = Color.Gray,
                     )
                 }
             }
@@ -305,16 +309,16 @@ private fun QuoteCard(
 @Composable
 fun NoSearchResult(
     modifier: Modifier = Modifier,
-    message: String
+    message: String,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = message,
             style = MaterialTheme.typography.bodyLarge,
-            color = Color.Gray
+            color = Color.Gray,
         )
     }
 }

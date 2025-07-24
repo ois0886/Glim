@@ -6,7 +6,10 @@ import android.content.Intent
 import com.ssafy.glim.feature.lock.LockScreenActivity
 
 object ScreenReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
         when (intent.action) {
             Intent.ACTION_SCREEN_ON -> {
                 navigateToLock(context)
@@ -20,7 +23,7 @@ object ScreenReceiver : BroadcastReceiver() {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-            }
+            },
         )
     }
 }

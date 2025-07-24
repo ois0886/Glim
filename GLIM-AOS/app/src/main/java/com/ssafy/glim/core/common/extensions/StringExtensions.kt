@@ -17,9 +17,10 @@ fun String.isValidEmail(): Boolean {
  * @return 유효한 비밀번호 형식이면 true, 아니면 false
  */
 fun String.isValidPassword(): Boolean {
-    val passwordRegex = Regex(
-        "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,16}$"
-    )
+    val passwordRegex =
+        Regex(
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,16}$",
+        )
     return passwordRegex.matches(this)
 }
 
@@ -46,10 +47,15 @@ fun String.isValidName(): Boolean {
  */
 sealed class BirthDateValidation {
     object Valid : BirthDateValidation()
+
     object InvalidFormat : BirthDateValidation() // 8자리 숫자가 아님
+
     object InvalidYear : BirthDateValidation() // 연도 범위 오류 (1900~현재년도)
+
     object InvalidMonth : BirthDateValidation() // 월 범위 오류 (1~12)
+
     object InvalidDay : BirthDateValidation() // 일 범위 오류 (월별 최대일수 초과)
+
     object FutureDate : BirthDateValidation() // 미래 날짜
 }
 
@@ -86,20 +92,22 @@ fun String.validateBirthDateDetailed(): BirthDateValidation {
         }
 
         // 월별 최대 일수 검사
-        val maxDaysInMonth = when (month) {
-            2 -> if (isLeapYear(year)) 29 else 28 // 2월 (윤년 고려)
-            4, 6, 9, 11 -> 30 // 4, 6, 9, 11월은 30일
-            else -> 31 // 1, 3, 5, 7, 8, 10, 12월은 31일
-        }
+        val maxDaysInMonth =
+            when (month) {
+                2 -> if (isLeapYear(year)) 29 else 28 // 2월 (윤년 고려)
+                4, 6, 9, 11 -> 30 // 4, 6, 9, 11월은 30일
+                else -> 31 // 1, 3, 5, 7, 8, 10, 12월은 31일
+            }
 
         if (day > maxDaysInMonth) {
             return BirthDateValidation.InvalidDay
         }
 
         val currentDate = Calendar.getInstance()
-        val inputDate = Calendar.getInstance().apply {
-            set(year, month - 1, day)
-        }
+        val inputDate =
+            Calendar.getInstance().apply {
+                set(year, month - 1, day)
+            }
 
         if (inputDate.after(currentDate)) {
             return BirthDateValidation.FutureDate
@@ -128,8 +136,62 @@ fun String.extractDigits(maxLength: Int): String {
 }
 
 /**
+ * YYYYMMDD 형식을 YYYY-MM-DD 형식으로 변환
+ */
+fun String.formatBirthDate(): String {
+    return if (this.length == 8) {
+        val year = this.substring(0, 4)
+        val month = this.substring(4, 6)
+        val day = this.substring(6, 8)
+        "$year-$month-$day"
+    } else {
+        this
+    }
+}
+
+/**
+ * "남성", "여성"을 "MALE", "FEMALE"로 변환
+ */
+fun String.formatGender(): String {
+    return when (this) {
+        "남성" -> "MALE"
+        "여성" -> "FEMALE"
+        else -> this
+    }
+}
+
+/**
  * 문자열을 쉼표로 구분된 가격 형식으로 변환합니다.
  */
 fun String.toCommaSeparatedPrice(): String {
     return this.replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,") + "원"
+}
+
+fun String.toBirthDateList(): Result<List<Int>> {
+    return runCatching {
+        val parts = split("-")
+        require(parts.size == 3) { "Birth date must be in YYYY-MM-DD format" }
+
+        val year = parts[0].toInt()
+        val month = parts[1].toInt()
+        val day = parts[2].toInt()
+
+        // 기본적인 유효성 검증
+        require(year in 1900..2100) { "Year must be between 1900 and 2100" }
+        require(month in 1..12) { "Month must be between 1 and 12" }
+        require(day in 1..31) { "Day must be between 1 and 31" }
+
+        listOf(year, month, day)
+    }.fold(
+        onSuccess = { Result.success(it) },
+        onFailure = { exception ->
+            val errorMessage =
+                when (exception) {
+                    is NumberFormatException -> "날짜 형식이 올바르지 않습니다. YYYY-MM-DD 형식으로 입력해주세요."
+                    is IllegalArgumentException -> exception.message ?: "유효하지 않은 날짜입니다."
+                    else -> "날짜 변환 중 오류가 발생했습니다."
+                }
+            Result.failure(Exception(errorMessage))
+        },
+    )
 }

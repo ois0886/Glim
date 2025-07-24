@@ -43,7 +43,7 @@ fun LibraryRoute(
     padding: PaddingValues,
     popBackStack: () -> Unit,
     onBookSelected: ((Book) -> Unit)? = null,
-    viewModel: LibraryViewModel = hiltViewModel()
+    viewModel: LibraryViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -115,19 +115,22 @@ fun LibraryRoute(
                 Icon(
                     painter = painterResource(R.drawable.ic_search),
                     contentDescription = null,
-                    modifier = Modifier.clickable {
+                    modifier =
+                    Modifier.clickable {
                         viewModel.onSearchExecuted()
-                    }
+                    },
                 )
             },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
+            keyboardOptions =
+            KeyboardOptions(
+                imeAction = ImeAction.Search,
             ),
-            keyboardActions = KeyboardActions(
+            keyboardActions =
+            KeyboardActions(
                 onSearch = {
                     viewModel.onSearchExecuted()
-                }
-            )
+                },
+            ),
         )
 
         when (state.searchMode) {
@@ -152,7 +155,7 @@ fun LibraryRoute(
                     },
                     onDeleteClick = { searchItem ->
                         viewModel.onRecentSearchItemDelete(searchItem)
-                    }
+                    },
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 PopularSearchSection(
@@ -176,7 +179,7 @@ fun LibraryRoute(
                             onBookSelected(it)
                         }
                     },
-                    onQuoteClick = { viewModel.onQuoteClicked(it) }
+                    onQuoteClick = { viewModel.onQuoteClicked(it) },
                 )
             }
         }

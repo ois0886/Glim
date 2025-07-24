@@ -16,7 +16,6 @@ import jakarta.inject.Inject
 
 @AndroidEntryPoint
 class LockService : Service() {
-
     @Inject
     lateinit var lockServiceManager: LockServiceManager
 
@@ -27,7 +26,7 @@ class LockService : Service() {
     override fun onStartCommand(
         intent: Intent?,
         flags: Int,
-        startId: Int
+        startId: Int,
     ): Int {
         createNotificationChannel()
         startForeground(SERVICE_ID, createNotificationBuilder())
@@ -42,10 +41,11 @@ class LockService : Service() {
     }
 
     private fun startLockReceiver() {
-        val intentFilter = IntentFilter().apply {
-            addAction(Intent.ACTION_SCREEN_ON)
-            addAction(Intent.ACTION_SCREEN_OFF)
-        }
+        val intentFilter =
+            IntentFilter().apply {
+                addAction(Intent.ACTION_SCREEN_ON)
+                addAction(Intent.ACTION_SCREEN_OFF)
+            }
         registerReceiver(ScreenReceiver, intentFilter)
     }
 
@@ -54,12 +54,13 @@ class LockService : Service() {
     }
 
     private fun createNotificationChannel() {
-        val notificationChannel = SimpleNotificationBuilder.createChannel(
-            LOCK_CHANNEL,
-            getStringWithContext(R.string.app_name),
-            NotificationManager.IMPORTANCE_HIGH,
-            getStringWithContext(R.string.app_name)
-        )
+        val notificationChannel =
+            SimpleNotificationBuilder.createChannel(
+                LOCK_CHANNEL,
+                getStringWithContext(R.string.app_name),
+                NotificationManager.IMPORTANCE_HIGH,
+                getStringWithContext(R.string.app_name),
+            )
 
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
@@ -68,9 +69,7 @@ class LockService : Service() {
         }
     }
 
-    private fun getStringWithContext(
-        stringRes: Int
-    ): String {
+    private fun getStringWithContext(stringRes: Int): String {
         return applicationContext.getString(stringRes)
     }
 
