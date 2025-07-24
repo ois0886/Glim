@@ -1,5 +1,8 @@
 package com.ssafy.glim.core.data.dto.response
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CurationItemResponse(
     val curationItemId: Long?,
     val title: String,
@@ -8,6 +11,7 @@ data class CurationItemResponse(
     val contents: List<CurationContentResponse>
 )
 
+@Serializable
 data class CurationContentResponse(
     val bookId: Long?,
     val bookTitle: String,

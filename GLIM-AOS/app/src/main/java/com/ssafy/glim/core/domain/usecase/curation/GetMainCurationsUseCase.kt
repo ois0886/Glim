@@ -5,8 +5,8 @@ import com.ssafy.glim.core.domain.repository.CurationRepository
 import javax.inject.Inject
 
 class GetMainCurationsUseCase @Inject constructor(
-    private val repo: CurationRepository
+    private val repository: CurationRepository
 ) {
     suspend operator fun invoke(): List<Curation> =
-        repo.getMainCurations()
+        repository.getMainCurations()
 }
