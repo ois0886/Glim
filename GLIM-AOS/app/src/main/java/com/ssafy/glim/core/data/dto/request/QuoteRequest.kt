@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 data class QuoteRequest(
     val visibility: String = "PUBLIC",
     val content: String,
+    val page : Long = 0,
     val isbn: String,
     val bookCreateData: BookCreateData
 )
@@ -22,7 +23,7 @@ data class BookCreateData(
     val author: String, // o
     val translator: String, // x
     val category: String, // ㅁ  categoryName 추정
-    val categoryNumber: Long, // ㅁ  categoryId 추정
+    val categoryId: Long, // ㅁ  categoryId 추정
     val publisher: String, // o
     val description: String, // o
     val isbn: String, // o
@@ -37,7 +38,7 @@ fun Book.toRequestDto() = BookCreateData(
     author = this.author,
     translator = "",
     category = "",
-    categoryNumber = 0L,
+    categoryId = 0L,
     publisher = "",
     description = "",
     isbn = this.isbn,

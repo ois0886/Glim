@@ -8,5 +8,5 @@ class GetPopularSearchQueriesUseCase
 constructor(
     private val searchQueryRepository: SearchQueryRepository,
 ) {
-    operator fun invoke() = searchQueryRepository.getPopularSearchQueries()
+    suspend operator fun invoke() = searchQueryRepository.getPopularSearchQueries()
 }
