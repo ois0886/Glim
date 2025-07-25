@@ -8,7 +8,9 @@ import com.lovedbug.geulgwi.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,9 +23,14 @@ public class MemberController {
     @PostMapping("")
     public ResponseEntity<SignUpResponseDto> signup(@RequestBody SignUpRequestDto signUpRequest){
 
-        SignUpResponseDto response = memberService.registerMember(signUpRequest);
+        URI location = ServletUriComponentsBuilder
+            .fromCurrentRequest()
+            .build()
+            .toUri();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity
+            .created(location)
+            .body(memberService.registerMember(signUpRequest));
     }
 
     @GetMapping("/{memberId}")
