@@ -77,6 +77,7 @@ fun RecentSearchSection(
                     painter = painterResource(R.drawable.ic_cancel),
                     contentDescription = null,
                     modifier = Modifier.clickable { onDeleteClick(item) },
+                    tint = Color.Black
                 )
             }
         }

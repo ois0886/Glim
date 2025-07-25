@@ -3,6 +3,7 @@ package com.ssafy.glim.feature.library
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -10,9 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -20,6 +23,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -32,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.ui.ImageCustomLoader
 import com.ssafy.glim.feature.library.component.PopularSearchSection
 import com.ssafy.glim.feature.library.component.RecentSearchSection
 import com.ssafy.glim.feature.library.component.SearchResultSection
@@ -105,6 +110,8 @@ fun LibraryRoute(
             shape = RoundedCornerShape(8.dp),
             colors =
             OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
                 focusedBorderColor = Color.LightGray,
                 unfocusedBorderColor = Color.LightGray,
                 focusedContainerColor = Color.White,
@@ -119,6 +126,7 @@ fun LibraryRoute(
                     Modifier.clickable {
                         viewModel.onSearchExecuted()
                     },
+                    tint = Color.Black
                 )
             },
             keyboardOptions =
@@ -168,19 +176,30 @@ fun LibraryRoute(
 
             SearchMode.RESULT -> {
                 Spacer(modifier = Modifier.height(8.dp))
-                SearchResultSection(
-                    searchQuery = state.searchQuery,
-                    bookList = state.searchBooks,
-                    quoteList = state.searchQuotes,
-                    onBookClick = {
-                        if (onBookSelected == null) {
-                            viewModel.onBookClicked(it)
-                        } else {
-                            onBookSelected(it)
-                        }
-                    },
-                    onQuoteClick = { viewModel.onQuoteClicked(it) },
-                )
+                if(state.isLoading) {
+                    Box(modifier = modifier.padding(40.dp).fillMaxWidth()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp).align(Alignment.Center),
+                            color = MaterialTheme.colorScheme.primary,
+                            strokeWidth = 2.dp
+                        )
+                    }
+                }
+                else {
+                    SearchResultSection(
+                        searchQuery = state.searchQuery,
+                        bookList = state.searchBooks,
+                        quoteList = state.searchQuotes,
+                        onBookClick = {
+                            if (onBookSelected == null) {
+                                viewModel.onBookClicked(it)
+                            } else {
+                                onBookSelected(it)
+                            }
+                        },
+                        onQuoteClick = { viewModel.onQuoteClicked(it) },
+                    )
+                }
             }
         }
     }

@@ -2,6 +2,7 @@
 
 package com.ssafy.glim.feature.auth.signup
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.extensions.extractDigits
@@ -306,6 +307,8 @@ internal class SignUpViewModel @Inject constructor(
 
     private fun certifyValidCode() = intent {
         reduce { state.copy(isLoading = true) }
+
+        Log.d("SignUpViewModel", "Verifying email: ${state.email}")
 
         runCatching {
             verifyEmailUseCase(state.email)

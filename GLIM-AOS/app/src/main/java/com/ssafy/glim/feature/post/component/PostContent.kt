@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,23 +54,23 @@ fun PostContent(
 
     Box(
         modifier =
-        modifier
-            .fillMaxSize()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-            ) {
-                onBackgroundClick()
-                focusManager.clearFocus()
-            }
-            .background(
-                brush =
-                Brush.linearGradient(
-                    colors = listOf(Color(0x881C1B1F), Color(0xFF1C1B1F)),
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, Float.POSITIVE_INFINITY),
+            modifier
+                .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                ) {
+                    onBackgroundClick()
+                    focusManager.clearFocus()
+                }
+                .background(
+                    brush =
+                        Brush.linearGradient(
+                            colors = listOf(Color(0x881C1B1F), Color(0xFF1C1B1F)),
+                            start = Offset(0f, 0f),
+                            end = Offset(0f, Float.POSITIVE_INFINITY),
+                        ),
                 ),
-            ),
     ) {
         if (state.showExitDialog) {
             ExitConfirmDialog(onCancelExit, onConfirmExit)
@@ -117,10 +118,16 @@ fun PostContent(
             },
         )
 
+        val bottomSheetState = rememberModalBottomSheetState(
+            skipPartiallyExpanded = false
+        )
+
         if (state.showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = { updateBottomSheetState(false) },
-                contentColor = Color.White,
+                containerColor = Color.White,
+                contentColor = Color.Black,
+                sheetState = bottomSheetState,
                 tonalElevation = 8.dp,
                 shape = MaterialTheme.shapes.large,
                 modifier = Modifier.align(Alignment.BottomCenter),
@@ -135,7 +142,9 @@ fun PostContent(
                         selectedBook(book)
                     },
                 )
+
             }
+
         }
     }
 }

@@ -43,7 +43,7 @@ class QuoteRepositoryImpl @Inject constructor(
         size: Int,
         sort: String
     ) =
-        quoteRemoteDataSource.getQuotes(page, size, sort)
+        quoteRemoteDataSource.getQuotes(0, size, sort)
             .map { it.toDomain() }
 
     override suspend fun updateQuoteViewCount(quoteId: Long) =
