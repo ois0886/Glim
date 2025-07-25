@@ -44,9 +44,9 @@ public class MemberService {
             .birthDate(signUpRequest.getBirthDate())
             .build();
 
-        Member savedMember = memberRepository.save(reigisterMember);
+        memberRepository.save(reigisterMember);
 
-        emailService.sendWelcomeEmail(savedMember.getEmail(), savedMember.getNickname());
+        emailService.sendWelcomeEmail(reigisterMember.getEmail(), reigisterMember.getNickname());
 
         return SignUpResponseDto.builder()
             .email(signUpRequest.getEmail())

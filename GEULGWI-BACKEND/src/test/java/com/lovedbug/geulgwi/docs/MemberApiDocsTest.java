@@ -67,15 +67,19 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
                         fieldWithPath("birthDate").description("생년월일 (선택, 기본값 CURRENT_TIMESTAMP)"),
                         fieldWithPath("gender").description("성별 (선택, 기본값 MALE)")
                     ),
-                    responseFields(signUpResponseFields())
+                    responseFields(
+                        fieldWithPath("email").description("가입한 사용자 이메일"),
+                        fieldWithPath("nickname").description("가입한 사용자 닉네임"),
+                        fieldWithPath("message").description("회원가입 처리 결과 메시지")
+                    )
                 ))
             .when()
             .post("/api/v1/members")
             .then().log().all()
-            .statusCode(200); // 201에서 200으로 변경
+            .statusCode(201);
     }
 
-    @DisplayName("사용자_등록번호를_통해_조회한다.")
+    @DisplayName("사용자_id를_통해_조회한다.")
     @Test
     void get_member_by_id(){
 
