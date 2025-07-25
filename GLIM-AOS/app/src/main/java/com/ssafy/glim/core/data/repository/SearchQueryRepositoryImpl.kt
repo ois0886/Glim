@@ -12,9 +12,11 @@ constructor(
     private val searchHistoryDataStore: SearchHistoryDataStore,
     private val searchHistoryDataSource: SearchQueryRemoteDataSource
 ) : SearchQueryRepository {
-        override suspend fun getPopularSearchQueries() = searchHistoryDataSource.getPopularSearches().first().searchHistory.map { title ->
+        override suspend fun getPopularSearchQueries() = searchHistoryDataSource.getPopularSearches().first().searchHistory.mapIndexed { index, title ->
         SearchItem(
-            text = title
+            text = title,
+            rank = index + 1,
+            type = "전체"
         )
     }
 

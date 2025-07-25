@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.DarkThemeScreen
@@ -77,12 +78,12 @@ internal fun ReelsRoute(
 
             is ReelsSideEffect.ShareQuote -> {
                 // 공유 기능 구현
-                // shareQuote(context, sideEffect.quote)
+                Toast.makeText(context, "준비 중인 기능입니다.", Toast.LENGTH_SHORT).show()
             }
 
             is ReelsSideEffect.ShowMoreOptions -> {
                 // 더보기 옵션 표시
-                // showMoreOptions(context, sideEffect.quote)
+                Toast.makeText(context, "준비 중인 기능입니다.", Toast.LENGTH_SHORT).show()
             }
 
             is ReelsSideEffect.CaptureSuccess -> {
@@ -93,6 +94,8 @@ internal fun ReelsRoute(
             is ReelsSideEffect.CaptureError -> {
                 Toast.makeText(context, sideEffect.error, Toast.LENGTH_SHORT).show()
             }
+
+            else -> Unit
         }
     }
 
@@ -161,7 +164,10 @@ fun QuoteItem(
 ) {
     Box(modifier = modifier) {
         AsyncImage(
-            model = quote.quoteImageName,
+            model = ImageRequest.Builder(LocalContext.current)
+                .data("http://i13d202.p.ssafy.io:8080/images/${quote.quoteImageName}")
+                .crossfade(true)
+                .build(),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
@@ -173,6 +179,7 @@ fun QuoteItem(
             bookId = quote.bookId,
             author = quote.author,
             bookName = quote.bookTitle,
+            bookCover = quote.bookCoverUrl,
             page = quote.page,
         ) {
             onBookInfoClick(quote.bookId)
@@ -243,6 +250,7 @@ fun QuoteBookContent(
     bookId: Long,
     author: String,
     bookName: String,
+    bookCover: String,
     page: Int,
     onBookInfoClick: (Long?) -> Unit = {},
 ) {
@@ -269,12 +277,11 @@ fun QuoteBookContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                model = "",
+                model = bookCover,
                 contentDescription = null,
                 modifier = Modifier.size(40.dp, 56.dp),
                 alpha = 0.8f,
                 contentScale = ContentScale.FillHeight,
-                placeholder = painterResource(R.drawable.ic_launcher_background),
                 error = painterResource(R.drawable.ic_launcher_background),
             )
 

@@ -33,6 +33,7 @@ fun BookInfoSection(
             bookId = book.itemId,
             author = book.author,
             bookName = book.title,
+            bookCover = book.cover,
             page = page,
             onBookInfoClick = onBookInfoClick
         )
@@ -51,7 +52,7 @@ private fun AddBookContent(modifier: Modifier, onBookClick: (Long?) -> Unit) {
             .clickable { onBookClick(null) },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(onClick = {}) {
+        IconButton(onClick = {onBookClick(null)}) {
             Icon(
                 painter = painterResource(R.drawable.icon_post),
                 contentDescription = null,
