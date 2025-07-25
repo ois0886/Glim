@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import com.lovedbug.geulgwi.entity.Quote;
 @Builder
 public class QuoteCreateDto {
 
+    @JsonIgnore
     private Long memberId;
     private String visibility;
     private String content;
@@ -34,4 +36,9 @@ public class QuoteCreateDto {
             .imageName(imageMetaData.imageName())
             .build();
     }
+
+    public void setMemberId(Long memberId){
+        this.memberId = memberId;
+    }
+
 }

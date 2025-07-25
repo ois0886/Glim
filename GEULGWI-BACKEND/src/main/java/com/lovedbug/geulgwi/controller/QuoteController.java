@@ -1,12 +1,15 @@
 package com.lovedbug.geulgwi.controller;
 
 import com.lovedbug.geulgwi.dto.resposne.QuoteResponseDto;
+import com.lovedbug.geulgwi.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.lovedbug.geulgwi.dto.request.QuoteCreateDto;
@@ -34,8 +37,10 @@ public class QuoteController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> createQuote(
-        @RequestPart QuoteCreateDto quoteData, @RequestPart MultipartFile quoteImage) {
+    public ResponseEntity<Void> createQuote(@AuthenticationPrincipal CustomUserDetails userDetails,
+        @RequestPart QuoteCreateDto quoteData, @RequestPart MultipartFile quoteImage, Authentication authentication) {
+
+        quoteData.setMemberId(userDetails.getMemberId());
 
         quoteService.createQuote(quoteData, quoteImage);
 
