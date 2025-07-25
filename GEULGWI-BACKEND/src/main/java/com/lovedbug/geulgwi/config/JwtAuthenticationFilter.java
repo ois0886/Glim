@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
+import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,6 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
+    private final BearerTokenResolver tokenResolver = new DefaultBearerTokenResolver();
 
     @Override
     protected void doFilterInternal(
@@ -31,17 +34,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        String token = tokenResolver.resolve(request);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")){
+        if (token == null){
             filterChain.doFilter(request, response);
             return ;
         }
 
         try {
-            authenticateWithJwt(authHeader.substring(7), request);
+            authenticateWithJwt(token, request);
         }catch (Exception e){
-            log.error("JWT 인증 처리 중 오류 발생", e);
             SecurityContextHolder.clearContext();
         }
 

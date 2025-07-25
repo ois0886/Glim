@@ -5,7 +5,7 @@ import com.lovedbug.geulgwi.dto.request.UpdateRequestDto;
 import com.lovedbug.geulgwi.entity.Member;
 import com.lovedbug.geulgwi.enums.MemberGender;
 import com.lovedbug.geulgwi.repository.MemberRepository;
-import com.lovedbug.geulgwi.service.EmailVerificationService;
+import com.lovedbug.geulgwi.service.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.mockito.Mockito.doNothing;
@@ -33,17 +33,18 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
     @BeforeEach
     void clearDatabase() {
+
         memberRepository.deleteAllInBatch();
     }
 
     @MockitoBean
-    private EmailVerificationService emailVerificationService;
+    private EmailService emailService;
 
-    @DisplayName("사용자가_사용할_계정을_생성하고_이메일_인증을_요청한다.")
+    @DisplayName("사용자가_사용할_계정을_생성한다")
     @Test
     void create_member(){
 
-        doNothing().when(emailVerificationService).createVerificationToken(any(SignUpRequestDto.class));
+        doNothing().when(emailService).sendWelcomeEmail(any(String.class), any(String.class));
 
         Member testMember = TestMemberFactory.createGetTestMember(passwordEncoder);
 
@@ -51,7 +52,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
             .email(testMember.getEmail())
             .password("pwd1234")
             .nickname("testNickname1")
-            .birthDate(LocalDate.of(1990, 1, 1))
+            .birthDate(LocalDateTime.of(1999, 1, 7, 0,0,0))
             .gender(MemberGender.MALE)
             .build();
 
@@ -66,19 +67,22 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
                         fieldWithPath("birthDate").description("생년월일 (선택, 기본값 CURRENT_TIMESTAMP)"),
                         fieldWithPath("gender").description("성별 (선택, 기본값 MALE)")
                     ),
-                    responseFields(signUpResponseFields())
+                    responseFields(
+                        fieldWithPath("email").description("가입한 사용자 이메일"),
+                        fieldWithPath("nickname").description("가입한 사용자 닉네임"),
+                        fieldWithPath("message").description("회원가입 처리 결과 메시지")
+                    )
                 ))
             .when()
             .post("/api/v1/members")
             .then().log().all()
-            .statusCode(200); // 201에서 200으로 변경
+            .statusCode(201);
     }
 
-    @DisplayName("사용자_이메일을_통해_조회한다.")
+    @DisplayName("사용자_id를_통해_조회한다.")
     @Test
-    void get_member_by_email(){
+    void get_member_by_id(){
 
-        // 이메일 인증이 완료된 Member를 직접 생성하여 저장
         Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
 
@@ -87,7 +91,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
                 responseFields(memberItemFields())
             ))
             .when()
-            .get("/api/v1/members/{email}",savedMember.getEmail())
+            .get("/api/v1/members/{memberId}",savedMember.getMemberId())
             .then().log().all()
             .statusCode(200);
     }
@@ -96,9 +100,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
     @Test
     void get_all_members(){
 
-        // 이메일 인증이 완료된 Members를 직접 생성하여 저장
         Member[] testMembers = TestMemberFactory.createGetAllVerifiedTestMembers(5, passwordEncoder);
-
         memberRepository.saveAll(List.of(testMembers));
 
         given(this.spec)
@@ -115,7 +117,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
     @Test
     void get_active_member_by_id(){
 
-        // 이메일 인증이 완료된 Member를 직접 생성하여 저장
         Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
 
@@ -133,7 +134,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
     @Test
     void get_all_active_members(){
 
-        // 이메일 인증이 완료된 Members를 직접 생성하여 저장
         Member[] testMembers = TestMemberFactory.createGetAllVerifiedTestMembers(5, passwordEncoder);
 
         memberRepository.saveAll(List.of(testMembers));
@@ -152,14 +152,13 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
     @Test
     void update_member() {
 
-        // 이메일 인증이 완료된 Member를 직접 생성하여 저장
         Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
 
         UpdateRequestDto updateRequestDto = UpdateRequestDto.builder()
             .password("updatePwd123")
             .nickname("updatedNickname")
-            .birthDate(LocalDate.of(1999,1,7))
+            .birthDate(LocalDateTime.of(1999, 1, 7, 0,0,0))
             .gender(MemberGender.MALE)
             .build();
 
@@ -188,7 +187,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
     @Test
     void soft_delete_member() {
 
-        // 이메일 인증이 완료된 Member를 직접 생성하여 저장
         Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
 
@@ -210,8 +208,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
         return List.of(
             fieldWithPath("email").description("가입한 사용자 이메일"),
             fieldWithPath("nickname").description("가입한 사용자 닉네임"),
-            fieldWithPath("message").description("회원가입 처리 결과 메시지"),
-            fieldWithPath("emailVerificationSent").description("이메일 인증 메일 발송 여부")
+            fieldWithPath("message").description("회원가입 처리 결과 메시지")
         );
     }
 
@@ -219,12 +216,12 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         return List.of(
             fieldWithPath("memberId").description("사용자 고유 ID"),
-            fieldWithPath("email").description("사용자 id"),
-            fieldWithPath("password").description("사용자 pwd"),
-            fieldWithPath("nickname").description("사용자 이름"),
-            fieldWithPath("status").description("회원 상태"),
+            fieldWithPath("email").description("사용자 이메일"),
+            fieldWithPath("password").description("사용자 비밀번호"),
+            fieldWithPath("nickname").description("사용자 닉네임"),
+            fieldWithPath("status").description("회원 상태 (ACTIVE, INACTIVE)"),
             fieldWithPath("birthDate").description("사용자 생년월일"),
-            fieldWithPath("gender").description("사용자 성별")
+            fieldWithPath("gender").description("사용자 성별 (MALE, FEMALE)")
         );
     }
 
@@ -232,12 +229,12 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         return List.of(
             fieldWithPath("[].memberId").description("사용자 고유 ID"),
-            fieldWithPath("[].email").description("사용자 id"),
-            fieldWithPath("[].password").description("사용자 pwd"),
-            fieldWithPath("[].nickname").description("사용자 이름"),
-            fieldWithPath("[].status").description("회원 상태"),
+            fieldWithPath("[].email").description("사용자 이메일"),
+            fieldWithPath("[].password").description("사용자 비밀번호"),
+            fieldWithPath("[].nickname").description("사용자 닉네임"),
+            fieldWithPath("[].status").description("회원 상태 (ACTIVE, INACTIVE)"),
             fieldWithPath("[].birthDate").description("사용자 생년월일"),
-            fieldWithPath("[].gender").description("사용자 성별")
+            fieldWithPath("[].gender").description("사용자 성별 (MALE, FEMALE)")
         );
     }
 
@@ -261,7 +258,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
             return Member.builder()
                 .password(passwordEncoder.encode("pwd1234"))
                 .nickname("testNickname")
-                .birthDate(LocalDate.of(1990, 1, 1))
+                .birthDate(LocalDateTime.of(1999, 1, 7, 0,0,0))
                 .gender(MemberGender.MALE);
         }
 
@@ -271,7 +268,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
             return memberBuilder(passwordEncoder)
                 .email(uniqueEmail)
-                .emailVerified(true)
                 .build();
         }
 
@@ -281,7 +277,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
             return memberBuilder(passwordEncoder)
                 .email(uniqueEmail)
-                .emailVerified(true)
                 .build();
         }
 
@@ -293,17 +288,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
         public static Member createVerifiedTestMember(PasswordEncoder passwordEncoder) {
 
             return createVerifiedMember("test_verified", passwordEncoder);
-        }
-
-        public static Member[] createGetAllTestMembers(int size,PasswordEncoder passwordEncoder) {
-
-            Member[] members = new Member[size];
-
-            for (int i = 0; i < size; i++){
-                members[i] = createMember("test_all_" + (i + 1), passwordEncoder);
-            }
-
-            return members;
         }
 
         public static Member[] createGetAllVerifiedTestMembers(int size, PasswordEncoder passwordEncoder) {

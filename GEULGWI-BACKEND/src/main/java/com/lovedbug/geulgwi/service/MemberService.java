@@ -3,7 +3,6 @@ package com.lovedbug.geulgwi.service;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EmailVerificationService emailVerificationService;
+    private final EmailService emailService;
 
     @Transactional
     public SignUpResponseDto registerMember(SignUpRequestDto signUpRequest){
@@ -33,19 +32,36 @@ public class MemberService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 가입된 이메일 입니다.");
         }
 
-
         if (memberRepository.existsByNickname(signUpRequest.getNickname())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용 중인 닉네임입니다.");
         }
 
-        emailVerificationService.createVerificationToken(signUpRequest);
+        Member reigisterMember = Member.builder()
+            .email(signUpRequest.getEmail())
+            .password(passwordEncoder.encode(signUpRequest.getPassword()))
+            .nickname(signUpRequest.getNickname())
+            .gender(signUpRequest.getGender())
+            .birthDate(signUpRequest.getBirthDate())
+            .build();
+
+        memberRepository.save(reigisterMember);
+
+        emailService.sendWelcomeEmail(reigisterMember.getEmail(), reigisterMember.getNickname());
 
         return SignUpResponseDto.builder()
             .email(signUpRequest.getEmail())
             .nickname(signUpRequest.getNickname())
-            .message("회원가입 정보가 이메일로 전송되었습니다. 이메일을 확인하여 인증을 완료해주세요.")
-            .emailVerificationSent(true)
+            .message("회원가입이 완료되었습니다.")
             .build();
+    }
+
+    public MemberDto findByMemberId(Long memberId){
+
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NoSuchElementException(
+                    "회원이 존재 하지 않습니다. memberId = " + memberId));
+
+        return toMemberDto(member);
     }
 
     public MemberDto findByMemberEmail(String email){
@@ -61,7 +77,7 @@ public class MemberService {
 
         return memberRepository.findAll().stream()
                 .map(this::toMemberDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public MemberDto getActiveMemberByMemberId(Long memberId){
@@ -77,7 +93,7 @@ public class MemberService {
 
         return memberRepository.findAllByStatus(MemberStatus.ACTIVE).stream()
                 .map(this::toMemberDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -103,6 +119,7 @@ public class MemberService {
     }
 
     private MemberDto toMemberDto(Member member){
+
         return MemberDto.builder()
             .memberId(member.getMemberId())
             .email(member.getEmail())

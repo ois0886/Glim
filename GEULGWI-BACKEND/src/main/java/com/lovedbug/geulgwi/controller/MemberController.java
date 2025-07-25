@@ -4,14 +4,13 @@ import com.lovedbug.geulgwi.dto.request.SignUpRequestDto;
 import com.lovedbug.geulgwi.dto.request.UpdateRequestDto;
 import com.lovedbug.geulgwi.dto.resposne.MemberDto;
 import com.lovedbug.geulgwi.dto.resposne.SignUpResponseDto;
-import com.lovedbug.geulgwi.service.AuthService;
-import com.lovedbug.geulgwi.service.EmailVerificationService;
 import com.lovedbug.geulgwi.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,15 +23,20 @@ public class MemberController {
     @PostMapping("")
     public ResponseEntity<SignUpResponseDto> signup(@RequestBody SignUpRequestDto signUpRequest){
 
-        SignUpResponseDto response = memberService.registerMember(signUpRequest);
+        URI location = ServletUriComponentsBuilder
+            .fromCurrentRequest()
+            .build()
+            .toUri();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity
+            .created(location)
+            .body(memberService.registerMember(signUpRequest));
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<MemberDto> getMemberByEmail(@PathVariable("email") String email){
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberDto> getMemberById(@PathVariable("memberId") Long memberId){
 
-        return ResponseEntity.ok(memberService.findByMemberEmail(email));
+        return ResponseEntity.ok(memberService.findByMemberId(memberId));
     }
 
     @GetMapping("")

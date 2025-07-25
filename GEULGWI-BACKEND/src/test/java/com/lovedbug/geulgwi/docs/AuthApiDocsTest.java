@@ -2,8 +2,6 @@ package com.lovedbug.geulgwi.docs;
 
 import com.lovedbug.geulgwi.dto.request.EmailVerificationRequestDto;
 import com.lovedbug.geulgwi.dto.request.LoginRequestDto;
-import com.lovedbug.geulgwi.dto.request.LogoutRequestDto;
-import com.lovedbug.geulgwi.dto.request.SignUpRequestDto;
 import com.lovedbug.geulgwi.entity.Member;
 import com.lovedbug.geulgwi.enums.MemberGender;
 import com.lovedbug.geulgwi.enums.MemberRole;
@@ -15,14 +13,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
+import static com.lovedbug.geulgwi.utils.JwtUtil.HEADER_AUTH;
+import static com.lovedbug.geulgwi.utils.JwtUtil.TOKEN_PREFIX;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -45,58 +42,36 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
     @MockitoBean
     private EmailVerificationService emailVerificationService;
 
-    @DisplayName("사용자가_이메일_인증을_완료한다.")
+    @DisplayName("사용자가_이메일_인증코드를_발송한다")
     @Test
-    void verify_email_test(){
+    void verify_email_code_test(){
 
-        doNothing().when(emailVerificationService).verifyEmailAndCreateMember(any(String.class));
+        when(emailVerificationService.sendVerificationCode(any(String.class)))
+            .thenReturn("123456");
 
         EmailVerificationRequestDto requestDto = EmailVerificationRequestDto.builder()
-            .token("test-verification-token-12345")
-            .build();
-
-        given(this.spec)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(requestDto)
-            .filter(document("{class_name}/{method_name}",
-                requestFields(verifyEmailRequestFields()),
-                responseFields(verifyEmailResponseFields())
-            ))
-            .when()
-            .post("/api/v1/auth/verify-email")
-            .then()
-            .log().all()
-            .statusCode(200);
-    }
-
-    @DisplayName("사용자가_인증_이메일_재전송을_요청한다.")
-    @Test
-    void resend_verification_email_test(){
-
-        doNothing().when(emailVerificationService).resendVerificationEmail(any(SignUpRequestDto.class));
-
-        SignUpRequestDto requestDto = SignUpRequestDto.builder()
             .email("test@example.com")
-            .password("password123")
-            .nickname("testNickname")
-            .birthDate(LocalDate.of(1990, 1, 7))
-            .gender(MemberGender.MALE)
             .build();
 
         given(this.spec)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(requestDto)
             .filter(document("{class_name}/{method_name}",
-                requestFields(resendVerificationRequestFields()),
-                responseFields(resendVerificationResponseFields())
+                requestFields(
+                        fieldWithPath("email").description("이메일 인증에 사용할 이메일 (필수)")
+                    ),
+                responseFields(
+                    fieldWithPath("message").type(STRING).description("인증 코드 발송 결과 메시지"),
+                    fieldWithPath("email").type(STRING).description("인증 코드 발송한 이메일 주소"),
+                    fieldWithPath("verificationCode").type(STRING).description("발송된 인증 코드")
+                )
             ))
             .when()
-            .post("/api/v1/auth/resend-verification")
+            .post("/api/v1/auth/email-verification-code")
             .then()
             .log().all()
             .statusCode(200);
     }
-
 
     @DisplayName("사용자가_로그인을_진행한다.")
     @Test
@@ -114,8 +89,15 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(loginRequestDto)
             .filter(document("{class_name}/{method_name}",
-                requestFields(loginRequestFields()),
-                responseFields(loginResponseFields())
+                requestFields(
+                    fieldWithPath("email").description("로그인할 사용자 이메일 (필수)"),
+                    fieldWithPath("password").description("로그인할 사용자 비밀번호 (필수)")
+                ),
+                responseFields(
+                    fieldWithPath("accessToken").description("API 요청에 사용할 액세스 토큰"),
+                    fieldWithPath("memberEmail").description("로그인한 사용자 이메일"),
+                    fieldWithPath("memberId").description("로그인한 사용자 ID")
+                )
             ))
             .when()
             .post("/api/v1/auth/login")
@@ -126,7 +108,7 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
 
     @DisplayName("사용자가_유효한_리프레시_토큰으로_갱신한다.")
     @Test
-    void refresh_token_test(){
+    void refresh_token_test() {
 
         Member testMember = AuthTestMemberFactory.createLoginTestMember(passwordEncoder);
         memberRepository.save(testMember);
@@ -134,12 +116,16 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
         String refreshToken = jwtUtil.generateRefreshToken(testMember.getEmail());
 
         given(this.spec)
-            .header("Authorization", "Bearer " + refreshToken)
+            .header(HEADER_AUTH, TOKEN_PREFIX + refreshToken)
             .filter(document("{class_name}/{method_name}",
                 requestHeaders(
-                    headerWithName("Authorization").description("Bearer {refreshToken} 형식의 리프레시 토큰")
+                    headerWithName(HEADER_AUTH).description("Bearer {refreshToken} 형식의 리프레시 토큰")
                 ),
-                responseFields(refreshResponseFields())
+                responseFields(
+                    fieldWithPath("accessToken").description("새로 발급된 액세스 토큰"),
+                    fieldWithPath("memberEmail").description("토큰 소유자 이메일"),
+                    fieldWithPath("memberId").description("토큰 소유자 ID")
+                )
             ))
             .when()
             .post("/api/v1/auth/refresh")
@@ -148,128 +134,18 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
             .statusCode(200);
     }
 
-    @DisplayName("사용자가_로그아웃을_진행한다.")
-    @Test
-    void logout_test(){
-
-        Member testMember = AuthTestMemberFactory.createLoginTestMember(passwordEncoder);
-        memberRepository.save(testMember);
-
-        String refreshToken = jwtUtil.generateRefreshToken(testMember.getEmail());
-
-        LogoutRequestDto logoutRequestDto = LogoutRequestDto.builder()
-            .refreshToken(refreshToken)
-            .build();
-
-        given(this.spec)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(logoutRequestDto)
-            .filter(document("{class_name}/{method_name}",
-                requestFields(logoutRequestFields()),
-                responseFields(logoutResponseFields())
-            ))
-            .when()
-            .post("/api/v1/auth/logout")
-            .then()
-            .log().all()
-            .statusCode(200);
-    }
-
-    public static List<FieldDescriptor> verifyEmailRequestFields(){
-        return List.of(
-            fieldWithPath("token").description("이메일 인증에 사용할 토큰 (필수)")
-        );
-    }
-
-    public static List<FieldDescriptor> verifyEmailResponseFields(){
-        return List.of(
-            fieldWithPath("token").type(STRING).optional().description("인증 토큰 (nullable)"),
-            fieldWithPath("verified").type(BOOLEAN).description("인증 완료 여부"),
-            fieldWithPath("message").type(STRING).description("인증 처리 결과 메시지")
-        );
-    }
-
-    public static List<FieldDescriptor> resendVerificationRequestFields(){
-        return List.of(
-            fieldWithPath("email").description("인증 이메일을 재전송할 이메일 주소 (필수)"),
-            fieldWithPath("password").description("사용자 비밀번호 (필수)"),
-            fieldWithPath("nickname").description("사용자 닉네임 (필수)"),
-            fieldWithPath("birthDate").description("사용자 생년월일 (YYYY-MM-DD 형식, 필수)"),
-            fieldWithPath("gender").description("사용자 성별 (MALE, FEMALE 중 하나, 필수)")
-        );
-    }
-
-    public static List<FieldDescriptor> resendVerificationResponseFields(){
-        return List.of(
-            fieldWithPath("message").type(STRING).description("인증 이메일 재전송 결과 메시지")
-        );
-    }
-
-    public static List<FieldDescriptor> loginRequestFields(){
-
-        return List.of(
-            fieldWithPath("email").description("로그인할 사용자 이메일 (필수)"),
-            fieldWithPath("password").description("로그인할 사용자 비밀번호 (필수)")
-        );
-    }
-
-    public static List<FieldDescriptor> loginResponseFields(){
-
-        return List.of(
-            fieldWithPath("access_token").type(STRING).description("API 요청에 사용할 액세스 토큰"),
-            fieldWithPath("refresh_token").type(STRING).description("액세스 토큰 갱신에 사용할 리프레시 토큰"),
-            fieldWithPath("token_type").type(STRING).description("토큰 타입 (Bearer)"),
-            fieldWithPath("expires_in").type(NUMBER).description("액세스 토큰 만료까지 남은 시간(초)"),
-            fieldWithPath("access_token_expires").type(STRING).description("액세스 토큰 만료 시각 (ISO 8601)"),
-            fieldWithPath("refresh_token_expires").type(STRING).description("리프레시 토큰 만료 시각 (ISO 8601)"),
-            fieldWithPath("user_email").type(STRING).description("로그인한 사용자 이메일"),
-            fieldWithPath("scope").type(STRING).optional().description("토큰 권한 범위")
-        );
-    }
-
-    public static List<FieldDescriptor> refreshResponseFields() {
-
-        return List.of(
-            fieldWithPath("access_token").type(STRING).description("새로 발급된 액세스 토큰"),
-            fieldWithPath("refresh_token").type(STRING).description("새로 발급된 리프레시 토큰"),
-            fieldWithPath("token_type").type(STRING).description("토큰 타입 (Bearer)"),
-            fieldWithPath("expires_in").type(NUMBER).description("새 액세스 토큰 만료까지 남은 시간(초)"),
-            fieldWithPath("access_token_expires").type(STRING).description("새 액세스 토큰 만료 시각 (ISO 8601)"),
-            fieldWithPath("refresh_token_expires").type(STRING).description("새 리프레시 토큰 만료 시각 (ISO 8601)"),
-            fieldWithPath("user_email").type(STRING).description("토큰 소유자 이메일"),
-            fieldWithPath("scope").type(STRING).optional().description("토큰 권한 범위")
-        );
-    }
-
-    public static List<FieldDescriptor> logoutRequestFields(){
-
-        return List.of(
-            fieldWithPath("refreshToken").description("로그아웃 사용자의 리프레시 토큰").optional()
-        );
-    }
-
-    public static List<FieldDescriptor> logoutResponseFields() {
-
-        return List.of(
-            fieldWithPath("message").description("로그아웃 처리 결과 메시지")
-        );
-    }
-
     public static class AuthTestMemberFactory {
 
-        private static long counter = 0L;
-
             public static Member createLoginTestMember(PasswordEncoder passwordEncoder) {
-        counter++;
+
         return Member.builder()
-            .email("auth_test_" + counter + "_" + System.currentTimeMillis() + "@example.com")
+            .email("auth_test_" + "_" + System.currentTimeMillis() + "@example.com")
             .password(passwordEncoder.encode("pwd1234"))
-            .nickname("authTestUser" + counter)
-            .birthDate(LocalDate.of(1990, 1, 1))
+            .nickname("authTestUser")
+            .birthDate(LocalDateTime.of(1999, 1, 7, 0,0,0))
             .gender(MemberGender.MALE)
             .status(MemberStatus.ACTIVE)
             .role(MemberRole.USER)
-            .emailVerified(true)  // 이메일 인증 완료 상태로 설정
             .build();
     }
     }

@@ -23,41 +23,36 @@ import java.util.Map;
 @Slf4j
 public class EmailService {
 
-    private final JavaMailSender javaMailSender;
+    private final JavaMailSender mailSender;
     private final ResourceLoader resourceLoader;
     private final Mustache.Compiler mustacheCompiler;
-
-    @Value("${app.frontend.url:http://localhost:3000}")
-    private String frontendUrl;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
 
-    @Value("${app.name:글궤}")
+    @Value("${app.name:글귀}")
     private String appName;
 
-    public void sendVerificationEmail(String toEmail, String verificationToken){
+    public void sendVerificationEmail(String toEmail, String verificationCode){
 
         try{
-            String verificationUrl = frontendUrl + "/verify-email?token=" + verificationToken;
-
             Map<String, Object> model = new HashMap<>();
             model.put("appName", appName);
             model.put("email", toEmail);
-            model.put("verificationUrl", verificationUrl);
+            model.put("verificationCode", verificationCode);
             model.put("expirationMinutes", "10");
 
             String htmlContent = renderTemplate("email/verification-email", model);
 
-            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setFrom(fromEmail, appName);
             helper.setTo(toEmail);
-            helper.setSubject(appName + "- 이메일 인증을 완료해주세요");
+            helper.setSubject(appName + "- 이메일 인증번호");
             helper.setText(htmlContent, true);
 
-            javaMailSender.send(message);
+            mailSender.send(message);
             log.info("이메일 인증 메일 발송 완료: {}", toEmail);
 
         }catch (Exception e){
@@ -73,11 +68,10 @@ public class EmailService {
             model.put("appName", appName);
             model.put("nickname", nickname);
             model.put("email", toEmail);
-            model.put("loginUrl", frontendUrl + "/login");
 
             String htmlContent = renderTemplate("email/welcome-email", model);
 
-            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setFrom(fromEmail, appName);
@@ -85,7 +79,7 @@ public class EmailService {
             helper.setSubject(appName +"에 오신것을 환영합니다!");
             helper.setText(htmlContent, true);
 
-            javaMailSender.send(message);
+            mailSender.send(message);
             log.info("환영 이메일 발송 완료: {}", toEmail);
 
         }catch (Exception e){

@@ -15,8 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -56,16 +55,12 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private MemberGender gender;
 
     @Column(name = "birth_date")
-    private LocalDate birthDate;
+    private LocalDateTime birthDate;
 
     private String provider;
 
     @Column(name = "provider_id")
     private String providerId;
-
-    @Column(nullable = false, name = "email_verified")
-    @Builder.Default
-    private Boolean emailVerified = false;
 
     @PrePersist
     protected void onCreate(){
@@ -117,10 +112,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
         return status == MemberStatus.ACTIVE;
     }
 
-    public void changeEmail(String newEmail){
-        this.email = newEmail;
-    }
-
     public void changeNickname(String newNickname){
         this.nickname = newNickname;
     }
@@ -133,7 +124,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.status = newStatus;
     }
 
-    public void changeBirthDate(LocalDate birthDate){
+    public void changeBirthDate(LocalDateTime birthDate){
         this.birthDate = birthDate;
     }
 
@@ -161,7 +152,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
         }
     }
 
-    private void updateBirthDate(LocalDate newBirthDate) {
+    private void updateBirthDate(LocalDateTime newBirthDate) {
         if (newBirthDate != null) {
             changeBirthDate(newBirthDate);
         }
