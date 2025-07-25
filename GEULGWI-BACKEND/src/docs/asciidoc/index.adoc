@@ -141,7 +141,7 @@ include::{snippets}/member_api_docs_test/create_member/http-response.adoc[]
 
 include::{snippets}/member_api_docs_test/create_member/response-fields.adoc[]
 
-=== 사용자 등록번호로 조회
+=== 사용자 id로 조회
 
 ==== 요청
 
