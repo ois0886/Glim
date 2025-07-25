@@ -1,6 +1,7 @@
 package com.lovedbug.geulgwi.config;
 
 import com.lovedbug.geulgwi.service.CustomUserDetailsService;
+import com.lovedbug.geulgwi.service.MemberService;
 import com.lovedbug.geulgwi.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
