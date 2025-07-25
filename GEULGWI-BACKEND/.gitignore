@@ -5,8 +5,17 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+
 ### 이미지 폴더 ###
-/upload/
+/upload-images
+
+### 디비 데이터
+/postgres-data
+
+## 로그
+/backend-logs
+/logs
+*.log
 
 ### STS ###
 .apt_generated
