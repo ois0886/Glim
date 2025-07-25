@@ -42,9 +42,6 @@ object PermissionUtil {
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var authManager: AuthManager
-
-    @Inject
     lateinit var lockServiceManager: LockServiceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,21 +57,12 @@ class MainActivity : ComponentActivity() {
             val navigator: MainNavController = rememberMainNavController()
             LaunchedNavigator(navigator.navController)
 
-            var startDestination: Route? by remember { mutableStateOf(null) }
-
-            LaunchedEffect(Unit) {
-                val accessToken = authManager.getAccessToken()
-                navigator.startDestination = if (accessToken != null) BottomTabRoute.Home else Route.Login
-                startDestination = navigator.startDestination
+            MyApplicationTheme {
+                MainScreen(
+                    navigator = navigator,
+                )
             }
 
-            startDestination?.let {
-                MyApplicationTheme {
-                    MainScreen(
-                        navigator = navigator,
-                    )
-                }
-            }
         }
 
     }
