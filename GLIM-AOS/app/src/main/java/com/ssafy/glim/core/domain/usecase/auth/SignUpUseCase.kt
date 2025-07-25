@@ -3,22 +3,14 @@ package com.ssafy.glim.core.domain.usecase.auth
 import com.ssafy.glim.core.domain.repository.AuthRepository
 import javax.inject.Inject
 
-class SignUpUseCase
-@Inject
-constructor(
-    private val repository: AuthRepository,
+class SignUpUseCase @Inject constructor(
+    private val repository: AuthRepository
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
         email: String,
         nickname: String,
         password: String,
         gender: String,
         birthDate: String,
-    ) = repository.signUp(
-        email = email,
-        nickname = nickname,
-        password = password,
-        gender = gender,
-        birthDate = birthDate,
-    )
+    ) = repository.signUp(email, nickname, password, gender, birthDate)
 }

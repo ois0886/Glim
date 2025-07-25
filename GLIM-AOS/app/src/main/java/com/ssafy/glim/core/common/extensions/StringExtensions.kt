@@ -167,31 +167,11 @@ fun String.toCommaSeparatedPrice(): String {
     return this.replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
 }
 
-fun String.toBirthDateList(): Result<List<Int>> {
-    return runCatching {
-        val parts = split("-")
-        require(parts.size == 3) { "Birth date must be in YYYY-MM-DD format" }
+fun String.toBirthDateList(): List<Int> {
+    val parts = split("-")
+    val year = parts[0].toInt()
+    val month = parts[1].toInt()
+    val day = parts[2].toInt()
 
-        val year = parts[0].toInt()
-        val month = parts[1].toInt()
-        val day = parts[2].toInt()
-
-        // 기본적인 유효성 검증
-        require(year in 1900..2100) { "Year must be between 1900 and 2100" }
-        require(month in 1..12) { "Month must be between 1 and 12" }
-        require(day in 1..31) { "Day must be between 1 and 31" }
-
-        listOf(year, month, day)
-    }.fold(
-        onSuccess = { Result.success(it) },
-        onFailure = { exception ->
-            val errorMessage =
-                when (exception) {
-                    is NumberFormatException -> "날짜 형식이 올바르지 않습니다. YYYY-MM-DD 형식으로 입력해주세요."
-                    is IllegalArgumentException -> exception.message ?: "유효하지 않은 날짜입니다."
-                    else -> "날짜 변환 중 오류가 발생했습니다."
-                }
-            Result.failure(Exception(errorMessage))
-        },
-    )
+    return listOf(year, month, day)
 }

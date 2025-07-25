@@ -5,11 +5,13 @@ import com.ssafy.glim.core.data.repository.BookRepositoryImpl
 import com.ssafy.glim.core.data.repository.CurationRepositoryImpl
 import com.ssafy.glim.core.data.repository.QuoteRepositoryImpl
 import com.ssafy.glim.core.data.repository.SearchQueryRepositoryImpl
+import com.ssafy.glim.core.data.repository.UserRepositoryImpl
 import com.ssafy.glim.core.domain.repository.AuthRepository
 import com.ssafy.glim.core.domain.repository.BookRepository
 import com.ssafy.glim.core.domain.repository.CurationRepository
 import com.ssafy.glim.core.domain.repository.QuoteRepository
 import com.ssafy.glim.core.domain.repository.SearchQueryRepository
+import com.ssafy.glim.core.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,6 +40,9 @@ interface RepositoryModule {
 
     @Singleton
     @Binds
-    fun bindCurationRepository(repository: CurationRepositoryImpl): CurationRepository
+    fun bindUserRepository(repository: UserRepositoryImpl): UserRepository
 
+    @Singleton
+    @Binds
+    fun bindCurationRepository(repository: CurationRepositoryImpl): CurationRepository
 }

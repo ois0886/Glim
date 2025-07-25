@@ -4,6 +4,7 @@ import java.util.Properties
 val props = Properties().apply {
     FileInputStream(rootProject.file("local.properties")).use { load(it) }
 }
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)

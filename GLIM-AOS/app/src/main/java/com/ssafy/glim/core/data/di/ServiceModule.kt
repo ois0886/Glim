@@ -4,7 +4,7 @@ import com.ssafy.glim.core.data.service.AuthService
 import com.ssafy.glim.core.data.service.BookService
 import com.ssafy.glim.core.data.service.CurationService
 import com.ssafy.glim.core.data.service.QuoteService
-import com.ssafy.glim.core.data.service.SearchQueryService
+import com.ssafy.glim.core.data.service.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,7 +41,7 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideSearchService(
-        retrofit: Retrofit,
-    ): SearchQueryService = retrofit.create(SearchQueryService::class.java)
+    fun provideUserService(
+        retrofit: Retrofit
+    ): UserService = retrofit.create(UserService::class.java)
 }

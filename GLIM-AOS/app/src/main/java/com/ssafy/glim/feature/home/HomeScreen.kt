@@ -279,7 +279,7 @@ fun BookCarousel(
         }
     }
 
-        LazyRow(
+    LazyRow(
         modifier = modifier,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(itemSpacing),

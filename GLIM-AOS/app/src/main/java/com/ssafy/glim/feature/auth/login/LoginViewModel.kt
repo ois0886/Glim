@@ -10,8 +10,6 @@ import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.auth.login.component.SocialProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -61,66 +59,53 @@ constructor(
             reduce { state.copy(password = password, passwordError = error) }
         }
 
-    fun onLoginClicked() =
-        intent {
-            // 1. 입력값 검증
-            val emailValidation =
-                ValidationUtils.validateEmail(
-                    email = state.email,
-                    emptyErrorRes = R.string.error_email_empty,
-                    invalidErrorRes = R.string.error_email_invalid,
-                )
+    fun onLoginClicked() = intent {
+        // 1. 입력값 검증
+        val emailValidation = ValidationUtils.validateEmail(
+            email = state.email,
+            emptyErrorRes = R.string.error_email_empty,
+            invalidErrorRes = R.string.error_email_invalid,
+        )
 
-            val passwordValidation =
-                ValidationUtils.validatePassword(
-                    password = state.password,
-                    emptyErrorRes = R.string.error_password_empty,
-                    invalidErrorRes = R.string.error_password_invalid,
-                )
+        val passwordValidation = ValidationUtils.validatePassword(
+            password = state.password,
+            emptyErrorRes = R.string.error_password_empty,
+            invalidErrorRes = R.string.error_password_invalid,
+        )
 
-            val emailError =
-                if (emailValidation is ValidationResult.Invalid) {
-                    emailValidation.errorMessageRes
-                } else {
-                    null
-                }
+        val emailError = if (emailValidation is ValidationResult.Invalid) {
+            emailValidation.errorMessageRes
+        } else {
+            null
+        }
 
-            val passwordError =
-                if (passwordValidation is ValidationResult.Invalid) {
-                    passwordValidation.errorMessageRes
-                } else {
-                    null
-                }
+        val passwordError = if (passwordValidation is ValidationResult.Invalid) {
+            passwordValidation.errorMessageRes
+        } else {
+            null
+        }
 
-            // 2. 검증 실패 시 에러 표시
-            if (emailError != null || passwordError != null) {
-                reduce { state.copy(emailError = emailError, passwordError = passwordError) }
-                postSideEffect(LoginSideEffect.ShowError(emailError ?: passwordError!!))
-                return@intent
-            }
+        if (emailError != null || passwordError != null) {
+            reduce { state.copy(emailError = emailError, passwordError = passwordError) }
+            postSideEffect(LoginSideEffect.ShowError(emailError ?: passwordError!!))
+            return@intent
+        }
 
-            // 3. 로그인 API 호출
+        reduce { state.copy(isLoading = true) }
+
+        runCatching {
             loginUseCase(
                 email = state.email,
                 password = state.password,
             )
-                .onStart {
-                    reduce { state.copy(isLoading = true) }
-                }
-                .catch { exception ->
-                    reduce { state.copy(isLoading = false) }
-                    postSideEffect(LoginSideEffect.ShowError(R.string.login_failed))
-                }
-                .collect { result ->
-                    reduce { state.copy(isLoading = false) }
-
-                    if (result.isSuccess) {
-                        navigateToHome()
-                    } else {
-                        postSideEffect(LoginSideEffect.ShowError(R.string.login_failed))
-                    }
-                }
+        }.onSuccess {
+            reduce { state.copy(isLoading = false) }
+            navigateToHome()
+        }.onFailure { exception ->
+            reduce { state.copy(isLoading = false) }
+            postSideEffect(LoginSideEffect.ShowError(R.string.login_failed))
         }
+    }
 
     fun navigateToSignUp() =
         intent {

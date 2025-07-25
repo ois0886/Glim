@@ -1,10 +1,10 @@
-package com.ssafy.glim.core.data.dto.response
+package com.ssafy.glim.core.data.dto.token
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RefreshTokenResponse(
+data class AuthToken(
     @SerializedName("access_token")
     val accessToken: String,
     @SerializedName("refresh_token")
