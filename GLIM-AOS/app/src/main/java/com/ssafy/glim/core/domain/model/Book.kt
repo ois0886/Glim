@@ -32,4 +32,7 @@ data class Book(
         } else {
             "가격 정보 없음"
         }
+
+    val categoryText
+        get() = categoryName.split(">").last()
 }

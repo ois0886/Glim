@@ -77,11 +77,11 @@ fun BookInfoSection(book: Book) {
             .fillMaxWidth()
             .background(
                 brush =
-                Brush.linearGradient(
-                    colors = listOf(LightBrown, LightBrown.copy(alpha = 0.0f)),
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, Float.POSITIVE_INFINITY),
-                ),
+                    Brush.linearGradient(
+                        colors = listOf(LightBrown, LightBrown.copy(alpha = 0.0f)),
+                        start = Offset(0f, 0f),
+                        end = Offset(0f, Float.POSITIVE_INFINITY),
+                    ),
             )
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
@@ -108,11 +108,12 @@ fun BookInfoSection(book: Book) {
                 Text(
                     text = book.title,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(end = 8.dp)
                 )
 
                 Text(
-                    text = book.categoryName,
+                    text = book.categoryText,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -127,6 +128,7 @@ fun BookInfoSection(book: Book) {
                 Text(
                     text = book.author,
                     style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(end = 8.dp)
                 )
 
                 Text(
@@ -143,6 +145,7 @@ fun BookInfoSection(book: Book) {
                 Text(
                     text = book.publisher,
                     style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(end = 8.dp)
                 )
 
                 Text(

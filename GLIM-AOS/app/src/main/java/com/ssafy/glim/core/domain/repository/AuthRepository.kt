@@ -15,8 +15,6 @@ interface AuthRepository {
         password: String,
     )
 
-    suspend fun refreshToken()
-
     suspend fun verifyEmail(email: String)
 
     suspend fun resendVerificationEmail(email: String)

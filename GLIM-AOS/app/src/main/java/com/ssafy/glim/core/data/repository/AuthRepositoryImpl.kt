@@ -1,6 +1,8 @@
 package com.ssafy.glim.core.data.repository
 
+import android.util.Log
 import com.ssafy.glim.core.common.extensions.toBirthDateList
+import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.data.datasource.remote.AuthRemoteDataSource
 import com.ssafy.glim.core.data.dto.request.LoginRequest
 import com.ssafy.glim.core.data.dto.request.SignUpRequest
@@ -9,6 +11,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val dataSource: AuthRemoteDataSource,
+    private val authManager: AuthManager
 ) : AuthRepository {
 
     override suspend fun signUp(
@@ -38,11 +41,18 @@ class AuthRepositoryImpl @Inject constructor(
             email = email,
             password = password,
         )
-        val token = dataSource.login(request)
-    }
 
-    override suspend fun refreshToken() {
-        val token = dataSource.refreshToken()
+        runCatching { dataSource.login(request) }
+            .onSuccess {
+                authManager.saveToken(
+                    accessToken = it.accessToken,
+                    refreshToken = it.refreshToken
+                )
+            }
+            .onFailure {
+                Log.d("AuthRepositoryImpl", "Login failed: ${it.message}")
+            }
+
     }
 
     override suspend fun verifyEmail(email: String) =

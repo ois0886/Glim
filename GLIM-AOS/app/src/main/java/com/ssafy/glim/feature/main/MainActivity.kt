@@ -8,10 +8,18 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.ssafy.glim.core.navigation.LaunchedNavigator
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.net.toUri
+import com.ssafy.glim.core.data.authmanager.AuthManager
+import com.ssafy.glim.core.navigation.BottomTabRoute
+import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.service.LockServiceManager
 import javax.inject.Inject
 
@@ -34,6 +42,9 @@ object PermissionUtil {
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
+    lateinit var authManager: AuthManager
+
+    @Inject
     lateinit var lockServiceManager: LockServiceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,13 +59,26 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navigator: MainNavController = rememberMainNavController()
             LaunchedNavigator(navigator.navController)
-            MyApplicationTheme {
-                MainScreen(
-                    navigator = navigator,
-                )
+
+            var startDestination: Route? by remember { mutableStateOf(null) }
+
+            LaunchedEffect(Unit) {
+                val accessToken = authManager.getAccessToken()
+                navigator.startDestination = if (accessToken != null) BottomTabRoute.Home else Route.Login
+                startDestination = navigator.startDestination
+            }
+
+            startDestination?.let {
+                MyApplicationTheme {
+                    MainScreen(
+                        navigator = navigator,
+                    )
+                }
             }
         }
+
     }
+
     private fun startLockService() {
         lockServiceManager.start()
     }

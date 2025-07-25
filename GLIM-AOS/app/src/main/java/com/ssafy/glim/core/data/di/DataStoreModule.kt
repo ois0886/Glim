@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 object DataStoreModule {
     @Provides
     @Singleton
+    @Named("search_history")
     fun provideSearchHistoryPreferencesDataStore(
         @ApplicationContext context: Context,
     ): DataStore<Preferences> {
@@ -25,7 +27,9 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun provideSearchHistoryDataStore(dataStore: DataStore<Preferences>): SearchHistoryDataStore {
+    fun provideSearchHistoryDataStore(
+        @Named("search_history") dataStore: DataStore<Preferences>
+    ): SearchHistoryDataStore {
         return SearchHistoryDataStore(dataStore)
     }
 }
