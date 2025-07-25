@@ -1,5 +1,6 @@
-package com.ssafy.quote.feature.reels
+package com.ssafy.glim.feature.reels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
@@ -22,6 +23,14 @@ constructor(
     private val navigator: Navigator
 ) : ViewModel(), ContainerHost<ReelsState, ReelsSideEffect> {
     override val container: Container<ReelsState, ReelsSideEffect> = container(ReelsState())
+
+    init {
+        refresh()
+    }
+
+    companion object {
+        private const val SIZE = 10 // 한 번에 가져올 인용구의 개수
+    }
 
     fun toggleLike() =
         intent {
@@ -51,13 +60,17 @@ constructor(
         intent {
             // 페이지가 변경될 때 currentQuoteId도 업데이트
             if (page >= 0 && page < state.quotes.size) {
-                val currentQuote = state.quotes[page]
                 reduce {
                     state.copy(
-                        currentPage = page,
-                        currentQuoteId = currentQuote.quoteId,
+                        currentIdx = page,
+                        currentQuoteId = state.currentQuote?.quoteId ?: -1,
                     )
                 }
+                if(state.currentIdx >= state.quotes.size - 3) {
+                    // 마지막 페이지에 도달했을 때 새로운 인용구를 가져옴
+                    refresh()
+                }
+//                updateQuoteViewCountUseCase(state.currentQuoteId)
             }
         }
 
@@ -68,39 +81,9 @@ constructor(
             }
         }
 
-    fun onCaptureClick(fileName: String) =
+    private fun refresh() =
         intent {
-            try {
-                // 캡처 로직은 외부에서 처리하고 결과만 받음
-                postSideEffect(ReelsSideEffect.CaptureSuccess(fileName))
-            } catch (e: Exception) {
-                postSideEffect(ReelsSideEffect.CaptureError("캡처에 실패했습니다: ${e.message}"))
-            }
-        }
-
-    fun refresh() =
-        intent {
-            reduce {
-                state.copy(
-                    quotes = emptyList(),
-                    currentPage = 0,
-                    currentQuoteId = -1,
-                    hasMoreData = true,
-                )
-            }
-            loadInitialQuotes()
-        }
-
-    fun onBookInfoClick(bookId: Long) =
-        intent {
-            navigator.navigate(Route.BookDetail(bookId))
-        }
-
-    private fun loadInitialQuotes() =
-        intent {
-            reduce { state.copy(isLoading = true, error = null) }
-
-            runCatching { getQuotesUseCase(page = state.currentPage + 1) }
+            runCatching { getQuotesUseCase(page = state.currentPage + 1, size = SIZE) }
                 .onSuccess {
                     val newQuotes = it.filter { quote -> quote.quoteId != state.currentQuoteId }
                     if (newQuotes.isNotEmpty()) {
@@ -108,22 +91,23 @@ constructor(
                             state.copy(
                                 quotes = state.quotes + newQuotes,
                                 currentPage = state.currentPage + 1,
-                                hasMoreData = newQuotes.size >= 10, // Assuming page size is 10
                                 isLoading = false,
                                 error = null
                             )
                         }
-                    } else {
-                        reduce { state.copy(hasMoreData = false, isLoading = false) }
-                    }
-
-                    // Update view count for the first quote in the list
-                    if (newQuotes.isNotEmpty()) {
-                        updateQuoteViewCountUseCase(newQuotes.first().quoteId)
+                        Log.d("ReelsViewModel", "Loaded ${newQuotes.size} new quotes")
+                        Log.d("ReelsViewModel", "Total quotes: ${state.quotes.size}")
                     }
                 }
                 .onFailure {
+                    Log.d("ReelsViewModel", "Loaded failed: ${it.message}")
                     reduce { state.copy(isLoading = false, error = it.message) }
                 }
         }
+
+    fun onBookInfoClick(bookId: Long) =
+        intent {
+            navigator.navigate(Route.BookDetail(bookId))
+        }
+
 }
