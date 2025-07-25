@@ -10,6 +10,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.ssafy.glim.core.navigation.BottomTabRoute
+import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.home.navigation.navigateToHome
 import com.ssafy.glim.feature.library.navigation.navigateToLibrary
 import com.ssafy.glim.feature.post.navigation.navigateToPost
@@ -25,7 +27,6 @@ internal class MainNavController(
                 .currentBackStackEntryAsState().value?.destination
 
     val startDestination = MainTab.HOME.route
-
     val currentTab: MainTab?
         @Composable get() =
             MainTab.Companion.find { tab ->
