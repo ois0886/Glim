@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.library
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
@@ -160,6 +161,10 @@ constructor(
                             error = null,
                         )
                     }
+                    Log.d("LibraryViewModel", "Popular search items loaded: $it")
+                }
+                .onFailure {
+                    Log.d("LibraryViewModel", "Error loading popular search items: ${it.message}")
                 }
         }
 
@@ -192,6 +197,9 @@ constructor(
                                 error = null,
                             )
                         }
+                    }
+                    .onFailure {
+                        Log.d("LibraryViewModel", "Error searching books: ${it.message}")
                     }
 
                 // 글귀 검색

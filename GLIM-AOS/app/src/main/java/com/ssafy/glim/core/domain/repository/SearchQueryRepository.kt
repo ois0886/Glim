@@ -4,7 +4,7 @@ import com.ssafy.glim.core.domain.model.SearchItem
 import kotlinx.coroutines.flow.Flow
 
 interface SearchQueryRepository {
-    fun getPopularSearchQueries(): List<SearchItem>
+    suspend fun getPopularSearchQueries(): List<SearchItem>
 
     fun getRecentSearchQueries(): Flow<List<String>>
 

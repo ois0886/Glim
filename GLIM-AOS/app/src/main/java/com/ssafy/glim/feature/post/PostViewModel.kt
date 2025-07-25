@@ -1,6 +1,7 @@
 package com.ssafy.glim.feature.post
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
@@ -167,6 +168,7 @@ class PostViewModel @Inject constructor(
                                 postSideEffect(PostSideEffect.NavigateBack)
                             }
                             .onFailure {
+                                Log.d("PostViewModel", "글림 업로드 실패: ${it.message}")
                                 postSideEffect(PostSideEffect.ShowToast("글림 업로드에 실패했습니다."))
                             }
                     }
