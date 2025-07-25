@@ -1,6 +1,12 @@
 package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
+import com.lovedbug.geulgwi.entity.Member;
+import com.lovedbug.geulgwi.enums.MemberGender;
+import com.lovedbug.geulgwi.enums.MemberRole;
+import com.lovedbug.geulgwi.enums.MemberStatus;
+import com.lovedbug.geulgwi.repository.MemberRepository;
+import com.lovedbug.geulgwi.utils.JwtUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,6 +40,9 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @MockitoBean
     private ImageHandler imageHandler;
 
@@ -42,6 +51,9 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -54,6 +66,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
         jdbcTemplate.execute("TRUNCATE TABLE quote");
         jdbcTemplate.execute("TRUNCATE TABLE book");
+        jdbcTemplate.execute("TRUNCATE TABLE member");
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
 
         entityManager.clear();
@@ -149,10 +162,25 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
     @DisplayName("글귀를 생성한다")
     @Test
     void create_quote() throws Exception {
+
+        Member member = Member.builder()
+            .email("hong@naver.com")
+            .nickname("홍홍홍")
+            .password("pass")
+            .status(MemberStatus.ACTIVE)
+            .role(MemberRole.USER)
+            .gender(MemberGender.MALE)
+            .build();
+
+        member = memberRepository.save(member);
+
+        String accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getMemberId());
+
         when(imageHandler.saveImage(any()))
             .thenReturn(new ImageMetaData("/upload/images", "imageName.jpg"));
 
         given(this.spec)
+            .header("Authorization", "Bearer " + accessToken)
             .multiPart("quoteData", "quoteData.json", objectMapper.writeValueAsBytes(createQuoteCreateDto()), "application/json")
             .multiPart("quoteImage", "quote.jpg", "fake-image-content".getBytes(), "image/jpeg")
             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
