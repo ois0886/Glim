@@ -15,6 +15,7 @@ data class Book(
     val description: String = "",
     val fixedPrice: Boolean = false,
     val isbn: String = "",
+    val isbn13: String = "",
     val itemId: Long = 0L,
     val link: String = "",
     val priceSales: Long = 0L,
@@ -23,6 +24,7 @@ data class Book(
     val publisher: String = "",
     val stockStatus: String = "",
     val title: String = "",
+    val translator: String = ""
 ) {
     val priceText
         get() = if (priceStandard > 0) {

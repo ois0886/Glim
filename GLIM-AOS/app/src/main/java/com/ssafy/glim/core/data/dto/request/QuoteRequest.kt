@@ -34,16 +34,16 @@ data class BookCreateData(
 )
 
 fun Book.toRequestDto() = BookCreateData(
-    title = this.title,
-    author = this.author,
-    translator = "",
-    category = "",
-    categoryId = 0L,
-    publisher = "",
-    description = "",
-    isbn = this.isbn,
-    isbn13 = "",
-    publishedDate = "",
-    coverUrl = "",
-    linkUrl = ""
+    title = title,
+    author = author,
+    translator = translator,
+    category = categoryName,
+    categoryId = categoryId,
+    publisher = publisher,
+    description = description,
+    isbn = isbn,
+    isbn13 = isbn13,
+    publishedDate = pubDate,
+    coverUrl = cover,
+    linkUrl = link
 )
