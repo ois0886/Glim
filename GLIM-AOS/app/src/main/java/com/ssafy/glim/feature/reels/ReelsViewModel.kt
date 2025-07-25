@@ -24,10 +24,6 @@ constructor(
 ) : ViewModel(), ContainerHost<ReelsState, ReelsSideEffect> {
     override val container: Container<ReelsState, ReelsSideEffect> = container(ReelsState())
 
-    init {
-        refresh()
-    }
-
     companion object {
         private const val SIZE = 10 // 한 번에 가져올 인용구의 개수
     }
@@ -81,7 +77,7 @@ constructor(
             }
         }
 
-    private fun refresh() =
+    fun refresh() =
         intent {
             runCatching { getQuotesUseCase(page = state.currentPage + 1, size = SIZE) }
                 .onSuccess {

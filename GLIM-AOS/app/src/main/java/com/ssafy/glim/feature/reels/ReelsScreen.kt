@@ -26,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.DarkThemeScreen
@@ -64,6 +66,10 @@ internal fun ReelsRoute(
 ) {
     val state by viewModel.collectAsState()
     val context = LocalContext.current
+
+    SideEffect {
+        viewModel.refresh()
+    }
 
     // Side effects 처리
     viewModel.collectSideEffect { sideEffect ->
@@ -157,7 +163,7 @@ fun QuoteItem(
 
     Box(modifier = modifier) {
         AsyncImage(
-            model = "http://i13d202.p.ssafy.io:8080/images/" + quote.quoteImageName,
+            model = "${BuildConfig.BASE_URL}/images/${quote.quoteImageName}",
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
