@@ -22,3 +22,6 @@ management:
     metrics:
       export:
         enabled: true
+
+log:
+  path: /logs
