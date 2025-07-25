@@ -1,6 +1,5 @@
 package com.lovedbug.geulgwi.service;
 
-import com.lovedbug.geulgwi.config.SecurityConstants;
 import com.lovedbug.geulgwi.dto.request.LoginRequestDto;
 import com.lovedbug.geulgwi.dto.resposne.JwtResponseDto;
 import com.lovedbug.geulgwi.dto.resposne.MemberDto;
@@ -13,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import static com.lovedbug.geulgwi.utils.JwtUtil.TOKEN_PREFIX;
 
 @Slf4j
 @Service
@@ -37,9 +37,9 @@ public class AuthService {
 
             MemberDto member = memberService.findByMemberEmail(email);
             String accessToken = jwtUtil.generateAccessToken(email);
-            String refreshToken = jwtUtil.generateRefreshToken(email);
+            jwtUtil.generateRefreshToken(email);
 
-            return toJwtResponse(accessToken, refreshToken, email, member.getMemberId(), "read write");
+            return toJwtResponse(accessToken, email, member.getMemberId());
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다.");
         }
@@ -57,31 +57,25 @@ public class AuthService {
 
         MemberDto member = memberService.findByMemberEmail(email);
         String newAccessToken = jwtUtil.generateAccessToken(email);
-        String newRefreshToken = jwtUtil.generateRefreshToken(email);
+        jwtUtil.generateRefreshToken(email);
 
-        return toJwtResponse(newAccessToken, newRefreshToken, email, member.getMemberId(), null);
+        return toJwtResponse(newAccessToken, email, member.getMemberId());
     }
 
-    private JwtResponseDto toJwtResponse(String accessToken, String refreshToken, String email, Long memberId, String scope){
+    private JwtResponseDto toJwtResponse(String accessToken, String email, Long memberId){
 
-        JwtResponseDto.JwtResponseDtoBuilder builder = JwtResponseDto.builder()
+        return JwtResponseDto.builder()
             .accessToken(accessToken)
-            .refreshToken(refreshToken)
             .memberEmail(email)
-            .memberId(memberId);
-
-        if (scope != null){
-            builder.scope(scope);
-        }
-
-        return builder.build();
+            .memberId(memberId)
+            .build();
     }
 
     private String extractTokenFromHeader(String authHeader){
-        if (authHeader == null || !authHeader.startsWith(SecurityConstants.TOKEN_PREFIX)){
+        if (authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization 헤더가 없거나 형식이 잘못되었습니다.");
         }
-        return authHeader.substring(SecurityConstants.TOKEN_PREFIX.length());
+        return authHeader.substring(TOKEN_PREFIX.length());
     }
 
 }

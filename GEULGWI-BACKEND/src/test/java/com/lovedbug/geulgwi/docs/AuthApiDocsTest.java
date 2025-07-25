@@ -1,6 +1,5 @@
 package com.lovedbug.geulgwi.docs;
 
-import com.lovedbug.geulgwi.config.SecurityConstants;
 import com.lovedbug.geulgwi.dto.request.EmailVerificationRequestDto;
 import com.lovedbug.geulgwi.dto.request.LoginRequestDto;
 import com.lovedbug.geulgwi.entity.Member;
@@ -14,11 +13,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.time.LocalDateTime;
-import java.util.List;
+import static com.lovedbug.geulgwi.utils.JwtUtil.HEADER_AUTH;
+import static com.lovedbug.geulgwi.utils.JwtUtil.TOKEN_PREFIX;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -58,8 +57,14 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(requestDto)
             .filter(document("{class_name}/{method_name}",
-                requestFields(sendVerifyEmailRequestFields()),
-                responseFields(sendVerifyEmailResponseFields())
+                requestFields(
+                        fieldWithPath("email").description("이메일 인증에 사용할 이메일 (필수)")
+                    ),
+                responseFields(
+                    fieldWithPath("message").type(STRING).description("인증 코드 발송 결과 메시지"),
+                    fieldWithPath("email").type(STRING).description("인증 코드 발송한 이메일 주소"),
+                    fieldWithPath("verificationCode").type(STRING).description("발송된 인증 코드")
+                )
             ))
             .when()
             .post("/api/v1/auth/email-verification-code")
@@ -84,8 +89,15 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(loginRequestDto)
             .filter(document("{class_name}/{method_name}",
-                requestFields(loginRequestFields()),
-                responseFields(loginResponseFields())
+                requestFields(
+                    fieldWithPath("email").description("로그인할 사용자 이메일 (필수)"),
+                    fieldWithPath("password").description("로그인할 사용자 비밀번호 (필수)")
+                ),
+                responseFields(
+                    fieldWithPath("accessToken").description("API 요청에 사용할 액세스 토큰"),
+                    fieldWithPath("memberEmail").description("로그인한 사용자 이메일"),
+                    fieldWithPath("memberId").description("로그인한 사용자 ID")
+                )
             ))
             .when()
             .post("/api/v1/auth/login")
@@ -96,7 +108,7 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
 
     @DisplayName("사용자가_유효한_리프레시_토큰으로_갱신한다.")
     @Test
-    void refresh_token_test(){
+    void refresh_token_test() {
 
         Member testMember = AuthTestMemberFactory.createLoginTestMember(passwordEncoder);
         memberRepository.save(testMember);
@@ -104,62 +116,22 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
         String refreshToken = jwtUtil.generateRefreshToken(testMember.getEmail());
 
         given(this.spec)
-            .header(SecurityConstants.HEADER_AUTH, SecurityConstants.TOKEN_PREFIX + refreshToken)
+            .header(HEADER_AUTH, TOKEN_PREFIX + refreshToken)
             .filter(document("{class_name}/{method_name}",
                 requestHeaders(
-                    headerWithName(SecurityConstants.HEADER_AUTH).description("Bearer {refreshToken} 형식의 리프레시 토큰")
+                    headerWithName(HEADER_AUTH).description("Bearer {refreshToken} 형식의 리프레시 토큰")
                 ),
-                responseFields(refreshResponseFields())
+                responseFields(
+                    fieldWithPath("accessToken").description("새로 발급된 액세스 토큰"),
+                    fieldWithPath("memberEmail").description("토큰 소유자 이메일"),
+                    fieldWithPath("memberId").description("토큰 소유자 ID")
+                )
             ))
             .when()
             .post("/api/v1/auth/refresh")
             .then()
             .log().all()
             .statusCode(200);
-    }
-
-    public static List<FieldDescriptor> sendVerifyEmailRequestFields(){
-        return List.of(
-            fieldWithPath("email").description("이메일 인증에 사용할 이메일 (필수)")
-        );
-    }
-
-    public static List<FieldDescriptor> sendVerifyEmailResponseFields(){
-        return List.of(
-            fieldWithPath("message").type(STRING).description("인증 코드 발송 결과 메시지"),
-            fieldWithPath("email").type(STRING).description("인증 코드 발송한 이메일 주소"),
-            fieldWithPath("verificationCode").type(STRING).description("발송된 인증 코드")
-        );
-    }
-
-    public static List<FieldDescriptor> loginRequestFields(){
-
-        return List.of(
-            fieldWithPath("email").description("로그인할 사용자 이메일 (필수)"),
-            fieldWithPath("password").description("로그인할 사용자 비밀번호 (필수)")
-        );
-    }
-
-    public static List<FieldDescriptor> loginResponseFields(){
-
-        return List.of(
-            fieldWithPath("access_token").type(STRING).description("API 요청에 사용할 액세스 토큰"),
-            fieldWithPath("refresh_token").type(STRING).description("액세스 토큰 갱신에 사용할 리프레시 토큰"),
-            fieldWithPath("member_email").type(STRING).description("로그인한 사용자 이메일"),
-            fieldWithPath("member_id").type(NUMBER).description("로그인한 사용자 ID"),
-            fieldWithPath("scope").type(STRING).optional().description("토큰 권한 범위")
-        );
-    }
-
-    public static List<FieldDescriptor> refreshResponseFields() {
-
-        return List.of(
-            fieldWithPath("access_token").type(STRING).description("새로 발급된 액세스 토큰"),
-            fieldWithPath("refresh_token").type(STRING).description("새로 발급된 리프레시 토큰"),
-            fieldWithPath("member_email").type(STRING).description("토큰 소유자 이메일"),
-            fieldWithPath("member_id").type(NUMBER).description("토큰 소유자 ID"),
-            fieldWithPath("scope").type(STRING).optional().description("토큰 권한 범위")
-        );
     }
 
     public static class AuthTestMemberFactory {

@@ -20,15 +20,15 @@ public class AuthController {
 
     @PostMapping("/email-verification-code")
     public ResponseEntity<EmailVerificationResponseDto> sendVerificationCode(
-        @RequestBody EmailVerificationRequestDto request) {
+        @RequestBody EmailVerificationRequestDto emailVerificationRequest) {
 
-        String verificationCode = emailVerificationService.sendVerificationCode(request.getEmail());
+        String verificationCode = emailVerificationService.sendVerificationCode(emailVerificationRequest.getEmail());
 
         return ResponseEntity
             .ok()
             .body(EmailVerificationResponseDto.builder()
                 .message("인증 이메일이 전송되었습니다.")
-                .email(request.getEmail())
+                .email(emailVerificationRequest.getEmail())
                 .verificationCode(verificationCode)
                 .build()
             );

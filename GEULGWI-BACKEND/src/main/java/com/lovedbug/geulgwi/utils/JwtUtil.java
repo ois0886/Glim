@@ -24,10 +24,10 @@ public class JwtUtil {
 
     private SecretKey hmacKey;
 
-    private final long accessTokenExpiry = 1000L * 60 * 60;
-    private final long refreshTokenExpiry = 1000L * 60 * 60 * 24 * 30;
-    private final long emailVerificationTokenExpiry = 1000L * 60 * 10;
-
+    private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 60;
+    private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 60 * 24 * 30;
+    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String HEADER_AUTH  = "Authorization";
 
     @PostConstruct
     public void init() {
@@ -37,12 +37,12 @@ public class JwtUtil {
 
     public String generateAccessToken(String email){
 
-        return generateToken(email, accessTokenExpiry, "access");
+        return generateToken(email, ACCESS_TOKEN_EXPIRY, "access");
     }
 
     public String generateRefreshToken (String email){
 
-        return generateToken(email, refreshTokenExpiry, "refresh");
+        return generateToken(email, REFRESH_TOKEN_EXPIRY, "refresh");
     }
 
     private String generateToken(String email, long expiry, String tokenType){
@@ -63,10 +63,6 @@ public class JwtUtil {
     public String extractEmail(String token) {
 
         return parseClaims(token).get("sub", String.class);
-    }
-
-    public Date extractExpiration(String token){
-        return parseClaims(token).getExpiration();
     }
 
     public boolean validateRefreshToken(String token){
