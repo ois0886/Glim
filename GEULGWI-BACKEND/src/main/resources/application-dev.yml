@@ -17,4 +17,8 @@ management:
         include: health, info, prometheus
   metrics:
     tags:
-      application: ${spring.application.name:my-app}
+      application: geulgwi-backend
+  prometheus:
+    metrics:
+      export:
+        enabled: true
