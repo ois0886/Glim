@@ -153,10 +153,12 @@ fun String.formatBirthDate(): String {
  * "남성", "여성"을 "MALE", "FEMALE"로 변환
  */
 fun String.formatGender(): String {
-    return when (this) {
-        "남성" -> "MALE"
-        "여성" -> "FEMALE"
-        else -> this
+    return if (this.equals("남자", ignoreCase = true)) {
+        "MALE"
+    } else if (this.equals("여자", ignoreCase = true)) {
+        "FEMALE"
+    } else {
+        this
     }
 }
 

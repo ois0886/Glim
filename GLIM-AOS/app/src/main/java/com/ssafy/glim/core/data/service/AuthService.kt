@@ -32,11 +32,11 @@ interface AuthService {
     @POST("api/v1/auth/verify-email")
     suspend fun verifyEmail(
         email: String,
-    ): Unit
+    )
 
     // 이메일 인증 재전송
     @POST("api/v1/auth/resend-verification")
     suspend fun resendVerificationEmail(
         email: String,
-    ): Unit
+    )
 }
