@@ -35,17 +35,17 @@ public class JwtUtil {
             SignatureAlgorithm.HS256.getJcaName());
     }
 
-    public String generateAccessToken(String email){
+    public String generateAccessToken(String email, Long memberId){
 
-        return generateToken(email, ACCESS_TOKEN_EXPIRY, "access");
+        return generateToken(email, memberId, ACCESS_TOKEN_EXPIRY, "access");
     }
 
-    public String generateRefreshToken (String email){
+    public String generateRefreshToken (String email, Long memberId){
 
-        return generateToken(email, REFRESH_TOKEN_EXPIRY, "refresh");
+        return generateToken(email, memberId, REFRESH_TOKEN_EXPIRY, "refresh");
     }
 
-    private String generateToken(String email, long expiry, String tokenType){
+    private String generateToken(String email, Long memberId ,long expiry, String tokenType){
 
         Date now =  new Date();
         Date exp = new Date(now.getTime() + expiry);
@@ -54,6 +54,7 @@ public class JwtUtil {
             .setSubject(email)
             .setIssuedAt(now)
             .setExpiration(exp)
+            .claim("memberId", memberId)
             .claim("type", tokenType)
             .claim("jti", UUID.randomUUID().toString())
             .signWith(hmacKey)

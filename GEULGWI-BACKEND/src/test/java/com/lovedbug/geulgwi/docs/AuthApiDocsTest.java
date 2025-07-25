@@ -113,7 +113,7 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
         Member testMember = AuthTestMemberFactory.createLoginTestMember(passwordEncoder);
         memberRepository.save(testMember);
 
-        String refreshToken = jwtUtil.generateRefreshToken(testMember.getEmail());
+        String refreshToken = jwtUtil.generateRefreshToken(testMember.getEmail(), testMember.getMemberId());
 
         given(this.spec)
             .header(HEADER_AUTH, TOKEN_PREFIX + refreshToken)
