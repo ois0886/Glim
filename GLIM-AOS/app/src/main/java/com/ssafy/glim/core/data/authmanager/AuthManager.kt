@@ -38,15 +38,14 @@ class AuthManager @Inject constructor(
 
     fun getRefreshToken(): String? = cachedRefreshToken
 
-    fun saveToken(accessToken: String, refreshToken: String) {
+    // TODO : refreshToken: String 추가
+    fun saveToken(accessToken: String) {
         Log.d("AuthManager", "save token")
         // 메모리는 즉시 업데이트
         cachedAccessToken = accessToken
-        cachedRefreshToken = refreshToken
 
         CoroutineScope(Dispatchers.IO).launch {
             authDataStore.saveAccessToken(accessToken)
-            authDataStore.saveRefreshToken(refreshToken)
         }
     }
 }

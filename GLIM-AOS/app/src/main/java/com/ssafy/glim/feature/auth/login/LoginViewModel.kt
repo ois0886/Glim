@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.auth.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.ValidationResult
@@ -9,6 +10,7 @@ import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.auth.login.component.SocialProvider
+import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -99,9 +101,11 @@ constructor(
             )
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
+            Log.d("LoginViewModel", "success")
             navigateToHome()
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
+            Log.d("LoginViewModel", "failed")
             postSideEffect(LoginSideEffect.ShowError(R.string.login_failed))
         }
     }
@@ -113,7 +117,7 @@ constructor(
 
     fun navigateToHome() =
         intent {
-            navigator.navigate(BottomTabRoute.Home)
+            navigator.navigate(MainTab.HOME.route)
         }
 
     fun navigateToForgotPassword() =

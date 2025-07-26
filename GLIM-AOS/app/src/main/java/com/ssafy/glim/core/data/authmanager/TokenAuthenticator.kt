@@ -9,7 +9,7 @@ import okhttp3.Response
 import okhttp3.Route
 import javax.inject.Inject
 
-// TODO: 일정 횟수 이상 재시도 제한 로직 추가
+// TODO: 일정 횟수 이상 재시도 제한 로직 추가, refreshToken 로직 추가
 class TokenAuthenticator @Inject constructor(
     private val authManager: AuthManager,
     private val authService: AuthService
@@ -32,7 +32,7 @@ class TokenAuthenticator @Inject constructor(
                 if (!newTokenResponse.isSuccessful) throw Exception("토큰 갱신 실패")
 
                 val newTokenData = newTokenResponse.body() ?: throw Exception("토큰 갱신 응답 에러")
-                authManager.saveToken(newTokenData.accessToken, newTokenData.refreshToken)
+                //authManager.saveToken(newTokenData.accessToken, newTokenData.refreshToken)
                 Log.d("TokenAuthenticator", "갱신 accessToken : $currentAccessToken\n갱신 refreshToken : $currentRefreshToken")
 
                 return response.request.createRequestWithRenewedToken(newTokenData.accessToken)

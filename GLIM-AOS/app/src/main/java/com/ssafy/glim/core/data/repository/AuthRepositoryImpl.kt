@@ -42,12 +42,19 @@ class AuthRepositoryImpl @Inject constructor(
             password = password,
         )
 
+        // TODO: refreshToken 추가
         runCatching { dataSource.login(request) }
             .onSuccess {
-                authManager.saveToken(
-                    accessToken = it.accessToken,
-                    refreshToken = it.refreshToken
-                )
+                Log.d("AuthRepositoryImpl", "API success")
+                try {
+                    authManager.saveToken(
+                        accessToken = it.accessToken
+                    )
+                    Log.d("AuthRepositoryImpl", "Token save success")
+                } catch (e: Exception) {
+                    Log.e("AuthRepositoryImpl", "Token save failed: ${e.message}")
+                    throw e
+                }
             }
             .onFailure {
                 Log.d("AuthRepositoryImpl", "Login failed: ${it.message}")
