@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
@@ -197,23 +198,13 @@ private fun BookCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // 책 아이콘/이미지
-            Box(
-                modifier =
-                Modifier
+            AsyncImage(
+                model = book.cover,
+                contentDescription = null,
+                modifier = Modifier
                     .size(80.dp)
-                    .background(
-                        color = Color.LightGray.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(8.dp),
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.icon_post),
-                    contentDescription = null,
-                    modifier = Modifier.size(32.dp),
-                    tint = Color.Gray,
-                )
-            }
+                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp)),
+            )
 
             // 책 정보
             Column(
@@ -241,6 +232,7 @@ private fun BookCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Black,
                     lineHeight = 20.sp,
+                    maxLines = 3
                 )
             }
         }

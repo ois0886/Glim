@@ -109,7 +109,7 @@ fun BookInfoSection(book: Book) {
                     text = book.title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = 8.dp).weight(1f),
                 )
 
                 Text(
@@ -128,7 +128,7 @@ fun BookInfoSection(book: Book) {
                 Text(
                     text = book.author,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = 8.dp).weight(1f),
                 )
 
                 Text(
@@ -145,7 +145,8 @@ fun BookInfoSection(book: Book) {
                 Text(
                     text = book.publisher,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = 8.dp).weight(1f),
+                    fontWeight = FontWeight.Bold
                 )
 
                 Text(

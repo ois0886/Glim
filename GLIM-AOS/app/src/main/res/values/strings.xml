@@ -12,6 +12,7 @@
     <string name="login_guest">비회원으로 둘러보기</string>
 
     <string name="social_login_message">소셜 로그인은 준비중입니다.</string>
+    <string name="not_ready_function">준비 중인 기능입니다.</string>
 
     <string name="login_email_placeholder">이메일을 입력해주세요.</string>
     <string name="login_password_placeholder">비밀번호를 입력해주세요.</string>
