@@ -14,6 +14,4 @@ class AuthRemoteDataSource @Inject constructor(
     suspend fun login(request: LoginRequest) = service.login(request)
 
     suspend fun verifyEmail(email: String) = service.verifyEmail(email)
-
-    suspend fun resendVerificationEmail(email: String) = service.resendVerificationEmail(email)
 }

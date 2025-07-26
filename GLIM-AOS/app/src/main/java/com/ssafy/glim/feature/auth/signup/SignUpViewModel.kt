@@ -311,6 +311,7 @@ internal class SignUpViewModel @Inject constructor(
             verifyEmailUseCase(state.email)
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
+            postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_send_verification_code))
             moveToNextStep()
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
