@@ -1,5 +1,7 @@
 package com.ssafy.glim.core.domain.repository
 
+import com.ssafy.glim.core.domain.model.VerifyEmail
+
 interface AuthRepository {
 
     suspend fun signUp(
@@ -15,5 +17,5 @@ interface AuthRepository {
         password: String,
     )
 
-    suspend fun verifyEmail(email: String)
+    suspend fun verifyEmail(email: String): VerifyEmail
 }

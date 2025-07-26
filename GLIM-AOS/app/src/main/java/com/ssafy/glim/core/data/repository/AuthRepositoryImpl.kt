@@ -56,7 +56,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun verifyEmail(email: String) {
-        dataSource.verifyEmail(email)
-    }
+    override suspend fun verifyEmail(email: String) =
+        dataSource.verifyEmail(email).toDomain()
+
 }
