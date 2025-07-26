@@ -138,14 +138,14 @@ fun String.extractDigits(maxLength: Int): String {
 /**
  * YYYYMMDD 형식을 YYYY-MM-DD 형식으로 변환
  */
-fun String.formatBirthDate(): String {
+fun String.formatBirthDate(): List<Int> {
     return if (this.length == 8) {
-        val year = this.substring(0, 4)
-        val month = this.substring(4, 6)
-        val day = this.substring(6, 8)
-        "$year-$month-$day"
+        val year = this.substring(0, 4).toInt()
+        val month = this.substring(4, 6).toInt()
+        val day = this.substring(6, 8).toInt()
+        listOf(year, month, day, 0, 0) // [년, 월, 일, 시, 분]
     } else {
-        this
+        listOf(1999, 1, 1, 0, 0)
     }
 }
 
@@ -167,13 +167,4 @@ fun String.formatGender(): String {
  */
 fun String.toCommaSeparatedPrice(): String {
     return this.replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
-}
-
-fun String.toBirthDateList(): List<Int> {
-    val parts = split("-")
-    val year = parts[0].toInt()
-    val month = parts[1].toInt()
-    val day = parts[2].toInt()
-
-    return listOf(year, month, day)
 }

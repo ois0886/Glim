@@ -204,6 +204,7 @@ internal class SignUpViewModel @Inject constructor(
                     Log.e("SignUp", "Verification failed: ${exception.message}", exception)
                     reduce { state.copy(isLoading = false) }
                     postSideEffect(SignUpSideEffect.ShowToast(R.string.verification_code_failed))
+                    moveToNextStep()
                 }
             }
             is ValidationResult.Invalid -> handleEmailValidationError(validation.errorMessageRes)
@@ -240,6 +241,7 @@ internal class SignUpViewModel @Inject constructor(
         } else {
             postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_incorrect))
             reduce { state.copy(codeError = R.string.error_code_incorrect) }
+            moveToNextStep()
         }
     }
 

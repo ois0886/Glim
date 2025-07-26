@@ -1,6 +1,5 @@
 package com.ssafy.glim.core.data.repository
 
-import com.ssafy.glim.core.common.extensions.toBirthDateList
 import com.ssafy.glim.core.data.datasource.remote.UserRemoteDataSource
 import com.ssafy.glim.core.data.dto.request.UpdateUserRequest
 import com.ssafy.glim.core.data.mapper.toDomain
@@ -20,14 +19,13 @@ class UserRepositoryImpl @Inject constructor(
         password: String,
         nickname: String,
         gender: String,
-        birthDate: String,
+        birthDate: List<Int>,
     ): User {
-        val birthDateList = birthDate.toBirthDateList()
         val request = UpdateUserRequest(
             password = password,
             nickname = nickname,
             gender = gender,
-            birthDate = birthDateList,
+            birthDate = birthDate,
         )
         return dataSource.updateUser(memberId, request).toDomain()
     }

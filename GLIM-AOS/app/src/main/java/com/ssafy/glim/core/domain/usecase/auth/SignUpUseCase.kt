@@ -11,6 +11,6 @@ class SignUpUseCase @Inject constructor(
         nickname: String,
         password: String,
         gender: String,
-        birthDate: String,
+        birthDate: List<Int>,
     ) = repository.signUp(email, nickname, password, gender, birthDate)
 }

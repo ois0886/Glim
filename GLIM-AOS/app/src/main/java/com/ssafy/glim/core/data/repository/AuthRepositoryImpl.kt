@@ -1,7 +1,6 @@
 package com.ssafy.glim.core.data.repository
 
 import android.util.Log
-import com.ssafy.glim.core.common.extensions.toBirthDateList
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.data.datasource.remote.AuthRemoteDataSource
 import com.ssafy.glim.core.data.dto.request.LoginRequest
@@ -21,15 +20,14 @@ class AuthRepositoryImpl @Inject constructor(
         nickname: String,
         password: String,
         gender: String,
-        birthDate: String,
+        birthDate: List<Int>,
     ) {
-        val birthDateList = birthDate.toBirthDateList()
         val request = SignUpRequest(
             email = email,
             nickname = nickname,
             password = password,
             gender = gender,
-            birthDate = birthDateList,
+            birthDate = birthDate,
         )
 
         dataSource.signUp(request)

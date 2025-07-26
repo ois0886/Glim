@@ -2,6 +2,7 @@ package com.ssafy.glim.feature.profile
 
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
+import com.ssafy.glim.core.common.extensions.formatBirthDate
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
 import com.ssafy.glim.core.domain.usecase.user.GetUserByEmailUseCase
 import com.ssafy.glim.core.domain.usecase.user.UpdateUserUseCase
@@ -83,7 +84,7 @@ class ProfileViewModel @Inject constructor(
         birthDate: String
     ) = intent {
         // val user = state.user ?: return@intent
-
+        val formattedBirthDate = birthDate.formatBirthDate()
         reduce { state.copy(isLoading = true) }
 
         runCatching {
@@ -92,7 +93,7 @@ class ProfileViewModel @Inject constructor(
                 password = password,
                 nickname = nickname,
                 gender = gender,
-                birthDate = birthDate
+                birthDate = formattedBirthDate
             )
         }.onSuccess { updatedUser ->
             reduce {

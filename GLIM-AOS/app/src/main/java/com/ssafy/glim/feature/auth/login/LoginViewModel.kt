@@ -60,7 +60,6 @@ constructor(
         }
 
     fun onLoginClicked() = intent {
-        // 1. 입력값 검증
         val emailValidation = ValidationUtils.validateEmail(
             email = state.email,
             emptyErrorRes = R.string.error_email_empty,
@@ -120,7 +119,6 @@ constructor(
     fun navigateToForgotPassword() =
         intent {
             // TODO: 비밀번호 찾기 화면으로 이동
-            // navigator.navigate(Route.ForgotPassword)
         }
 
     fun navigateToSocialLogin(socialProvider: SocialProvider) =

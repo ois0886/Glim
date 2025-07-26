@@ -31,7 +31,7 @@ interface AuthService {
     ): Response<AuthToken>
 
     // 이메일 인증
-    @POST("api/v1/auth/verify-email")
+    @POST("api/v1/auth/email-verification-code")
     suspend fun verifyEmail(
         @Body request: VerifyEmailRequest
     ): VerifyEmailResponse

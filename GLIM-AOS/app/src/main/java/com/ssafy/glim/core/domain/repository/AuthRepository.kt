@@ -9,7 +9,7 @@ interface AuthRepository {
         nickname: String,
         password: String,
         gender: String,
-        birthDate: String,
+        birthDate: List<Int>,
     )
 
     suspend fun login(

@@ -11,7 +11,7 @@ interface UserRepository {
         password: String,
         nickname: String,
         gender: String,
-        birthDate: String,
+        birthDate: List<Int>,
     ): User
 
     suspend fun deleteUser(memberId: Long): User
