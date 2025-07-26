@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.auth.signup
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.extensions.extractDigits
@@ -191,14 +192,16 @@ internal class SignUpViewModel @Inject constructor(
         when (validation) {
             is ValidationResult.Valid -> {
                 reduce { state.copy(isLoading = true) }
-
+                Log.d("SignUp", "Starting verification for email: ${state.email}")
                 runCatching {
                     verifyEmailUseCase(state.email)
                 }.onSuccess { response ->
+                    Log.d("SignUp", "Verification success: ${response.verificationCode}")
                     reduce { state.copy(isLoading = false, actualVerificationCode = response.verificationCode) }
                     postSideEffect(SignUpSideEffect.ShowToast(R.string.verification_code_instruction))
                     moveToNextStep()
                 }.onFailure { exception ->
+                    Log.e("SignUp", "Verification failed: ${exception.message}", exception)
                     reduce { state.copy(isLoading = false) }
                     postSideEffect(SignUpSideEffect.ShowToast(R.string.verification_code_failed))
                 }

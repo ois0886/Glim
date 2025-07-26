@@ -2,6 +2,7 @@ package com.ssafy.glim.core.data.service
 
 import com.ssafy.glim.core.data.dto.request.LoginRequest
 import com.ssafy.glim.core.data.dto.request.SignUpRequest
+import com.ssafy.glim.core.data.dto.request.VerifyEmailRequest
 import com.ssafy.glim.core.data.dto.response.SignUpResponse
 import com.ssafy.glim.core.data.dto.response.VerifyEmailResponse
 import com.ssafy.glim.core.data.dto.token.AuthToken
@@ -32,6 +33,6 @@ interface AuthService {
     // 이메일 인증
     @POST("api/v1/auth/verify-email")
     suspend fun verifyEmail(
-        email: String,
+        @Body request: VerifyEmailRequest
     ): VerifyEmailResponse
 }

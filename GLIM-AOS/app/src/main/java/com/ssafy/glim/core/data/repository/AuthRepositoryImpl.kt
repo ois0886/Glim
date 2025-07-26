@@ -6,6 +6,7 @@ import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.data.datasource.remote.AuthRemoteDataSource
 import com.ssafy.glim.core.data.dto.request.LoginRequest
 import com.ssafy.glim.core.data.dto.request.SignUpRequest
+import com.ssafy.glim.core.data.dto.request.VerifyEmailRequest
 import com.ssafy.glim.core.data.mapper.toDomain
 import com.ssafy.glim.core.domain.repository.AuthRepository
 import javax.inject.Inject
@@ -57,6 +58,6 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun verifyEmail(email: String) =
-        dataSource.verifyEmail(email).toDomain()
+        dataSource.verifyEmail(VerifyEmailRequest(email)).toDomain()
 
 }
