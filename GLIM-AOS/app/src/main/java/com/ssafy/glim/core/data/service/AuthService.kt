@@ -3,6 +3,7 @@ package com.ssafy.glim.core.data.service
 import com.ssafy.glim.core.data.dto.request.LoginRequest
 import com.ssafy.glim.core.data.dto.request.SignUpRequest
 import com.ssafy.glim.core.data.dto.response.SignUpResponse
+import com.ssafy.glim.core.data.dto.response.VerifyEmailResponse
 import com.ssafy.glim.core.data.dto.token.AuthToken
 import retrofit2.Response
 import retrofit2.http.Body
@@ -32,11 +33,5 @@ interface AuthService {
     @POST("api/v1/auth/verify-email")
     suspend fun verifyEmail(
         email: String,
-    )
-
-    // 이메일 인증 재전송
-    @POST("api/v1/auth/resend-verification")
-    suspend fun resendVerificationEmail(
-        email: String,
-    )
+    ): VerifyEmailResponse
 }

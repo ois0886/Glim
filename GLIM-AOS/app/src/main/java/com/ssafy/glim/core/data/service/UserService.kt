@@ -16,7 +16,7 @@ interface UserService {
         @Path("email") email: String,
     ): UserResponse
 
-    // 사용자 정보 수정 (회원 탈퇴)
+    // 사용자 정보 수정
     @PUT("api/v1/members/{memberId}")
     suspend fun updateUser(
         @Path("memberId") memberId: Long,
