@@ -11,7 +11,7 @@ class QuoteRemoteDataSource @Inject constructor(
 ) {
     suspend fun getQuotes(
         page: Int,
-        size: Int = 10,
+        size: Int,
         sort: String
     ): List<QuoteResponse> = quoteService.getQuotes(
         page = page,

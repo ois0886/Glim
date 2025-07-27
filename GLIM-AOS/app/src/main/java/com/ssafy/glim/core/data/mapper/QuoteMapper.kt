@@ -13,5 +13,5 @@ fun QuoteResponse.toDomain() =
         publisher = publisher,
         quoteId = quoteId,
         quoteImageName = quoteImageName,
-        quoteViews = quoteViews
+        quoteViews = 0
     )

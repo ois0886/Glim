@@ -15,8 +15,8 @@ interface QuoteService {
 
     @GET("api/v1/quotes")
     suspend fun getQuotes(
-        @Query("page") page: Int = 0,
-        @Query("size") size: Int = 10,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
         @Query("sort") sort: String,
     ): List<QuoteResponse>
 

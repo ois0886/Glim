@@ -1,5 +1,6 @@
 package com.ssafy.quote.feature.reels
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,11 +46,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.DarkThemeScreen
 import com.ssafy.glim.feature.main.excludeSystemBars
+import com.ssafy.glim.feature.reels.ReelsSideEffect
+import com.ssafy.glim.feature.reels.ReelsViewModel
 import com.ssafy.glim.feature.reels.rememberCaptureAction
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
 import org.orbitmvi.orbit.compose.collectAsState
@@ -64,7 +67,6 @@ internal fun ReelsRoute(
     val state by viewModel.collectAsState()
     val context = LocalContext.current
 
-    // 초기 데이터 로드
     SideEffect {
         viewModel.refresh()
     }
@@ -102,13 +104,8 @@ internal fun ReelsRoute(
     val pagerState = rememberPagerState(pageCount = { state.quotes.size })
     val graphicsLayer = rememberGraphicsLayer()
 
-    val captureAction =
-        rememberCaptureAction(
-            graphicsLayer = graphicsLayer,
-            fileName = "Quote_${System.currentTimeMillis()}.jpg",
-        )
-
     LaunchedEffect(pagerState) {
+        Log.d("ReelsRoute", "PagerState initialized with ${state.quotes.size} quotes")
         snapshotFlow { pagerState.currentPage }.collect { page ->
             viewModel.onPageChanged(page)
         }
@@ -138,10 +135,6 @@ internal fun ReelsRoute(
                 onLikeClick = { viewModel.toggleLike() },
                 onShareClick = { viewModel.onShareClick() },
                 onMoreClick = { },
-                onCaptureClick = {
-                    captureAction()
-                    viewModel.onCaptureClick("Quote_${System.currentTimeMillis()}.jpg")
-                },
                 onBookInfoClick = {
                     it?.let {
                         viewModel.onBookInfoClick(it)
@@ -159,20 +152,34 @@ fun QuoteItem(
     onLikeClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
     onMoreClick: () -> Unit = {},
-    onCaptureClick: () -> Unit = {},
     onBookInfoClick: (Long?) -> Unit
 ) {
+    val imageGraphicsLayer = rememberGraphicsLayer()
+
+    val captureAction = rememberCaptureAction(
+        graphicsLayer = imageGraphicsLayer,
+        fileName = "Quote_${System.currentTimeMillis()}.jpg",
+    )
+
     Box(modifier = modifier) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data("http://i13d202.p.ssafy.io:8080/images/${quote.quoteImageName}")
-                .crossfade(true)
-                .build(),
+            model = "${BuildConfig.BASE_URL}/images/${quote.quoteImageName}",
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .drawWithCache {
+                    onDrawWithContent {
+                        // AsyncImage만 GraphicsLayer에 기록
+                        imageGraphicsLayer.record {
+                            this@onDrawWithContent.drawContent()
+                        }
+                        drawLayer(imageGraphicsLayer)
+                    }
+                },
             contentScale = ContentScale.Crop,
             error = painterResource(R.drawable.example_glim_2),
         )
+
 
         QuoteBookContent(
             modifier = Modifier.align(Alignment.BottomEnd),
@@ -194,7 +201,7 @@ fun QuoteItem(
                 .align(Alignment.BottomEnd),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            IconButton(onClick = onCaptureClick) {
+            IconButton(onClick = {captureAction()}) {
                 Icon(
                     painter = painterResource(R.drawable.ic_download),
                     contentDescription = stringResource(R.string.download),
