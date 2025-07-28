@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.library.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,17 +16,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +43,8 @@ import coil.compose.AsyncImage
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 enum class SearchTab(val displayName: String) {
     BOOKS("도서"),
@@ -46,10 +53,12 @@ enum class SearchTab(val displayName: String) {
 
 @Composable
 fun SearchResultSection(
+    modifier: Modifier = Modifier,
     searchQuery: String,
     bookList: List<Book>,
     quoteList: List<Quote>,
-    modifier: Modifier = Modifier,
+    isRefreshing: Boolean = false,
+    onLoadMore: () -> Unit = {},
     onBookClick: (Book) -> Unit = {},
     onQuoteClick: (Quote) -> Unit = {},
 ) {
@@ -115,6 +124,8 @@ fun SearchResultSection(
             SearchTab.BOOKS -> {
                 BookListContent(
                     books = bookList,
+                    isRefreshing = isRefreshing,
+                    onLoadMore = onLoadMore,
                     onBookClick = { onBookClick(it) },
                 )
             }
@@ -131,6 +142,8 @@ fun SearchResultSection(
 @Composable
 private fun BookListContent(
     books: List<Book>,
+    isRefreshing: Boolean = false,
+    onLoadMore: () -> Unit,
     onBookClick: (Book) -> Unit,
 ) {
     if (books.isEmpty()) {
@@ -138,18 +151,64 @@ private fun BookListContent(
             message = stringResource(R.string.no_search_result),
             modifier = Modifier.fillMaxSize(),
         )
-    }
+    } else {
+        val listState = rememberLazyListState()
+        var hasRequestedMore by remember { mutableStateOf(false) }
 
-    LazyColumn(
-        Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-        contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        items(books) { book ->
-            BookCard(
-                book = book,
-                onClick = { onBookClick(book) },
-            )
+        LaunchedEffect(books.size) {
+            hasRequestedMore = false
+        }
+
+        LaunchedEffect(listState) {
+            snapshotFlow {
+                listState.layoutInfo.let { layoutInfo ->
+                    val totalItems = layoutInfo.totalItemsCount
+                    val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                    totalItems to lastVisible
+                }
+            }
+                .collect { (totalItems, lastVisible) ->
+                    if (!isRefreshing &&
+                        !hasRequestedMore &&
+                        lastVisible >= (totalItems - 1)) {
+                        hasRequestedMore = true
+                        Log.d("SearchResult", "Loading more books...")
+                        onLoadMore()
+                    }
+                }
+        }
+
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            items(books.size) { index ->
+                if (index < books.size) {
+                    val book = books[index]
+                    BookCard(
+                        book = book,
+                        onClick = { onBookClick(book) },
+                    )
+                }
+            }
+
+            if (isRefreshing) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -202,8 +261,7 @@ private fun BookCard(
                 model = book.cover,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(80.dp)
-                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp)),
+                    .size(width = 60.dp, height = 80.dp)
             )
 
             // 책 정보

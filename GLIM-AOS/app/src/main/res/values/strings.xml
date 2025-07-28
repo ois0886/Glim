@@ -141,6 +141,7 @@
     <string name="signup_send_verification_code">인증번호 발송</string>
     <string name="signup_verify_code">인증완료</string>
     <string name="signup_confirm">확인</string>
+    <string name="views">조회수</string>
 
     <!-- 회원탈퇴 경고 다이얼로그 -->
     <string name="withdrawal_title">회원탈퇴</string>

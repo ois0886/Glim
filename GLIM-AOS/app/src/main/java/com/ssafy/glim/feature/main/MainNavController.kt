@@ -71,6 +71,14 @@ internal class MainNavController(
                 .build()
         navController.navigate(startDestination, options)
     }
+
+    fun clearBackStackAndNavigate(route : Route) {
+        val options =
+            NavOptions.Builder()
+                .setPopUpTo(startDestination, inclusive = true)
+                .build()
+        navController.navigate(route, options)
+    }
 }
 
 @Composable

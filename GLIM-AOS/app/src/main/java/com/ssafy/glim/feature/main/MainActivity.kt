@@ -5,16 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.core.net.toUri
 import com.ssafy.glim.core.navigation.LaunchedNavigator
+import com.ssafy.glim.core.navigation.Route
+import com.ssafy.glim.core.service.LockServiceManager
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.core.net.toUri
-import com.ssafy.glim.core.service.LockServiceManager
 import javax.inject.Inject
 
 private const val REQ_CODE_OVERLAY_PERMISSION: Int = 0
@@ -50,6 +51,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navigator: MainNavController = rememberMainNavController()
             LaunchedNavigator(navigator.navController)
+            val initialRoute = intent.getStringExtra("nav_route")
+
+            LaunchedEffect(initialRoute) {
+                if(initialRoute == "book"){
+                    val bookId = intent.getLongExtra("book_num", -1L)
+                    Log.d("test",bookId.toString())
+                    navigator.navController.navigate(Route.BookDetail(bookId)){
+                        popUpTo(navigator.startDestination) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
+                else if(initialRoute == "glim"){
+                    navigator.clearBackStackAndNavigate(MainTab.REELS.route)
+                }
+            }
 
             MyApplicationTheme {
                 MainScreen(

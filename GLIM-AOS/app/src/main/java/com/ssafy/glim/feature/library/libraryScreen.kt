@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.library
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,6 +42,7 @@ import com.ssafy.glim.feature.library.component.PopularSearchSection
 import com.ssafy.glim.feature.library.component.RecentSearchSection
 import com.ssafy.glim.feature.library.component.SearchResultSection
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun LibraryRoute(
@@ -51,10 +54,27 @@ fun LibraryRoute(
 ) {
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     BackHandler {
         focusManager.clearFocus()
         viewModel.onBackPressed()
+    }
+
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is LibrarySideEffect.NavigateBack -> {
+                popBackStack()
+            }
+
+            is LibrarySideEffect.ShowToast -> {
+                Toast.makeText(
+                    context,
+                    sideEffect.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     Column(
@@ -175,7 +195,7 @@ fun LibraryRoute(
 
             SearchMode.RESULT -> {
                 Spacer(modifier = Modifier.height(8.dp))
-                if (state.isLoading) {
+                if(state.isLoading && !state.isRefreshing) {
                     Box(modifier = modifier.padding(40.dp).fillMaxWidth()) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(24.dp).align(Alignment.Center),
@@ -188,6 +208,8 @@ fun LibraryRoute(
                         searchQuery = state.searchQuery,
                         bookList = state.searchBooks,
                         quoteList = state.searchQuotes,
+                        isRefreshing = state.isRefreshing,
+                        onLoadMore = {viewModel.loadMoreBooks()},
                         onBookClick = {
                             if (onBookSelected == null) {
                                 viewModel.onBookClicked(it)

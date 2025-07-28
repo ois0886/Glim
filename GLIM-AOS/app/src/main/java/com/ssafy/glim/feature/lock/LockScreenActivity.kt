@@ -57,7 +57,8 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
-import com.ssafy.glim.core.ui.ImageCustomLoader
+import com.ssafy.glim.core.ui.GlimErrorLoader
+import com.ssafy.glim.core.ui.GlimLoader
 import com.ssafy.glim.feature.lock.component.SwipeButton
 import com.ssafy.glim.feature.lock.component.SwipeDirection
 import com.ssafy.glim.feature.main.MainActivity
@@ -113,6 +114,7 @@ class LockScreenActivity : ComponentActivity() {
                             this.startActivity(
                                 Intent(this, MainActivity::class.java).apply {
                                     putExtra("nav_route", "book")
+                                    putExtra("book_num",effect.bookId)
                                 }
                             )
                             (this as? Activity)?.finish()
@@ -210,25 +212,10 @@ fun LockScreenContent(
                 contentScale = ContentScale.Crop,
                 imageLoader = imageLoader,
                 loading = {
-                    ImageCustomLoader(Modifier)
+                    GlimLoader(Modifier)
                 },
                 error = {
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .background(
-                                color = Gray.copy(alpha = 0.2f),
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.example_glim_4),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
+                    GlimErrorLoader(Modifier)
                 }
             )
         } else {

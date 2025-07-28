@@ -69,7 +69,8 @@ constructor(
 
     fun viewBook() =
         intent {
-            postSideEffect(LockSideEffect.NavigateBook)
+            val currentQuote = state.quotes[state.currentIndex]
+            postSideEffect(LockSideEffect.NavigateBook(currentQuote.bookId))
         }
 
     fun viewQuote() =

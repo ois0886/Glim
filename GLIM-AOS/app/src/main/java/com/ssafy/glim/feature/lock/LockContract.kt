@@ -23,5 +23,5 @@ sealed interface LockSideEffect {
 
     data object NavigateQuotes : LockSideEffect
 
-    data object NavigateBook : LockSideEffect
+    data class NavigateBook(val bookId : Long) : LockSideEffect
 }

@@ -1,6 +1,7 @@
 package com.ssafy.glim.core.data.service
 
 import com.ssafy.glim.core.data.dto.response.QuoteResponse
+import com.ssafy.glim.core.data.dto.response.QuoteSummaryResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.GET
@@ -23,7 +24,7 @@ interface QuoteService {
     @GET("api/v1/quotes/{isbn}")
     suspend fun getQuoteByIsbn(
         @Path("isbn") isbn: String
-    ): List<QuoteResponse>
+    ): List<QuoteSummaryResponse>
 
     @Multipart
     @POST("api/v1/quotes")
