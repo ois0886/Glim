@@ -1,7 +1,6 @@
 package com.lovedbug.geulgwi.external.image;
 
 import org.springframework.web.multipart.MultipartFile;
-import com.lovedbug.geulgwi.dto.ImageMetaData;
 
 public interface ImageHandler {
 

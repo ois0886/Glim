@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import com.lovedbug.geulgwi.dto.ImageMetaData;
 
 @Component
 public class LocalImageHandler implements ImageHandler {

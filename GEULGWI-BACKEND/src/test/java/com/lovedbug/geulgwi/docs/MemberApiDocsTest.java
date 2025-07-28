@@ -1,11 +1,11 @@
 package com.lovedbug.geulgwi.docs;
 
-import com.lovedbug.geulgwi.dto.request.SignUpRequestDto;
-import com.lovedbug.geulgwi.dto.request.UpdateRequestDto;
-import com.lovedbug.geulgwi.entity.Member;
-import com.lovedbug.geulgwi.enums.MemberGender;
-import com.lovedbug.geulgwi.repository.MemberRepository;
-import com.lovedbug.geulgwi.service.EmailService;
+import com.lovedbug.geulgwi.core.domain.member.dto.SignUpRequestDto;
+import com.lovedbug.geulgwi.core.domain.member.dto.UpdateRequestDto;
+import com.lovedbug.geulgwi.core.domain.member.Member;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
+import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.external.email.EmailSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,13 +38,13 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
     }
 
     @MockitoBean
-    private EmailService emailService;
+    private EmailSender emailSender;
 
     @DisplayName("사용자가_사용할_계정을_생성한다")
     @Test
     void create_member(){
 
-        doNothing().when(emailService).sendWelcomeEmail(any(String.class), any(String.class));
+        doNothing().when(emailSender).sendWelcomeEmail(any(String.class), any(String.class));
 
         Member testMember = TestMemberFactory.createGetTestMember(passwordEncoder);
 

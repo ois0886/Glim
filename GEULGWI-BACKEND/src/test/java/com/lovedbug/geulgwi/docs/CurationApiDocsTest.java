@@ -1,6 +1,24 @@
 package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
+import com.lovedbug.geulgwi.core.domain.book.entity.Book;
+import com.lovedbug.geulgwi.core.domain.book.BookRepository;
+import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
+import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItem;
+import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItemBook;
+import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItemQuote;
+import com.lovedbug.geulgwi.core.domain.curation.entity.MainCuration;
+import com.lovedbug.geulgwi.core.domain.curation.repository.CurationItemBookRepository;
+import com.lovedbug.geulgwi.core.domain.curation.repository.CurationItemQuoteRepository;
+import com.lovedbug.geulgwi.core.domain.curation.repository.CurationItemRepository;
+import com.lovedbug.geulgwi.core.domain.curation.repository.MainCurationRepository;
+import com.lovedbug.geulgwi.core.domain.member.Member;
+import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
+import com.lovedbug.geulgwi.core.domain.quote.*;
+import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -12,12 +30,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
-import com.lovedbug.geulgwi.constant.CurationType;
-import com.lovedbug.geulgwi.entity.*;
-import com.lovedbug.geulgwi.enums.MemberGender;
-import com.lovedbug.geulgwi.enums.MemberRole;
-import com.lovedbug.geulgwi.enums.MemberStatus;
-import com.lovedbug.geulgwi.repository.*;
 
 class CurationApiDocsTest extends RestDocsTestSupport {
 

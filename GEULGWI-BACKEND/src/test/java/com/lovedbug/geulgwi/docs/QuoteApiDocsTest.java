@@ -1,12 +1,12 @@
 package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
-import com.lovedbug.geulgwi.entity.Member;
-import com.lovedbug.geulgwi.enums.MemberGender;
-import com.lovedbug.geulgwi.enums.MemberRole;
-import com.lovedbug.geulgwi.enums.MemberStatus;
-import com.lovedbug.geulgwi.repository.MemberRepository;
-import com.lovedbug.geulgwi.utils.JwtUtil;
+import com.lovedbug.geulgwi.core.domain.member.Member;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
+import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.core.security.JwtUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,14 +25,14 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lovedbug.geulgwi.dto.ImageMetaData;
-import com.lovedbug.geulgwi.dto.request.BookCreateDto;
-import com.lovedbug.geulgwi.dto.request.QuoteCreateDto;
-import com.lovedbug.geulgwi.entity.Book;
-import com.lovedbug.geulgwi.entity.Quote;
+import com.lovedbug.geulgwi.external.image.ImageMetaData;
+import com.lovedbug.geulgwi.core.domain.book.dto.BookCreateDto;
+import com.lovedbug.geulgwi.core.domain.quote.dto.QuoteCreateDto;
+import com.lovedbug.geulgwi.core.domain.book.entity.Book;
+import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import com.lovedbug.geulgwi.external.image.ImageHandler;
-import com.lovedbug.geulgwi.repository.BookRepository;
-import com.lovedbug.geulgwi.repository.QuoteRepository;
+import com.lovedbug.geulgwi.core.domain.book.BookRepository;
+import com.lovedbug.geulgwi.core.domain.quote.QuoteRepository;
 
 
 class QuoteApiDocsTest extends RestDocsTestSupport {
