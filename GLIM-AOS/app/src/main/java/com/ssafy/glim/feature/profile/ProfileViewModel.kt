@@ -7,7 +7,7 @@ import com.ssafy.glim.core.domain.usecase.auth.LogOutUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
 import com.ssafy.glim.core.domain.usecase.user.GetUserByEmailUseCase
 import com.ssafy.glim.core.domain.usecase.user.UpdateUserUseCase
-import com.ssafy.glim.core.navigation.GlimRoute
+import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,11 +33,11 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun navigateToGlimLikedList() = intent {
-        navigator.navigate(GlimRoute.Liked)
+        navigator.navigate(MyGlimsRoute.Liked)
     }
 
     fun navigateToGlimUploadList() = intent {
-        navigator.navigate(GlimRoute.Upload)
+        navigator.navigate(MyGlimsRoute.Upload)
     }
 
     fun navigateToEditProfile() = intent {
