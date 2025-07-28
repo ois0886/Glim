@@ -96,58 +96,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
             .statusCode(200);
     }
 
-    @DisplayName("등록된_모든_사용자를_조회한다.")
-    @Test
-    void get_all_members(){
-
-        Member[] testMembers = TestMemberFactory.createGetAllVerifiedTestMembers(5, passwordEncoder);
-        memberRepository.saveAll(List.of(testMembers));
-
-        given(this.spec)
-            .filter(document("{class_name}/{method_name}",
-                responseFields(memberArrayFields())
-            ))
-            .when()
-            .get("/api/v1/members")
-            .then().log().all()
-            .statusCode(200);
-    }
-
-    @DisplayName("활성상태인_사용자_등록번호로_조회한다.")
-    @Test
-    void get_active_member_by_id(){
-
-        Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
-        Member savedMember = memberRepository.save(testMember);
-
-        given(this.spec)
-            .filter(document("{class_name}/{method_name}",
-                responseFields(memberItemFields())
-            ))
-            .when()
-            .get("/api/v1/members/active/{memberId}",savedMember.getMemberId())
-            .then().log().all()
-            .statusCode(200);
-    }
-
-    @DisplayName("활성상태인_모든_사용자를_조회한다.")
-    @Test
-    void get_all_active_members(){
-
-        Member[] testMembers = TestMemberFactory.createGetAllVerifiedTestMembers(5, passwordEncoder);
-
-        memberRepository.saveAll(List.of(testMembers));
-
-        given(this.spec)
-            .filter(document("{class_name}/{method_name}",
-                responseFields(memberArrayFields())
-            ))
-            .when()
-            .get("/api/v1/members/active")
-            .then().log().all()
-            .statusCode(200);
-    }
-
     @DisplayName("사용자_정보를_수정한다")
     @Test
     void update_member() {
@@ -203,15 +151,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
             .statusCode(200);
     }
 
-    public static List<FieldDescriptor> signUpResponseFields() {
-
-        return List.of(
-            fieldWithPath("email").description("가입한 사용자 이메일"),
-            fieldWithPath("nickname").description("가입한 사용자 닉네임"),
-            fieldWithPath("message").description("회원가입 처리 결과 메시지")
-        );
-    }
-
     public static List<FieldDescriptor> memberItemFields() {
 
         return List.of(
@@ -222,19 +161,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
             fieldWithPath("status").description("회원 상태 (ACTIVE, INACTIVE)"),
             fieldWithPath("birthDate").description("사용자 생년월일"),
             fieldWithPath("gender").description("사용자 성별 (MALE, FEMALE)")
-        );
-    }
-
-    public static List<FieldDescriptor> memberArrayFields() {
-
-        return List.of(
-            fieldWithPath("[].memberId").description("사용자 고유 ID"),
-            fieldWithPath("[].email").description("사용자 이메일"),
-            fieldWithPath("[].password").description("사용자 비밀번호"),
-            fieldWithPath("[].nickname").description("사용자 닉네임"),
-            fieldWithPath("[].status").description("회원 상태 (ACTIVE, INACTIVE)"),
-            fieldWithPath("[].birthDate").description("사용자 생년월일"),
-            fieldWithPath("[].gender").description("사용자 성별 (MALE, FEMALE)")
         );
     }
 

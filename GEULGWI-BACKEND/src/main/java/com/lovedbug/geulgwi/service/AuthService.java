@@ -37,9 +37,10 @@ public class AuthService {
 
             MemberDto member = memberService.findByMemberEmail(email);
             String accessToken = jwtUtil.generateAccessToken(email);
+            String refreshToken = jwtUtil.generateRefreshToken(email);
             jwtUtil.generateRefreshToken(email);
 
-            return toJwtResponse(accessToken, email, member.getMemberId());
+            return toJwtResponse(accessToken, refreshToken ,email, member.getMemberId());
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다.");
         }
@@ -59,13 +60,14 @@ public class AuthService {
         String newAccessToken = jwtUtil.generateAccessToken(email);
         jwtUtil.generateRefreshToken(email);
 
-        return toJwtResponse(newAccessToken, email, member.getMemberId());
+        return toJwtResponse(newAccessToken, null ,email, member.getMemberId());
     }
 
-    private JwtResponseDto toJwtResponse(String accessToken, String email, Long memberId){
+    private JwtResponseDto toJwtResponse(String accessToken, String refreshToken, String email, Long memberId){
 
         return JwtResponseDto.builder()
             .accessToken(accessToken)
+            .refreshToken(refreshToken)
             .memberEmail(email)
             .memberId(memberId)
             .build();
