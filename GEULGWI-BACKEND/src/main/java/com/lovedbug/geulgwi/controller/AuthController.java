@@ -6,6 +6,8 @@ import com.lovedbug.geulgwi.dto.resposne.EmailVerificationResponseDto;
 import com.lovedbug.geulgwi.service.AuthService;
 import com.lovedbug.geulgwi.dto.resposne.JwtResponseDto;
 import com.lovedbug.geulgwi.service.EmailVerificationService;
+import com.lovedbug.geulgwi.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +38,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponseDto> login(@RequestBody LoginRequestDto loginRequest){
-
+        
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<JwtResponseDto> refresh(@RequestHeader("Authorization") String authHeader) {
-
-        return ResponseEntity.ok(authService.refresh(authHeader));
+    public ResponseEntity<JwtResponseDto> refresh(HttpServletRequest request) {
+        
+        String authHeader = request.getHeader(JwtUtil.HEADER_AUTH);
+        String token = authHeader.substring(JwtUtil.TOKEN_PREFIX.length()).trim();
+        return ResponseEntity.ok(authService.refresh(token));
     }
 }
