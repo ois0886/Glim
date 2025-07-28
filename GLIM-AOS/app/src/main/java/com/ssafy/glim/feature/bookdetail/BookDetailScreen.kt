@@ -174,31 +174,32 @@ fun BookDetailContent(
                         )
                     }
                 }
-                item {
-                    Spacer(modifier = Modifier.height(24.dp))
-                    HorizontalDivider(
-                        thickness = 8.dp,
-                        color = Color(0xFFF7F7F7)
-                    )
-                }
-                item {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        TitleWithAction(
-                            title = stringResource(R.string.author_intro),
-                            isExpanded = isAuthorDescriptionExpanded,
-                            action = toggleAuthorDescriptionExpanded
-                        )
-                        Text(
-                            text = book.description,
-                            style = MaterialTheme.typography.bodyMedium,
-                            maxLines = if (isAuthorDescriptionExpanded) Int.MAX_VALUE else 3,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
+                // TODO: 작가소개 데이터 올 시 주석 해제
+//                item {
+//                    Spacer(modifier = Modifier.height(24.dp))
+//                    HorizontalDivider(
+//                        thickness = 8.dp,
+//                        color = Color(0xFFF7F7F7)
+//                    )
+//                }
+//                item {
+//                    Column(
+//                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+//                        verticalArrangement = Arrangement.spacedBy(8.dp)
+//                    ) {
+//                        TitleWithAction(
+//                            title = stringResource(R.string.author_intro),
+//                            isExpanded = isAuthorDescriptionExpanded,
+//                            action = toggleAuthorDescriptionExpanded
+//                        )
+//                        Text(
+//                            text = book.description,
+//                            style = MaterialTheme.typography.bodyMedium,
+//                            maxLines = if (isAuthorDescriptionExpanded) Int.MAX_VALUE else 3,
+//                            overflow = TextOverflow.Ellipsis
+//                        )
+//                    }
+//                }
                 item {
                     Spacer(modifier = Modifier.height(48.dp))
                 }
