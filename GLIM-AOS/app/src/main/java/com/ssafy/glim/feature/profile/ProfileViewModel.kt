@@ -8,13 +8,13 @@ import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
 import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
+import com.ssafy.glim.core.navigation.UpdateInfoRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
-
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val navigator: Navigator,
@@ -35,7 +35,21 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun navigateToEditProfile() = intent {
-        navigator.navigate(Route.UpdateInfo)
+        reduce { state.copy(editProfileDialogState = EditProfileDialogState.Showing) }
+    }
+
+    fun navigateToPersonalInfo() = intent {
+        reduce { state.copy(editProfileDialogState = EditProfileDialogState.Hidden) }
+        navigator.navigate(UpdateInfoRoute.Personal)
+    }
+
+    fun navigateToPasswordChange() = intent {
+        reduce { state.copy(editProfileDialogState = EditProfileDialogState.Hidden) }
+        navigator.navigate(UpdateInfoRoute.Password)
+    }
+
+    fun onEditProfileDialogCancel() = intent {
+        reduce { state.copy(editProfileDialogState = EditProfileDialogState.Hidden) }
     }
 
     fun navigateToLockSettings() = intent {

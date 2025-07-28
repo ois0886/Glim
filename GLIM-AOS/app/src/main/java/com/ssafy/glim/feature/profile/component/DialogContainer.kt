@@ -4,8 +4,11 @@ package com.ssafy.glim.feature.profile.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -20,14 +23,91 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
+import com.ssafy.glim.feature.profile.EditProfileDialogState
 import com.ssafy.glim.feature.profile.LogoutDialogState
 import com.ssafy.glim.feature.profile.ProfileUiState
 import com.ssafy.glim.feature.profile.WithdrawalDialogState
 
-// ===== 로그아웃 다이얼로그 컨테이너 =====
+@Composable
+fun EditProfileDialogContainer(
+    state: ProfileUiState,
+    onPersonalInfoClick: () -> Unit,
+    onPasswordChangeClick: () -> Unit,
+    onCancel: () -> Unit
+) {
+    if (state.editProfileDialogState == EditProfileDialogState.Showing) {
+        AlertDialog(
+            containerColor = Color.White,
+            onDismissRequest = onCancel,
+            title = {
+                Text(
+                    text = "프로필 편집",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            text = {
+                Column {
+                    Text(
+                        text = "어떤 정보를 수정하시겠습니까?",
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Button(
+                        onClick = onPersonalInfoClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(
+                            text = "개인정보 변경하기",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    OutlinedButton(
+                        onClick = onPasswordChangeClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(
+                            text = "비밀번호 변경하기",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                Button(
+                    onClick = onCancel
+                ) {
+                    Text("취소")
+                }
+            },
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+}
+
 @Composable
 fun LogoutDialogContainer(
     state: ProfileUiState,
@@ -250,6 +330,24 @@ private fun PreviewLogoutConfirmationDialog() {
 private fun PreviewLogoutProcessingDialog() {
     MaterialTheme {
         LogoutProcessingDialog()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewEditProfileDialog() {
+
+    val mockState = ProfileUiState(
+        editProfileDialogState = EditProfileDialogState.Showing
+    )
+
+    MaterialTheme {
+        EditProfileDialogContainer(
+            state = mockState,
+            onPersonalInfoClick = {},
+            onPasswordChangeClick = {},
+            onCancel = {}
+        )
     }
 }
 

@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.updateInfo.component
+package com.ssafy.glim.feature.update.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

@@ -176,4 +176,18 @@
     <string name="logout_processing_title">로그아웃 중</string>
     <string name="logout_processing_message">잠시만 기다려주세요...</string>
 
+    <string name="change_password_title">비밀번호 변경</string>
+    <string name="current_password_label">현재 비밀번호</string>
+    <string name="current_password_hint">현재 비밀번호를 입력하세요</string>
+    <string name="new_password_instruction">새로운 비밀번호를 입력해주세요</string>
+    <string name="new_password_label">새 비밀번호</string>
+    <string name="update_profile">프로필 저장</string>
+    <string name="update_password">비밀번호 변경</string>
+    <string name="updating_profile">프로필 저장 중...</string>
+    <string name="updating_password">비밀번호 변경 중...</string>
+    <string name="success_update_password">비밀번호가 변경되었습니다</string>
+    <string name="error_current_password_empty">현재 비밀번호를 입력해주세요</string>
+    <string name="error_current_password_invalid">현재 비밀번호가 올바르지 않습니다</string>
+    <string name="error_update_password_failed">비밀번호 변경에 실패했습니다</string>
+
 </resources>

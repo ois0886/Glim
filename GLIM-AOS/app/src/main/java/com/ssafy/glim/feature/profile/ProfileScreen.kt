@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ssafy.glim.feature.profile.component.EditProfileDialogContainer
 import com.ssafy.glim.feature.profile.component.LogoutDialogContainer
 import com.ssafy.glim.feature.profile.component.MyGlimsSection
 import com.ssafy.glim.feature.profile.component.ProfileHeader
@@ -72,6 +73,10 @@ internal fun ProfileRoute(
         onUserInputChanged = viewModel::onUserInputChanged,
         onFinalConfirm = viewModel::onFinalConfirm,
         onFinalCancel = viewModel::onFinalCancel,
+        // 새로운 다이얼로그 관련 콜백 추가
+        onPersonalInfoClick = viewModel::navigateToPersonalInfo,
+        onPasswordChangeClick = viewModel::navigateToPasswordChange,
+        onEditProfileDialogCancel = viewModel::onEditProfileDialogCancel,
         modifier = Modifier.padding(padding)
     )
 }
@@ -93,6 +98,10 @@ private fun ProfileScreen(
     onUserInputChanged: (String) -> Unit,
     onFinalConfirm: () -> Unit,
     onFinalCancel: () -> Unit,
+    // 새로운 파라미터 추가
+    onPersonalInfoClick: () -> Unit,
+    onPasswordChangeClick: () -> Unit,
+    onEditProfileDialogCancel: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -128,6 +137,7 @@ private fun ProfileScreen(
         item { WithdrawalButton(onWithdrawalClick) }
     }
 
+    // 기존 다이얼로그들
     LogoutDialogContainer(
         state = state,
         onLogoutConfirm = onLogoutConfirm,
@@ -141,6 +151,14 @@ private fun ProfileScreen(
         onUserInputChanged = onUserInputChanged,
         onFinalConfirm = onFinalConfirm,
         onFinalCancel = onFinalCancel
+    )
+
+    // 새로운 다이얼로그 추가
+    EditProfileDialogContainer(
+        state = state,
+        onPersonalInfoClick = onPersonalInfoClick,
+        onPasswordChangeClick = onPasswordChangeClick,
+        onCancel = onEditProfileDialogCancel
     )
 }
 
@@ -187,7 +205,10 @@ private fun PreviewProfileScreen() {
             onFinalConfirm = {},
             onFinalCancel = {},
             onLogoutCancel = {},
-            onLogoutConfirm = {}
+            onLogoutConfirm = {},
+            onPersonalInfoClick = {},
+            onPasswordChangeClick = {},
+            onEditProfileDialogCancel = {}
         )
     }
 }

@@ -2,7 +2,6 @@ package com.ssafy.glim.feature.profile
 
 import androidx.annotation.StringRes
 
-
 data class ProfileUiState(
     val profileImageUrl: String? = null,
     val userName: String = "",
@@ -12,10 +11,16 @@ data class ProfileUiState(
     val glimShortCards: List<GlimShortCard> = emptyList(),
     val logoutDialogState: LogoutDialogState = LogoutDialogState.Hidden,
     val withdrawalDialogState: WithdrawalDialogState = WithdrawalDialogState.Hidden,
+    val editProfileDialogState: EditProfileDialogState = EditProfileDialogState.Hidden,
     val userInputText: String = "",
     val countdownSeconds: Int = 0,
     val isWithdrawalLoading: Boolean = false
 )
+
+enum class EditProfileDialogState {
+    Hidden,
+    Showing
+}
 
 data class GlimShortCard(
     val id: String,

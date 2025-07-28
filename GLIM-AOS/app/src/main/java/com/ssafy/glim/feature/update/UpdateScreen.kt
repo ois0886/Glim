@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.updateInfo
+package com.ssafy.glim.feature.update
 
 import android.net.Uri
 import android.widget.Toast
@@ -8,15 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,18 +30,24 @@ import com.ssafy.glim.core.ui.GlimTopBar
 import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.main.excludeSystemBars
-import com.ssafy.glim.feature.updateInfo.component.EmailSection
-import com.ssafy.glim.feature.updateInfo.component.ProfileImageSection
+import com.ssafy.glim.feature.update.component.EmailSection
+import com.ssafy.glim.feature.update.component.ProfileImageSection
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
-internal fun UpdateProfileRoute(
+internal fun UpdateRoute(
+    updateType: UpdateType,
     padding: PaddingValues,
     popBackStack: () -> Unit,
-    viewModel: UpdateInfoViewModel = hiltViewModel(),
+    viewModel: UpdateViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.container.stateFlow.collectAsState()
     val context = LocalContext.current
+
+    // 화면 진입 시 업데이트 타입 설정
+    LaunchedEffect(updateType) {
+        viewModel.setUpdateType(updateType)
+    }
 
     val imagePickerLauncher =
         rememberLauncherForActivityResult(
@@ -54,6 +57,7 @@ internal fun UpdateProfileRoute(
                 viewModel.onImageSelected(it)
             }
         }
+
     viewModel.collectSideEffect { effect ->
         when (effect) {
             is UpdateInfoSideEffect.ShowErrorRes ->
@@ -70,37 +74,55 @@ internal fun UpdateProfileRoute(
                     context.getString(R.string.success_update_profile),
                     Toast.LENGTH_SHORT,
                 ).show()
+                popBackStack()
+            }
+
+            is UpdateInfoSideEffect.PasswordUpdated -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.success_update_password),
+                    Toast.LENGTH_SHORT,
+                ).show()
+                popBackStack()
             }
         }
     }
 
-    UpdateProfileScreen(
+    UpdateScreen(
         state = uiState,
         padding = padding,
         onNameChanged = viewModel::onNameChanged,
         onProfileImageClicked = viewModel::onProfileImageClicked,
+        onCurrentPasswordChanged = viewModel::onCurrentPasswordChanged,
+        onNewPasswordChanged = viewModel::onNewPasswordChanged,
+        onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
         onSaveClicked = viewModel::onSaveClicked,
-        onBackClick = viewModel::onBackClicked,
+        onBackClick = { popBackStack() },
     )
 }
 
 @Composable
-internal fun UpdateProfileScreen(
+internal fun UpdateScreen(
     state: UpdateInfoUiState,
     padding: PaddingValues,
     onNameChanged: (String) -> Unit,
     onProfileImageClicked: () -> Unit,
+    onCurrentPasswordChanged: (String) -> Unit,
+    onNewPasswordChanged: (String) -> Unit,
+    onConfirmPasswordChanged: (String) -> Unit,
     onSaveClicked: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     Column(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(padding.excludeSystemBars()),
     ) {
         GlimTopBar(
-            title = stringResource(id = R.string.edit_profile_title),
+            title = when (state.updateType) {
+                UpdateType.PERSONAL -> stringResource(id = R.string.edit_profile_title)
+                UpdateType.PASSWORD -> stringResource(id = R.string.change_password_title)
+            },
             showBack = true,
             alignment = TitleAlignment.Center,
             titleColor = Color.Black,
@@ -109,59 +131,45 @@ internal fun UpdateProfileScreen(
         )
 
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            ProfileImageSection(
-                imageUri = state.profileImageUri,
-                onImageClicked = onProfileImageClicked,
-            )
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(text = stringResource(id = R.string.profile_label_name))
-                Spacer(modifier = Modifier.height(8.dp))
-                TextField(
-                    value = state.name,
-                    onValueChange = onNameChanged,
-                    label = { Text(stringResource(id = R.string.profile_hint_name)) },
-                    isError = state.nameError != null,
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                if (state.nameError != null) {
-                    Text(
-                        text = stringResource(state.nameError),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.error,
+            when (state.updateType) {
+                UpdateType.PERSONAL -> {
+                    PersonalInfoContent(
+                        state = state,
+                        onNameChanged = onNameChanged,
+                        onProfileImageClicked = onProfileImageClicked
                     )
-                } else {
-                    Text(
-                        text = stringResource(id = R.string.profile_note_name),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.Gray,
+                }
+
+                UpdateType.PASSWORD -> {
+                    PasswordChangeContent(
+                        state = state,
+                        onCurrentPasswordChanged = onCurrentPasswordChanged,
+                        onNewPasswordChanged = onNewPasswordChanged,
+                        onConfirmPasswordChanged = onConfirmPasswordChanged
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // 이메일 섹션
-            EmailSection(email = state.email)
 
             Spacer(modifier = Modifier.height(32.dp))
 
             GlimButton(
-                text =
-                if (state.isLoading) {
-                    stringResource(R.string.updating)
-                } else {
-                    stringResource(R.string.update)
+                text = when {
+                    state.isLoading && state.updateType == UpdateType.PERSONAL ->
+                        stringResource(R.string.updating_profile)
+
+                    state.isLoading && state.updateType == UpdateType.PASSWORD ->
+                        stringResource(R.string.updating_password)
+
+                    state.updateType == UpdateType.PERSONAL ->
+                        stringResource(R.string.update_profile)
+
+                    else -> stringResource(R.string.update_password)
                 },
                 onClick = onSaveClicked,
                 enabled = state.isSaveEnabled && !state.isLoading,
@@ -175,12 +183,12 @@ internal fun UpdateProfileScreen(
 @Preview(showBackground = true)
 @Composable
 fun UpdateProfileScreenPreview() {
-    UpdateProfileScreen(
+    UpdateScreen(
         state =
         UpdateInfoUiState(
             profileImageUri = null,
-            name = "홍길동",
-            nameError = null,
+            nickname = "홍길동",
+            nicknameError = null,
             email = "hong@example.com",
             isLoading = false,
         ),
@@ -195,12 +203,12 @@ fun UpdateProfileScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 fun UpdateProfileScreenErrorPreview() {
-    UpdateProfileScreen(
+    UpdateScreen(
         state =
         UpdateInfoUiState(
             profileImageUri = null,
-            name = "",
-            nameError = R.string.error_name_empty,
+            nickname = "",
+            nicknameError = R.string.error_name_empty,
             email = "hong@example.com",
             isLoading = false,
         ),
