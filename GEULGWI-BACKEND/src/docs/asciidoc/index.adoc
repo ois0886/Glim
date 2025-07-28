@@ -153,42 +153,6 @@ include::{snippets}/member_api_docs_test/get_member_by_id/http-response.adoc[]
 
 include::{snippets}/member_api_docs_test/get_member_by_id/response-fields.adoc[]
 
-=== 등록된 모든 사용자 조회
-
-==== 요청
-
-include::{snippets}/member_api_docs_test/get_all_members/http-request.adoc[]
-
-==== 응답
-
-include::{snippets}/member_api_docs_test/get_all_members/http-response.adoc[]
-
-include::{snippets}/member_api_docs_test/get_all_members/response-fields.adoc[]
-
-=== 활성 상태인 사용자 조회
-
-==== 요청
-
-include::{snippets}/member_api_docs_test/get_active_member_by_id/http-request.adoc[]
-
-==== 응답
-
-include::{snippets}/member_api_docs_test/get_active_member_by_id/http-response.adoc[]
-
-include::{snippets}/member_api_docs_test/get_active_member_by_id/response-fields.adoc[]
-
-=== 활성 상태인 모든 사용자 조회
-
-==== 요청
-
-include::{snippets}/member_api_docs_test/get_all_active_members/http-request.adoc[]
-
-==== 응답
-
-include::{snippets}/member_api_docs_test/get_all_active_members/http-response.adoc[]
-
-include::{snippets}/member_api_docs_test/get_all_active_members/response-fields.adoc[]
-
 === 사용자 정보 수정
 
 ==== 요청
@@ -239,7 +203,7 @@ include::{snippets}/auth_api_docs_test/login_test/http-response.adoc[]
 
 include::{snippets}/auth_api_docs_test/login_test/response-fields.adoc[]
 
-=== 리프레시 토큰 갱신
+=== 토큰 갱신
 
 ==== 요청
 

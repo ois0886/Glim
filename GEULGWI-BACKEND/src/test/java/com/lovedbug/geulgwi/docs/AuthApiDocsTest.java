@@ -95,6 +95,7 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
                 ),
                 responseFields(
                     fieldWithPath("accessToken").description("API 요청에 사용할 액세스 토큰"),
+                    fieldWithPath("refreshToken").description("API 요청에 사용할 리프레쉬 토큰"),
                     fieldWithPath("memberEmail").description("로그인한 사용자 이메일"),
                     fieldWithPath("memberId").description("로그인한 사용자 ID")
                 )
@@ -106,7 +107,7 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
             .statusCode(200);
     }
 
-    @DisplayName("사용자가_유효한_리프레시_토큰으로_갱신한다.")
+    @DisplayName("사용자가_유효한_토큰으로_갱신한다.")
     @Test
     void refresh_token_test() {
 
