@@ -215,16 +215,5 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
             return createVerifiedMember("test_verified", passwordEncoder);
         }
-
-        public static Member[] createGetAllVerifiedTestMembers(int size, PasswordEncoder passwordEncoder) {
-
-            Member[] members = new Member[size];
-
-            for (int i = 0; i < size; i++){
-                members[i] = createVerifiedMember("test_all_verified_" + (i + 1), passwordEncoder);
-            }
-
-            return members;
-        }
     }
 }
