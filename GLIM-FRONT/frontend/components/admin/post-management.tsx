@@ -1,14 +1,26 @@
+/**
+ * @file post-management.tsx
+ * @description '글:림' 관리자 대시보드에서 게시물(글귀)을 관리하는 컴포넌트.
+ *              게시물 검색, 정렬, 상세 정보 편집, 삭제 기능을 제공합니다.
+ *              `app/page.tsx`에서 '게시물 관리' 섹션에 동적으로 로드되어 사용됩니다.
+ *
+ * @backend_note
+ * - 현재 게시물 데이터는 `/public/posts.json` 파일에서 로드됩니다.
+ * - 게시물 삭제 및 편집 기능은 `http://localhost:50871/api/v1/quotes/{quoteId}` 엔드포인트를 호출합니다.
+ * - **향후 백엔드 연동 시, 데이터 로드 (`useEffect` 내 `fetchQuotes`) 및 수정/삭제 (`handleDeleteClick`, `handleSaveEdit`) 로직을
+ *   백엔드 API 호출로 변경해야 합니다.**
+ */
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Search, Trash2, Edit } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
-import { Input } from "./ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
-import { Badge } from "./ui/badge"
-import { Button } from "./ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 interface Quote {
   quoteId: number;
@@ -140,33 +152,34 @@ export function PostManagement() {
             </TableHeader>
             <TableBody>
               {filteredQuotes.map((quote) => (
-                <TableRow key={quote.quoteId}><TableCell className="font-mono">{quote.quoteId}</TableCell>
-                  <TableCell>
-                    {/* <img src={`http://localhost:50871${quote.bookCoverUrl}`} alt={quote.bookTitle} className="w-16 h-auto" /> */}
-                    {/* 이미지 대신 텍스트로 대체 */}
-                    {quote.quoteImageName ? `이미지: ${quote.quoteImageName}` : '이미지 없음'}
-                  </TableCell>
-                  <TableCell>
-                    <div className="font-bold text-foreground">{quote.bookTitle}</div>
-                    <div className="text-xs">{quote.author}</div>
-                  </TableCell>
-                  <TableCell>{quote.quoteViews ?? 0}</TableCell>
-                  <TableCell>
-                    <Badge variant={quote.status === "visible" ? "default" : "destructive"}>
-                      {quote.status === "visible" ? "표시" : "숨김"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={() => handleEditClick(quote)}>
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button variant="outline" size="sm" onClick={() => handleDeleteClick(quote.quoteId)}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                <React.Fragment key={quote.quoteId}>
+                  <TableRow>
+                    <TableCell className="font-mono">{quote.quoteId}</TableCell>
+                    <TableCell>
+                      {quote.quoteImageName ? `이미지: ${quote.quoteImageName}` : '이미지 없음'}
+                    </TableCell>
+                    <TableCell>
+                      <div className="font-bold text-foreground">{quote.bookTitle}</div>
+                      <div className="text-xs">{quote.author}</div>
+                    </TableCell>
+                    <TableCell>{quote.quoteViews ?? 0}</TableCell>
+                    <TableCell>
+                      <Badge variant={quote.status === "visible" ? "default" : "destructive"}>
+                        {quote.status === "visible" ? "표시" : "숨김"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => handleEditClick(quote)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleDeleteClick(quote.quoteId)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                </React.Fragment>
               ))}
             </TableBody>
           </Table>

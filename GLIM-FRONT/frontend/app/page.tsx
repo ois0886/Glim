@@ -5,14 +5,41 @@ import { AppSidebar } from "@/components/admin/app-sidebar";
 import { VisitorAnalytics } from "@/components/admin/visitor-analytics";
 import { UserManagement } from "@/components/admin/user-management";
 import { PostManagement } from "@/components/admin/post-management";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/admin/ui/card";
-import { Button } from "@/components/admin/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/admin/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserDemographics } from "@/components/admin/user-demographics";
-import { CurationEditor } from "@/components/admin/curation-editor";
+import dynamic from 'next/dynamic';
+
+// Dynamically import CurationEditor to ensure it's client-side rendered
+const CurationEditor = dynamic(
+  () => import('@/components/admin/curation-editor').then(mod => mod.CurationEditor),
+  { ssr: false }
+);
+
+// Dynamically import CurationList to ensure it's client-side rendered
+const CurationList = dynamic(
+  () => import('@/components/admin/curation-list').then(mod => mod.CurationList),
+  { ssr: false }
+);
 
 export default function Dashboard() {
-  const [activeSection, setActiveSection] = useState("users");
+  const [activeSection, setActiveSection] = useState("users"); // Default to user management
+  const [editingCurationId, setEditingCurationId] = useState<string | undefined>(undefined);
+
+  const handleNewCuration = () => {
+    setEditingCurationId(undefined);
+    setActiveSection("curation-editor");
+  };
+
+  const handleEditCuration = (id: string) => {
+    setEditingCurationId(id);
+    setActiveSection("curation-editor");
+  };
+
+  const handleSaveSuccess = () => {
+    setActiveSection("curation-list"); // Go back to list after saving
+  };
 
   const renderContent = () => {
     switch (activeSection) {
@@ -25,7 +52,11 @@ export default function Dashboard() {
       case "demographics":
         return <UserDemographics />;
       case "curation":
-        return <CurationEditor />;
+        return <CurationList onNewCuration={handleNewCuration} onEditCuration={handleEditCuration} />;
+      case "curation-editor":
+        return <CurationEditor curationId={editingCurationId} onSaveSuccess={handleSaveSuccess} />;
+      case "curation-list":
+        return <CurationList onNewCuration={handleNewCuration} onEditCuration={handleEditCuration} />;
       default:
         return <UserManagement />;
     }
