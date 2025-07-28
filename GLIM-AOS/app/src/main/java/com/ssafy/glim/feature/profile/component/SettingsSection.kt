@@ -63,10 +63,10 @@ internal fun SettingItem(
 ) {
     Row(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .clickable { onClick() }
-                .padding(vertical = 8.dp),
+        modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {

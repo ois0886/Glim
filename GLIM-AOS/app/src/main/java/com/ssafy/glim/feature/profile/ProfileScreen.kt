@@ -91,7 +91,9 @@ private fun ProfileScreen(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize().background(Color.White),
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
@@ -130,7 +132,6 @@ private fun ProfileScreen(
         onFinalCancel = onFinalCancel
     )
 }
-
 
 @Preview(showBackground = true)
 @Composable

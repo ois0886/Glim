@@ -17,7 +17,6 @@ constructor() : Navigator, InternalNavigator {
         saveState: Boolean,
         launchSingleTop: Boolean,
         inclusive: Boolean
-
     ) {
         channel.send(
             InternalRoute.Navigate(
