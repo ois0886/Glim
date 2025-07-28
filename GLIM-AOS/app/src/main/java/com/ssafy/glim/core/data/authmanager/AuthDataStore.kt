@@ -43,4 +43,3 @@ class AuthDataStore @Inject constructor(
     suspend fun saveUserId(userId: String) = USER_ID.saveTo(dataStore, userId)
     suspend fun deleteUserId() = USER_ID.deleteFrom(dataStore)
 }
-

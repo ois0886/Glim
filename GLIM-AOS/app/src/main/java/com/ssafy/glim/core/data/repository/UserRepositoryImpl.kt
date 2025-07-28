@@ -42,5 +42,4 @@ class UserRepositoryImpl @Inject constructor(
             .onSuccess { authManager.deleteAll() }
             .onFailure { Log.d("UserRepositoryImpl", "deleteUser failed: ${it.message}") }
     }
-
 }

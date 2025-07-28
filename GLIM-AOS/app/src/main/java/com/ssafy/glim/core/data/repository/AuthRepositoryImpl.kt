@@ -47,7 +47,6 @@ class AuthRepositoryImpl @Inject constructor(
             )
         }.onFailure {
             Log.d("AuthRepositoryImpl", "login failed: ${it.message}")
-
         }
     }
 
