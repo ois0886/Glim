@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import com.lovedbug.geulgwi.core.domain.curation.dto.CurationBookDto;
-import com.lovedbug.geulgwi.core.domain.curation.dto.CurationQuoteDto;
+import com.lovedbug.geulgwi.core.domain.curation.projection.CurationBook;
+import com.lovedbug.geulgwi.core.domain.curation.projection.CurationQuote;
 
 @Repository
 public interface MainCurationRepository extends JpaRepository<MainCuration, Long> {
@@ -29,7 +29,7 @@ public interface MainCurationRepository extends JpaRepository<MainCuration, Long
         WHERE
             ci.main_curation_id = :curationId
         """, nativeQuery = true)
-    List<CurationBookDto> findCurationBooksByCurationId(@Param("curationId") Long curationId);
+    List<CurationBook> findCurationBooksByCurationId(@Param("curationId") Long curationId);
 
     @Query(value = """
         SELECT
@@ -50,6 +50,6 @@ public interface MainCurationRepository extends JpaRepository<MainCuration, Long
         WHERE
             ci.main_curation_id = :curationId
         """, nativeQuery = true)
-    List<CurationQuoteDto> findCurationQuotesByCurationId(@Param("curationId") Long curationId);
+    List<CurationQuote> findCurationQuotesByCurationId(@Param("curationId") Long curationId);
 
 }

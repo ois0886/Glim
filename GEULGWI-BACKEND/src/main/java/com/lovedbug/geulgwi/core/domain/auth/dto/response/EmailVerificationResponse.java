@@ -1,4 +1,4 @@
-package com.lovedbug.geulgwi.core.domain.member.dto;
+package com.lovedbug.geulgwi.core.domain.auth.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpResponseDto {
-    private String email;
-    private String nickname;
+public class EmailVerificationResponse {
+
     private String message;
+    private String email;
+    private String verificationCode;
 }

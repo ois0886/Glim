@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.lovedbug.geulgwi.external.book_provider.aladdin.AladdinListQueryType;
-import com.lovedbug.geulgwi.external.book_provider.aladdin.AladdinSearchQueryType;
+import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinListQueryType;
+import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinSearchQueryType;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookDto;
 
 @RestController

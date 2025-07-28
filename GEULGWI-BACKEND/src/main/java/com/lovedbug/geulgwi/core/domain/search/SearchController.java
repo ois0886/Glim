@@ -12,13 +12,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SearchController {
 
-    private final SearchHistoryService searchHistoryService;
+    private final SearchService searchService;
 
     @GetMapping("/popular")
     public ResponseEntity<List<SearchHistoryResponseDto>> getSearchHistory() {
 
         return ResponseEntity
             .ok()
-            .body(searchHistoryService.getSearchPopularHistory());
+            .body(searchService.getSearchPopularHistory());
     }
 }

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BookCreateDto {
+public class BookCreateRequest {
 
     private String title;
     private String author;
@@ -30,7 +30,7 @@ public class BookCreateDto {
     private String coverUrl;
     private String linkUrl;
 
-    public static Book toEntity(BookCreateDto bookCreateData) {
+    public static Book toEntity(BookCreateRequest bookCreateData) {
         return Book.builder()
             .title(bookCreateData.getTitle())
             .author(bookCreateData.getAuthor())

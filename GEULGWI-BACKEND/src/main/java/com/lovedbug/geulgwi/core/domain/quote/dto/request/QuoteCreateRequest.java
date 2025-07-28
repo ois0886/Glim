@@ -1,7 +1,7 @@
-package com.lovedbug.geulgwi.core.domain.quote.dto;
+package com.lovedbug.geulgwi.core.domain.quote.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lovedbug.geulgwi.core.domain.book.dto.BookCreateDto;
+import com.lovedbug.geulgwi.core.domain.book.dto.BookCreateRequest;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class QuoteCreateDto {
+public class QuoteCreateRequest {
 
     @JsonIgnore
     private Long memberId;
@@ -23,9 +23,9 @@ public class QuoteCreateDto {
     private Integer page;
 
     private String isbn;
-    private BookCreateDto bookCreateData;
+    private BookCreateRequest bookCreateData;
 
-    public static Quote toEntity(QuoteCreateDto quoteData, Book book, ImageMetaData imageMetaData) {
+    public static Quote toEntity(QuoteCreateRequest quoteData, Book book, ImageMetaData imageMetaData) {
         return Quote.builder()
             .memberId(quoteData.getMemberId())
             .visibility(quoteData.getVisibility())
@@ -38,7 +38,7 @@ public class QuoteCreateDto {
             .build();
     }
 
-    public void setMemberId(Long memberId){
+    public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
 

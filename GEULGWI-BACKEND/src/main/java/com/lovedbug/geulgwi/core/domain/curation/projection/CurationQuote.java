@@ -1,6 +1,6 @@
-package com.lovedbug.geulgwi.core.domain.curation.dto;
+package com.lovedbug.geulgwi.core.domain.curation.projection;
 
-public interface CurationQuoteDto {
+public interface CurationQuote {
 
     Long getCurationItemId();
 

@@ -1,8 +1,8 @@
 package com.lovedbug.geulgwi.core.domain.quote;
 
-import com.lovedbug.geulgwi.core.domain.quote.dto.QuoteCreateDto;
-import com.lovedbug.geulgwi.core.domain.quote.dto.QuoteResponseDto;
-import com.lovedbug.geulgwi.core.domain.quote.dto.QuoteWithBookDto;
+import com.lovedbug.geulgwi.core.domain.quote.dto.request.QuoteCreateRequest;
+import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteResponse;
+import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteWithBookResponse;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -15,9 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.lovedbug.geulgwi.external.image.ImageMetaData;
-import com.lovedbug.geulgwi.core.domain.book.dto.BookCreateDto;
+import com.lovedbug.geulgwi.core.domain.book.dto.BookCreateRequest;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
-import com.lovedbug.geulgwi.external.image.ImageHandler;
+import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 
 
@@ -29,7 +29,7 @@ public class QuoteService {
     private final BookRepository bookRepository;
     private final ImageHandler imageHandler;
 
-    public List<QuoteWithBookDto> getQuotes(Pageable pageable) {
+    public List<QuoteWithBookResponse> getQuotes(Pageable pageable) {
         List<Quote> quotes = quoteRepository.findPublicQuotes(pageable);
 
         return quotes.stream()
@@ -37,11 +37,11 @@ public class QuoteService {
             .toList();
     }
 
-    public List<QuoteResponseDto> getPublicQuotesByIsbn(String isbn){
+    public List<QuoteResponse> getPublicQuotesByIsbn(String isbn){
         List<Quote> quotes = quoteRepository.findAllByBookIsbnAndVisibility(isbn, "PUBLIC");
 
         return quotes.stream()
-            .map(QuoteResponseDto::toResponseDto)
+            .map(QuoteResponse::toResponseDto)
             .collect(Collectors.toList());
     }
 
@@ -54,16 +54,16 @@ public class QuoteService {
     }
 
     @Transactional
-    public void createQuote(QuoteCreateDto quoteData, MultipartFile quoteImage) {
+    public void createQuote(QuoteCreateRequest quoteData, MultipartFile quoteImage) {
         Book book = bookRepository.findBookByIsbn(quoteData.getIsbn())
-            .orElseGet(() -> bookRepository.save(BookCreateDto.toEntity(quoteData.getBookCreateData())));
+            .orElseGet(() -> bookRepository.save(BookCreateRequest.toEntity(quoteData.getBookCreateData())));
 
         ImageMetaData imageMetaData = imageHandler.saveImage(quoteImage);
 
-        quoteRepository.save(QuoteCreateDto.toEntity(quoteData, book, imageMetaData));
+        quoteRepository.save(QuoteCreateRequest.toEntity(quoteData, book, imageMetaData));
     }
 
-    public List<QuoteWithBookDto> getPopularQuotesWithBook() {
+    public List<QuoteWithBookResponse> getPopularQuotesWithBook() {
         List<Quote> quotes = quoteRepository.findPublicQuotes(
             PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "views")));
 
@@ -72,8 +72,8 @@ public class QuoteService {
             .toList();
     }
 
-    public static QuoteWithBookDto toDto(Quote quote) {
-        return QuoteWithBookDto.builder()
+    public static QuoteWithBookResponse toDto(Quote quote) {
+        return QuoteWithBookResponse.builder()
             .quoteId(quote.getQuoteId())
             .quoteImageName(quote.getImageName())
             .page(quote.getPage())

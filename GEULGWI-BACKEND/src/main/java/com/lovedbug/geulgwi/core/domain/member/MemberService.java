@@ -1,9 +1,9 @@
 package com.lovedbug.geulgwi.core.domain.member;
 
-import com.lovedbug.geulgwi.core.domain.member.dto.MemberDto;
-import com.lovedbug.geulgwi.core.domain.member.dto.SignUpRequestDto;
-import com.lovedbug.geulgwi.core.domain.member.dto.SignUpResponseDto;
-import com.lovedbug.geulgwi.core.domain.member.dto.UpdateRequestDto;
+import com.lovedbug.geulgwi.core.domain.member.dto.response.MemberResponse;
+import com.lovedbug.geulgwi.core.domain.member.dto.request.SignUpRequest;
+import com.lovedbug.geulgwi.core.domain.member.dto.response.SignUpResponse;
+import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
 import com.lovedbug.geulgwi.external.email.EmailSender;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
@@ -25,7 +25,7 @@ public class MemberService {
     private final EmailSender emailSender;
 
     @Transactional
-    public SignUpResponseDto registerMember(SignUpRequestDto signUpRequest){
+    public SignUpResponse registerMember(SignUpRequest signUpRequest){
 
         if (memberRepository.existsByEmail(signUpRequest.getEmail())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 가입된 이메일 입니다.");
@@ -47,14 +47,14 @@ public class MemberService {
 
         emailSender.sendWelcomeEmail(reigisterMember.getEmail(), reigisterMember.getNickname());
 
-        return SignUpResponseDto.builder()
+        return SignUpResponse.builder()
             .email(signUpRequest.getEmail())
             .nickname(signUpRequest.getNickname())
             .message("회원가입이 완료되었습니다.")
             .build();
     }
 
-    public MemberDto findByMemberId(Long memberId){
+    public MemberResponse findByMemberId(Long memberId){
 
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new NoSuchElementException(
@@ -63,7 +63,7 @@ public class MemberService {
         return toMemberDto(member);
     }
 
-    public MemberDto findByMemberEmail(String email){
+    public MemberResponse findByMemberEmail(String email){
 
         Member member =  memberRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException(
@@ -72,14 +72,14 @@ public class MemberService {
         return toMemberDto(member);
     }
 
-    public List<MemberDto> findAllMembers(){
+    public List<MemberResponse> findAllMembers(){
 
         return memberRepository.findAll().stream()
                 .map(this::toMemberDto)
                 .toList();
     }
 
-    public MemberDto getActiveMemberByMemberId(Long memberId){
+    public MemberResponse getActiveMemberByMemberId(Long memberId){
 
         Member member = memberRepository.findByMemberIdAndStatus(memberId, MemberStatus.ACTIVE)
                 .orElseThrow(() -> new NoSuchElementException(
@@ -88,7 +88,7 @@ public class MemberService {
         return toMemberDto(member);
     }
 
-    public List<MemberDto> getAllActiveMembers(){
+    public List<MemberResponse> getAllActiveMembers(){
 
         return memberRepository.findAllByStatus(MemberStatus.ACTIVE).stream()
                 .map(this::toMemberDto)
@@ -96,7 +96,7 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberDto updateMember(Long memberId, UpdateRequestDto updateRequest){
+    public MemberResponse updateMember(Long memberId, UpdateRequest updateRequest){
 
         Member existingMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException(
@@ -107,7 +107,7 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberDto softDeleteMember(Long memberId){
+    public MemberResponse softDeleteMember(Long memberId){
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException(
@@ -117,9 +117,9 @@ public class MemberService {
         return toMemberDto(member);
     }
 
-    private MemberDto toMemberDto(Member member){
+    private MemberResponse toMemberDto(Member member){
 
-        return MemberDto.builder()
+        return MemberResponse.builder()
             .memberId(member.getMemberId())
             .email(member.getEmail())
             .password(member.getPassword())

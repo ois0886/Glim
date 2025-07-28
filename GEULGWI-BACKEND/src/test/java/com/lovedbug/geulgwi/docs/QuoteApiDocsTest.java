@@ -26,11 +26,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lovedbug.geulgwi.external.image.ImageMetaData;
-import com.lovedbug.geulgwi.core.domain.book.dto.BookCreateDto;
-import com.lovedbug.geulgwi.core.domain.quote.dto.QuoteCreateDto;
+import com.lovedbug.geulgwi.core.domain.book.dto.BookCreateRequest;
+import com.lovedbug.geulgwi.core.domain.quote.dto.request.QuoteCreateRequest;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
-import com.lovedbug.geulgwi.external.image.ImageHandler;
+import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.quote.QuoteRepository;
 
@@ -225,8 +225,8 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
             .statusCode(204);
     }
 
-    static BookCreateDto createBookCreateDto() {
-        return BookCreateDto.builder()
+    static BookCreateRequest createBookCreateDto() {
+        return BookCreateRequest.builder()
             .title("테스트 제목")
             .author("테스트 저자")
             .translator("테스트 번역가")
@@ -242,8 +242,8 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
             .build();
     }
 
-    static QuoteCreateDto createQuoteCreateDto() {
-        return QuoteCreateDto.builder()
+    static QuoteCreateRequest createQuoteCreateDto() {
+        return QuoteCreateRequest.builder()
             .memberId(100L)
             .visibility("PUBLIC")
             .content("테스트용 글귀 내용입니다.")

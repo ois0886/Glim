@@ -1,7 +1,7 @@
 package com.lovedbug.geulgwi.docs;
 
-import com.lovedbug.geulgwi.core.domain.member.dto.SignUpRequestDto;
-import com.lovedbug.geulgwi.core.domain.member.dto.UpdateRequestDto;
+import com.lovedbug.geulgwi.core.domain.member.dto.request.SignUpRequest;
+import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
@@ -48,7 +48,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         Member testMember = TestMemberFactory.createGetTestMember(passwordEncoder);
 
-        SignUpRequestDto signUpRequestDto = SignUpRequestDto.builder()
+        SignUpRequest signUpRequest = SignUpRequest.builder()
             .email(testMember.getEmail())
             .password("pwd1234")
             .nickname("testNickname1")
@@ -58,7 +58,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         given(this.spec)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(signUpRequestDto)
+            .body(signUpRequest)
             .filter(document("{class_name}/{method_name}",
                     requestFields(
                         fieldWithPath("email").description("로그인시 사용할 id(필수)"),
@@ -103,7 +103,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
         Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
 
-        UpdateRequestDto updateRequestDto = UpdateRequestDto.builder()
+        UpdateRequest updateRequest = UpdateRequest.builder()
             .password("updatePwd123")
             .nickname("updatedNickname")
             .birthDate(LocalDateTime.of(1999, 1, 7, 0,0,0))
@@ -112,7 +112,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         given(this.spec)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(updateRequestDto)
+            .body(updateRequest)
             .filter(document("{class_name}/{method_name}",
                 pathParameters(
                     parameterWithName("memberId").description("수정할 사용자의 ID")

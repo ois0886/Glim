@@ -1,9 +1,9 @@
 package com.lovedbug.geulgwi.core.domain.auth;
 
-import com.lovedbug.geulgwi.core.domain.auth.dto.EmailVerificationRequestDto;
-import com.lovedbug.geulgwi.core.domain.auth.dto.JwtResponseDto;
-import com.lovedbug.geulgwi.core.domain.member.dto.LoginRequestDto;
-import com.lovedbug.geulgwi.core.domain.auth.dto.EmailVerificationResponseDto;
+import com.lovedbug.geulgwi.core.domain.auth.dto.request.EmailVerificationRequest;
+import com.lovedbug.geulgwi.core.domain.auth.dto.response.JwtResponse;
+import com.lovedbug.geulgwi.core.domain.auth.dto.request.LoginRequest;
+import com.lovedbug.geulgwi.core.domain.auth.dto.response.EmailVerificationResponse;
 import com.lovedbug.geulgwi.external.email.EmailVerifier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +18,14 @@ public class AuthController {
     private final EmailVerifier emailVerifier;
 
     @PostMapping("/email-verification-code")
-    public ResponseEntity<EmailVerificationResponseDto> sendVerificationCode(
-        @RequestBody EmailVerificationRequestDto emailVerificationRequest) {
+    public ResponseEntity<EmailVerificationResponse> sendVerificationCode(
+        @RequestBody EmailVerificationRequest emailVerificationRequest) {
 
         String verificationCode = emailVerifier.sendVerificationCode(emailVerificationRequest.getEmail());
 
         return ResponseEntity
             .ok()
-            .body(EmailVerificationResponseDto.builder()
+            .body(EmailVerificationResponse.builder()
                 .message("인증 이메일이 전송되었습니다.")
                 .email(emailVerificationRequest.getEmail())
                 .verificationCode(verificationCode)
@@ -34,13 +34,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDto> login(@RequestBody LoginRequestDto loginRequest){
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest){
 
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<JwtResponseDto> refresh(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<JwtResponse> refresh(@RequestHeader("Authorization") String authHeader) {
 
         return ResponseEntity.ok(authService.refresh(authHeader));
     }

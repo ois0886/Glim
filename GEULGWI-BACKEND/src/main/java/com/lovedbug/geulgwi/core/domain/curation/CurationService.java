@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
-import com.lovedbug.geulgwi.external.book_provider.aladdin.AladdinListQueryType;
-import com.lovedbug.geulgwi.core.domain.curation.dto.CurationContentDto;
-import com.lovedbug.geulgwi.core.domain.curation.dto.CurationItemDto;
+import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinListQueryType;
+import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationContentResponse;
+import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
 import com.lovedbug.geulgwi.core.domain.curation.mapper.CurationMapper;
 
 @Service
@@ -21,7 +21,7 @@ public class CurationService {
     private final QuoteService quoteService;
     private final MainCurationRepository mainCurationRepository;
 
-    public List<CurationItemDto> getMainCuration() {
+    public List<CurationItemResponse> getMainCuration() {
         final long MAIN_CURATION_ID = 1L;
 
         return Stream.of(
@@ -34,24 +34,24 @@ public class CurationService {
             .toList();
     }
 
-    public List<CurationItemDto> getBookCurationsById(long curationId) {
+    public List<CurationItemResponse> getBookCurationsById(long curationId) {
         return CurationMapper.toCurationItemDtoListFromBooks(
             mainCurationRepository.findCurationBooksByCurationId(curationId)
         );
     }
 
-    public List<CurationItemDto> getQuoteCurationsById(long curationId) {
+    public List<CurationItemResponse> getQuoteCurationsById(long curationId) {
         return CurationMapper.toCurationItemDtoListFromQuotes(
             mainCurationRepository.findCurationQuotesByCurationId(curationId)
         );
     }
 
-    public CurationItemDto getPopularQuoteCuration() {
-        List<CurationContentDto> contents = CurationMapper.toCurationContentListFromQuotes(
+    public CurationItemResponse getPopularQuoteCuration() {
+        List<CurationContentResponse> contents = CurationMapper.toCurationContentListFromQuotes(
             quoteService.getPopularQuotesWithBook()
         );
 
-        return CurationItemDto.builder()
+        return CurationItemResponse.builder()
             .title("현재 인기 많은 글귀")
             .description("현재 인기 많은 글귀 입니다")
             .curationType(CurationType.QUOTE)
@@ -59,12 +59,12 @@ public class CurationService {
             .build();
     }
 
-    public CurationItemDto getPopularBookCuration() {
-        List<CurationContentDto> contents = CurationMapper.toCurationContentListFromBooks(
+    public CurationItemResponse getPopularBookCuration() {
+        List<CurationContentResponse> contents = CurationMapper.toCurationContentListFromBooks(
             bookService.getBestSellerBooks(AladdinListQueryType.BESTSELLER, 1)
         );
 
-        return CurationItemDto.builder()
+        return CurationItemResponse.builder()
             .title("현재 인기 많은 도서")
             .description("현재 인기 많은 도서 입니다")
             .curationType(CurationType.BOOK)

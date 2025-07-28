@@ -1,8 +1,8 @@
 package com.lovedbug.geulgwi.core.domain.auth;
 
-import com.lovedbug.geulgwi.core.domain.auth.dto.JwtResponseDto;
-import com.lovedbug.geulgwi.core.domain.member.dto.LoginRequestDto;
-import com.lovedbug.geulgwi.core.domain.member.dto.MemberDto;
+import com.lovedbug.geulgwi.core.domain.auth.dto.response.JwtResponse;
+import com.lovedbug.geulgwi.core.domain.auth.dto.request.LoginRequest;
+import com.lovedbug.geulgwi.core.domain.member.dto.response.MemberResponse;
 import com.lovedbug.geulgwi.core.domain.member.MemberService;
 import com.lovedbug.geulgwi.core.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final MemberService memberService;
 
-    public JwtResponseDto login(LoginRequestDto loginRequest){
+    public JwtResponse login(LoginRequest loginRequest){
 
         try{
             Authentication authentication = authenticationManager.authenticate(
@@ -36,7 +36,7 @@ public class AuthService {
 
             String email = authentication.getName();
 
-            MemberDto member = memberService.findByMemberEmail(email);
+            MemberResponse member = memberService.findByMemberEmail(email);
 
             String accessToken = jwtUtil.generateAccessToken(email, member.getMemberId());
             String refreshToken = jwtUtil.generateRefreshToken(email, member.getMemberId());
@@ -48,7 +48,7 @@ public class AuthService {
         }
     }
 
-    public JwtResponseDto refresh(String authHeader){
+    public JwtResponse refresh(String authHeader){
 
         String refreshToken = extractTokenFromHeader(authHeader);
 
@@ -58,16 +58,16 @@ public class AuthService {
 
         String email = jwtUtil.extractEmail(refreshToken);
 
-        MemberDto member = memberService.findByMemberEmail(email);
+        MemberResponse member = memberService.findByMemberEmail(email);
         String newAccessToken = jwtUtil.generateAccessToken(email, member.getMemberId());
         jwtUtil.generateRefreshToken(email, member.getMemberId());
 
         return toJwtResponse(newAccessToken, null ,email, member.getMemberId());
     }
 
-    private JwtResponseDto toJwtResponse(String accessToken, String refreshToken, String email, Long memberId){
+    private JwtResponse toJwtResponse(String accessToken, String refreshToken, String email, Long memberId){
 
-        return JwtResponseDto.builder()
+        return JwtResponse.builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
             .memberEmail(email)

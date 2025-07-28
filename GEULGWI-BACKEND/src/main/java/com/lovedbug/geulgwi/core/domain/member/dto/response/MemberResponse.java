@@ -1,4 +1,4 @@
-package com.lovedbug.geulgwi.core.domain.member.dto;
+package com.lovedbug.geulgwi.core.domain.member.dto.response;
 
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class MemberDto {
+public class MemberResponse {
 
     @Column(name="member_id")
     private Long memberId;

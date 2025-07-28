@@ -1,7 +1,7 @@
 package com.lovedbug.geulgwi.core.domain.member;
 
 import com.lovedbug.geulgwi.core.common.entity.BaseTimeEntity;
-import com.lovedbug.geulgwi.core.domain.member.dto.UpdateRequestDto;
+import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -132,7 +132,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.gender = gender;
     }
 
-    public void updateFromRequest(UpdateRequestDto updateRequest, MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public void updateFromRequest(UpdateRequest updateRequest, MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         updateNickname(updateRequest.getNickname(), memberRepository);
         updatePassword(updateRequest.getPassword(), passwordEncoder);
         updateBirthDate(updateRequest.getBirthDate());

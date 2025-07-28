@@ -4,17 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
-import com.lovedbug.geulgwi.core.domain.curation.dto.CurationBookDto;
-import com.lovedbug.geulgwi.core.domain.curation.dto.CurationContentDto;
-import com.lovedbug.geulgwi.core.domain.curation.dto.CurationItemDto;
-import com.lovedbug.geulgwi.core.domain.curation.dto.CurationQuoteDto;
-import com.lovedbug.geulgwi.core.domain.quote.dto.QuoteWithBookDto;
+import com.lovedbug.geulgwi.core.domain.curation.projection.CurationBook;
+import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationContentResponse;
+import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
+import com.lovedbug.geulgwi.core.domain.curation.projection.CurationQuote;
+import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteWithBookResponse;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookDto;
 
 public class CurationMapper {
 
-    public static CurationContentDto toCurationContent(QuoteWithBookDto quoteWithBook) {
-        return CurationContentDto.builder()
+    public static CurationContentResponse toCurationContent(QuoteWithBookResponse quoteWithBook) {
+        return CurationContentResponse.builder()
             .bookId(quoteWithBook.getBookId())
             .bookTitle(quoteWithBook.getBookTitle())
             .quoteId(quoteWithBook.getQuoteId())
@@ -24,14 +24,14 @@ public class CurationMapper {
             .build();
     }
 
-    public static List<CurationContentDto> toCurationContentListFromQuotes(List<QuoteWithBookDto> quoteWithBooks) {
+    public static List<CurationContentResponse> toCurationContentListFromQuotes(List<QuoteWithBookResponse> quoteWithBooks) {
         return quoteWithBooks.stream()
             .map(CurationMapper::toCurationContent)
             .toList();
     }
 
-    public static CurationContentDto toCurationContent(AladdinBookDto aladdinBook) {
-        return CurationContentDto.builder()
+    public static CurationContentResponse toCurationContent(AladdinBookDto aladdinBook) {
+        return CurationContentResponse.builder()
             .bookTitle(aladdinBook.getTitle())
             .author(aladdinBook.getAuthor())
             .publisher(aladdinBook.getPublisher())
@@ -39,14 +39,14 @@ public class CurationMapper {
             .build();
     }
 
-    public static List<CurationContentDto> toCurationContentListFromBooks(List<AladdinBookDto> aladdinBooks) {
+    public static List<CurationContentResponse> toCurationContentListFromBooks(List<AladdinBookDto> aladdinBooks) {
         return aladdinBooks.stream()
             .map(CurationMapper::toCurationContent)
             .toList();
     }
 
-    public static CurationContentDto toCurationContent(CurationBookDto curationBook) {
-        return CurationContentDto.builder()
+    public static CurationContentResponse toCurationContent(CurationBook curationBook) {
+        return CurationContentResponse.builder()
             .bookId(curationBook.getBookId())
             .bookTitle(curationBook.getBookTitle())
             .author(curationBook.getAuthor())
@@ -55,22 +55,22 @@ public class CurationMapper {
             .build();
     }
 
-    public static List<CurationItemDto> toCurationItemDtoListFromBooks(List<CurationBookDto> curationBooks) {
-        Map<Long, List<CurationBookDto>> curationBooksByItemId = curationBooks.stream()
-            .collect(Collectors.groupingBy(CurationBookDto::getCurationItemId));
+    public static List<CurationItemResponse> toCurationItemDtoListFromBooks(List<CurationBook> curationBooks) {
+        Map<Long, List<CurationBook>> curationBooksByItemId = curationBooks.stream()
+            .collect(Collectors.groupingBy(CurationBook::getCurationItemId));
 
         return curationBooksByItemId.entrySet().stream()
             .map(curationItemGroup -> {
                 Long curationItemId = curationItemGroup.getKey();
-                List<CurationBookDto> curationItems = curationItemGroup.getValue();
+                List<CurationBook> curationItems = curationItemGroup.getValue();
 
-                CurationBookDto representativeBook = curationItems.get(0);
+                CurationBook representativeBook = curationItems.get(0);
 
-                List<CurationContentDto> contents = curationItems.stream()
+                List<CurationContentResponse> contents = curationItems.stream()
                     .map(CurationMapper::toCurationContent)
                     .toList();
 
-                return new CurationItemDto(
+                return new CurationItemResponse(
                     curationItemId,
                     representativeBook.getTitle(),
                     representativeBook.getDescription(),
@@ -81,8 +81,8 @@ public class CurationMapper {
             .toList();
     }
 
-    public static CurationContentDto toCurationContent(CurationQuoteDto curationQuote) {
-        return CurationContentDto.builder()
+    public static CurationContentResponse toCurationContent(CurationQuote curationQuote) {
+        return CurationContentResponse.builder()
             .bookId(curationQuote.getBookId())
             .bookTitle(curationQuote.getBookTitle())
             .quoteId(curationQuote.getQuoteId())
@@ -92,22 +92,22 @@ public class CurationMapper {
             .build();
     }
 
-    public static List<CurationItemDto> toCurationItemDtoListFromQuotes(List<CurationQuoteDto> curationQuotes) {
-        Map<Long, List<CurationQuoteDto>> curationQuotesByItemId = curationQuotes.stream()
-            .collect(Collectors.groupingBy(CurationQuoteDto::getCurationItemId));
+    public static List<CurationItemResponse> toCurationItemDtoListFromQuotes(List<CurationQuote> curationQuotes) {
+        Map<Long, List<CurationQuote>> curationQuotesByItemId = curationQuotes.stream()
+            .collect(Collectors.groupingBy(CurationQuote::getCurationItemId));
 
         return curationQuotesByItemId.entrySet().stream()
             .map(entry -> {
                 Long curationItemId = entry.getKey();
-                List<CurationQuoteDto> curationItems = entry.getValue();
+                List<CurationQuote> curationItems = entry.getValue();
 
-                CurationQuoteDto representativeQuote = curationItems.get(0);
+                CurationQuote representativeQuote = curationItems.get(0);
 
-                List<CurationContentDto> contents = curationItems.stream()
+                List<CurationContentResponse> contents = curationItems.stream()
                     .map(CurationMapper::toCurationContent)
                     .toList();
 
-                return new CurationItemDto(
+                return new CurationItemResponse(
                     curationItemId,
                     representativeQuote.getTitle(),
                     representativeQuote.getDescription(),

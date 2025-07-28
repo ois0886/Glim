@@ -5,7 +5,7 @@ import java.util.List;
 
 
 @Service
-public class SearchHistoryService {
+public class SearchService {
 
     public List<SearchHistoryResponseDto> getSearchPopularHistory() {
         return List.of(SearchHistoryResponseDto.toSearchDto());

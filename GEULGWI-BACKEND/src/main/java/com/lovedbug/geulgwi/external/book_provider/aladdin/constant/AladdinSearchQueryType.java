@@ -1,4 +1,4 @@
-package com.lovedbug.geulgwi.external.book_provider.aladdin;
+package com.lovedbug.geulgwi.external.book_provider.aladdin.constant;
 
 public enum AladdinSearchQueryType {
 

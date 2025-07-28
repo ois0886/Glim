@@ -1,11 +1,11 @@
-package com.lovedbug.geulgwi.core.domain.curation.dto;
+package com.lovedbug.geulgwi.core.domain.curation.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Builder
 @Getter
-public class CurationContentDto {
+public class CurationContentResponse {
 
     private Long bookId;
     private String bookTitle;

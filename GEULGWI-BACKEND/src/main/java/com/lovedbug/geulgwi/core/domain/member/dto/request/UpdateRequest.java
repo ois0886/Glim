@@ -1,4 +1,4 @@
-package com.lovedbug.geulgwi.core.domain.member.dto;
+package com.lovedbug.geulgwi.core.domain.member.dto.request;
 
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class UpdateRequestDto {
+public class UpdateRequest {
 
     private String password;
     private String nickname;

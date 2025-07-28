@@ -1,7 +1,7 @@
 package com.lovedbug.geulgwi.docs;
 
-import com.lovedbug.geulgwi.core.domain.auth.dto.EmailVerificationRequestDto;
-import com.lovedbug.geulgwi.core.domain.member.dto.LoginRequestDto;
+import com.lovedbug.geulgwi.core.domain.auth.dto.request.EmailVerificationRequest;
+import com.lovedbug.geulgwi.core.domain.auth.dto.request.LoginRequest;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
@@ -49,7 +49,7 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
         when(emailVerifier.sendVerificationCode(any(String.class)))
             .thenReturn("123456");
 
-        EmailVerificationRequestDto requestDto = EmailVerificationRequestDto.builder()
+        EmailVerificationRequest requestDto = EmailVerificationRequest.builder()
             .email("test@example.com")
             .build();
 
@@ -80,14 +80,14 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
         Member testMember = AuthTestMemberFactory.createLoginTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
 
-        LoginRequestDto loginRequestDto = LoginRequestDto.builder()
+        LoginRequest loginRequest = LoginRequest.builder()
             .email(savedMember.getEmail())
             .password("pwd1234")
             .build();
 
         given(this.spec)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(loginRequestDto)
+            .body(loginRequest)
             .filter(document("{class_name}/{method_name}",
                 requestFields(
                     fieldWithPath("email").description("로그인할 사용자 이메일 (필수)"),
