@@ -1,11 +1,8 @@
 package com.ssafy.glim.feature.home
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,10 +25,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -51,7 +45,8 @@ import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
-import com.ssafy.glim.core.ui.ImageCustomLoader
+import com.ssafy.glim.core.ui.GlimErrorLoader
+import com.ssafy.glim.core.ui.GlimLoader
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.ui.theme.GlimColor.LightGray600
 import com.ssafy.glim.ui.theme.GlimColor.LightGray700
@@ -212,25 +207,10 @@ fun QuoteCarousel(
                         contentScale = ContentScale.Crop,
                         imageLoader = imageLoader,
                         loading = {
-                            ImageCustomLoader(Modifier)
+                            GlimLoader(Modifier)
                         },
                         error = {
-                            Box(
-                                modifier = Modifier
-                                    .size(80.dp)
-                                    .background(
-                                        color = Gray.copy(alpha = 0.2f),
-                                        shape = CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.example_glim_4),
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
+                            GlimErrorLoader(Modifier)
                         }
                     )
                 }
@@ -309,25 +289,10 @@ fun BookCarousel(
                         contentScale = ContentScale.Crop,
                         imageLoader = imageLoader,
                         loading = {
-                            ImageCustomLoader(Modifier)
+                            GlimLoader(Modifier)
                         },
                         error = {
-                            Box(
-                                modifier = Modifier
-                                    .size(80.dp)
-                                    .background(
-                                        color = Gray.copy(alpha = 0.2f),
-                                        shape = CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.example_glim_4),
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
+                            GlimErrorLoader(Modifier)
                         }
                     )
                 }
