@@ -17,6 +17,8 @@ data class LibraryState(
     val searchMode: SearchMode = SearchMode.POPULAR,
     val selectedTab: SearchTab = SearchTab.BOOKS,
     val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
+    val currentPage : Int = 0,
     val error: String? = null,
     val popularSearchItems: List<SearchItem> = emptyList(),
     val recentSearchItems: List<String> = emptyList(),

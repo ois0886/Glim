@@ -82,6 +82,7 @@ constructor(
     // 검색 실행
     fun onSearchExecuted() =
         intent {
+            Log.d("LibraryViewModel", "Search executed with query: ${state.currentQuery}")
             val query = state.currentQuery.trim()
             if (query.isNotEmpty()) {
                 performSearch(query)
@@ -94,6 +95,30 @@ constructor(
                 saveRecentSearchQueryUseCase(query)
             }
         }
+
+    fun loadMoreBooks() = intent {
+        Log.d("LibraryViewModel", "Loading more books for query: ${state.searchQuery}, page: ${state.currentPage + 1}")
+        reduce {
+            state.copy(
+                currentPage = state.currentPage + 1,
+                isRefreshing = true
+            )
+        }
+        runCatching { searchBooksUseCase(state.searchQuery, state.currentPage) }
+            .onSuccess {
+                reduce {
+                    state.copy(
+                        searchBooks = state.searchBooks+it,
+                        isRefreshing = false,
+                        error = null,
+                    )
+                }
+            }
+            .onFailure {
+                Log.d("LibraryViewModel", "Error searching books: ${it.message}")
+                postSideEffect(LibrarySideEffect.ShowToast("검색 중 오류가 발생했습니다."))
+            }
+    }
 
     // 인기 검색어 항목 클릭
     fun onPopularSearchItemClicked(query: String) =
@@ -127,9 +152,9 @@ constructor(
             reduce {
                 state.copy(
                     recentSearchItems =
-                    state.recentSearchItems.filter {
-                        it != searchQuery
-                    },
+                        state.recentSearchItems.filter {
+                            it != searchQuery
+                        },
                     error = null,
                 )
             }
@@ -185,44 +210,33 @@ constructor(
     private fun performSearch(query: String) =
         intent {
             reduce { state.copy(isLoading = true) }
-            try {
-                loadRecentSearchItems()
-                // 책 검색
-                runCatching { searchBooksUseCase(query) }
-                    .onSuccess {
-                        reduce {
-                            state.copy(
-                                searchBooks = it,
-                                isLoading = false,
-                                error = null,
-                            )
-                        }
+            runCatching { searchBooksUseCase(query, state.currentPage) }
+                .onSuccess {
+                    reduce {
+                        state.copy(
+                            searchBooks = it,
+                            isLoading = false,
+                            error = null,
+                        )
                     }
-                    .onFailure {
-                        Log.d("LibraryViewModel", "Error searching books: ${it.message}")
-                    }
-
-                // 글귀 검색
-                runCatching { searchQuotesUseCase(query) }
-                    .onSuccess {
-                        reduce {
-                            state.copy(
-                                searchQuotes = it,
-                                isLoading = false,
-                                error = null
-                            )
-                        }
-                    }
-            } catch (e: Exception) {
-                reduce {
-                    state.copy(
-                        isLoading = false,
-                        error = "검색 중 오류가 발생했습니다."
-                    )
                 }
-                postSideEffect(LibrarySideEffect.ShowToast("검색 중 오류가 발생했습니다."))
-            }
+                .onFailure {
+                    Log.d("LibraryViewModel", "Error searching books: ${it.message}")
+                    postSideEffect(LibrarySideEffect.ShowToast("검색 중 오류가 발생했습니다."))
+                }
+
+            runCatching { searchQuotesUseCase(query) }
+                .onSuccess {
+                    reduce {
+                        state.copy(
+                            searchQuotes = it,
+                            isLoading = false,
+                            error = null
+                        )
+                    }
+                }
         }
+
 
     fun updateSearchMode(searchMode: SearchMode) =
         intent {

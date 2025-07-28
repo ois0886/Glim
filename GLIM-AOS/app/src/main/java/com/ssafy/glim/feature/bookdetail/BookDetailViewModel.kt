@@ -36,6 +36,7 @@ class BookDetailViewModel @Inject constructor(
                 loadQuotes(it.isbn)
             }
             .onFailure {
+                Log.d("BookDetailViewModel", "Failed to load book details: ${it.message}")
                 postSideEffect(BookDetailSideEffect.ShowToast("책 정보를 불러오는데 실패했습니다."))
             }
     }

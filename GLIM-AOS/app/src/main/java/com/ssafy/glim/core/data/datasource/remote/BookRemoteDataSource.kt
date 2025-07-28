@@ -8,7 +8,7 @@ class BookRemoteDataSource @Inject constructor(
 ) {
     suspend fun getBooks(
         keyword: String,
-        page: Int = 1,
+        page: Int,
         queryType: String = "KEYWORD",
     ) = bookService.getBooks(keyword, page, queryType)
 
