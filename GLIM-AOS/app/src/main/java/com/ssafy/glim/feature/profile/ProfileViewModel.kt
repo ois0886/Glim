@@ -59,10 +59,19 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onLogOutClick() = intent {
-        reduce { state.copy(isLoading = true) }
+        reduce { state.copy(logoutDialogState = LogoutDialogState.Confirmation) }
+    }
+
+    fun onLogoutConfirm() = intent {
+        reduce { state.copy(logoutDialogState = LogoutDialogState.Processing) }
         runCatching { logOutUseCase() }
             .onSuccess {
-                reduce { state.copy(isLoading = false) }
+                reduce {
+                    state.copy(
+                        logoutDialogState = LogoutDialogState.Hidden,
+                        isLoading = false
+                    )
+                }
                 postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_success))
                 navigator.navigate(
                     route = Route.Login,
@@ -72,9 +81,18 @@ class ProfileViewModel @Inject constructor(
                 )
             }
             .onFailure {
-                reduce { state.copy(isLoading = false) }
+                reduce {
+                    state.copy(
+                        logoutDialogState = LogoutDialogState.Hidden,
+                        isLoading = false
+                    )
+                }
                 postSideEffect(ProfileSideEffect.ShowError(R.string.logout_failed))
             }
+    }
+
+    fun onLogoutCancel() = intent {
+        reduce { state.copy(logoutDialogState = LogoutDialogState.Hidden) }
     }
 
     fun onWithdrawalClick() = intent {
@@ -150,6 +168,16 @@ class ProfileViewModel @Inject constructor(
                     }
                     postSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_failed))
                 }
+        }
+    }
+
+    fun onFinalCancel() = intent {
+        reduce {
+            state.copy(
+                withdrawalDialogState = WithdrawalDialogState.Hidden,
+                userInputText = "",
+                countdownSeconds = 0
+            )
         }
     }
 }

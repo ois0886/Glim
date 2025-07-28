@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ssafy.glim.feature.profile.component.LogoutDialogContainer
 import com.ssafy.glim.feature.profile.component.MyGlimsSection
 import com.ssafy.glim.feature.profile.component.ProfileHeader
 import com.ssafy.glim.feature.profile.component.SettingsSection
@@ -57,18 +58,20 @@ internal fun ProfileRoute(
 
     ProfileScreen(
         state = state,
+        onLogOutClick = viewModel::onLogOutClick,
+        onLogoutConfirm = viewModel::onLogoutConfirm,
+        onLogoutCancel = viewModel::onLogoutCancel,
         navigateToEditProfile = viewModel::navigateToEditProfile,
         navigateToGlimUploadList = viewModel::navigateToGlimUploadList,
         navigateToGlimLikedList = viewModel::navigateToGlimLikedList,
         navigateToLockSettings = viewModel::navigateToLockSettings,
         navigateToNotificationSettings = viewModel::navigateToNotificationSettings,
-        onLogOutClick = viewModel::onLogOutClick,
         onWithdrawalClick = viewModel::onWithdrawalClick,
         onWarningConfirm = viewModel::onWarningConfirm,
         onWarningCancel = viewModel::onWarningCancel,
         onUserInputChanged = viewModel::onUserInputChanged,
         onFinalConfirm = viewModel::onFinalConfirm,
-        onFinalCancel = viewModel::onWarningCancel,
+        onFinalCancel = viewModel::onFinalCancel,
         modifier = Modifier.padding(padding)
     )
 }
@@ -76,12 +79,14 @@ internal fun ProfileRoute(
 @Composable
 private fun ProfileScreen(
     state: ProfileUiState,
+    onLogOutClick: () -> Unit,
+    onLogoutConfirm: () -> Unit,
+    onLogoutCancel: () -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToGlimUploadList: () -> Unit,
     navigateToGlimLikedList: () -> Unit,
     navigateToLockSettings: () -> Unit,
     navigateToNotificationSettings: () -> Unit,
-    onLogOutClick: () -> Unit,
     onWithdrawalClick: () -> Unit,
     onWarningConfirm: () -> Unit,
     onWarningCancel: () -> Unit,
@@ -122,6 +127,12 @@ private fun ProfileScreen(
         }
         item { WithdrawalButton(onWithdrawalClick) }
     }
+
+    LogoutDialogContainer(
+        state = state,
+        onLogoutConfirm = onLogoutConfirm,
+        onLogoutCancel = onLogoutCancel
+    )
 
     WithdrawalDialogContainer(
         state = state,
@@ -174,7 +185,9 @@ private fun PreviewProfileScreen() {
             onWarningCancel = {},
             onUserInputChanged = {},
             onFinalConfirm = {},
-            onFinalCancel = {}
+            onFinalCancel = {},
+            onLogoutCancel = {},
+            onLogoutConfirm = {}
         )
     }
 }
