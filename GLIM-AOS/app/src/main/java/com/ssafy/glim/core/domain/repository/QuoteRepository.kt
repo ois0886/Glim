@@ -3,6 +3,7 @@ package com.ssafy.glim.core.domain.repository
 import android.graphics.Bitmap
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.core.domain.model.QuoteSummary
 
 interface QuoteRepository {
 
@@ -24,4 +25,8 @@ interface QuoteRepository {
     suspend fun updateQuoteViewCount(
         quoteId: Long
     )
+
+    suspend fun getQuoteByIsbn(
+        isbn: String
+    ): List<QuoteSummary>
 }

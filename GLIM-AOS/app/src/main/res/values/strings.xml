@@ -141,5 +141,6 @@
     <string name="signup_send_verification_code">인증번호 발송</string>
     <string name="signup_verify_code">인증완료</string>
     <string name="signup_confirm">확인</string>
+    <string name="views">조회수</string>
 
 </resources>

@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -144,8 +146,15 @@ fun BookDetailContent(
                     ) {
                         TitleWithAction(title = stringResource(R.string.relative_quote))
 
-                        for (quote in quotes) {
-                            QuoteCard(quote) { onClickQuote(it) }
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp),
+                        ) {
+                            items(quotes.size) { index ->
+                                val quote = quotes[index]
+                                QuoteCard(quote, Modifier.fillParentMaxWidth(1f)) { onClickQuote(it) }
+                            }
                         }
                     }
                 }
@@ -174,31 +183,32 @@ fun BookDetailContent(
                         )
                     }
                 }
-                item {
-                    Spacer(modifier = Modifier.height(24.dp))
-                    HorizontalDivider(
-                        thickness = 8.dp,
-                        color = Color(0xFFF7F7F7)
-                    )
-                }
-                item {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        TitleWithAction(
-                            title = stringResource(R.string.author_intro),
-                            isExpanded = isAuthorDescriptionExpanded,
-                            action = toggleAuthorDescriptionExpanded
-                        )
-                        Text(
-                            text = book.description,
-                            style = MaterialTheme.typography.bodyMedium,
-                            maxLines = if (isAuthorDescriptionExpanded) Int.MAX_VALUE else 3,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
+                // TODO: 작가소개 데이터 올 시 주석 해제
+//                item {
+//                    Spacer(modifier = Modifier.height(24.dp))
+//                    HorizontalDivider(
+//                        thickness = 8.dp,
+//                        color = Color(0xFFF7F7F7)
+//                    )
+//                }
+//                item {
+//                    Column(
+//                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+//                        verticalArrangement = Arrangement.spacedBy(8.dp)
+//                    ) {
+//                        TitleWithAction(
+//                            title = stringResource(R.string.author_intro),
+//                            isExpanded = isAuthorDescriptionExpanded,
+//                            action = toggleAuthorDescriptionExpanded
+//                        )
+//                        Text(
+//                            text = book.description,
+//                            style = MaterialTheme.typography.bodyMedium,
+//                            maxLines = if (isAuthorDescriptionExpanded) Int.MAX_VALUE else 3,
+//                            overflow = TextOverflow.Ellipsis
+//                        )
+//                    }
+//                }
                 item {
                     Spacer(modifier = Modifier.height(48.dp))
                 }

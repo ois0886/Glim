@@ -54,6 +54,7 @@ constructor(
 
     fun onPageChanged(page: Int) =
         intent {
+            Log.d("ReelsViewModel", "$page / ${state.quotes.size} 페이지로 변경됨")
             // 페이지가 변경될 때 currentQuoteId도 업데이트
             if (page >= 0 && page < state.quotes.size) {
                 reduce {
@@ -66,7 +67,13 @@ constructor(
                     // 마지막 페이지에 도달했을 때 새로운 인용구를 가져옴
                     refresh()
                 }
-//                updateQuoteViewCountUseCase(state.currentQuoteId)
+                runCatching { updateQuoteViewCountUseCase(state.currentQuoteId) }
+                    .onSuccess {
+                        Log.d("ReelsViewModel", "Quote view count updated successfully")
+                    }
+                    .onFailure {
+                        Log.d("ReelsViewModel", "Failed to update quote view count: ${it.message}")
+                    }
             }
         }
 
