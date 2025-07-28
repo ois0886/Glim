@@ -61,6 +61,9 @@ internal class MainNavController(
         navController.popBackStack()
     }
 
+    fun navigateToReels() {
+        navigate(MainTab.REELS)
+    }
     fun clearBackStack() {
         val options =
             NavOptions.Builder()
