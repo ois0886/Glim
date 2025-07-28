@@ -4,7 +4,7 @@ import com.ssafy.glim.core.domain.model.user.User
 
 interface UserRepository {
 
-    suspend fun getUserByEmail(): User
+    suspend fun getUserById(): User
 
     suspend fun updateUser(
         memberId: Long,
@@ -14,5 +14,5 @@ interface UserRepository {
         birthDate: List<Int>,
     ): User
 
-    suspend fun deleteUser(memberId: Long)
+    suspend fun deleteUser()
 }

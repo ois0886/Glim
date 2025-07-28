@@ -24,7 +24,7 @@ import com.ssafy.glim.R
 @Composable
 internal fun SettingsSection(
     navigateToEditProfile: () -> Unit,
-    navigateToAccountSettings: () -> Unit,
+    navigateToLockSettings: () -> Unit,
     navigateToNotificationSettings: () -> Unit,
     onLogOutClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -90,7 +90,7 @@ private fun PreviewSettingsSection() {
     MaterialTheme {
         SettingsSection(
             navigateToEditProfile = {},
-            navigateToAccountSettings = {},
+            navigateToLockSettings = {},
             navigateToNotificationSettings = {},
             onLogOutClick = {},
         )

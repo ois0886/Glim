@@ -35,22 +35,21 @@ import com.ssafy.glim.feature.profile.GlimShortCard
 @Composable
 internal fun GlimShortCardContent(
     glimCard: GlimShortCard,
-    onLikeToggle: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
         modifier =
-        modifier
-            .width(280.dp)
-            .height(120.dp),
+            modifier
+                .width(280.dp)
+                .height(120.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
     ) {
         Column(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
@@ -77,17 +76,17 @@ internal fun GlimShortCardContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(
-                        onClick = onLikeToggle,
+                        onClick = {},
                         modifier = Modifier.size(20.dp),
                     ) {
                         Icon(
                             imageVector = if (glimCard.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription =
-                            if (glimCard.isLiked) {
-                                stringResource(R.string.content_description_unlike)
-                            } else {
-                                stringResource(R.string.content_description_like)
-                            },
+                                if (glimCard.isLiked) {
+                                    stringResource(R.string.content_description_unlike)
+                                } else {
+                                    stringResource(R.string.content_description_like)
+                                },
                             tint = if (glimCard.isLiked) Color.Red else Color.Gray,
                             modifier = Modifier.size(16.dp),
                         )
@@ -118,8 +117,7 @@ private fun PreviewGlimShortCardContent() {
 
     MaterialTheme {
         GlimShortCardContent(
-            glimCard = mockGlimCard,
-            onLikeToggle = {},
+            glimCard = mockGlimCard
         )
     }
 }
@@ -138,8 +136,7 @@ private fun PreviewGlimShortCardContentLiked() {
 
     MaterialTheme {
         GlimShortCardContent(
-            glimCard = mockGlimCard,
-            onLikeToggle = {},
+            glimCard = mockGlimCard
         )
     }
 }

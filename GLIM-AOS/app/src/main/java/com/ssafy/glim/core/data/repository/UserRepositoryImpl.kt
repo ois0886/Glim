@@ -14,11 +14,11 @@ class UserRepositoryImpl @Inject constructor(
     private val authManager: AuthManager
 ) : UserRepository {
 
-    override suspend fun getUserByEmail(): User {
-        val email = requireNotNull(authManager.getUserEmail()) {
-            "사용자 이메일을 찾을 수 없습니다."
+    override suspend fun getUserById(): User {
+        val id = requireNotNull(authManager.getUserId()) {
+            "사용자 ID를 찾을 수 없습니다."
         }
-        return dataSource.getUserByEmail(email).toDomain()
+        return dataSource.getUserById(id).toDomain()
     }
 
     override suspend fun updateUser(
@@ -37,8 +37,11 @@ class UserRepositoryImpl @Inject constructor(
         return dataSource.updateUser(memberId, request).toDomain()
     }
 
-    override suspend fun deleteUser(memberId: Long) {
-        runCatching { dataSource.deleteUser(memberId).toDomain() }
+    override suspend fun deleteUser() {
+        val id = requireNotNull(authManager.getUserId()) {
+            "사용자 ID를 찾을 수 없습니다."
+        }
+        runCatching { dataSource.deleteUser(id.toLong()).toDomain() }
             .onSuccess { authManager.deleteAll() }
             .onFailure { Log.d("UserRepositoryImpl", "deleteUser failed: ${it.message}") }
     }

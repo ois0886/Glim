@@ -2,15 +2,15 @@ package com.ssafy.glim.feature.profile
 
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.common.extensions.formatBirthDate
 import com.ssafy.glim.core.domain.usecase.auth.LogOutUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
-import com.ssafy.glim.core.domain.usecase.user.GetUserByEmailUseCase
-import com.ssafy.glim.core.domain.usecase.user.UpdateUserUseCase
+import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
 import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -20,17 +20,12 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val navigator: Navigator,
     private val logOutUseCase: LogOutUseCase,
-    private val getUserByEmailUseCase: GetUserByEmailUseCase,
-    private val updateUserUseCase: UpdateUserUseCase,
-    private val deleteUserUseCase: DeleteUserUseCase,
+    private val getUserByIdUseCase: GetUserByIdUseCase,
+    private val deleteUserUseCase: DeleteUserUseCase
 ) : ViewModel(), ContainerHost<ProfileUiState, ProfileSideEffect> {
 
     override val container: Container<ProfileUiState, ProfileSideEffect> =
         container(initialState = ProfileUiState())
-
-    init {
-        loadProfileData()
-    }
 
     fun navigateToGlimLikedList() = intent {
         navigator.navigate(MyGlimsRoute.Liked)
@@ -45,139 +40,117 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun navigateToLockSettings() = intent {
-        // TODO: 잠금 설정 화면으로 이동
         postSideEffect(ProfileSideEffect.ShowToast(R.string.lock_settings_message))
     }
 
     fun navigateToNotificationSettings() = intent {
-        // TODO: 알림 설정 화면으로 이동
         postSideEffect(ProfileSideEffect.ShowToast(R.string.notification_settings_message))
     }
 
-    private fun loadProfileData() = intent {
+    fun loadProfileData() = intent {
         reduce { state.copy(isLoading = true) }
-
-        runCatching {
-            getUserByEmailUseCase()
-        }.onSuccess { user ->
-            reduce {
-                state.copy(
-                    isLoading = false,
-                    userName = user.nickname,
-                    // user = user,
-                    publishedGlimCount = 24,
-                    likedGlimCount = 8,
-                    glimShortCards = createMockGlimShortCards(),
-                    profileImageUrl = "https://example.com/profile.jpg",
-                )
+        runCatching { getUserByIdUseCase() }
+            .onSuccess { user ->
+                reduce { state.copy(isLoading = false, userName = user.nickname) }
             }
-        }.onFailure { exception ->
-            reduce { state.copy(isLoading = false) }
-            postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
-        }
-    }
-
-    fun updateProfile(
-        password: String,
-        nickname: String,
-        gender: String,
-        birthDate: String
-    ) = intent {
-        // val user = state.user ?: return@intent
-        val formattedBirthDate = birthDate.formatBirthDate()
-        reduce { state.copy(isLoading = true) }
-
-        runCatching {
-            updateUserUseCase(
-                memberId = 3,
-                password = password,
-                nickname = nickname,
-                gender = gender,
-                birthDate = formattedBirthDate
-            )
-        }.onSuccess { updatedUser ->
-            reduce {
-                state.copy(
-                    isLoading = false,
-                    // user = updatedUser,
-                    userName = updatedUser.nickname
-                )
+            .onFailure {
+                reduce { state.copy(isLoading = false) }
+                postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
             }
-            postSideEffect(ProfileSideEffect.ShowToast(R.string.profile_update_success))
-        }.onFailure { exception ->
-            reduce { state.copy(isLoading = false) }
-            postSideEffect(ProfileSideEffect.ShowError(R.string.profile_update_failed))
-        }
     }
 
     fun onLogOutClick() = intent {
         reduce { state.copy(isLoading = true) }
-        runCatching {
-            logOutUseCase()
-        }.onSuccess {
-            reduce { state.copy(isLoading = false) }
-            postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_success))
-            navigator.navigate(Route.Login)
-        }.onFailure {
-            postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_failed))
-        }
+        runCatching { logOutUseCase() }
+            .onSuccess {
+                reduce { state.copy(isLoading = false) }
+                postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_success))
+                navigator.navigate(
+                    route = Route.Login,
+                    saveState = true,
+                    launchSingleTop = true,
+                    inclusive = true
+                )
+            }
+            .onFailure {
+                reduce { state.copy(isLoading = false) }
+                postSideEffect(ProfileSideEffect.ShowError(R.string.logout_failed))
+            }
     }
 
     fun onWithdrawalClick() = intent {
-        reduce { state.copy(isLoading = true) }
-
-        runCatching {
-            deleteUserUseCase(3)
-        }.onSuccess { deletedUser ->
-            reduce { state.copy(isLoading = false) }
-            postSideEffect(ProfileSideEffect.ShowToast(R.string.withdrawal_success))
-            navigator.navigate(Route.Login)
-        }.onFailure { exception ->
-            reduce { state.copy(isLoading = false) }
-            postSideEffect(ProfileSideEffect.ShowToast(R.string.withdrawal_failed))
+        reduce {
+            state.copy(
+                withdrawalDialogState = WithdrawalDialogState.Warning
+            )
         }
     }
 
-    // ========== 글림 좋아요 토글 ==========
-    fun onGlimLikeToggle(glimId: String) = intent {
-        val currentGlims = state.glimShortCards
-        val updatedGlims = currentGlims.map { glim ->
-            if (glim.id == glimId) {
-                glim.copy(
-                    isLiked = !glim.isLiked,
-                    likeCount = if (glim.isLiked) glim.likeCount - 1 else glim.likeCount + 1,
+    fun onWarningConfirm() = intent {
+        reduce {
+            state.copy(
+                withdrawalDialogState = WithdrawalDialogState.Confirmation,
+                countdownSeconds = 10
+            )
+        }
+        // Countdown without separate job
+        for (i in 10 downTo 0) {
+            delay(1_000)
+            reduce { state.copy(countdownSeconds = i) }
+        }
+    }
+
+    fun onWarningCancel() = intent {
+        reduce {
+            state.copy(
+                withdrawalDialogState = WithdrawalDialogState.Hidden,
+                userInputText = "",
+                countdownSeconds = 0
+            )
+        }
+    }
+
+    fun onUserInputChanged(input: String) = intent {
+        reduce { state.copy(userInputText = input) }
+    }
+
+    fun onFinalConfirm() = intent {
+        if (state.userInputText == "탈퇴하겠습니다" && state.countdownSeconds == 0) {
+            reduce {
+                state.copy(
+                    withdrawalDialogState = WithdrawalDialogState.Processing,
+                    isWithdrawalLoading = true
                 )
-            } else {
-                glim
             }
+            runCatching { deleteUserUseCase() }
+                .onSuccess {
+                    reduce {
+                        state.copy(
+                            withdrawalDialogState = WithdrawalDialogState.Hidden,
+                            isWithdrawalLoading = false,
+                            userInputText = "",
+                            countdownSeconds = 0
+                        )
+                    }
+                    postSideEffect(ProfileSideEffect.ShowToast(R.string.withdrawal_success))
+                    navigator.navigate(
+                        route = Route.Login,
+                        saveState = true,
+                        launchSingleTop = true,
+                        inclusive = true
+                    )
+                }
+                .onFailure {
+                    reduce {
+                        state.copy(
+                            withdrawalDialogState = WithdrawalDialogState.Hidden,
+                            isWithdrawalLoading = false,
+                            userInputText = "",
+                            countdownSeconds = 0
+                        )
+                    }
+                    postSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_failed))
+                }
         }
-
-        reduce { state.copy(glimShortCards = updatedGlims) }
-
-        // TODO: 서버에 좋아요 상태 업데이트 API 호출
-        val toggledGlim = updatedGlims.find { it.id == glimId }
-        val messageRes = if (toggledGlim?.isLiked == true) {
-            R.string.like_added_message
-        } else {
-            R.string.like_removed_message
-        }
-        postSideEffect(ProfileSideEffect.ShowToast(messageRes))
     }
-
-    private fun createMockGlimShortCards() = listOf(
-        GlimShortCard(
-            id = "1",
-            title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
-            timestamp = "P.51",
-            likeCount = 1247,
-            isLiked = false,
-        ),
-        GlimShortCard(
-            id = "2",
-            title = "이젠 더이상 뒤돌지도 않아. 왜지, 왜 나는 이렇게 말라가는 거지.",
-            timestamp = "P.51",
-            likeCount = 856,
-            isLiked = true,
-        ),
-    )
 }
