@@ -3,6 +3,7 @@ package com.ssafy.glim.feature.profile
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.extensions.formatBirthDate
+import com.ssafy.glim.core.domain.usecase.auth.LogOutUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
 import com.ssafy.glim.core.domain.usecase.user.GetUserByEmailUseCase
 import com.ssafy.glim.core.domain.usecase.user.UpdateUserUseCase
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val navigator: Navigator,
+    private val logOutUseCase: LogOutUseCase,
     private val getUserByEmailUseCase: GetUserByEmailUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
@@ -56,9 +58,7 @@ class ProfileViewModel @Inject constructor(
         reduce { state.copy(isLoading = true) }
 
         runCatching {
-            // TODO: 실제 사용자 이메일 가져오기 (토큰에서 추출 등)
-            val userEmail = "user@example.com"
-            getUserByEmailUseCase(userEmail)
+            getUserByEmailUseCase()
         }.onSuccess { user ->
             reduce {
                 state.copy(
@@ -110,17 +110,20 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    // ========== 로그아웃 ==========
     fun onLogOutClick() = intent {
-        // TODO: 로그아웃 처리 (토큰 삭제 등)
-        postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_success))
-        navigator.navigate(Route.Login)
+        reduce { state.copy(isLoading = true) }
+        runCatching {
+            logOutUseCase()
+        }.onSuccess {
+            reduce { state.copy(isLoading = false) }
+            postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_success))
+            navigator.navigate(Route.Login)
+        }.onFailure {
+            postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_failed))
+        }
     }
 
-    // ========== 회원탈퇴 ==========
     fun onWithdrawalClick() = intent {
-        // val user = state.user ?: return@intent
-
         reduce { state.copy(isLoading = true) }
 
         runCatching {
@@ -128,7 +131,6 @@ class ProfileViewModel @Inject constructor(
         }.onSuccess { deletedUser ->
             reduce { state.copy(isLoading = false) }
             postSideEffect(ProfileSideEffect.ShowToast(R.string.withdrawal_success))
-            // TODO: 토큰 삭제 등
             navigator.navigate(Route.Login)
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }

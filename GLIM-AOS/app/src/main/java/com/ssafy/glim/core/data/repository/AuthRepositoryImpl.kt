@@ -33,35 +33,22 @@ class AuthRepositoryImpl @Inject constructor(
         dataSource.signUp(request)
     }
 
-    override suspend fun login(
-        email: String,
-        password: String,
-    ) {
-        val request = LoginRequest(
-            email = email,
-            password = password,
-        )
+    override suspend fun login(email: String, password: String) {
+        runCatching {
+            dataSource.login(LoginRequest(email = email, password = password))
+        }.onSuccess {
+            authManager.saveToken(
+                accessToken = it.accessToken,
+                refreshToken = it.refreshToken
+            )
+            authManager.saveUserInfo(
+                email = it.memberEmail,
+                userId = it.memberId.toString()
+            )
+        }.onFailure {
+            Log.d("AuthRepositoryImpl", "login failed: ${it.message}")
 
-        runCatching { dataSource.login(request) }
-            .onSuccess {
-                Log.d("AuthRepositoryImpl", "API success")
-                try {
-                    authManager.saveToken(
-                        accessToken = it.accessToken,
-                        refreshToken = it.refreshToken
-                    )
-                    authManager.saveUserInfo(
-                        email = it.memberEmail,
-                        userId = it.memberId.toString())
-                    Log.d("AuthRepositoryImpl", "Token save success")
-                } catch (e: Exception) {
-                    Log.e("AuthRepositoryImpl", "Token save failed: ${e.message}")
-                    throw e
-                }
-            }
-            .onFailure {
-                Log.d("AuthRepositoryImpl", "Login failed: ${it.message}")
-            }
+        }
     }
 
     override suspend fun verifyEmail(email: String) =

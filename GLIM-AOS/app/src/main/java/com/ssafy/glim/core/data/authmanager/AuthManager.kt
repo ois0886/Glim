@@ -58,6 +58,10 @@ class AuthManager @Inject constructor(
 
     fun getRefreshToken(): String? = cachedRefreshToken
 
+    fun getUserEmail(): String? = cachedUserEmail
+
+    fun getUserId(): String? = cachedUserId
+
     fun saveToken(accessToken: String, refreshToken: String) {
         Log.d("AuthManager", "save token")
         cachedAccessToken = accessToken
@@ -93,5 +97,4 @@ class AuthManager @Inject constructor(
             authDataStore.deleteUserId()
         }
     }
-
 }

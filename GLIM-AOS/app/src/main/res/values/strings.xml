@@ -129,6 +129,7 @@
     <string name="lock_screen_slide_description"><![CDATA[밀어서 잠금 해제 >>]]></string>
 
     <string name="logout_success">로그아웃되었습니다.</string>
+    <string name="logout_failed">로그아웃에 실패하였습니다.</string>
     <string name="withdrawal_success">성공적으로 회원 탈퇴하였습니다.</string>
     <string name="withdrawal_failed">회원 탈퇴 실패하였습니다.</string>
     <string name="lock_settings_message">잠금 설정 화면으로 이동</string>

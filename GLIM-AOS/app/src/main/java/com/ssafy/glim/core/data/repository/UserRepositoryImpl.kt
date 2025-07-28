@@ -1,5 +1,7 @@
 package com.ssafy.glim.core.data.repository
 
+import android.util.Log
+import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.data.datasource.remote.UserRemoteDataSource
 import com.ssafy.glim.core.data.dto.request.UpdateUserRequest
 import com.ssafy.glim.core.data.mapper.toDomain
@@ -9,10 +11,15 @@ import jakarta.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val dataSource: UserRemoteDataSource,
+    private val authManager: AuthManager
 ) : UserRepository {
 
-    override suspend fun getUserByEmail(email: String) =
-        dataSource.getUserByEmail(email).toDomain()
+    override suspend fun getUserByEmail(): User {
+        val email = requireNotNull(authManager.getUserEmail()) {
+            "사용자 이메일을 찾을 수 없습니다."
+        }
+        return dataSource.getUserByEmail(email).toDomain()
+    }
 
     override suspend fun updateUser(
         memberId: Long,
@@ -30,6 +37,10 @@ class UserRepositoryImpl @Inject constructor(
         return dataSource.updateUser(memberId, request).toDomain()
     }
 
-    override suspend fun deleteUser(memberId: Long) =
-        dataSource.deleteUser(memberId).toDomain()
+    override suspend fun deleteUser(memberId: Long) {
+        runCatching { dataSource.deleteUser(memberId).toDomain() }
+            .onSuccess { authManager.deleteAll() }
+            .onFailure { Log.d("UserRepositoryImpl", "deleteUser failed: ${it.message}") }
+    }
+
 }
