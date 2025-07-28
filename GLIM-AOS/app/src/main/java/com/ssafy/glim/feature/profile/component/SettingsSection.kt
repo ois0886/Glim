@@ -34,19 +34,19 @@ internal fun SettingsSection(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         SettingItem(
-            title = stringResource(R.string.settings_personal_info),
+            title = stringResource(R.string.settings_personal_info_password),
             onClick = navigateToEditProfile,
         )
-
-        SettingItem(
-            title = stringResource(R.string.settings_account),
-            onClick = navigateToAccountSettings,
-        )
-
-        SettingItem(
-            title = stringResource(R.string.settings_notification),
-            onClick = navigateToNotificationSettings,
-        )
+//        TODO: 잠금화면, 알림설정 화면 추가
+//        SettingItem(
+//            title = stringResource(R.string.settings_account),
+//            onClick = navigateToAccountSettings,
+//        )
+//
+//        SettingItem(
+//            title = stringResource(R.string.settings_notification),
+//            onClick = navigateToNotificationSettings,
+//        )
 
         SettingItem(
             title = stringResource(R.string.settings_logout),
@@ -63,10 +63,10 @@ internal fun SettingItem(
 ) {
     Row(
         modifier =
-        modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(vertical = 8.dp),
+            modifier
+                .fillMaxWidth()
+                .clickable { onClick() }
+                .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {

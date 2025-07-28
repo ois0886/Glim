@@ -68,7 +68,7 @@
     <string name="profile_view_all">전체보기</string>
 
     <!-- 설정 메뉴 -->
-    <string name="settings_personal_info">개인정보 변경</string>
+    <string name="settings_personal_info_password">개인정보 &amp; 비밀번호 변경</string>
     <string name="settings_account">잠금화면 설정</string>
     <string name="settings_notification">알림 설정</string>
     <string name="settings_logout">로그아웃</string>
