@@ -123,7 +123,6 @@ public class MemberService {
         return MemberDto.builder()
             .memberId(member.getMemberId())
             .email(member.getEmail())
-            .password(member.getPassword())
             .nickname(member.getNickname())
             .birthDate(member.getBirthDate())
             .gender(member.getGender())
