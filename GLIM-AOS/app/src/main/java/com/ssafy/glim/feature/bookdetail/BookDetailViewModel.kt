@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.bookdetail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.usecase.book.GetBookDetailUseCase
 import com.ssafy.glim.core.domain.usecase.book.UpdateBookViewCountUseCase
@@ -64,9 +65,11 @@ class BookDetailViewModel @Inject constructor(
         runCatching { updateBookViewCountUseCase(bookId) }
             .onSuccess {
                 // 성공적으로 조회수 증가
+                Log.d("BookDetailViewModel", "조회수 증가 성공")
             }
             .onFailure {
-                postSideEffect(BookDetailSideEffect.ShowToast("조회수 증가에 실패했습니다."))
+                Log.d("BookDetailViewModel", "조회수 증가 실패: ${it.message}")
+//                postSideEffect(BookDetailSideEffect.ShowToast("조회수 증가에 실패했습니다."))
             }
     }
 }
