@@ -23,6 +23,7 @@ constructor(
                             navigator.route,
                             navigator.saveState,
                             navigator.launchSingleTop,
+                            navigator.inclusive
                         )
 
                     InternalRoute.NavigateBack -> RouteSideEffect.NavigateBack

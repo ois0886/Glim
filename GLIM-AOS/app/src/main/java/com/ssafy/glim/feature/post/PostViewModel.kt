@@ -28,7 +28,7 @@ class PostViewModel @Inject constructor(
 
     fun backPressed() =
         intent {
-            if(state.showBottomSheet) {
+            if (state.showBottomSheet) {
                 reduce { state.copy(showBottomSheet = false) }
             } else if (state.recognizedText.isNotEmpty()) {
                 reduce { state.copy(showExitDialog = true) }

@@ -1,25 +1,24 @@
 package com.ssafy.glim.feature.auth.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.domain.usecase.auth.LoginUseCase
-import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.auth.login.component.SocialProvider
+import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-internal class LoginViewModel
-@Inject
-constructor(
+internal class LoginViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val loginUseCase: LoginUseCase,
+    private val loginUseCase: LoginUseCase
 ) : ViewModel(), ContainerHost<LoginUiState, LoginSideEffect> {
     override val container = container<LoginUiState, LoginSideEffect>(initialState = LoginUiState())
 
@@ -60,7 +59,6 @@ constructor(
         }
 
     fun onLoginClicked() = intent {
-        // 1. 입력값 검증
         val emailValidation = ValidationUtils.validateEmail(
             email = state.email,
             emptyErrorRes = R.string.error_email_empty,
@@ -100,9 +98,11 @@ constructor(
             )
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
+            Log.d("LoginViewModel", "success")
             navigateToHome()
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
+            Log.d("LoginViewModel", "failed")
             postSideEffect(LoginSideEffect.ShowError(R.string.login_failed))
         }
     }
@@ -114,13 +114,12 @@ constructor(
 
     fun navigateToHome() =
         intent {
-            navigator.navigate(BottomTabRoute.Home)
+            navigator.navigate(route = MainTab.HOME.route, launchSingleTop = true, saveState = true)
         }
 
     fun navigateToForgotPassword() =
         intent {
             // TODO: 비밀번호 찾기 화면으로 이동
-            // navigator.navigate(Route.ForgotPassword)
         }
 
     fun navigateToSocialLogin(socialProvider: SocialProvider) =

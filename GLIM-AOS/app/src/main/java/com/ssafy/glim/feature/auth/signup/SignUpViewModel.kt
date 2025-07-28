@@ -1,5 +1,3 @@
-// 수정된 SignUpViewModel - runCatching 사용
-
 package com.ssafy.glim.feature.auth.signup
 
 import android.util.Log
@@ -67,6 +65,13 @@ internal class SignUpViewModel @Inject constructor(
         }
 
         reduce { state.copy(code = filteredCode, codeError = error) }
+
+        if (filteredCode.length == 6 &&
+            validationResult is ValidationResult.Valid &&
+            filteredCode == state.actualVerificationCode
+        ) {
+            certifyValidCode()
+        }
     }
 
     fun onPasswordChanged(password: String) = intent {
@@ -168,17 +173,16 @@ internal class SignUpViewModel @Inject constructor(
         reduce { state.copy(gender = gender) }
     }
 
-    // 단계별 검증 함수들
     fun onNextStep() = intent {
         when (state.currentStep) {
-            SignUpStep.Email -> validateEmailStep()
+            SignUpStep.Email -> sendVerificationCode()
             SignUpStep.Code -> validateCodeStep()
             SignUpStep.Password -> validatePasswordStep()
             SignUpStep.Profile -> validateProfileStep()
         }
     }
 
-    private fun validateEmailStep() = intent {
+    private fun sendVerificationCode() = intent {
         val validation = ValidationUtils.validateEmail(
             email = state.email,
             emptyErrorRes = R.string.error_email_empty,
@@ -186,7 +190,23 @@ internal class SignUpViewModel @Inject constructor(
         )
 
         when (validation) {
-            is ValidationResult.Valid -> moveToNextStep()
+            is ValidationResult.Valid -> {
+                reduce { state.copy(isLoading = true) }
+                Log.d("SignUp", "Starting verification for email: ${state.email}")
+                runCatching {
+                    verifyEmailUseCase(state.email)
+                }.onSuccess { response ->
+                    Log.d("SignUp", "Verification success: ${response.verificationCode}")
+                    reduce { state.copy(isLoading = false, actualVerificationCode = response.verificationCode) }
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.verification_code_instruction))
+                    moveToNextStep()
+                }.onFailure { exception ->
+                    Log.e("SignUp", "Verification failed: ${exception.message}", exception)
+                    reduce { state.copy(isLoading = false) }
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.verification_code_failed))
+                }
+            }
+
             is ValidationResult.Invalid -> handleEmailValidationError(validation.errorMessageRes)
         }
     }
@@ -212,6 +232,16 @@ internal class SignUpViewModel @Inject constructor(
     private fun handleCodeValidationError(errorRes: Int) = intent {
         postSideEffect(SignUpSideEffect.ShowToast(errorRes))
         reduce { state.copy(codeError = errorRes) }
+    }
+
+    private fun certifyValidCode() = intent {
+        if (state.code == state.actualVerificationCode) {
+            postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_verify_code))
+            moveToNextStep()
+        } else {
+            postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_incorrect))
+            reduce { state.copy(codeError = R.string.error_code_incorrect) }
+        }
     }
 
     private fun validatePasswordStep() = intent {
@@ -305,25 +335,6 @@ internal class SignUpViewModel @Inject constructor(
         } ?: navigator.navigateBack()
     }
 
-    private fun certifyValidCode() = intent {
-        reduce { state.copy(isLoading = true) }
-
-        Log.d("SignUpViewModel", "Verifying email: ${state.email}")
-
-        runCatching {
-            verifyEmailUseCase(state.email)
-        }.onSuccess {
-            reduce { state.copy(isLoading = false) }
-            moveToNextStep()
-        }.onFailure { exception ->
-            reduce { state.copy(isLoading = false) }
-            postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_verification_failed))
-            reduce { state.copy(codeError = R.string.error_code_verification_failed) }
-            // TODO: 나중에 삭제
-            moveToNextStep()
-        }
-    }
-
     private fun moveToNextStep() = intent {
         state.currentStep.next()?.let { next ->
             reduce { state.copy(currentStep = next) }
@@ -348,7 +359,7 @@ internal class SignUpViewModel @Inject constructor(
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
             postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_success))
-            navigator.navigate(route = Route.Login, launchSingleTop = true)
+            navigator.navigate(route = Route.Login, launchSingleTop = true, saveState = true, inclusive = true)
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
             postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))

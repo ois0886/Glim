@@ -2,7 +2,9 @@ package com.ssafy.glim.core.data.service
 
 import com.ssafy.glim.core.data.dto.request.LoginRequest
 import com.ssafy.glim.core.data.dto.request.SignUpRequest
+import com.ssafy.glim.core.data.dto.request.VerifyEmailRequest
 import com.ssafy.glim.core.data.dto.response.SignUpResponse
+import com.ssafy.glim.core.data.dto.response.VerifyEmailResponse
 import com.ssafy.glim.core.data.dto.token.AuthToken
 import retrofit2.Response
 import retrofit2.http.Body
@@ -23,20 +25,15 @@ interface AuthService {
         @Body request: LoginRequest,
     ): AuthToken
 
+    // 액섹스 토큰 갱신
     @POST("api/v1/auth/refresh")
     fun refreshToken(
         @Header("Authorization") refreshToken: String
     ): Response<AuthToken>
 
     // 이메일 인증
-    @POST("api/v1/auth/verify-email")
+    @POST("api/v1/auth/email-verification-code")
     suspend fun verifyEmail(
-        email: String,
-    ): Unit
-
-    // 이메일 인증 재전송
-    @POST("api/v1/auth/resend-verification")
-    suspend fun resendVerificationEmail(
-        email: String,
-    ): Unit
+        @Body request: VerifyEmailRequest
+    ): VerifyEmailResponse
 }

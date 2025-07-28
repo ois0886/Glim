@@ -1,21 +1,20 @@
 package com.ssafy.glim.core.data.di
 
+import com.ssafy.glim.BuildConfig
+import com.ssafy.glim.core.data.authmanager.AuthInterceptor
+import com.ssafy.glim.core.data.authmanager.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
-import com.ssafy.glim.BuildConfig
-import com.ssafy.glim.core.data.authmanager.AuthInterceptor
-import com.ssafy.glim.core.data.authmanager.TokenAuthenticator
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Named
-
+import javax.inject.Singleton
 
 private val baseUrl = BuildConfig.BASE_URL.toHttpUrl()
 

@@ -5,6 +5,7 @@ interface Navigator {
         route: Route,
         saveState: Boolean = false,
         launchSingleTop: Boolean = false,
+        inclusive: Boolean = false
     )
 
     suspend fun navigateBack()
