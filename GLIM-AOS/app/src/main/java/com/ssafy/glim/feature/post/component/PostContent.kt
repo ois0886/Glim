@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.post.component
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,9 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
@@ -43,7 +47,7 @@ fun PostContent(
     onToggleItalic: () -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageClick: () -> Unit,
-    onCompleteClick: () -> Unit,
+    onCompleteClick: (Bitmap?) -> Unit,
     onConfirmExit: () -> Unit,
     onCancelExit: () -> Unit,
     updateBottomSheetState: (Boolean) -> Unit,
@@ -76,37 +80,53 @@ fun PostContent(
             ExitConfirmDialog(onCancelExit, onConfirmExit)
         }
 
-        AsyncImage(
-            model = state.backgroundImageUri,
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,
-        )
+        val imageGraphicsLayer = rememberGraphicsLayer()
 
-        EditableTextField(
-            text = state.recognizedText,
-            textStyle = state.textStyle,
-            isFocused = state.isFocused,
-            isDragging = state.isDragging,
-            offsetX = state.textPosition.offsetX,
-            offsetY = state.textPosition.offsetY,
-            onTextChange = onTextChanged,
-            onFocusChanged = onTextFocusChanged,
-            onDragStart = onDragStart,
-            onDragEnd = onDragEnd,
-            onDrag = onDrag,
-            onIncreaseFontSize = onIncreaseFontSize,
-            onDecreaseFontSize = onDecreaseFontSize,
-            onToggleBold = onToggleBold,
-            onToggleItalic = onToggleItalic,
-            modifier = Modifier.align(Alignment.Center),
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .drawWithCache {
+                    onDrawWithContent {
+                        // AsyncImage만 GraphicsLayer에 기록
+                        imageGraphicsLayer.record {
+                            this@onDrawWithContent.drawContent()
+                        }
+                        drawLayer(imageGraphicsLayer)
+                    }
+                }
+        ) {
+            AsyncImage(
+                model = state.backgroundImageUri,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+            )
 
+            EditableTextField(
+                text = state.recognizedText,
+                textStyle = state.textStyle,
+                isFocused = state.isFocused,
+                isDragging = state.isDragging,
+                offsetX = state.textPosition.offsetX,
+                offsetY = state.textPosition.offsetY,
+                onTextChange = onTextChanged,
+                onFocusChanged = onTextFocusChanged,
+                onDragStart = onDragStart,
+                onDragEnd = onDragEnd,
+                onDrag = onDrag,
+                onIncreaseFontSize = onIncreaseFontSize,
+                onDecreaseFontSize = onDecreaseFontSize,
+                onToggleBold = onToggleBold,
+                onToggleItalic = onToggleItalic,
+                modifier = Modifier.align(Alignment.Center),
+            )
+        }
         ActionButtons(
             onTextExtractionClick = onTextExtractionClick,
             onBackgroundImageButtonClick = onBackgroundImageClick,
             onCreateTextClick = onTextFocusChanged,
             onCompleteClick = onCompleteClick,
+            graphicsLayer = imageGraphicsLayer,
             modifier = Modifier.align(Alignment.BottomEnd),
         )
 

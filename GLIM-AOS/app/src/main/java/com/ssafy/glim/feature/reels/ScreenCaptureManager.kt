@@ -1,4 +1,4 @@
-// CaptureUtils.kt
+// Enhanced CaptureUtils.kt
 package com.ssafy.glim.feature.reels
 
 import android.content.ContentValues
@@ -18,20 +18,63 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 /**
  * 화면 캡처를 위한 유틸리티 클래스
  */
-class ScreenCaptureManager
-@Inject
-constructor(
+class ScreenCaptureManager @Inject constructor(
     @ApplicationContext val context: Context,
 ) {
+
+    /**
+     * GraphicsLayer를 Bitmap으로 변환 (저장하지 않고 반환만)
+     */
+    suspend fun captureToBitmap(graphicsLayer: GraphicsLayer): Bitmap? {
+        return try {
+            graphicsLayer.toImageBitmap().asAndroidBitmap()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    /**
+     * GraphicsLayer를 ByteArray로 변환
+     */
+    suspend fun captureToByteArray(
+        graphicsLayer: GraphicsLayer,
+        format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
+        quality: Int = 100
+    ): ByteArray? {
+        return try {
+            val bitmap = graphicsLayer.toImageBitmap().asAndroidBitmap()
+            bitmapToByteArray(bitmap, format, quality)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    /**
+     * Bitmap을 ByteArray로 변환
+     */
+    fun bitmapToByteArray(
+        bitmap: Bitmap,
+        format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
+        quality: Int = 100
+    ): ByteArray {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(format, quality, stream)
+        return stream.toByteArray()
+    }
+
     /**
      * GraphicsLayer를 캡처해서 갤러리에 저장
      */
@@ -49,9 +92,41 @@ constructor(
     }
 
     /**
+     * GraphicsLayer를 캡처해서 임시 파일로 저장
+     */
+    suspend fun captureToTempFile(
+        graphicsLayer: GraphicsLayer,
+        fileName: String? = null,
+    ): File? {
+        return try {
+            val bitmap = graphicsLayer.toImageBitmap().asAndroidBitmap()
+            saveBitmapToTempFile(bitmap, fileName)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    /**
+     * GraphicsLayer를 캡처해서 캐시 디렉토리에 저장
+     */
+    suspend fun captureToCacheFile(
+        graphicsLayer: GraphicsLayer,
+        fileName: String? = null,
+    ): File? {
+        return try {
+            val bitmap = graphicsLayer.toImageBitmap().asAndroidBitmap()
+            saveBitmapToCacheFile(bitmap, fileName)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    /**
      * Bitmap을 갤러리에 저장
      */
-    private suspend fun saveBitmapToGallery(
+    suspend fun saveBitmapToGallery(
         bitmap: Bitmap,
         customFileName: String? = null,
     ): Boolean {
@@ -68,6 +143,57 @@ constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 false
+            }
+        }
+    }
+
+    /**
+     * Bitmap을 임시 파일로 저장
+     */
+    suspend fun saveBitmapToTempFile(
+        bitmap: Bitmap,
+        customFileName: String? = null,
+    ): File? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+                val fileName = customFileName ?: "temp_$timestamp.jpg"
+
+                val tempFile = File(context.cacheDir, fileName)
+                FileOutputStream(tempFile).use { outputStream ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                }
+                tempFile
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
+    /**
+     * Bitmap을 캐시 디렉토리에 저장
+     */
+    suspend fun saveBitmapToCacheFile(
+        bitmap: Bitmap,
+        customFileName: String? = null,
+    ): File? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+                val fileName = customFileName ?: "cache_$timestamp.jpg"
+
+                val cacheDir = File(context.cacheDir, "screenshots")
+                if (!cacheDir.exists()) cacheDir.mkdirs()
+
+                val cacheFile = File(cacheDir, fileName)
+                FileOutputStream(cacheFile).use { outputStream ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                }
+                cacheFile
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
             }
         }
     }
@@ -146,26 +272,65 @@ fun rememberScreenCapture(context: Context = LocalContext.current): ScreenCaptur
 }
 
 /**
- * 캡처 액션을 생성하는 헬퍼 함수
+ * 다양한 캡처 액션들을 제공하는 클래스
+ */
+data class CaptureActions(
+    val saveToGallery: () -> Unit,
+    val getBitmap: suspend () -> Bitmap?,
+    val getByteArray: suspend () -> ByteArray?,
+    val saveToTempFile: suspend () -> File?,
+    val saveToCacheFile: suspend () -> File?,
+)
+
+/**
+ * 캡처 액션들을 생성하는 헬퍼 함수
+ */
+@Composable
+fun rememberCaptureActions(
+    graphicsLayer: GraphicsLayer,
+    fileName: String? = null,
+): CaptureActions {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val captureManager = rememberScreenCapture(context)
+
+    return remember(graphicsLayer, fileName) {
+        CaptureActions(
+            saveToGallery = {
+                coroutineScope.launch {
+                    try {
+                        val success = captureManager.captureAndSaveToGallery(graphicsLayer, fileName)
+                        captureManager.showSaveResult(success)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "캡처 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                        e.printStackTrace()
+                    }
+                }
+            },
+            getBitmap = {
+                captureManager.captureToBitmap(graphicsLayer)
+            },
+            getByteArray = {
+                captureManager.captureToByteArray(graphicsLayer)
+            },
+            saveToTempFile = {
+                captureManager.captureToTempFile(graphicsLayer, fileName)
+            },
+            saveToCacheFile = {
+                captureManager.captureToCacheFile(graphicsLayer, fileName)
+            }
+        )
+    }
+}
+
+/**
+ * 기존 함수 유지 (호환성)
  */
 @Composable
 fun rememberCaptureAction(
     graphicsLayer: GraphicsLayer,
     fileName: String? = null,
 ): () -> Unit {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-    val captureManager = rememberScreenCapture(context)
-
-    return {
-        coroutineScope.launch {
-            try {
-                val success = captureManager.captureAndSaveToGallery(graphicsLayer, fileName)
-                captureManager.showSaveResult(success)
-            } catch (e: Exception) {
-                Toast.makeText(context, "캡처 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
-                e.printStackTrace()
-            }
-        }
-    }
+    val captureActions = rememberCaptureActions(graphicsLayer, fileName)
+    return captureActions.saveToGallery
 }

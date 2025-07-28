@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetQuotesUseCase @Inject constructor(
     private val repository: QuoteRepository
 ) {
-    suspend operator fun invoke(page: Int, size: Int = 10) =
+    suspend operator fun invoke(page: Int, size: Int) =
         repository.getQuotes(page, size, "")
 }

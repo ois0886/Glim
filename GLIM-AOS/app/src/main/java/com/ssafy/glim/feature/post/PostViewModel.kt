@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.post
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -148,21 +149,17 @@ class PostViewModel @Inject constructor(
             reduce { state.copy(book = book, showBottomSheet = false) }
         }
 
-    fun completeClick() =
+    fun completeClick(bitmap: Bitmap?) =
         intent {
             state.backgroundImageUri?.let { uri ->
                 try {
-                    val bitmap =
-                        imageProcessor.uriToBitmap(uri)
-                            ?: throw IllegalStateException("이미지를 불러올 수 없습니다.")
-
                     state.book?.let {
                         runCatching {
                             createQuoteUseCase(
                                 content = state.recognizedText,
                                 isbn = it.isbn,
                                 book = it,
-                                bitmap = bitmap
+                                bitmap = bitmap ?: throw IllegalArgumentException("Bitmap cannot be null"),
                             )
                         }
                             .onSuccess {

@@ -1,4 +1,4 @@
-package com.ssafy.quote.feature.reels
+package com.ssafy.glim.feature.reels
 
 import com.ssafy.glim.core.domain.model.Quote
 
@@ -6,15 +6,15 @@ import com.ssafy.glim.core.domain.model.Quote
 data class ReelsState(
     val quotes: List<Quote> = emptyList(),
     val currentQuoteId: Long = -1,
-    val currentPage: Int = 0,
+    val currentIdx: Int = 0,
+    val currentPage: Int = -1,
     val isLoading: Boolean = false,
     val error: String? = null,
-    val hasMoreData: Boolean = true,
 ) {
     val currentQuote: Quote?
         get() =
-            if (currentPage >= 0 && currentPage < quotes.size) {
-                quotes[currentPage]
+            if (currentIdx >= 0 && currentIdx < quotes.size) {
+                quotes[currentIdx]
             } else {
                 null
             }
