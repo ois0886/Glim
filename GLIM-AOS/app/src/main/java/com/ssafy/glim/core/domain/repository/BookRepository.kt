@@ -4,7 +4,7 @@ import com.ssafy.glim.core.domain.model.Book
 
 interface BookRepository {
 
-    suspend fun searchBooks(query: String): List<Book>
+    suspend fun searchBooks(query: String, page: Int): List<Book>
 
     suspend fun updateBookViewCount(isbn: Long)
 

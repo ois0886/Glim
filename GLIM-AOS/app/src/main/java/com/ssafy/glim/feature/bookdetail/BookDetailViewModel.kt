@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.bookdetail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.usecase.book.GetBookDetailUseCase
 import com.ssafy.glim.core.domain.usecase.book.UpdateBookViewCountUseCase
@@ -32,6 +33,7 @@ class BookDetailViewModel @Inject constructor(
                 increaseViewCount(bookId)
             }
             .onFailure {
+                Log.d("BookDetailViewModel", "Failed to load book details: ${it.message}")
                 postSideEffect(BookDetailSideEffect.ShowToast("책 정보를 불러오는데 실패했습니다."))
             }
     }
