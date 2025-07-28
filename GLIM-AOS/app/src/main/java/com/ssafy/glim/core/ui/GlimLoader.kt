@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ImageCustomLoader(modifier: Modifier = Modifier) {
+fun GlimLoader(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .size(80.dp)

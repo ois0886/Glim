@@ -57,7 +57,7 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
-import com.ssafy.glim.core.ui.ImageCustomLoader
+import com.ssafy.glim.core.ui.GlimLoader
 import com.ssafy.glim.feature.lock.component.SwipeButton
 import com.ssafy.glim.feature.lock.component.SwipeDirection
 import com.ssafy.glim.feature.main.MainActivity
@@ -210,7 +210,7 @@ fun LockScreenContent(
                 contentScale = ContentScale.Crop,
                 imageLoader = imageLoader,
                 loading = {
-                    ImageCustomLoader(Modifier)
+                    GlimLoader(Modifier)
                 },
                 error = {
                     Box(

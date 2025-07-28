@@ -51,7 +51,7 @@ import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
-import com.ssafy.glim.core.ui.ImageCustomLoader
+import com.ssafy.glim.core.ui.GlimLoader
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.ui.theme.GlimColor.LightGray600
 import com.ssafy.glim.ui.theme.GlimColor.LightGray700
@@ -212,7 +212,7 @@ fun QuoteCarousel(
                         contentScale = ContentScale.Crop,
                         imageLoader = imageLoader,
                         loading = {
-                            ImageCustomLoader(Modifier)
+                            GlimLoader(Modifier)
                         },
                         error = {
                             Box(
@@ -309,7 +309,7 @@ fun BookCarousel(
                         contentScale = ContentScale.Crop,
                         imageLoader = imageLoader,
                         loading = {
-                            ImageCustomLoader(Modifier)
+                            GlimLoader(Modifier)
                         },
                         error = {
                             Box(
