@@ -42,14 +42,17 @@ class AuthRepositoryImpl @Inject constructor(
             password = password,
         )
 
-        // TODO: refreshToken 추가
         runCatching { dataSource.login(request) }
             .onSuccess {
                 Log.d("AuthRepositoryImpl", "API success")
                 try {
                     authManager.saveToken(
-                        accessToken = it.accessToken
+                        accessToken = it.accessToken,
+                        refreshToken = it.refreshToken
                     )
+                    authManager.saveUserInfo(
+                        email = it.memberEmail,
+                        userId = it.memberId.toString())
                     Log.d("AuthRepositoryImpl", "Token save success")
                 } catch (e: Exception) {
                     Log.e("AuthRepositoryImpl", "Token save failed: ${e.message}")
@@ -63,4 +66,8 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun verifyEmail(email: String) =
         dataSource.verifyEmail(VerifyEmailRequest(email)).toDomain()
+
+    override suspend fun logOut() {
+        authManager.deleteAll()
+    }
 }

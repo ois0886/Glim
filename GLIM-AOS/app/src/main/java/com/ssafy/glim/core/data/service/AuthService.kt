@@ -25,6 +25,7 @@ interface AuthService {
         @Body request: LoginRequest,
     ): AuthToken
 
+    // 액섹스 토큰 갱신
     @POST("api/v1/auth/refresh")
     fun refreshToken(
         @Header("Authorization") refreshToken: String

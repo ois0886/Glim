@@ -16,11 +16,9 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-internal class LoginViewModel
-@Inject
-constructor(
+internal class LoginViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val loginUseCase: LoginUseCase,
+    private val loginUseCase: LoginUseCase
 ) : ViewModel(), ContainerHost<LoginUiState, LoginSideEffect> {
     override val container = container<LoginUiState, LoginSideEffect>(initialState = LoginUiState())
 
@@ -116,7 +114,7 @@ constructor(
 
     fun navigateToHome() =
         intent {
-            navigator.navigate(MainTab.HOME.route)
+            navigator.navigate(route = MainTab.HOME.route, launchSingleTop = true, saveState = true)
         }
 
     fun navigateToForgotPassword() =

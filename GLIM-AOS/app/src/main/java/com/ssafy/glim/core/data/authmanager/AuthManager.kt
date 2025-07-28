@@ -8,13 +8,19 @@ import javax.inject.Inject
 
 class AuthManager @Inject constructor(
     private val authDataStore: AuthDataStore,
-    private val applicationScope: CoroutineScope
+    applicationScope: CoroutineScope
 ) {
     @Volatile
     private var cachedAccessToken: String? = null
 
     @Volatile
     private var cachedRefreshToken: String? = null
+
+    @Volatile
+    private var cachedUserEmail: String? = null
+
+    @Volatile
+    private var cachedUserId: String? = null
 
     init {
         applicationScope.launch {
@@ -31,6 +37,20 @@ class AuthManager @Inject constructor(
                     cachedRefreshToken = token
                 }
             }
+
+            launch {
+                authDataStore.userEmailFlow.collect { email ->
+                    Log.d("Init AuthManager user email", "$email")
+                    cachedRefreshToken = email
+                }
+            }
+
+            launch {
+                authDataStore.userIdFlow.collect { id ->
+                    Log.d("Init AuthManager user id", "$id")
+                    cachedRefreshToken = id
+                }
+            }
         }
     }
 
@@ -38,14 +58,40 @@ class AuthManager @Inject constructor(
 
     fun getRefreshToken(): String? = cachedRefreshToken
 
-    // TODO : refreshToken: String 추가
-    fun saveToken(accessToken: String) {
+    fun saveToken(accessToken: String, refreshToken: String) {
         Log.d("AuthManager", "save token")
-        // 메모리는 즉시 업데이트
         cachedAccessToken = accessToken
+        cachedRefreshToken = refreshToken
 
         CoroutineScope(Dispatchers.IO).launch {
             authDataStore.saveAccessToken(accessToken)
+            authDataStore.saveRefreshToken(refreshToken)
         }
     }
+
+    fun saveUserInfo(email: String, userId: String) {
+        Log.d("AuthManager", "save userInfo")
+        cachedUserEmail = email
+        cachedUserId = userId
+
+        CoroutineScope(Dispatchers.IO).launch {
+            authDataStore.saveUserEmail(email)
+            authDataStore.saveUserId(userId)
+        }
+    }
+
+    fun deleteAll() {
+        cachedAccessToken = null
+        cachedRefreshToken = null
+        cachedUserEmail = null
+        cachedUserId = null
+
+        CoroutineScope(Dispatchers.IO).launch {
+            authDataStore.deleteAccessToken()
+            authDataStore.deleteRefreshToken()
+            authDataStore.deleteUserEmail()
+            authDataStore.deleteUserId()
+        }
+    }
+
 }
