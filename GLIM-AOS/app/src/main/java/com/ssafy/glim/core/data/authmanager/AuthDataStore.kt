@@ -32,5 +32,4 @@ class AuthDataStore @Inject constructor(
 
     suspend fun saveRefreshToken(token: String) = REFRESH_TOKEN.saveTo(dataStore, token)
     suspend fun deleteRefreshToken() = REFRESH_TOKEN.deleteFrom(dataStore)
-
 }

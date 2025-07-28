@@ -77,11 +77,11 @@ fun BookInfoSection(book: Book) {
             .fillMaxWidth()
             .background(
                 brush =
-                    Brush.linearGradient(
-                        colors = listOf(LightBrown, LightBrown.copy(alpha = 0.0f)),
-                        start = Offset(0f, 0f),
-                        end = Offset(0f, Float.POSITIVE_INFINITY),
-                    ),
+                Brush.linearGradient(
+                    colors = listOf(LightBrown, LightBrown.copy(alpha = 0.0f)),
+                    start = Offset(0f, 0f),
+                    end = Offset(0f, Float.POSITIVE_INFINITY),
+                ),
             )
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {

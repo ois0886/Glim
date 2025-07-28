@@ -59,10 +59,8 @@ class AuthRepositoryImpl @Inject constructor(
             .onFailure {
                 Log.d("AuthRepositoryImpl", "Login failed: ${it.message}")
             }
-
     }
 
     override suspend fun verifyEmail(email: String) =
         dataSource.verifyEmail(VerifyEmailRequest(email)).toDomain()
-
 }

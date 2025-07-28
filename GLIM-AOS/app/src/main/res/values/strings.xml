@@ -21,8 +21,8 @@
     <string name="auth_greeting">반가워요!</string>
     <string name="email_auth_instruction">사용하실 이메일을 입력해주세요.</string>
     <string name="verification_code_placeholder">인증번호 입력</string>
-    <string name="verification_code_instruction">이메일로 번호를 보냈어요!\n확인 후 인증을 완료해주세요.</string>
-    <string name="verification_code_failed">해당 이메일로 인증번호 요청이 실패하였어요! \n다시한번도 확인해주세요!</string>
+    <string name="verification_code_instruction">이메일로 인증번호를 보냈어요!</string>
+    <string name="verification_code_failed">해당 이메일로 인증번호 요청이 실패하였어요!</string>
 
     <string name="password_instruction">사용하실 비밀번호를 입력해주세요.</string>
     <string name="password_hint">대소문자, 영문, 숫자, 특수문자를 포함해 8~16자를 입력해주세요.</string>

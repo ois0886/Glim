@@ -16,7 +16,6 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Named
 
-
 private val baseUrl = BuildConfig.BASE_URL.toHttpUrl()
 
 @Module
