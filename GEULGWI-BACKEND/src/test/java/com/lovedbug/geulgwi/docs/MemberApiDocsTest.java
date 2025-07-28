@@ -6,6 +6,7 @@ import com.lovedbug.geulgwi.entity.Member;
 import com.lovedbug.geulgwi.enums.MemberGender;
 import com.lovedbug.geulgwi.repository.MemberRepository;
 import com.lovedbug.geulgwi.service.EmailService;
+import com.lovedbug.geulgwi.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @BeforeEach
     void clearDatabase() {
@@ -102,6 +106,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
+        String accessToken = jwtUtil.generateAccessToken(savedMember.getEmail(), savedMember.getMemberId());
 
         UpdateRequestDto updateRequestDto = UpdateRequestDto.builder()
             .password("updatePwd123")
@@ -111,6 +116,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
             .build();
 
         given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(updateRequestDto)
             .filter(document("{class_name}/{method_name}",
@@ -137,8 +143,10 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
+        String accessToken = jwtUtil.generateAccessToken(savedMember.getEmail(), savedMember.getMemberId());
 
         given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
             .filter(document("{class_name}/{method_name}",
                 pathParameters(
                     parameterWithName("memberId").description("삭제할 회원의 ID")
@@ -156,7 +164,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
         return List.of(
             fieldWithPath("memberId").description("사용자 고유 ID"),
             fieldWithPath("email").description("사용자 이메일"),
-            fieldWithPath("password").description("사용자 비밀번호"),
             fieldWithPath("nickname").description("사용자 닉네임"),
             fieldWithPath("status").description("회원 상태 (ACTIVE, INACTIVE)"),
             fieldWithPath("birthDate").description("사용자 생년월일"),
@@ -169,7 +176,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
         return List.of(
             fieldWithPath("memberId").description("회원 고유 ID"),
             fieldWithPath("email").description("회원 이메일"),
-            fieldWithPath("password").description("회원 비밀번호"),
             fieldWithPath("nickname").description("회원 닉네임"),
             fieldWithPath("status").description("회원 상태 (INACTIVE로 변경됨)"),
             fieldWithPath("birthDate").description("회원 생년월일"),
