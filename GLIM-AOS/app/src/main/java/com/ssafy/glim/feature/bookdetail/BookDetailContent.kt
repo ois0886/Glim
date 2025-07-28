@@ -109,7 +109,9 @@ fun BookInfoSection(book: Book) {
                     text = book.title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(end = 8.dp).weight(1f),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .weight(1f),
                 )
 
                 Text(
@@ -128,7 +130,9 @@ fun BookInfoSection(book: Book) {
                 Text(
                     text = book.author,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(end = 8.dp).weight(1f),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .weight(1f),
                 )
 
                 Text(
@@ -145,7 +149,9 @@ fun BookInfoSection(book: Book) {
                 Text(
                     text = book.publisher,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(end = 8.dp).weight(1f),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .weight(1f),
                     fontWeight = FontWeight.Bold
                 )
 
@@ -160,9 +166,9 @@ fun BookInfoSection(book: Book) {
 }
 
 @Composable
-fun QuoteCard(quote: QuoteSummary, onClickCard: (Long) -> Unit) {
+fun QuoteCard(quote: QuoteSummary, modifier: Modifier, onClickCard: (Long) -> Unit) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .clickable { onClickCard(quote.quoteId) },
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -170,35 +176,36 @@ fun QuoteCard(quote: QuoteSummary, onClickCard: (Long) -> Unit) {
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Text(
-            text = quote.content,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(16.dp)
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Text(
-                text = quote.page.toString(),
+                text = quote.content,
                 style = MaterialTheme.typography.bodyMedium,
+                maxLines = 5,
+                overflow = TextOverflow.Ellipsis,
             )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween, // 이걸 사용!
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    text = "p.${quote.page}",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            Icon(
-                painter = painterResource(id = R.drawable.ic_favorite),
-                contentDescription = stringResource(R.string.like),
-                modifier = Modifier.padding(end = 4.dp)
-            )
-
-            Text(
-                text = quote.views.toString(),
-                style = MaterialTheme.typography.bodyMedium,
-            )
+                Row(verticalAlignment = Alignment.Bottom) { // 조회수 그룹
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_views),
+                        contentDescription = stringResource(R.string.views),
+                        modifier = Modifier.padding(end = 2.dp)
+                    )
+                    Text(
+                        text = quote.views.toString(),
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                }
+            }
         }
     }
 }
+    

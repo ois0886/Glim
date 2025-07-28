@@ -49,6 +49,9 @@ class QuoteRepositoryImpl @Inject constructor(
     override suspend fun updateQuoteViewCount(quoteId: Long) =
         quoteRemoteDataSource.updateQuoteViewCount(quoteId)
 
+    override suspend fun getQuoteByIsbn(isbn: String) =
+        quoteRemoteDataSource.getQuoteByIsbn(isbn).map { it.toDomain() }
+
     private fun createQuoteMultipartData(
         bitmap: Bitmap
     ): MultipartBody.Part? = bitmap.toImagePart(

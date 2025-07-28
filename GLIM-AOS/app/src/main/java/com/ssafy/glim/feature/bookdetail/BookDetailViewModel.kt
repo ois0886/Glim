@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.usecase.book.GetBookDetailUseCase
 import com.ssafy.glim.core.domain.usecase.book.UpdateBookViewCountUseCase
+import com.ssafy.glim.core.domain.usecase.quote.GetQuoteByIsbnUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class BookDetailViewModel @Inject constructor(
     private val getBookDetailUseCase: GetBookDetailUseCase,
     private val updateBookViewCountUseCase: UpdateBookViewCountUseCase,
+    private val getQuoteByIsbnUseCase: GetQuoteByIsbnUseCase,
     private val navigator: Navigator
 ) : ViewModel(), ContainerHost<BookDetailState, BookDetailSideEffect> {
 
@@ -31,6 +33,7 @@ class BookDetailViewModel @Inject constructor(
                     )
                 }
                 increaseViewCount(bookId)
+                loadQuotes(it.isbn)
             }
             .onFailure {
                 postSideEffect(BookDetailSideEffect.ShowToast("책 정보를 불러오는데 실패했습니다."))
@@ -70,6 +73,16 @@ class BookDetailViewModel @Inject constructor(
             .onFailure {
                 Log.d("BookDetailViewModel", "조회수 증가 실패: ${it.message}")
 //                postSideEffect(BookDetailSideEffect.ShowToast("조회수 증가에 실패했습니다."))
+            }
+    }
+
+    private fun loadQuotes(isbn: String) = intent {
+        runCatching { getQuoteByIsbnUseCase(isbn) }
+            .onSuccess { quotes ->
+                reduce { state.copy(quoteSummaries = quotes) }
+            }
+            .onFailure {
+                postSideEffect(BookDetailSideEffect.ShowToast("글귀를 불러오는데 실패했습니다."))
             }
     }
 }

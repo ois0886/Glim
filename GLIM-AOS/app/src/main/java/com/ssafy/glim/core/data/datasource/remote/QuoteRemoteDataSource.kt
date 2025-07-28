@@ -30,4 +30,8 @@ class QuoteRemoteDataSource @Inject constructor(
     suspend fun updateQuoteViewCount(
         quoteId: Long
     ) = quoteService.updateQuoteViewCount(quoteId)
+
+    suspend fun getQuoteByIsbn(
+        isbn: String
+    ) = quoteService.getQuoteByIsbn(isbn)
 }
