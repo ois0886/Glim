@@ -1,4 +1,4 @@
-package com.ssafy.quote.feature.home
+package com.ssafy.glim.feature.home
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -51,8 +51,6 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.ImageCustomLoader
-import com.ssafy.glim.feature.home.HomeSideEffect
-import com.ssafy.glim.feature.home.HomeUiState
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.ui.theme.GlimColor.LightGray600
 import com.ssafy.glim.ui.theme.GlimColor.LightGray700
@@ -62,6 +60,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 internal fun HomeRoute(
     padding: PaddingValues,
+    onQuoteClicked: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -78,7 +77,7 @@ internal fun HomeRoute(
     HomeScreen(
         padding = padding,
         homeUiState = homeUiState,
-        onQuoteClick = viewModel::navigateToQuote,
+        onQuoteClick = onQuoteClicked,
         onBookClick = viewModel::navigateToBookDetail,
     )
 }

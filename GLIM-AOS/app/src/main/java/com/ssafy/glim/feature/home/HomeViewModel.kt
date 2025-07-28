@@ -1,12 +1,10 @@
-package com.ssafy.quote.feature.home
+package com.ssafy.glim.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.core.domain.model.CurationType
 import com.ssafy.glim.core.domain.usecase.curation.GetMainCurationsUseCase
 import com.ssafy.glim.core.navigation.Navigator
-import com.ssafy.glim.feature.home.HomeSideEffect
-import com.ssafy.glim.feature.home.HomeUiState
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
