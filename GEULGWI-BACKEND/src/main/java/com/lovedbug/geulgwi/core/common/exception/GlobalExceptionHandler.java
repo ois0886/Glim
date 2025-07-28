@@ -11,9 +11,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
+    public ResponseEntity<GeulgwiErrorResponse> handleException(Exception e) {
         log.error("Unhandled exception occurred", e);
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body("Internal server error");
+            .body(GeulgwiErrorResponse.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message("Internal Server Error")
+                .build());
     }
 }
