@@ -37,9 +37,9 @@ public class AuthService {
 
             MemberDto member = memberService.findByMemberEmail(email);
 
-            String accessToken = jwtUtil.generateAccessToken(email);
-            String refreshToken = jwtUtil.generateRefreshToken(email);
-            jwtUtil.generateRefreshToken(email);
+            String accessToken = jwtUtil.generateAccessToken(email, member.getMemberId());
+            String refreshToken = jwtUtil.generateRefreshToken(email, member.getMemberId());
+            jwtUtil.generateRefreshToken(email, member.getMemberId());
 
             return toJwtResponse(accessToken, refreshToken ,email, member.getMemberId());
         }catch(Exception e){
