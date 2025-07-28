@@ -16,12 +16,15 @@ constructor() : Navigator, InternalNavigator {
         route: Route,
         saveState: Boolean,
         launchSingleTop: Boolean,
+        inclusive: Boolean
+
     ) {
         channel.send(
             InternalRoute.Navigate(
                 route = route,
                 saveState = saveState,
                 launchSingleTop = launchSingleTop,
+                inclusive = inclusive
             ),
         )
     }

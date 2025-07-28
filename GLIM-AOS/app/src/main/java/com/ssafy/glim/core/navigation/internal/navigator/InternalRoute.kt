@@ -7,6 +7,7 @@ sealed interface InternalRoute {
         val route: Route,
         val saveState: Boolean,
         val launchSingleTop: Boolean,
+        val inclusive: Boolean
     ) : InternalRoute
 
     data object NavigateBack : InternalRoute
