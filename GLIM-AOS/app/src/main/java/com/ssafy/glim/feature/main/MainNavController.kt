@@ -64,13 +64,6 @@ internal class MainNavController(
     fun navigateToReels() {
         navigate(MainTab.REELS)
     }
-    fun clearBackStack() {
-        val options =
-            NavOptions.Builder()
-                .setPopUpTo(navController.graph.findStartDestination().id, inclusive = false)
-                .build()
-        navController.navigate(startDestination, options)
-    }
 
     fun clearBackStackAndNavigate(route : Route) {
         val options =

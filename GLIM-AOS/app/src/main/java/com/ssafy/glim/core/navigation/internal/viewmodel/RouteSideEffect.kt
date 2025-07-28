@@ -6,9 +6,12 @@ sealed interface RouteSideEffect {
     data class Navigate(
         val route: Route,
         val saveState: Boolean,
-        val launchSingleTop: Boolean,
-        val inclusive: Boolean
+        val launchSingleTop: Boolean
     ) : RouteSideEffect
 
     data object NavigateBack : RouteSideEffect
+
+    data class NavigateAndClearBackStack(
+        val route: Route
+    ) : RouteSideEffect
 }

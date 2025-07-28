@@ -73,12 +73,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
                 postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_success))
-                navigator.navigate(
-                    route = Route.Login,
-                    saveState = true,
-                    launchSingleTop = true,
-                    inclusive = true
-                )
+                navigator.navigateAndClearBackStack(Route.Login)
             }
             .onFailure {
                 reduce {
@@ -110,7 +105,6 @@ class ProfileViewModel @Inject constructor(
                 countdownSeconds = 10
             )
         }
-        // Countdown without separate job
         for (i in 10 downTo 0) {
             delay(1_000)
             reduce { state.copy(countdownSeconds = i) }
@@ -150,12 +144,7 @@ class ProfileViewModel @Inject constructor(
                         )
                     }
                     postSideEffect(ProfileSideEffect.ShowToast(R.string.withdrawal_success))
-                    navigator.navigate(
-                        route = Route.Login,
-                        saveState = true,
-                        launchSingleTop = true,
-                        inclusive = true
-                    )
+                    navigator.navigateAndClearBackStack(Route.Login)
                 }
                 .onFailure {
                     reduce {

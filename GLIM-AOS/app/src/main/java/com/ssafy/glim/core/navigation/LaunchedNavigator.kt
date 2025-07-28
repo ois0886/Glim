@@ -11,7 +11,6 @@ import androidx.navigation.NavHostController
 import com.ssafy.glim.core.navigation.internal.viewmodel.NavigatorViewModel
 import com.ssafy.glim.core.navigation.internal.viewmodel.RouteSideEffect
 import kotlinx.coroutines.flow.collectLatest
-
 @Composable
 fun LaunchedNavigator(navHostController: NavHostController) {
     InternalLaunchedNavigator(
@@ -39,12 +38,21 @@ private fun InternalLaunchedNavigator(
                                 navHostController.graph.findStartDestination().route?.let {
                                     popUpTo(it) {
                                         saveState = true
-                                        inclusive = true
                                     }
                                 }
                                 restoreState = true
                             }
                             launchSingleTop = sideEffect.launchSingleTop
+                        }
+                    }
+
+                    is RouteSideEffect.NavigateAndClearBackStack -> {
+                        navHostController.navigate(sideEffect.route) {
+                            popUpTo(0) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                            restoreState = false
                         }
                     }
                 }
