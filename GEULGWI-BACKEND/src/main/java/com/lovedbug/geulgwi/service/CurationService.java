@@ -59,7 +59,7 @@ public class CurationService {
 
     public CurationItemDto getPopularBookCuration() {
         List<CurationContentDto> contents = CurationMapper.toCurationContentListFromBooks(
-            bookService.getBestSellerBooks(AladdinListQueryType.BESTSELLER, 10)
+            bookService.getBestSellerBooks(AladdinListQueryType.BESTSELLER, 1)
         );
 
         return CurationItemDto.builder()
