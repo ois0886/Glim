@@ -136,13 +136,13 @@ internal class UpdateViewModel @Inject constructor(
 
     private fun updatePersonalInfo() = intent {
         val nameValidation = ValidationUtils.validateName(
-            name = state.nickname,
+            name = state.name,
             emptyErrorRes = R.string.error_name_empty,
             invalidErrorRes = R.string.error_name_invalid,
         )
 
         if (nameValidation is ValidationResult.Invalid) {
-            reduce { state.copy(nicknameError = nameValidation.errorMessageRes) }
+            reduce { state.copy(nameError = nameValidation.errorMessageRes) }
             return@intent
         }
 

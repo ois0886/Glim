@@ -3,10 +3,10 @@ package com.ssafy.glim.feature.update
 import androidx.annotation.StringRes
 
 data class UpdateInfoUiState(
-    val nickname: String = "",
+    val name: String = "",
     val email: String = "",
     val profileImageUri: String? = null,
-    @StringRes val nicknameError: Int? = null,
+    @StringRes val nameError: Int? = null,
     val currentPassword: String = "",
     val newPassword: String = "",
     val confirmPassword: String = "",
@@ -20,7 +20,7 @@ data class UpdateInfoUiState(
     val isSaveEnabled: Boolean
         get() = when (updateType) {
             UpdateType.PERSONAL -> {
-                nicknameError == null && nickname.isNotBlank()
+                nameError == null && name.isNotBlank()
             }
             UpdateType.PASSWORD -> {
                 currentPasswordError == null &&

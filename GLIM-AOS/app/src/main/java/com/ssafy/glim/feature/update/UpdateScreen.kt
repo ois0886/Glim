@@ -30,9 +30,9 @@ import com.ssafy.glim.core.ui.GlimTopBar
 import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.main.excludeSystemBars
-import com.ssafy.glim.feature.update.component.EmailSection
-import com.ssafy.glim.feature.update.component.ProfileImageSection
+import com.ssafy.glim.feature.update.component.PasswordChangeContent
 import org.orbitmvi.orbit.compose.collectSideEffect
+import com.ssafy.glim.feature.update.component.PersonalInfoContent
 
 @Composable
 internal fun UpdateRoute(
@@ -187,8 +187,8 @@ fun UpdateProfileScreenPreview() {
         state =
         UpdateInfoUiState(
             profileImageUri = null,
-            nickname = "홍길동",
-            nicknameError = null,
+            name = "홍길동",
+            nameError = null,
             email = "hong@example.com",
             isLoading = false,
         ),
@@ -197,6 +197,9 @@ fun UpdateProfileScreenPreview() {
         onProfileImageClicked = {},
         onSaveClicked = {},
         onBackClick = {},
+        onNewPasswordChanged = {},
+        onConfirmPasswordChanged = {},
+        onCurrentPasswordChanged = {}
     )
 }
 
@@ -207,8 +210,8 @@ fun UpdateProfileScreenErrorPreview() {
         state =
         UpdateInfoUiState(
             profileImageUri = null,
-            nickname = "",
-            nicknameError = R.string.error_name_empty,
+            name = "",
+            nameError = R.string.error_name_empty,
             email = "hong@example.com",
             isLoading = false,
         ),
@@ -217,20 +220,8 @@ fun UpdateProfileScreenErrorPreview() {
         onProfileImageClicked = {},
         onSaveClicked = {},
         onBackClick = {},
+        onNewPasswordChanged = {},
+        onConfirmPasswordChanged = {},
+        onCurrentPasswordChanged = {}
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfileImageSectionPreview() {
-    ProfileImageSection(
-        imageUri = null,
-        onImageClicked = {},
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun EmailSectionPreview() {
-    EmailSection(email = "hong@example.com")
 }

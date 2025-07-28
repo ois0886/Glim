@@ -9,14 +9,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.ssafy.glim.R
 import com.ssafy.glim.feature.update.UpdateInfoUiState
 
 @Composable
-private fun PersonalInfoContent(
+fun PersonalInfoContent(
     state: UpdateInfoUiState,
     onNameChanged: (String) -> Unit,
     onProfileImageClicked: () -> Unit
@@ -32,19 +32,19 @@ private fun PersonalInfoContent(
         Text(text = stringResource(id = R.string.profile_label_name))
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
-            value = state.nickname,
+            value = state.name,
             onValueChange = onNameChanged,
             label = { Text(stringResource(id = R.string.profile_hint_name)) },
-            isError = state.nicknameError != null,
+            isError = state.nameError != null,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (state.nicknameError != null) {
+        if (state.nameError != null) {
             Text(
-                text = stringResource(state.nicknameError),
+                text = stringResource(state.nameError),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.error,
             )
