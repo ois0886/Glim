@@ -3,8 +3,8 @@ package com.ssafy.glim.core.data.dto.response
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SignUpResponse(
+data class VerifyEmailResponse(
+    val message: String,
     val email: String,
-    val nickname: String,
-    val message: String
+    val verificationCode: String
 )

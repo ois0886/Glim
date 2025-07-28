@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class QuoteRequest(
     val visibility: String = "PUBLIC",
     val content: String,
-    val page : Long = 0,
+    val page: Long = 0,
     val isbn: String,
     val bookCreateData: BookCreateData
 )

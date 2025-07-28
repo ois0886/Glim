@@ -2,14 +2,13 @@ package com.ssafy.glim.core.data.authmanager
 
 import android.util.Log
 import com.ssafy.glim.core.data.service.AuthService
-import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 import javax.inject.Inject
 
-// TODO: 일정 횟수 이상 재시도 제한 로직 추가
+// TODO: 일정 횟수 이상 재시도 제한 로직 추가, 자동 로그아웃 세션 추가하기
 class TokenAuthenticator @Inject constructor(
     private val authManager: AuthManager,
     private val authService: AuthService

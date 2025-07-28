@@ -11,6 +11,7 @@ data class SignUpUiState(
     val name: String = "",
     val birthDate: String = "",
     val gender: String? = null,
+    val actualVerificationCode: String = "",
     @StringRes val emailError: Int? = null,
     @StringRes val codeError: Int? = null,
     @StringRes val passwordError: Int? = null,

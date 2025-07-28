@@ -77,7 +77,7 @@ internal fun PostRoute(
             onToggleItalic = viewModel::toggleItalic,
             onTextExtractionClick = viewModel::textExtractionClick,
             onBackgroundImageClick = viewModel::backgroundImageClick,
-            onCompleteClick = {viewModel.completeClick(it)},
+            onCompleteClick = { viewModel.completeClick(it) },
             onConfirmExit = viewModel::confirmExit,
             onCancelExit = viewModel::cancelExit,
             updateBottomSheetState = viewModel::updateBottomSheetState,

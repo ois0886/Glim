@@ -16,13 +16,13 @@ sealed interface Route {
     data class BookDetail(val bookId: Long) : BottomTabRoute
 }
 
-sealed interface GlimRoute : Route {
+sealed interface MyGlimsRoute : Route {
 
     @Serializable
-    data object Liked : GlimRoute
+    data object Liked : MyGlimsRoute
 
     @Serializable
-    data object Upload : GlimRoute
+    data object Upload : MyGlimsRoute
 }
 
 sealed interface BottomTabRoute : Route {

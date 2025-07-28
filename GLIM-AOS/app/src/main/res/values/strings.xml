@@ -21,7 +21,8 @@
     <string name="auth_greeting">반가워요!</string>
     <string name="email_auth_instruction">사용하실 이메일을 입력해주세요.</string>
     <string name="verification_code_placeholder">인증번호 입력</string>
-    <string name="verification_code_instruction">이메일로 번호를 보냈어요!\n확인 후 인증을 완료해주세요.</string>
+    <string name="verification_code_instruction">이메일로 인증번호를 보냈어요!</string>
+    <string name="verification_code_failed">해당 이메일로 인증번호 요청이 실패하였어요!</string>
 
     <string name="password_instruction">사용하실 비밀번호를 입력해주세요.</string>
     <string name="password_hint">대소문자, 영문, 숫자, 특수문자를 포함해 8~16자를 입력해주세요.</string>
@@ -58,7 +59,7 @@
     <string name="error_gender_empty">성별을 선택해주세요.</string>
 
     <!-- 회원가입 처리 관련 메시지 -->
-    <string name="error_code_verification_failed">인증 코드 검증에 실패했습니다.</string>
+
     <string name="error_code_incorrect">인증 코드가 올바르지 않습니다.</string>
 
     <!-- 프로필 관련 문자열 -->
@@ -128,6 +129,7 @@
     <string name="lock_screen_slide_description"><![CDATA[밀어서 잠금 해제 >>]]></string>
 
     <string name="logout_success">로그아웃되었습니다.</string>
+    <string name="logout_failed">로그아웃에 실패하였습니다.</string>
     <string name="withdrawal_success">성공적으로 회원 탈퇴하였습니다.</string>
     <string name="withdrawal_failed">회원 탈퇴 실패하였습니다.</string>
     <string name="lock_settings_message">잠금 설정 화면으로 이동</string>
@@ -136,7 +138,7 @@
     <string name="like_removed_message">좋아요를 취소했습니다.</string>
     <string name="error_load_profile_failed">프로필 정보를 불러오는데 실패했습니다.</string>
 
-    <string name="signup_send_verification_code">인증번호 전송</string>
+    <string name="signup_send_verification_code">인증번호 발송</string>
     <string name="signup_verify_code">인증완료</string>
     <string name="signup_confirm">확인</string>
 

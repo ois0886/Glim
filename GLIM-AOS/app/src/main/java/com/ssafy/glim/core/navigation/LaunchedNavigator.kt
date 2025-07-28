@@ -32,12 +32,14 @@ private fun InternalLaunchedNavigator(
                     is RouteSideEffect.NavigateBack -> {
                         navHostController.popBackStack()
                     }
+
                     is RouteSideEffect.Navigate -> {
                         navHostController.navigate(sideEffect.route) {
                             if (sideEffect.saveState) {
                                 navHostController.graph.findStartDestination().route?.let {
                                     popUpTo(it) {
                                         saveState = true
+                                        inclusive = true
                                     }
                                 }
                                 restoreState = true

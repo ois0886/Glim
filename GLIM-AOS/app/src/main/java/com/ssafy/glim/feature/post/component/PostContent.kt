@@ -58,23 +58,23 @@ fun PostContent(
 
     Box(
         modifier =
-            modifier
-                .fillMaxSize()
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                ) {
-                    onBackgroundClick()
-                    focusManager.clearFocus()
-                }
-                .background(
-                    brush =
-                        Brush.linearGradient(
-                            colors = listOf(Color(0x881C1B1F), Color(0xFF1C1B1F)),
-                            start = Offset(0f, 0f),
-                            end = Offset(0f, Float.POSITIVE_INFINITY),
-                        ),
+        modifier
+            .fillMaxSize()
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+            ) {
+                onBackgroundClick()
+                focusManager.clearFocus()
+            }
+            .background(
+                brush =
+                Brush.linearGradient(
+                    colors = listOf(Color(0x881C1B1F), Color(0xFF1C1B1F)),
+                    start = Offset(0f, 0f),
+                    end = Offset(0f, Float.POSITIVE_INFINITY),
                 ),
+            ),
     ) {
         if (state.showExitDialog) {
             ExitConfirmDialog(onCancelExit, onConfirmExit)
@@ -162,9 +162,7 @@ fun PostContent(
                         selectedBook(book)
                     },
                 )
-
             }
-
         }
     }
 }

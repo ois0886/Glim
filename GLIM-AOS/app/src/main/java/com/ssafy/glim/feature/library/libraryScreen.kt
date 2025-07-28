@@ -183,8 +183,7 @@ fun LibraryRoute(
                             strokeWidth = 2.dp
                         )
                     }
-                }
-                else {
+                } else {
                     SearchResultSection(
                         searchQuery = state.searchQuery,
                         bookList = state.searchBooks,

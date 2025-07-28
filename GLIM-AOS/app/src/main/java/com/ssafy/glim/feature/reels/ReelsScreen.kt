@@ -180,7 +180,6 @@ fun QuoteItem(
             error = painterResource(R.drawable.example_glim_2),
         )
 
-
         QuoteBookContent(
             modifier = Modifier.align(Alignment.BottomEnd),
             bookId = quote.bookId,
@@ -201,7 +200,7 @@ fun QuoteItem(
                 .align(Alignment.BottomEnd),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            IconButton(onClick = {captureAction()}) {
+            IconButton(onClick = { captureAction() }) {
                 Icon(
                     painter = painterResource(R.drawable.ic_download),
                     contentDescription = stringResource(R.string.download),

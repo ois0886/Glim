@@ -52,7 +52,7 @@ private fun AddBookContent(modifier: Modifier, onBookClick: (Long?) -> Unit) {
             .clickable { onBookClick(null) },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(onClick = {onBookClick(null)}) {
+        IconButton(onClick = { onBookClick(null) }) {
             Icon(
                 painter = painterResource(R.drawable.icon_post),
                 contentDescription = null,

@@ -11,6 +11,6 @@ class UpdateUserUseCase @Inject constructor(
         password: String,
         nickname: String,
         gender: String,
-        birthDate: String,
+        birthDate: List<Int>,
     ) = repository.updateUser(memberId, password, nickname, gender, birthDate)
 }

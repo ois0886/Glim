@@ -1,7 +1,5 @@
 package com.ssafy.glim.core.data.datasource.remote
 
-import com.ssafy.glim.core.data.dto.response.CurationContentResponse
-import com.ssafy.glim.core.data.dto.response.CurationItemResponse
 import com.ssafy.glim.core.data.service.CurationService
 import javax.inject.Inject
 

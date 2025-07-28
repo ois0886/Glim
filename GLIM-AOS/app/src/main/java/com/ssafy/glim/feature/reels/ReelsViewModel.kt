@@ -62,7 +62,7 @@ constructor(
                         currentQuoteId = state.currentQuote?.quoteId ?: -1,
                     )
                 }
-                if(state.currentIdx >= state.quotes.size - 3) {
+                if (state.currentIdx >= state.quotes.size - 3) {
                     // 마지막 페이지에 도달했을 때 새로운 인용구를 가져옴
                     refresh()
                 }
@@ -105,5 +105,4 @@ constructor(
         intent {
             navigator.navigate(Route.BookDetail(bookId))
         }
-
 }
