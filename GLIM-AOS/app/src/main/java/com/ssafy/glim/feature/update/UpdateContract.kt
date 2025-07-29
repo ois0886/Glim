@@ -8,19 +8,15 @@ data class UpdateInfoUiState(
     val email: String = "",
     val gender: String = "",
     val birthDate: String = "",
-
     val newName: String = "",
     val profileImageUri: String? = null,
-
     val password: String = "",
     val newPassword: String = "",
     val confirmPassword: String = "",
-
     @StringRes val newNameError: Int? = null,
     @StringRes val currentPasswordError: Int? = null,
     @StringRes val newPasswordError: Int? = null,
     @StringRes val confirmPasswordError: Int? = null,
-
     val isLoading: Boolean = false,
     val updateType: UpdateType = UpdateType.PERSONAL
 ) {
