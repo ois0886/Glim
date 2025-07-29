@@ -49,6 +49,18 @@ include::{snippets}/book_api_docs_test/get_popular_books/http-response.adoc[]
 
 include::{snippets}/book_api_docs_test/get_popular_books/response-fields.adoc[]
 
+=== 도서 상세 조회
+
+==== 요청
+
+include::{snippets}/book_api_docs_test/get_book_info/http-request.adoc[]
+
+include::{snippets}/book_api_docs_test/get_book_info/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/book_api_docs_test/get_book_info/http-response.adoc[]
+
 === 도서 조회수 증가
 
 ==== 요청
