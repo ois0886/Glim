@@ -9,7 +9,7 @@ internal enum class MainTab(
     val iconResId: Int,
     internal val contentDescription: String,
     val label: String,
-    val route: BottomTabRoute,
+    val route: BottomTabRoute
 ) {
     HOME(
         iconResId = R.drawable.ic_home,
@@ -33,7 +33,7 @@ internal enum class MainTab(
         iconResId = R.drawable.ic_reels,
         contentDescription = "Reels Icon",
         label = "릴스",
-        route = BottomTabRoute.Reels,
+        route = BottomTabRoute.Reels(),
     ),
     PROFILE(
         iconResId = R.drawable.ic_profile,

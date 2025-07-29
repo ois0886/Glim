@@ -1,6 +1,7 @@
 package com.ssafy.glim.core.data.repository
 
 import android.graphics.Bitmap
+import com.ssafy.glim.core.data.datasource.local.QuoteLocalDataSource
 import com.ssafy.glim.core.data.datasource.remote.QuoteRemoteDataSource
 import com.ssafy.glim.core.data.dto.request.QuoteRequest
 import com.ssafy.glim.core.data.dto.request.toRequestDto
@@ -15,6 +16,7 @@ import javax.inject.Inject
 
 class QuoteRepositoryImpl @Inject constructor(
     private val quoteRemoteDataSource: QuoteRemoteDataSource,
+    private val quoteLocalDataSource: QuoteLocalDataSource
 ) : QuoteRepository {
 
     override suspend fun createQuote(
@@ -42,15 +44,21 @@ class QuoteRepositoryImpl @Inject constructor(
         page: Int,
         size: Int,
         sort: String
-    ) =
+    ) = runCatching {
         quoteRemoteDataSource.getQuotes(page, size, sort)
             .map { it.toDomain() }
+    }.onSuccess {
+        quoteLocalDataSource.addQuotes(it)
+    }.getOrThrow()
 
     override suspend fun updateQuoteViewCount(quoteId: Long) =
         quoteRemoteDataSource.updateQuoteViewCount(quoteId)
 
     override suspend fun getQuoteByIsbn(isbn: String) =
         quoteRemoteDataSource.getQuoteByIsbn(isbn).map { it.toDomain() }
+
+    override suspend fun getQuoteById(quoteId: Long) =
+        quoteLocalDataSource.getQuote(quoteId)
 
     private fun createQuoteMultipartData(
         bitmap: Bitmap

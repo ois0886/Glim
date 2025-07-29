@@ -121,6 +121,7 @@ class LockScreenActivity : ComponentActivity() {
                             this.startActivity(
                                 Intent(this, MainActivity::class.java).apply {
                                     putExtra("nav_route", "glim")
+                                    putExtra("quote_id", effect.quoteId)
                                 }
                             )
                             (this as? Activity)?.finish()

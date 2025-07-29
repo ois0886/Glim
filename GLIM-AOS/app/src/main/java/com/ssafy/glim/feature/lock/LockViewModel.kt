@@ -75,7 +75,7 @@ constructor(
 
     fun viewQuote() =
         intent {
-            postSideEffect(LockSideEffect.NavigateQuotes)
+            postSideEffect(LockSideEffect.NavigateQuotes(state.quotes[state.currentIndex].quoteId))
         }
 
     private fun loadQuotes() =
