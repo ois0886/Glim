@@ -4,6 +4,8 @@ import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.AladdinClient;
@@ -45,5 +47,37 @@ public class BookService {
             .orElseThrow(() -> new EntityNotFoundException("없는 책 id 입니다. 책 id = " + bookId));
 
         book.increaseViewCount();
+    }
+
+    @Transactional
+    public void saveBooksFromExternal(List<AladdinBookDto> aladdinBooks) {
+        for (AladdinBookDto aladdinBook : aladdinBooks) {
+            String isbn = aladdinBook.getIsbn();
+            if (isbn == null || isbn.isBlank()) {
+                continue;
+            }
+
+            if (bookRepository.existsByIsbn(isbn)) {
+                continue;
+            }
+
+            Book book = Book.builder()
+                .isbn(aladdinBook.getIsbn())
+                .title(aladdinBook.getTitle())
+                .author(aladdinBook.getAuthor())
+                .category(aladdinBook.getCategoryName())
+                .categoryId(aladdinBook.getCategoryId())
+                .publisher(aladdinBook.getPublisher())
+                .description(aladdinBook.getDescription())
+                .isbn(aladdinBook.getIsbn())
+                .isbn13(aladdinBook.getIsbn13())
+                .publishedDate(
+                    LocalDate.parse(aladdinBook.getPublishedDate(), DateTimeFormatter.ISO_LOCAL_DATE))
+                .coverUrl(aladdinBook.getCoverUrl())
+                .linkUrl(aladdinBook.getLinkUrl())
+                .build();
+
+            bookRepository.save(book);
+        }
     }
 }
