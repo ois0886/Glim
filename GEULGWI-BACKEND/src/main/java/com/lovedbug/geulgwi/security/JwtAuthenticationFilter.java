@@ -1,6 +1,5 @@
 package com.lovedbug.geulgwi.security;
 
-import com.lovedbug.geulgwi.annotation.JwtRequired;
 import com.lovedbug.geulgwi.dto.resposne.AuthenticatedUser;
 import com.lovedbug.geulgwi.service.AuthenticatedUserService;
 import com.lovedbug.geulgwi.utils.JwtUtil;
@@ -12,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import java.io.IOException;
 
@@ -41,9 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         HttpServletResponse response,
         FilterChain filterChain)
         throws IOException {
-            
+
         try {
-            if (request.getRequestURI().equals("/api/v1/auth/refresh") || !requiresJwtAuthentication(request)) {
+            if (request.getRequestURI().equals("/api/v1/auth/refresh")) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -66,26 +63,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private boolean requiresJwtAuthentication(HttpServletRequest request) throws Exception {
-
-        HandlerExecutionChain executionChain = handlerMapping.getHandler(request);
-        if (executionChain == null || !(executionChain.getHandler() instanceof HandlerMethod)) {
-            return false;
-        }
-
-        JwtRequired jwtRequired = getJwtRequiredAnnotation((HandlerMethod) executionChain.getHandler());
-        return jwtRequired != null;
-    }
-
-    private JwtRequired getJwtRequiredAnnotation(HandlerMethod handlerMethod) {
-
-        JwtRequired methodAnnotation = handlerMethod.getMethodAnnotation(JwtRequired.class);
-        if (methodAnnotation != null) {
-            return methodAnnotation;
-        }
-
-        return handlerMethod.getBeanType().getAnnotation(JwtRequired.class);
-    }
 
     private String extractTokenFromRequest(HttpServletRequest request) {
 

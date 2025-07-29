@@ -1,6 +1,5 @@
 package com.lovedbug.geulgwi.controller;
 
-import com.lovedbug.geulgwi.annotation.JwtRequired;
 import com.lovedbug.geulgwi.dto.request.SignUpRequestDto;
 import com.lovedbug.geulgwi.dto.request.UpdateRequestDto;
 import com.lovedbug.geulgwi.dto.resposne.MemberDto;
@@ -59,7 +58,6 @@ public class MemberController {
     }
 
     @PutMapping("/{memberId}")
-    @JwtRequired
     public ResponseEntity<MemberDto> updateMember(
         @PathVariable("memberId") Long memberId,
         @RequestBody UpdateRequestDto updateRequest) {
@@ -68,7 +66,6 @@ public class MemberController {
     }
 
     @PatchMapping("/{memberId}/status")
-    @JwtRequired
     public ResponseEntity<MemberDto> deleteMember(
             @PathVariable Long memberId){
 

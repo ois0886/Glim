@@ -3,7 +3,6 @@ package com.lovedbug.geulgwi.controller;
 import com.lovedbug.geulgwi.dto.resposne.AuthenticatedUser;
 import com.lovedbug.geulgwi.dto.resposne.QuoteResponseDto;
 import com.lovedbug.geulgwi.annotation.CurrentUser;
-import com.lovedbug.geulgwi.annotation.JwtRequired;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +36,6 @@ public class QuoteController {
     }
 
     @PostMapping("")
-    @JwtRequired
     public ResponseEntity<Void> createQuote(@CurrentUser AuthenticatedUser user,
         @RequestPart QuoteCreateDto quoteData, @RequestPart MultipartFile quoteImage) {
 
