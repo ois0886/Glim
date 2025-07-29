@@ -1,14 +1,14 @@
 package com.lovedbug.geulgwi.docs;
 
-import com.lovedbug.geulgwi.dto.request.EmailVerificationRequestDto;
-import com.lovedbug.geulgwi.dto.request.LoginRequestDto;
-import com.lovedbug.geulgwi.entity.Member;
-import com.lovedbug.geulgwi.enums.MemberGender;
-import com.lovedbug.geulgwi.enums.MemberRole;
-import com.lovedbug.geulgwi.enums.MemberStatus;
-import com.lovedbug.geulgwi.repository.MemberRepository;
-import com.lovedbug.geulgwi.service.EmailVerificationService;
-import com.lovedbug.geulgwi.utils.JwtUtil;
+import com.lovedbug.geulgwi.core.domain.auth.dto.request.EmailVerificationRequest;
+import com.lovedbug.geulgwi.core.domain.auth.dto.request.LoginRequest;
+import com.lovedbug.geulgwi.core.domain.member.Member;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
+import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.external.email.EmailVerifier;
+import com.lovedbug.geulgwi.core.security.JwtUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.time.LocalDateTime;
-import static com.lovedbug.geulgwi.utils.JwtUtil.HEADER_AUTH;
-import static com.lovedbug.geulgwi.utils.JwtUtil.TOKEN_PREFIX;
+import static com.lovedbug.geulgwi.core.security.JwtUtil.HEADER_AUTH;
+import static com.lovedbug.geulgwi.core.security.JwtUtil.TOKEN_PREFIX;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -40,16 +40,16 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
     private JwtUtil jwtUtil;
 
     @MockitoBean
-    private EmailVerificationService emailVerificationService;
+    private EmailVerifier emailVerifier;
 
     @DisplayName("사용자가_이메일_인증코드를_발송한다")
     @Test
     void verify_email_code_test(){
 
-        when(emailVerificationService.sendVerificationCode(any(String.class)))
+        when(emailVerifier.sendVerificationCode(any(String.class)))
             .thenReturn("123456");
 
-        EmailVerificationRequestDto requestDto = EmailVerificationRequestDto.builder()
+        EmailVerificationRequest requestDto = EmailVerificationRequest.builder()
             .email("test@example.com")
             .build();
 
@@ -80,14 +80,14 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
         Member testMember = AuthTestMemberFactory.createLoginTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
 
-        LoginRequestDto loginRequestDto = LoginRequestDto.builder()
+        LoginRequest loginRequest = LoginRequest.builder()
             .email(savedMember.getEmail())
             .password("pwd1234")
             .build();
 
         given(this.spec)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(loginRequestDto)
+            .body(loginRequest)
             .filter(document("{class_name}/{method_name}",
                 requestFields(
                     fieldWithPath("email").description("로그인할 사용자 이메일 (필수)"),

@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.FieldDescriptor;
-import com.lovedbug.geulgwi.entity.Book;
-import com.lovedbug.geulgwi.repository.BookRepository;
+import com.lovedbug.geulgwi.core.domain.book.entity.Book;
+import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 
 public class BookApiDocsTest extends RestDocsTestSupport {
 
