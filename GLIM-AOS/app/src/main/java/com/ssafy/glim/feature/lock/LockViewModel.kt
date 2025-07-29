@@ -43,8 +43,7 @@ constructor(
         val lastIndex = state.quotes.lastIndex
         val nextIdx = (state.currentIndex + 1).coerceAtMost(lastIndex)
 
-        if (nextIdx >= state.quotes.size - 5)
-            loadQuotes()
+        if (nextIdx >= state.quotes.size - 5) loadQuotes()
         if (nextIdx != state.currentIndex) {
             reduce { state.copy(currentIndex = nextIdx) }
         }
@@ -90,7 +89,7 @@ constructor(
                 val updatedQuotes = state.quotes + newQuotes
                 state.copy(
                     quotes = updatedQuotes,
-                    page   = state.page + 1
+                    page = state.page + 1
                 )
             }
         }

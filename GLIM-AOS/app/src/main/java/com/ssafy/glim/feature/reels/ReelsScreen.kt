@@ -26,7 +26,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -64,7 +63,7 @@ internal fun ReelsRoute(
 ) {
     val context = LocalContext.current
 
-    SideEffect {
+    LaunchedEffect(Unit) {
         Log.d("ReelsRoute", "ReelsRoute SideEffect triggered with quoteId: $quoteId")
         if (quoteId >= 0) {
             viewModel.loadQuote(quoteId)

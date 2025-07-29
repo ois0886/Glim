@@ -249,7 +249,6 @@ fun QuoteCarousel(
                         overflow = TextOverflow.Ellipsis
                     )
                     Spacer(modifier = Modifier.weight(1F))
-
                 }
             }
         }
