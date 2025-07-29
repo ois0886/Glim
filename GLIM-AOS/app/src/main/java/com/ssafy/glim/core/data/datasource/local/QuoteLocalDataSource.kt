@@ -4,7 +4,7 @@ import android.util.Log
 import com.ssafy.glim.core.domain.model.Quote
 import javax.inject.Inject
 
-class QuoteLocalDataSource @Inject constructor()  {
+class QuoteLocalDataSource @Inject constructor() {
     val quotes = hashSetOf<Quote>()
 
     fun addQuotes(quoteList: List<Quote>) {

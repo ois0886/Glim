@@ -3,7 +3,6 @@ package com.ssafy.glim.feature.reels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.usecase.quote.GetQuoteByIdUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
 import com.ssafy.glim.core.domain.usecase.quote.UpdateQuoteViewCountUseCase
@@ -90,7 +89,7 @@ constructor(
     fun loadQuote(quoteId: Long) = intent {
         runCatching { getQuoteByIdUseCase(quoteId) }
             .onSuccess {
-                Log.d("ReelsViewModel", "Loaded quote: ${it}")
+                Log.d("ReelsViewModel", "Loaded quote: $it")
                 reduce {
                     state.copy(
                         quotes = listOf(it),

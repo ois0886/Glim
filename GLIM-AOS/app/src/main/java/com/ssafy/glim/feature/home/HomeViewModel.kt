@@ -7,7 +7,6 @@ import com.ssafy.glim.core.domain.usecase.curation.GetMainCurationsUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
-import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
