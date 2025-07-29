@@ -1,6 +1,5 @@
 package com.ssafy.glim.core.common.extensions
 
-import android.annotation.SuppressLint
 import androidx.core.util.PatternsCompat
 import com.ssafy.glim.core.domain.model.user.Gender
 import java.util.Calendar

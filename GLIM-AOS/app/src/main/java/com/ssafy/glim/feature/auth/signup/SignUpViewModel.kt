@@ -182,6 +182,9 @@ internal class SignUpViewModel @Inject constructor(
             invalidErrorRes = R.string.error_email_invalid
         )
 
+        val emailError = validation.toErrorRes()
+        reduce { state.copy(emailError = emailError) }
+
         when (validation) {
             is ValidationResult.Valid -> {
                 reduce { state.copy(isLoading = true) }
@@ -200,13 +203,10 @@ internal class SignUpViewModel @Inject constructor(
                 }
             }
 
-            is ValidationResult.Invalid -> handleEmailValidationError(validation.errorMessageRes)
+            is ValidationResult.Invalid -> {
+                postSideEffect(SignUpSideEffect.ShowToast(validation.errorMessageRes))
+            }
         }
-    }
-
-    private fun handleEmailValidationError(errorRes: Int) = intent {
-        postSideEffect(SignUpSideEffect.ShowToast(errorRes))
-        reduce { state.copy(emailError = errorRes) }
     }
 
     private fun validateCodeStep() = intent {
@@ -216,6 +216,18 @@ internal class SignUpViewModel @Inject constructor(
             invalidErrorRes = R.string.error_code_invalid
         )
 
+        val codeError = if (validation is ValidationResult.Valid) {
+            if (state.code == state.actualVerificationCode) {
+                null
+            } else {
+                R.string.error_code_incorrect
+            }
+        } else {
+            validation.toErrorRes()
+        }
+
+        reduce { state.copy(codeError = codeError) }
+
         when (validation) {
             is ValidationResult.Valid -> {
                 if (state.code == state.actualVerificationCode) {
@@ -223,16 +235,13 @@ internal class SignUpViewModel @Inject constructor(
                     moveToNextStep()
                 } else {
                     postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_incorrect))
-                    reduce { state.copy(codeError = R.string.error_code_incorrect) }
                 }
             }
-            is ValidationResult.Invalid -> handleCodeValidationError(validation.errorMessageRes)
-        }
-    }
 
-    private fun handleCodeValidationError(errorRes: Int) = intent {
-        postSideEffect(SignUpSideEffect.ShowToast(errorRes))
-        reduce { state.copy(codeError = errorRes) }
+            is ValidationResult.Invalid -> {
+                postSideEffect(SignUpSideEffect.ShowToast(validation.errorMessageRes))
+            }
+        }
     }
 
     private fun validatePasswordStep() = intent {
@@ -251,24 +260,18 @@ internal class SignUpViewModel @Inject constructor(
         val passwordError = passwordValidation.toErrorRes()
         val confirmError = confirmValidation.toErrorRes()
 
-        if (passwordError != null || confirmError != null) {
-            handlePasswordValidationErrors(passwordError, confirmError)
-        } else {
-            moveToNextStep()
-        }
-    }
-
-    private fun handlePasswordValidationErrors(
-        passwordError: Int?,
-        confirmError: Int?
-    ) = intent {
-        val firstError = passwordError ?: confirmError!!
-        postSideEffect(SignUpSideEffect.ShowToast(firstError))
         reduce {
             state.copy(
                 passwordError = passwordError,
                 confirmPasswordError = confirmError,
             )
+        }
+
+        if (passwordError != null || confirmError != null) {
+            val firstError = passwordError ?: confirmError!!
+            postSideEffect(SignUpSideEffect.ShowToast(firstError))
+        } else {
+            moveToNextStep()
         }
     }
 
@@ -298,25 +301,18 @@ internal class SignUpViewModel @Inject constructor(
         val birthDateError = birthDateValidation.toErrorRes()
         val genderError = genderValidation.toErrorRes()
 
-        if (nameError != null || birthDateError != null || genderError != null) {
-            handleProfileValidationErrors(nameError, birthDateError, genderError)
-        } else {
-            performSignUp()
-        }
-    }
-
-    private fun handleProfileValidationErrors(
-        nameError: Int?,
-        birthDateError: Int?,
-        genderError: Int?
-    ) = intent {
-        val firstError = nameError ?: birthDateError ?: genderError!!
-        postSideEffect(SignUpSideEffect.ShowToast(firstError))
         reduce {
             state.copy(
                 nameError = nameError,
                 birthDateError = birthDateError,
             )
+        }
+
+        if (nameError != null || birthDateError != null || genderError != null) {
+            val firstError = nameError ?: birthDateError ?: genderError!!
+            postSideEffect(SignUpSideEffect.ShowToast(firstError))
+        } else {
+            performSignUp()
         }
     }
 

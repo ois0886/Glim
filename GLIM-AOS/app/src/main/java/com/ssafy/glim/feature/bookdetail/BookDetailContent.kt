@@ -189,7 +189,7 @@ fun QuoteCard(
             )
             Row(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween, // 이걸 사용!
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
@@ -197,7 +197,7 @@ fun QuoteCard(
                     style = MaterialTheme.typography.bodyMedium,
                 )
 
-                Row(verticalAlignment = Alignment.Bottom) { // 조회수 그룹
+                Row(verticalAlignment = Alignment.Bottom) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_views),
                         contentDescription = stringResource(R.string.views),
