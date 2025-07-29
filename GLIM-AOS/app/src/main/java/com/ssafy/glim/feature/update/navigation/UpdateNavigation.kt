@@ -11,7 +11,7 @@ fun NavGraphBuilder.updateNavGraph(
     popBackStack: () -> Unit,
     padding: PaddingValues,
 ) {
-    composable<UpdateInfoRoute.Personal> { backStackEntry ->
+    composable<UpdateInfoRoute.Personal> {
         UpdateRoute(
             updateType = UpdateType.PERSONAL,
             padding = padding,
