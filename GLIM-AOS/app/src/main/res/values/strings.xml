@@ -178,6 +178,7 @@
 
     <string name="change_password_title">비밀번호 변경</string>
     <string name="current_password_label">현재 비밀번호</string>
+    <string name="change_password_info">새로운 비밀번호를 \n입력해주세요.</string>
     <string name="current_password_hint">현재 비밀번호를 입력하세요</string>
     <string name="new_password_instruction">새로운 비밀번호를 입력해주세요</string>
     <string name="new_password_label">새 비밀번호</string>

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
@@ -25,6 +26,15 @@ fun PasswordChangeContent(
     onConfirmPasswordChanged: (String) -> Unit
 ) {
     Column {
+
+        Text(
+            text = stringResource(R.string.change_password_info),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
         Text(
             text = stringResource(R.string.current_password_label),
             style = MaterialTheme.typography.bodyMedium,
@@ -40,7 +50,6 @@ fun PasswordChangeContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 새 비밀번호 입력 섹션
         Text(
             text = stringResource(R.string.new_password_instruction),
             style = MaterialTheme.typography.bodyMedium.copy(
@@ -76,4 +85,15 @@ fun PasswordChangeContent(
             ),
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPasswordChangeContent() {
+    PasswordChangeContent(
+        state = UpdateInfoUiState(email = "hong@example.com"),
+        onCurrentPasswordChanged = {},
+        onNewPasswordChanged = {},
+        onConfirmPasswordChanged = {}
+    )
 }
