@@ -17,9 +17,6 @@ class AuthManager @Inject constructor(
     private var cachedRefreshToken: String? = null
 
     @Volatile
-    private var cachedUserEmail: String? = null
-
-    @Volatile
     private var cachedUserId: String? = null
 
     init {
@@ -39,13 +36,6 @@ class AuthManager @Inject constructor(
             }
 
             launch {
-                authDataStore.userEmailFlow.collect { email ->
-                    Log.d("Init AuthManager user email", "$email")
-                    cachedRefreshToken = email
-                }
-            }
-
-            launch {
                 authDataStore.userIdFlow.collect { id ->
                     Log.d("Init AuthManager user id", "$id")
                     cachedRefreshToken = id
@@ -57,8 +47,6 @@ class AuthManager @Inject constructor(
     fun getAccessToken(): String? = cachedAccessToken
 
     fun getRefreshToken(): String? = cachedRefreshToken
-
-    fun getUserEmail(): String? = cachedUserEmail
 
     fun getUserId(): String? = cachedUserId
 
@@ -73,13 +61,11 @@ class AuthManager @Inject constructor(
         }
     }
 
-    fun saveUserInfo(email: String, userId: String) {
+    fun saveUserInfo(userId: String) {
         Log.d("AuthManager", "save userInfo")
-        cachedUserEmail = email
         cachedUserId = userId
 
         CoroutineScope(Dispatchers.IO).launch {
-            authDataStore.saveUserEmail(email)
             authDataStore.saveUserId(userId)
         }
     }
@@ -87,13 +73,11 @@ class AuthManager @Inject constructor(
     fun deleteAll() {
         cachedAccessToken = null
         cachedRefreshToken = null
-        cachedUserEmail = null
         cachedUserId = null
 
         CoroutineScope(Dispatchers.IO).launch {
             authDataStore.deleteAccessToken()
             authDataStore.deleteRefreshToken()
-            authDataStore.deleteUserEmail()
             authDataStore.deleteUserId()
         }
     }

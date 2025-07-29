@@ -44,7 +44,6 @@ class AuthRepositoryImpl @Inject constructor(
             refreshToken = response.refreshToken
         )
         authManager.saveUserInfo(
-            email = response.memberEmail,
             userId = response.memberId.toString()
         )
     }
