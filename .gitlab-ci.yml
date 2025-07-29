@@ -1,0 +1,129 @@
+# Android GitLab CI/CD Pipeline
+# SSAFY Glim 프로젝트용 CI/CD 설정
+
+image: openjdk:17-jdk-slim
+
+variables:
+  ANDROID_COMPILE_SDK: "35"
+  ANDROID_BUILD_TOOLS: "35.0.0"
+  ANDROID_SDK_TOOLS: "11076708"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.configureondemand=true"
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+
+# 캐시 설정으로 빌드 시간 단축
+cache:
+  key: 
+    files:
+      - gradle/wrapper/gradle-wrapper.properties
+      - "gradle/libs.versions.toml"
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+    - .android/
+
+# Android SDK 및 환경 설정
+before_script:
+  - apt-get --quiet update --yes
+  - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 git
+  - export ANDROID_HOME="$PWD/android-sdk-linux"
+  - export PATH="$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin"
+  - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
+  - unzip -q android-sdk.zip -d android-sdk-linux
+  - mkdir -p android-sdk-linux/cmdline-tools/latest
+  - mv android-sdk-linux/cmdline-tools/* android-sdk-linux/cmdline-tools/latest/ 2>/dev/null || true
+  - echo y | sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}" >/dev/null 2>&1
+  - echo y | sdkmanager "platform-tools" >/dev/null 2>&1
+  - echo y | sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}" >/dev/null 2>&1
+  - chmod +x ./gradlew
+  # local.properties 파일 생성 (BASE_URL은 GitLab Variables에서 가져옴)
+  - echo "BASE_URL=$BASE_URL" > local.properties
+
+stages:
+  - code-quality
+  - test
+
+# 코드 품질 검사 스테이지
+ktlint-check:
+  stage: code-quality
+  script:
+    - echo "🔍 Running Ktlint code style check..."
+    - ./gradlew ktlintCheck --stacktrace
+  artifacts:
+    reports:
+      junit: "app/build/reports/ktlint/**/TEST-*.xml"
+    paths:
+      - app/build/reports/ktlint/
+    expire_in: 1 week
+    when: always
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "Android/develop"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+detekt-check:
+  stage: code-quality
+  script:
+    - echo "🔍 Running Detekt static code analysis..."
+    - ./gradlew detekt --stacktrace
+  artifacts:
+    reports:
+      codequality: app/build/reports/detekt/detekt.json
+    paths:
+      - app/build/reports/detekt/
+    expire_in: 1 week
+    when: always
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "Android/develop"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# 전체 코드 품질 검사 (Gradle 커스텀 태스크 사용)
+code-quality-check:
+  stage: code-quality
+  script:
+    - echo "🔍 Running comprehensive code quality check..."
+    - ./gradlew codeQualityCheck --stacktrace
+  artifacts:
+    reports:
+      junit: 
+        - "app/build/test-results/testDebugUnitTest/TEST-*.xml"
+        - "app/build/reports/ktlint/**/TEST-*.xml"
+      codequality: app/build/reports/detekt/detekt.json
+    paths:
+      - app/build/reports/
+      - app/build/test-results/
+    expire_in: 1 week
+    when: always
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "Android/develop"
+
+# 테스트 스테이지
+unit-tests:
+  stage: test
+  script:
+    - echo "🧪 Running unit tests (including ViewModel tests)..."
+    - ./gradlew testDebugUnitTest --stacktrace
+  coverage: '/Total.*?([0-9]{1,3})%/'
+  artifacts:
+    reports:
+      junit: "app/build/test-results/testDebugUnitTest/TEST-*.xml"
+    paths:
+      - app/build/reports/tests/testDebugUnitTest/
+      - app/build/jacoco/
+    expire_in: 1 week
+    when: always
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "Android/develop"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# 컴파일 테스트 (빌드 검증)
+compile-test:
+  stage: test
+  script:
+    - echo "🔧 Testing compilation..."
+    - ./gradlew compileDebugKotlin compileDebugAndroidTestKotlin --stacktrace
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "Android/develop"
