@@ -12,5 +12,5 @@ data class QuoteResponse(
     val publisher: String,
     val quoteId: Long,
     val quoteImageName: String,
-    val quoteViews: Long? = null,
+    val quoteViews: Long,
 )
