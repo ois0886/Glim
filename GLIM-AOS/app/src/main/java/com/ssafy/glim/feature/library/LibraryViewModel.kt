@@ -170,7 +170,7 @@ constructor(
     // 글귀 아이템 클릭
     fun onQuoteClicked(quote: Quote) =
         intent {
-            navigator.navigate(BottomTabRoute.Reels)
+            navigator.navigate(BottomTabRoute.Reels(quote.quoteId))
         }
 
     // 인기 검색어 로드

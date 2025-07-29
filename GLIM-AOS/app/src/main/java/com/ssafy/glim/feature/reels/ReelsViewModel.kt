@@ -3,6 +3,8 @@ package com.ssafy.glim.feature.reels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.core.domain.usecase.quote.GetQuoteByIdUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
 import com.ssafy.glim.core.domain.usecase.quote.UpdateQuoteViewCountUseCase
 import com.ssafy.glim.core.navigation.Navigator
@@ -20,6 +22,7 @@ class ReelsViewModel
 constructor(
     private val getQuotesUseCase: GetQuotesUseCase,
     private val updateQuoteViewCountUseCase: UpdateQuoteViewCountUseCase,
+    private val getQuoteByIdUseCase: GetQuoteByIdUseCase,
     private val navigator: Navigator
 ) : ViewModel(), ContainerHost<ReelsState, ReelsSideEffect> {
     override val container: Container<ReelsState, ReelsSideEffect> = container(ReelsState())
@@ -83,6 +86,30 @@ constructor(
                 postSideEffect(ReelsSideEffect.ShareQuote(it))
             }
         }
+
+    fun loadQuote(quoteId: Long) = intent {
+        runCatching { getQuoteByIdUseCase(quoteId) }
+            .onSuccess {
+                Log.d("ReelsViewModel", "Loaded quote: ${it}")
+                reduce {
+                    state.copy(
+                        quotes = listOf(it),
+                        currentQuoteId = it.quoteId,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+            }
+            .onFailure {
+                Log.d("ReelsViewModel", "Failed to load quote: ${it.message}")
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        error = it.message
+                    )
+                }
+            }
+    }
 
     fun refresh() =
         intent {

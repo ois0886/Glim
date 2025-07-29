@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.core.domain.model.CurationType
 import com.ssafy.glim.core.domain.usecase.curation.GetMainCurationsUseCase
+import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.feature.main.MainTab
@@ -25,9 +26,9 @@ class HomeViewModel @Inject constructor(
     private val _errorFlow = MutableSharedFlow<Throwable>()
     val errorFlow get() = _errorFlow.asSharedFlow()
 
-    fun navigateToQuote() =
+    fun navigateToQuote(quoteId: Long) =
         viewModelScope.launch {
-            navigator.navigate(MainTab.REELS.route)
+            navigator.navigate(BottomTabRoute.Reels(quoteId))
         }
 
     fun navigateToBookDetail(bookId: String) =

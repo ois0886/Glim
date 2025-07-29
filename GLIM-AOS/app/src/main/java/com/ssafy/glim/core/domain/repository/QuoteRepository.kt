@@ -29,4 +29,8 @@ interface QuoteRepository {
     suspend fun getQuoteByIsbn(
         isbn: String
     ): List<QuoteSummary>
+
+    suspend fun getQuoteById(
+        quoteId: Long
+    ): Quote
 }

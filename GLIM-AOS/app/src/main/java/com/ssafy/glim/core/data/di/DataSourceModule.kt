@@ -1,5 +1,6 @@
 package com.ssafy.glim.core.data.di
 
+import com.ssafy.glim.core.data.datasource.local.QuoteLocalDataSource
 import com.ssafy.glim.core.data.datasource.remote.QuoteRemoteDataSource
 import com.ssafy.glim.core.data.datasource.remote.AuthRemoteDataSource
 import com.ssafy.glim.core.data.datasource.remote.BookRemoteDataSource
@@ -33,4 +34,8 @@ object DataSourceModule {
     @Singleton
     @Provides
     fun provideSearchRemoteDataSource(service: SearchQueryService) = SearchQueryRemoteDataSource(service)
+
+    @Singleton
+    @Provides
+    fun provideQuoteLocalDataSource(): QuoteLocalDataSource = QuoteLocalDataSource()
 }

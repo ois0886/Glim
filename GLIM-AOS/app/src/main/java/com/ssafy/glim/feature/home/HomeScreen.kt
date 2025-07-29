@@ -56,7 +56,6 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 internal fun HomeRoute(
     padding: PaddingValues,
-    onQuoteClicked: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -73,7 +72,7 @@ internal fun HomeRoute(
     HomeScreen(
         padding = padding,
         homeUiState = homeUiState,
-        onQuoteClick = onQuoteClicked,
+        onQuoteClick = viewModel::navigateToQuote,
         onBookClick = viewModel::navigateToBookDetail,
     )
 }
@@ -82,7 +81,7 @@ internal fun HomeRoute(
 private fun HomeScreen(
     padding: PaddingValues,
     homeUiState: HomeUiState,
-    onQuoteClick: () -> Unit,
+    onQuoteClick: (Long) -> Unit,
     onBookClick: (String) -> Unit,
 ) {
     LazyColumn(
@@ -159,7 +158,7 @@ fun SectionTitle(text: String) {
 @Composable
 fun QuoteCarousel(
     quotes: List<Quote>,
-    onItemClick: () -> Unit,
+    onItemClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
     itemSize: DpSize = DpSize(width = 240.dp, height = 360.dp),
@@ -187,7 +186,7 @@ fun QuoteCarousel(
                 modifier =
                 Modifier
                     .width(itemSize.width)
-                    .clickable { onItemClick() },
+                    .clickable { onItemClick(quote.quoteId) },
                 horizontalAlignment = Alignment.Start,
             ) {
                 Card(

@@ -58,7 +58,6 @@ internal fun MainScreen(navigator: MainNavController = rememberMainNavController
             )
             homeNavGraph(
                 padding = innerPadding,
-                onQuoteClicked = navigator::navigateToReels
             )
             postNavGraph(
                 padding = innerPadding,

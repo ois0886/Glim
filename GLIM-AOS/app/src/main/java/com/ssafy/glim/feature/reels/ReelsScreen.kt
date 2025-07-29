@@ -1,4 +1,4 @@
-package com.ssafy.quote.feature.reels
+package com.ssafy.glim.feature.reels
 
 import android.util.Log
 import android.widget.Toast
@@ -51,15 +51,13 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.DarkThemeScreen
 import com.ssafy.glim.feature.main.excludeSystemBars
-import com.ssafy.glim.feature.reels.ReelsSideEffect
-import com.ssafy.glim.feature.reels.ReelsViewModel
-import com.ssafy.glim.feature.reels.rememberCaptureAction
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 internal fun ReelsRoute(
+    quoteId: Long,
     padding: PaddingValues,
     popBackStack: () -> Unit,
     viewModel: ReelsViewModel = hiltViewModel(),
@@ -68,7 +66,12 @@ internal fun ReelsRoute(
     val context = LocalContext.current
 
     SideEffect {
-        viewModel.refresh()
+        Log.d("ReelsRoute", "ReelsRoute SideEffect triggered with quoteId: $quoteId")
+        if (quoteId >= 0) {
+            viewModel.loadQuote(quoteId)
+        } else {
+            viewModel.refresh()
+        }
     }
 
     // Side effects 처리
