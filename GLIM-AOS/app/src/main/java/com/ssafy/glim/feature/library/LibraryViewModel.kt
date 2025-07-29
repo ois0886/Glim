@@ -164,7 +164,7 @@ constructor(
     // 책 아이템 클릭
     fun onBookClicked(book: Book) =
         intent {
-            navigator.navigate(Route.BookDetail(isbn = book.isbn       ))
+            navigator.navigate(Route.BookDetail(isbn = book.isbn))
         }
 
     // 글귀 아이템 클릭
