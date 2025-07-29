@@ -268,7 +268,7 @@ fun BookCarousel(
                 modifier =
                 Modifier
                     .width(itemWidth)
-                    .clickable { onItemClick(book.itemId.toString()) },
+                    .clickable { onItemClick(book.bookId.toString()) },
                 horizontalAlignment = Alignment.Start
             ) {
                 Card(

@@ -36,7 +36,7 @@ fun CurationItemResponse.toDomain(): Curation {
 
 private fun CurationContentResponse.toBook(): Book =
     Book(
-        itemId = this.bookId ?: -1L,
+        bookId = this.bookId ?: -1L,
         title = this.bookTitle,
         author = this.author,
         publisher = this.publisher,

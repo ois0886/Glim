@@ -23,8 +23,8 @@ class BookDetailViewModel @Inject constructor(
 
     override val container: Container<BookDetailState, BookDetailSideEffect> = container(BookDetailState())
 
-    fun initBook(bookId: Long) = intent {
-        runCatching { getBookDetailUseCase(bookId) }
+    fun initBook(isbn: String?, bookId: Long?) = intent {
+        runCatching { getBookDetailUseCase(isbn, bookId) }
             .onSuccess {
                 reduce {
                     state.copy(
@@ -32,7 +32,7 @@ class BookDetailViewModel @Inject constructor(
                         isLoading = false
                     )
                 }
-                increaseViewCount(bookId)
+                increaseViewCount(state.bookDetail.bookId)
                 loadQuotes(it.isbn)
             }
             .onFailure {

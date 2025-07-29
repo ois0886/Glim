@@ -7,22 +7,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Book(
+    val bookId: Long = 0L,
     val adult: Boolean = false,
     val author: String = "",
     val categoryId: Long = 0L,
     val categoryName: String = "",
     val cover: String = "",
     val description: String = "",
-    val fixedPrice: Boolean = false,
     val isbn: String = "",
     val isbn13: String = "",
-    val itemId: Long = 0L,
     val link: String = "",
     val priceSales: Long = 0L,
     val priceStandard: Long = 0L,
     val pubDate: String = "",
     val publisher: String = "",
-    val stockStatus: String = "",
     val title: String = "",
     val translator: String = ""
 ) {

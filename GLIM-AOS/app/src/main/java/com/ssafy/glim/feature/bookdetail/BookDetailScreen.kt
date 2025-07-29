@@ -48,7 +48,8 @@ import kotlin.math.min
 
 @Composable
 fun BookDetailScreen(
-    bookId: Long,
+    isbn: String?,
+    bookId: Long?,
     padding: PaddingValues,
     popBackStack: () -> Unit,
     viewModel: BookDetailViewModel = hiltViewModel(),
@@ -57,7 +58,7 @@ fun BookDetailScreen(
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.initBook(bookId)
+        viewModel.initBook(isbn, bookId)
     }
 
     viewModel.collectSideEffect {

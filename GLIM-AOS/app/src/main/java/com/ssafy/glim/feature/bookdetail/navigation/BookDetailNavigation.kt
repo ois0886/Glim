@@ -17,7 +17,8 @@ fun NavGraphBuilder.bookDetailNavGraph(
         BookDetailScreen(
             padding = padding,
             popBackStack = popBackStack,
-            bookId = route.bookId
+            isbn = route.isbn,
+            bookId = route.bookId,
         )
     }
 }

@@ -11,16 +11,13 @@ fun BookResponse.toDomain(): Book {
         categoryName = categoryName,
         cover = coverUrl,
         description = description,
-        fixedPrice = fixedPrice,
         isbn = isbn,
         isbn13 = isbn13,
-        itemId = itemId,
         link = linkUrl,
         priceSales = priceSales,
         priceStandard = priceStandard,
         pubDate = publishedDate,
         publisher = publisher,
-        stockStatus = stockStatus,
         title = title,
         translator = translator ?: ""
     )

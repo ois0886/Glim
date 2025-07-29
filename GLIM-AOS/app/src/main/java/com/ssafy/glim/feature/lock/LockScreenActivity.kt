@@ -112,7 +112,7 @@ class LockScreenActivity : ComponentActivity() {
                             this.startActivity(
                                 Intent(this, MainActivity::class.java).apply {
                                     putExtra("nav_route", "book")
-                                    putExtra("book_num", effect.bookId)
+                                    putExtra("isbn", effect.bookId)
                                 }
                             )
                             (this as? Activity)?.finish()

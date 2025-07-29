@@ -8,5 +8,5 @@ interface BookRepository {
 
     suspend fun updateBookViewCount(isbn: Long)
 
-    fun getBookDetail(bookId: Long): Book
+    fun getBookDetail(isbn: String?, bookId: Long?): Book
 }
