@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.core.domain.book;
 
+import java.util.List;
 import java.util.Optional;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findBookByIsbn(String isbn);
 
     boolean existsByIsbn(String isbn);
+
+    List<Book> findTop10ByOrderByViewsDesc();
 }

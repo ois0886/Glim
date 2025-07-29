@@ -3,13 +3,15 @@ package com.lovedbug.geulgwi.core.domain.curation.mapper;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.lovedbug.geulgwi.core.domain.book.dto.PopularBookResponse;
+import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
 import com.lovedbug.geulgwi.core.domain.curation.projection.CurationBook;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationContentResponse;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
 import com.lovedbug.geulgwi.core.domain.curation.projection.CurationQuote;
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteWithBookResponse;
-import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookDto;
+import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookResponse;
 
 public class CurationMapper {
 
@@ -30,7 +32,7 @@ public class CurationMapper {
             .toList();
     }
 
-    public static CurationContentResponse toCurationContent(AladdinBookDto aladdinBook) {
+    public static CurationContentResponse toCurationContent(AladdinBookResponse aladdinBook) {
         return CurationContentResponse.builder()
             .bookTitle(aladdinBook.getTitle())
             .author(aladdinBook.getAuthor())
@@ -39,7 +41,16 @@ public class CurationMapper {
             .build();
     }
 
-    public static List<CurationContentResponse> toCurationContentListFromBooks(List<AladdinBookDto> aladdinBooks) {
+    public static CurationContentResponse toCurationContent(PopularBookResponse popularBook) {
+        return CurationContentResponse.builder()
+            .bookTitle(popularBook.bookTitle())
+            .author(popularBook.author())
+            .publisher(popularBook.publisher())
+            .bookCoverUrl(popularBook.bookCoverUrl())
+            .build();
+    }
+
+    public static List<CurationContentResponse> toCurationContentListFromBooks(List<PopularBookResponse> aladdinBooks) {
         return aladdinBooks.stream()
             .map(CurationMapper::toCurationContent)
             .toList();

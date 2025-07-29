@@ -26,5 +26,5 @@ public class AladdinBookSearchDto {
     private String searchCategoryName;
 
     @JsonProperty("item")
-    private List<AladdinBookDto> items;
+    private List<AladdinBookResponse> items;
 }

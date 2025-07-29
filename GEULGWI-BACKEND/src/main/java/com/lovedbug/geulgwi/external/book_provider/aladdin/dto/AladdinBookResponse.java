@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 @ToString
 @Getter
-public class AladdinBookDto {
+public class AladdinBookResponse {
 
     private String title;
     private String linkUrl;
