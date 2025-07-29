@@ -39,7 +39,6 @@ internal class UpdateViewModel @Inject constructor(
                     email = user.email,
                     gender = user.gender.formatGenderToString(),
                     birthDate = user.birthDate,
-                    // 이름만 수정 가능하므로 newName만 초기화
                     newName = user.nickname
                 )
             }
@@ -50,7 +49,15 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     fun setUpdateType(type: UpdateType) = intent {
-        reduce { state.copy(updateType = type) }
+        reduce {
+            state.copy(
+                updateType = type,
+                newNameError = null,
+                currentPasswordError = null,
+                newPasswordError = null,
+                confirmPasswordError = null
+            )
+        }
     }
 
     fun onImageSelected(uri: Uri) = intent {
@@ -158,6 +165,24 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     private fun updatePersonalInfo() = intent {
+        val nameValidation = ValidationUtils.validateName(
+            name = state.newName,
+            emptyErrorRes = R.string.error_name_empty,
+            invalidErrorRes = R.string.error_name_invalid,
+        )
+
+        val nameError = when (nameValidation) {
+            is ValidationResult.Valid -> null
+            is ValidationResult.Invalid -> nameValidation.errorMessageRes
+        }
+
+        reduce { state.copy(newNameError = nameError) }
+
+        if (nameError != null) {
+            postSideEffect(UpdateInfoSideEffect.ShowErrorRes(nameError))
+            return@intent
+        }
+
         reduce { state.copy(isLoading = true) }
 
         runCatching {
@@ -172,7 +197,8 @@ internal class UpdateViewModel @Inject constructor(
             reduce {
                 state.copy(
                     isLoading = false,
-                    name = updatedUser.nickname
+                    name = updatedUser.nickname,
+                    newName = updatedUser.nickname
                 )
             }
             postSideEffect(UpdateInfoSideEffect.ProfileUpdated)
@@ -183,13 +209,59 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     private fun updatePassword() = intent {
+        val currentPasswordValidation = ValidationUtils.validatePassword(
+            password = state.password,
+            emptyErrorRes = R.string.error_current_password_empty,
+            invalidErrorRes = R.string.error_current_password_invalid
+        )
+
+        val newPasswordValidation = ValidationUtils.validatePassword(
+            password = state.newPassword,
+            emptyErrorRes = R.string.error_password_empty,
+            invalidErrorRes = R.string.error_password_invalid
+        )
+
+        val confirmValidation = ValidationUtils.validatePasswordConfirm(
+            password = state.newPassword,
+            confirmPassword = state.confirmPassword,
+            mismatchErrorRes = R.string.error_password_mismatch
+        )
+
+        val currentPasswordError = when (currentPasswordValidation) {
+            is ValidationResult.Valid -> null
+            is ValidationResult.Invalid -> currentPasswordValidation.errorMessageRes
+        }
+
+        val newPasswordError = when (newPasswordValidation) {
+            is ValidationResult.Valid -> null
+            is ValidationResult.Invalid -> newPasswordValidation.errorMessageRes
+        }
+
+        val confirmError = when (confirmValidation) {
+            is ValidationResult.Valid -> null
+            is ValidationResult.Invalid -> confirmValidation.errorMessageRes
+        }
+
+        reduce {
+            state.copy(
+                currentPasswordError = currentPasswordError,
+                newPasswordError = newPasswordError,
+                confirmPasswordError = confirmError
+            )
+        }
+
+        if (currentPasswordError != null || newPasswordError != null || confirmError != null) {
+            val firstError = currentPasswordError ?: newPasswordError ?: confirmError!!
+            postSideEffect(UpdateInfoSideEffect.ShowErrorRes(firstError))
+            return@intent
+        }
+
         reduce { state.copy(isLoading = true) }
 
         runCatching {
             updateUserUseCase(
                 memberId = state.userId,
                 password = state.newPassword,
-                // 기존 값 그대로 전달 (변경하지 않음)
                 nickname = state.name,
                 gender = state.gender.formatGender(),
                 birthDate = state.birthDate.formatBirthDate()
@@ -198,7 +270,6 @@ internal class UpdateViewModel @Inject constructor(
             reduce {
                 state.copy(
                     isLoading = false,
-                    // 비밀번호 변경 후 필드 초기화
                     password = "",
                     newPassword = "",
                     confirmPassword = "",

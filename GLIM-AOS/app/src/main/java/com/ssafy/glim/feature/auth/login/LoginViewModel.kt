@@ -83,8 +83,9 @@ internal class LoginViewModel @Inject constructor(
             null
         }
 
+        reduce { state.copy(emailError = emailError, passwordError = passwordError) }
+
         if (emailError != null || passwordError != null) {
-            reduce { state.copy(emailError = emailError, passwordError = passwordError) }
             postSideEffect(LoginSideEffect.ShowError(emailError ?: passwordError!!))
             return@intent
         }
