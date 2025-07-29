@@ -1,10 +1,11 @@
 package com.lovedbug.geulgwi.docs;
 
+import com.lovedbug.geulgwi.core.domain.member.Member;
+import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.SignUpRequest;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
-import com.lovedbug.geulgwi.core.domain.member.Member;
-import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
-import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.core.security.JwtUtil;
 import com.lovedbug.geulgwi.external.email.EmailSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +31,9 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @BeforeEach
     void clearDatabase() {
@@ -102,6 +106,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
+        String accessToken = jwtUtil.generateAccessToken(savedMember.getEmail(), savedMember.getMemberId());
 
         UpdateRequest updateRequest = UpdateRequest.builder()
             .password("updatePwd123")
@@ -111,6 +116,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
             .build();
 
         given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(updateRequest)
             .filter(document("{class_name}/{method_name}",
@@ -137,8 +143,10 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
+        String accessToken = jwtUtil.generateAccessToken(savedMember.getEmail(), savedMember.getMemberId());
 
         given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
             .filter(document("{class_name}/{method_name}",
                 pathParameters(
                     parameterWithName("memberId").description("삭제할 회원의 ID")
@@ -156,7 +164,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
         return List.of(
             fieldWithPath("memberId").description("사용자 고유 ID"),
             fieldWithPath("email").description("사용자 이메일"),
-            fieldWithPath("password").description("사용자 비밀번호"),
             fieldWithPath("nickname").description("사용자 닉네임"),
             fieldWithPath("status").description("회원 상태 (ACTIVE, INACTIVE)"),
             fieldWithPath("birthDate").description("사용자 생년월일"),
@@ -169,7 +176,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
         return List.of(
             fieldWithPath("memberId").description("회원 고유 ID"),
             fieldWithPath("email").description("회원 이메일"),
-            fieldWithPath("password").description("회원 비밀번호"),
             fieldWithPath("nickname").description("회원 닉네임"),
             fieldWithPath("status").description("회원 상태 (INACTIVE로 변경됨)"),
             fieldWithPath("birthDate").description("회원 생년월일"),
@@ -214,17 +220,6 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
         public static Member createVerifiedTestMember(PasswordEncoder passwordEncoder) {
 
             return createVerifiedMember("test_verified", passwordEncoder);
-        }
-
-        public static Member[] createGetAllVerifiedTestMembers(int size, PasswordEncoder passwordEncoder) {
-
-            Member[] members = new Member[size];
-
-            for (int i = 0; i < size; i++){
-                members[i] = createVerifiedMember("test_all_verified_" + (i + 1), passwordEncoder);
-            }
-
-            return members;
         }
     }
 }

@@ -21,9 +21,6 @@ public class MemberResponse {
     @Column(name="email")
     private String email;
 
-    @Column(name="password")
-    private String password;
-
     @Column(name="nickname")
     private String nickname;
 

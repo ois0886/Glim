@@ -1,19 +1,17 @@
 package com.lovedbug.geulgwi.core.domain.auth;
 
-import com.lovedbug.geulgwi.core.domain.auth.dto.response.JwtResponse;
 import com.lovedbug.geulgwi.core.domain.auth.dto.request.LoginRequest;
-import com.lovedbug.geulgwi.core.domain.member.dto.response.MemberResponse;
-import com.lovedbug.geulgwi.core.domain.member.MemberService;
+import com.lovedbug.geulgwi.core.domain.auth.dto.response.JwtResponse;
+import com.lovedbug.geulgwi.core.domain.member.Member;
+import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
 import com.lovedbug.geulgwi.core.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import static com.lovedbug.geulgwi.core.security.JwtUtil.TOKEN_PREFIX;
 
 @Slf4j
 @Service
@@ -21,48 +19,42 @@ import static com.lovedbug.geulgwi.core.security.JwtUtil.TOKEN_PREFIX;
 public class AuthService {
 
     private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
-    private final MemberService memberService;
+    private final PasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
 
     public JwtResponse login(LoginRequest loginRequest){
-
         try{
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    loginRequest.getEmail(),
-                    loginRequest.getPassword()
-                )
-            );
+            Member member = memberRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "존재하지 않는 사용자입니다"));
 
-            String email = authentication.getName();
+            if (!passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "패스워드가 올바르지 않습니다.");
+            }
 
-            MemberResponse member = memberService.findByMemberEmail(email);
+            if (member.getStatus() != MemberStatus.ACTIVE) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비활성화된 사용자입니다.");
+            }
 
-            String accessToken = jwtUtil.generateAccessToken(email, member.getMemberId());
-            String refreshToken = jwtUtil.generateRefreshToken(email, member.getMemberId());
-            jwtUtil.generateRefreshToken(email, member.getMemberId());
+            String accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getMemberId());
+            String refreshToken = jwtUtil.generateRefreshToken(member.getEmail(), member.getMemberId());
 
-            return toJwtResponse(accessToken, refreshToken ,email, member.getMemberId());
+            return toJwtResponse(accessToken, refreshToken, member.getEmail(), member.getMemberId());
+
         }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다.");
         }
     }
 
-    public JwtResponse refresh(String authHeader){
-
-        String refreshToken = extractTokenFromHeader(authHeader);
-
-        if (!jwtUtil.validateRefreshToken(refreshToken)){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired refresh token");
-        }
+    public JwtResponse refresh(String refreshToken) {
 
         String email = jwtUtil.extractEmail(refreshToken);
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "존재하지 않는 사용자입니다."));
 
-        MemberResponse member = memberService.findByMemberEmail(email);
         String newAccessToken = jwtUtil.generateAccessToken(email, member.getMemberId());
         jwtUtil.generateRefreshToken(email, member.getMemberId());
 
-        return toJwtResponse(newAccessToken, null ,email, member.getMemberId());
+        return toJwtResponse(newAccessToken, null, email, member.getMemberId());
     }
 
     private JwtResponse toJwtResponse(String accessToken, String refreshToken, String email, Long memberId){
@@ -74,12 +66,4 @@ public class AuthService {
             .memberId(memberId)
             .build();
     }
-
-    private String extractTokenFromHeader(String authHeader){
-        if (authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization 헤더가 없거나 형식이 잘못되었습니다.");
-        }
-        return authHeader.substring(TOKEN_PREFIX.length());
-    }
-
 }

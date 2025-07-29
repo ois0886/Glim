@@ -1,18 +1,18 @@
 package com.lovedbug.geulgwi.core.domain.quote;
 
-import com.lovedbug.geulgwi.core.domain.quote.dto.request.QuoteCreateRequest;
-import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteResponse;
-import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteWithBookResponse;
-import com.lovedbug.geulgwi.core.security.CustomUserDetails;
+import com.lovedbug.geulgwi.core.security.annotation.CurrentUser;
+import com.lovedbug.geulgwi.core.security.dto.AuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.lovedbug.geulgwi.core.domain.quote.dto.request.QuoteCreateRequest;
+import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteResponse;
+import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteWithBookResponse;
 
 @RequestMapping("/api/v1/quotes")
 @RestController
@@ -29,16 +29,16 @@ public class QuoteController {
     }
 
     @GetMapping("/{isbn}")
-    public ResponseEntity<List<QuoteResponse>> getQuotesByIsbn(@PathVariable String isbn){
+    public ResponseEntity<List<QuoteResponse>> getQuotesByIsbn(@PathVariable String isbn) {
 
         return ResponseEntity.ok(quoteService.getPublicQuotesByIsbn(isbn));
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> createQuote(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<Void> createQuote(@CurrentUser AuthenticatedUser user,
                                             @RequestPart QuoteCreateRequest quoteData, @RequestPart MultipartFile quoteImage) {
 
-        quoteData.setMemberId(userDetails.getMemberId());
+        quoteData.setMemberId(user.getMemberId());
 
         quoteService.createQuote(quoteData, quoteImage);
 

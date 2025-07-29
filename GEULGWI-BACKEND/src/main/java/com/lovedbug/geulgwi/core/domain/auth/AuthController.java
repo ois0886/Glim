@@ -1,10 +1,12 @@
 package com.lovedbug.geulgwi.core.domain.auth;
 
 import com.lovedbug.geulgwi.core.domain.auth.dto.request.EmailVerificationRequest;
-import com.lovedbug.geulgwi.core.domain.auth.dto.response.JwtResponse;
 import com.lovedbug.geulgwi.core.domain.auth.dto.request.LoginRequest;
 import com.lovedbug.geulgwi.core.domain.auth.dto.response.EmailVerificationResponse;
+import com.lovedbug.geulgwi.core.domain.auth.dto.response.JwtResponse;
+import com.lovedbug.geulgwi.core.security.JwtUtil;
 import com.lovedbug.geulgwi.external.email.EmailVerifier;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +42,10 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<JwtResponse> refresh(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<JwtResponse> refresh(HttpServletRequest request) {
 
-        return ResponseEntity.ok(authService.refresh(authHeader));
+        String authHeader = request.getHeader(JwtUtil.HEADER_AUTH);
+        String token = authHeader.substring(JwtUtil.TOKEN_PREFIX.length()).trim();
+        return ResponseEntity.ok(authService.refresh(token));
     }
 }

@@ -1,77 +1,95 @@
 package com.lovedbug.geulgwi.core.security;
 
+import com.lovedbug.geulgwi.core.security.dto.AuthenticatedUser;
+import com.lovedbug.geulgwi.external.email.AuthenticatedUserService;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
-import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService userDetailsService;
-    private final BearerTokenResolver tokenResolver = new DefaultBearerTokenResolver();
+    private final AuthenticatedUserService authenticatedUserService;
+    private final RequestMappingHandlerMapping handlerMapping;
+    public static final String AUTHENTICATED_USER_KEY = "authenticatedUser";
+
+    public JwtAuthenticationFilter(
+        JwtUtil jwtUtil,
+        AuthenticatedUserService authenticatedUserService,
+        @Qualifier("requestMappingHandlerMapping") RequestMappingHandlerMapping handlerMapping
+    ) {
+        this.jwtUtil = jwtUtil;
+        this.authenticatedUserService = authenticatedUserService;
+        this.handlerMapping = handlerMapping;
+    }
 
     @Override
     protected void doFilterInternal(
         HttpServletRequest request,
         HttpServletResponse response,
-        FilterChain filterChain
-    ) throws ServletException, IOException {
-
-        String token = tokenResolver.resolve(request);
-
-        if (token == null){
-            filterChain.doFilter(request, response);
-            return ;
-        }
+        FilterChain filterChain)
+        throws IOException {
 
         try {
-            authenticateWithJwt(token, request);
-        }catch (Exception e){
-            SecurityContextHolder.clearContext();
-        }
+            if (request.getRequestURI().equals("/api/v1/auth/refresh")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-        filterChain.doFilter(request, response);
+            String token = extractTokenFromRequest(request);
+            if (token == null || !jwtUtil.validateAccessToken(token)) {
+                sendUnauthorizedResponse(response, "유효하지 않은 토큰입니다.");
+                return;
+            }
+
+            AuthenticatedUser user = extractUserFromToken(token);
+            request.setAttribute(AUTHENTICATED_USER_KEY, user);
+
+            filterChain.doFilter(request, response);
+
+        } catch (JwtValidationException e) {
+            sendUnauthorizedResponse(response, "토큰 검증 실패: " + e.getMessage());
+        } catch (Exception e) {
+            sendUnauthorizedResponse(response, "인증 처리 중 오류가 발생했습니다.");
+        }
     }
 
-    private void authenticateWithJwt(String token, HttpServletRequest request){
 
-        if (!jwtUtil.validateAccessToken(token)) {
-            return ;
+    private String extractTokenFromRequest(HttpServletRequest request) {
+
+        String authHeader = request.getHeader(JwtUtil.HEADER_AUTH);
+
+        if (authHeader != null && authHeader.startsWith(JwtUtil.TOKEN_PREFIX)) {
+            String token = authHeader.substring(JwtUtil.TOKEN_PREFIX.length()).trim();
+            return token.isEmpty() ? null : token;
         }
 
-        if (jwtUtil.extractEmail(token) == null || SecurityContextHolder.getContext().getAuthentication() != null) {
-            return ;
-        }
-
-        setAuthenticationInSecurityContext(jwtUtil.extractEmail(token), request);
+        return null;
     }
 
-    private void setAuthenticationInSecurityContext(String email, HttpServletRequest request) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+    private AuthenticatedUser extractUserFromToken(String token) {
 
-        UsernamePasswordAuthenticationToken authToken =
-            new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-            );
+        String email = jwtUtil.extractEmail(token);
+        AuthenticatedUser user = authenticatedUserService.getAuthenticatedUser(email);
 
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+        return AuthenticatedUser.builder()
+            .memberId(user.getMemberId())
+            .email(user.getEmail())
+            .build();
+    }
+
+    private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(String.format("{\"error\":\"%s\"}", message));
     }
 }

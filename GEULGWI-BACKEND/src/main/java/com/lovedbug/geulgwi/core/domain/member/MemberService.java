@@ -122,7 +122,6 @@ public class MemberService {
         return MemberResponse.builder()
             .memberId(member.getMemberId())
             .email(member.getEmail())
-            .password(member.getPassword())
             .nickname(member.getNickname())
             .birthDate(member.getBirthDate())
             .gender(member.getGender())
