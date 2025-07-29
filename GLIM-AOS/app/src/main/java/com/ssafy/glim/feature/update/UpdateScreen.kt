@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -119,7 +121,9 @@ internal fun UpdateScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding.excludeSystemBars()),
+            .padding(padding.excludeSystemBars())
+            .imePadding()
+            .navigationBarsPadding()
     ) {
         GlimTopBar(
             title = when (state.updateType) {
@@ -159,7 +163,7 @@ internal fun UpdateScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             GlimButton(
                 text = when {
@@ -177,8 +181,6 @@ internal fun UpdateScreen(
                 onClick = onSaveClicked,
                 enabled = state.isSaveEnabled,
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
