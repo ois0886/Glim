@@ -1,13 +1,18 @@
 package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
+
+import java.time.LocalDate;
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,6 +78,48 @@ public class BookApiDocsTest extends RestDocsTestSupport {
                 ))
                 .when()
                 .get("/api/v1/books/popular")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @DisplayName("도서_상세정보를_조회한다")
+    @Test
+    void get_book_info() {
+        Book book = bookRepository.save(Book.builder()
+                .linkUrl("http://aladdin.com")
+                .views(100)
+                .publishedDate(LocalDate.now())
+                .isbn13("123456789")
+                .isbn("1234567")
+                .coverUrl("http://aladdin.com/image.jpg")
+                .description("재밌는 책입니다")
+                .title("재밌는 책")
+                .author("김작가")
+                .build());
+
+        given(this.spec)
+                .filter(document("{class_name}/{method_name}",
+                        pathParameters(
+                                parameterWithName("id").description("도서 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("bookId").description("도서 ID"),
+                                fieldWithPath("title").description("도서 제목"),
+                                fieldWithPath("author").description("저자"),
+                                fieldWithPath("categoryName").description("카테고리 이름"),
+                                fieldWithPath("categoryId").description("카테고리 ID"),
+                                fieldWithPath("publisher").description("출판사"),
+                                fieldWithPath("description").description("도서 설명"),
+                                fieldWithPath("isbn").description("ISBN"),
+                                fieldWithPath("isbn13").description("ISBN-13"),
+                                fieldWithPath("publishedDate").description("출판일 (yyyy-MM-dd)"),
+                                fieldWithPath("coverUrl").description("도서 표지 URL"),
+                                fieldWithPath("linkUrl").description("도서 링크 URL"),
+                                fieldWithPath("views").description("조회수")
+                        )
+                ))
+                .when()
+                .get("/api/v1/books/{id}", book.getBookId())
                 .then().log().all()
                 .statusCode(200);
     }

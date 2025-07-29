@@ -1,8 +1,11 @@
 package com.lovedbug.geulgwi.core.domain.book;
 
+import com.lovedbug.geulgwi.core.domain.book.dto.BookInfoResponse;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookResponse;
 import lombok.RequiredArgsConstructor;
+
 import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinListQueryType;
@@ -17,23 +20,31 @@ public class BookController {
 
     @GetMapping("")
     public ResponseEntity<List<AladdinBookResponse>> getBooksByKeyword(
-        @RequestParam(name = "keyword") String keyword,
-        @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-        @RequestParam(defaultValue = "KEYWORD") AladdinSearchQueryType searchQueryType) {
+            @RequestParam(name = "keyword") String keyword,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(defaultValue = "KEYWORD") AladdinSearchQueryType searchQueryType) {
 
         return ResponseEntity
-            .ok()
-            .body(bookService.getBooksByKeyword(searchQueryType, keyword, page));
+                .ok()
+                .body(bookService.getBooksByKeyword(searchQueryType, keyword, page));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookInfoResponse> getBookInfo(@PathVariable(value = "id") long bookId) {
+
+        return ResponseEntity
+                .ok()
+                .body(bookService.getBookInfoById(bookId));
     }
 
     @GetMapping("/popular")
     public ResponseEntity<List<AladdinBookResponse>> getBestSellerBooks(
-        @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-        @RequestParam(defaultValue = "BESTSELLER") AladdinListQueryType listQueryType) {
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(defaultValue = "BESTSELLER") AladdinListQueryType listQueryType) {
 
         return ResponseEntity
-            .ok()
-            .body(bookService.getBestSellerBooks(listQueryType, page));
+                .ok()
+                .body(bookService.getBestSellerBooks(listQueryType, page));
     }
 
     @PatchMapping("/{id}/views")
@@ -42,8 +53,8 @@ public class BookController {
         bookService.increaseViewCount(bookId);
 
         return ResponseEntity
-            .noContent()
-            .build();
+                .noContent()
+                .build();
     }
 
 }
