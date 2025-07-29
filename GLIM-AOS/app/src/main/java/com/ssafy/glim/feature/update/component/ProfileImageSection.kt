@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.updateInfo.component
+package com.ssafy.glim.feature.update.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

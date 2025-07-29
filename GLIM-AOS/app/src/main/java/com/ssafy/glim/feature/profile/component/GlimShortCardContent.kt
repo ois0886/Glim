@@ -35,7 +35,6 @@ import com.ssafy.glim.feature.profile.GlimShortCard
 @Composable
 internal fun GlimShortCardContent(
     glimCard: GlimShortCard,
-    onLikeToggle: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -77,7 +76,7 @@ internal fun GlimShortCardContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(
-                        onClick = onLikeToggle,
+                        onClick = {},
                         modifier = Modifier.size(20.dp),
                     ) {
                         Icon(
@@ -118,8 +117,7 @@ private fun PreviewGlimShortCardContent() {
 
     MaterialTheme {
         GlimShortCardContent(
-            glimCard = mockGlimCard,
-            onLikeToggle = {},
+            glimCard = mockGlimCard
         )
     }
 }
@@ -138,8 +136,7 @@ private fun PreviewGlimShortCardContentLiked() {
 
     MaterialTheme {
         GlimShortCardContent(
-            glimCard = mockGlimCard,
-            onLikeToggle = {},
+            glimCard = mockGlimCard
         )
     }
 }

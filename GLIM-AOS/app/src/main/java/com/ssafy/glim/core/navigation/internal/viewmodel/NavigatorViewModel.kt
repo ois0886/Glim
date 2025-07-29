@@ -9,9 +9,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 @HiltViewModel
-internal class NavigatorViewModel
-@Inject
-constructor(
+internal class NavigatorViewModel @Inject constructor(
     navigator: InternalNavigator,
 ) : ViewModel() {
     val sideEffect by lazy(LazyThreadSafetyMode.NONE) {
@@ -22,11 +20,13 @@ constructor(
                         RouteSideEffect.Navigate(
                             navigator.route,
                             navigator.saveState,
-                            navigator.launchSingleTop,
-                            navigator.inclusive
+                            navigator.launchSingleTop
                         )
 
-                    InternalRoute.NavigateBack -> RouteSideEffect.NavigateBack
+                    is InternalRoute.NavigateBack -> RouteSideEffect.NavigateBack
+
+                    is InternalRoute.NavigateAndClearBackStack ->
+                        RouteSideEffect.NavigateAndClearBackStack(navigator.route)
                 }
             }
     }

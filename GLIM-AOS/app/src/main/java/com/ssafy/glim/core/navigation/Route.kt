@@ -10,9 +10,6 @@ sealed interface Route {
     data object SignUp : Route
 
     @Serializable
-    data object UpdateInfo : Route
-
-    @Serializable
     data class BookDetail(val bookId: Long) : BottomTabRoute
 }
 
@@ -23,6 +20,14 @@ sealed interface MyGlimsRoute : Route {
 
     @Serializable
     data object Upload : MyGlimsRoute
+}
+
+sealed class UpdateInfoRoute : Route {
+    @Serializable
+    data object Personal : Route
+
+    @Serializable
+    data object Password : Route
 }
 
 sealed interface BottomTabRoute : Route {

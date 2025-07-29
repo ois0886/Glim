@@ -1,4 +1,3 @@
-// UploadGlimCardListSection.kt
 package com.ssafy.glim.feature.profile.component
 
 import androidx.compose.foundation.clickable
@@ -31,7 +30,6 @@ import com.ssafy.glim.feature.profile.GlimShortCard
 internal fun UploadGlimCardListSection(
     glimCards: List<GlimShortCard>,
     navigateToGlimUploadList: () -> Unit,
-    onGlimLikeToggle: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -69,8 +67,7 @@ internal fun UploadGlimCardListSection(
                 key = { glimCard -> glimCard.id },
             ) { glimCard ->
                 GlimShortCardContent(
-                    glimCard = glimCard,
-                    onLikeToggle = { onGlimLikeToggle(glimCard.id) },
+                    glimCard = glimCard
                 )
             }
         }
@@ -108,8 +105,7 @@ private fun PreviewUploadGlimCardListSection() {
     MaterialTheme {
         UploadGlimCardListSection(
             glimCards = mockGlimCards,
-            navigateToGlimUploadList = {},
-            onGlimLikeToggle = {},
+            navigateToGlimUploadList = {}
         )
     }
 }

@@ -22,6 +22,6 @@ fun QuoteSummaryResponse.toDomain() =
     QuoteSummary(
         content = content,
         quoteId = quoteId,
-        page = if(page > 0) page.toString() else "-",
+        page = if (page > 0) page.toString() else "-",
         views = views,
     )

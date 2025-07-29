@@ -9,22 +9,41 @@ data class ProfileUiState(
     val likedGlimCount: Int = 0,
     val isLoading: Boolean = false,
     val glimShortCards: List<GlimShortCard> = emptyList(),
+    val logoutDialogState: LogoutDialogState = LogoutDialogState.Hidden,
+    val withdrawalDialogState: WithdrawalDialogState = WithdrawalDialogState.Hidden,
+    val editProfileDialogState: EditProfileDialogState = EditProfileDialogState.Hidden,
+    val userInputText: String = "",
+    val countdownSeconds: Int = 0,
+    val isWithdrawalLoading: Boolean = false
 )
+
+enum class EditProfileDialogState {
+    Hidden,
+    Showing
+}
 
 data class GlimShortCard(
     val id: String,
     val title: String,
     val timestamp: String,
     val likeCount: Int,
-    val isLiked: Boolean = false,
+    val isLiked: Boolean,
 )
 
-sealed class ProfileSideEffect {
-    data class ShowToast(
-        @StringRes val messageRes: Int,
-    ) : ProfileSideEffect()
+enum class WithdrawalDialogState {
+    Hidden,
+    Warning,
+    Confirmation,
+    Processing
+}
 
-    data class ShowError(
-        @StringRes val messageRes: Int,
-    ) : ProfileSideEffect()
+enum class LogoutDialogState {
+    Hidden,
+    Confirmation,
+    Processing
+}
+
+sealed class ProfileSideEffect {
+    data class ShowToast(@StringRes val messageRes: Int) : ProfileSideEffect()
+    data class ShowError(@StringRes val messageRes: Int) : ProfileSideEffect()
 }

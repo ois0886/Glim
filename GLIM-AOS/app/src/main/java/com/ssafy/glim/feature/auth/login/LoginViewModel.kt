@@ -6,10 +6,10 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.domain.usecase.auth.LoginUseCase
+import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.auth.login.component.SocialProvider
-import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -114,12 +114,13 @@ internal class LoginViewModel @Inject constructor(
 
     fun navigateToHome() =
         intent {
-            navigator.navigate(route = MainTab.HOME.route, launchSingleTop = true, saveState = true)
+            navigator.navigateAndClearBackStack(BottomTabRoute.Home)
         }
 
     fun navigateToForgotPassword() =
         intent {
-            // TODO: 비밀번호 찾기 화면으로 이동
+            // TODO: 비밀번호 찾기 기능 구현
+            postSideEffect(LoginSideEffect.ShowError(R.string.not_ready_function))
         }
 
     fun navigateToSocialLogin(socialProvider: SocialProvider) =

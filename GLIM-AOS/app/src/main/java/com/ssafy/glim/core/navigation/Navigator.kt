@@ -4,9 +4,10 @@ interface Navigator {
     suspend fun navigate(
         route: Route,
         saveState: Boolean = false,
-        launchSingleTop: Boolean = false,
-        inclusive: Boolean = false
+        launchSingleTop: Boolean = false
     )
 
     suspend fun navigateBack()
+
+    suspend fun navigateAndClearBackStack(route: Route)
 }

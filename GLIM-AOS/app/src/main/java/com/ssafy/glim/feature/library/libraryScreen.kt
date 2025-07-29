@@ -195,7 +195,7 @@ fun LibraryRoute(
 
             SearchMode.RESULT -> {
                 Spacer(modifier = Modifier.height(8.dp))
-                if(state.isLoading && !state.isRefreshing) {
+                if (state.isLoading && !state.isRefreshing) {
                     Box(modifier = modifier.padding(40.dp).fillMaxWidth()) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(24.dp).align(Alignment.Center),
@@ -209,7 +209,7 @@ fun LibraryRoute(
                         bookList = state.searchBooks,
                         quoteList = state.searchQuotes,
                         isRefreshing = state.isRefreshing,
-                        onLoadMore = {viewModel.loadMoreBooks()},
+                        onLoadMore = { viewModel.loadMoreBooks() },
                         onBookClick = {
                             if (onBookSelected == null) {
                                 viewModel.onBookClicked(it)

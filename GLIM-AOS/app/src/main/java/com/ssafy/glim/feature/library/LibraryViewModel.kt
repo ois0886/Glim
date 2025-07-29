@@ -108,7 +108,7 @@ constructor(
             .onSuccess {
                 reduce {
                     state.copy(
-                        searchBooks = state.searchBooks+it,
+                        searchBooks = state.searchBooks + it,
                         isRefreshing = false,
                         error = null,
                     )
@@ -152,9 +152,9 @@ constructor(
             reduce {
                 state.copy(
                     recentSearchItems =
-                        state.recentSearchItems.filter {
-                            it != searchQuery
-                        },
+                    state.recentSearchItems.filter {
+                        it != searchQuery
+                    },
                     error = null,
                 )
             }
@@ -236,7 +236,6 @@ constructor(
                     }
                 }
         }
-
 
     fun updateSearchMode(searchMode: SearchMode) =
         intent {

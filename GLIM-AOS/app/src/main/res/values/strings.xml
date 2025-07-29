@@ -68,7 +68,7 @@
     <string name="profile_view_all">전체보기</string>
 
     <!-- 설정 메뉴 -->
-    <string name="settings_personal_info">개인정보 변경</string>
+    <string name="settings_personal_info_password">개인정보 &amp; 비밀번호 변경</string>
     <string name="settings_account">잠금화면 설정</string>
     <string name="settings_notification">알림 설정</string>
     <string name="settings_logout">로그아웃</string>
@@ -142,5 +142,54 @@
     <string name="signup_verify_code">인증완료</string>
     <string name="signup_confirm">확인</string>
     <string name="views">조회수</string>
+
+    <!-- 회원탈퇴 경고 다이얼로그 -->
+    <string name="withdrawal_title">회원탈퇴</string>
+    <string name="withdrawal_warning_description">회원탈퇴하셔도 다음과 같은 정보는 남아있습니다:</string>
+    <string name="withdrawal_retained_glims">작성한 모든 글림(Glim)</string>
+    <string name="withdrawal_retained_likes">좋아요 및 활동 기록</string>
+    <string name="withdrawal_retained_profile">프로필 정보</string>
+    <string name="withdrawal_warning_caution">그 외 삭제된 데이터는 복구할 수 없습니다.</string>
+    <string name="withdrawal_continue">계속 진행</string>
+
+    <!-- 회원탈퇴 확인 다이얼로그 -->
+    <string name="withdrawal_confirmation_title">회원탈퇴 확인</string>
+    <string name="withdrawal_confirmation_question">회원탈퇴를 진행하시겠습니까?</string>
+    <string name="withdrawal_rejoin_info">탈퇴 후에도 동일한 이메일로 재가입하실 수 있습니다.</string>
+    <string name="withdrawal_input_instruction">아래에 \'탈퇴하겠습니다\'를 정확히 입력해주세요:</string>
+    <string name="withdrawal_confirmation_text">탈퇴하겠습니다</string>
+    <string name="withdrawal_countdown">%d초 후 확인 가능</string>
+    <string name="withdrawal_ready">✓ 탈퇴 준비 완료</string>
+    <string name="withdrawal_confirm">탈퇴하기</string>
+
+    <!-- 회원탈퇴 처리 다이얼로그 -->
+    <string name="withdrawal_processing_title">회원탈퇴 처리중</string>
+    <string name="withdrawal_processing_message">잠시만 기다려주세요...</string>
+
+    <!-- 로그아웃 다이얼로그 -->
+    <string name="logout_title">로그아웃</string>
+    <string name="logout_message">정말 로그아웃하시겠습니까?</string>
+    <string name="logout_info_message">언제든지 다시 로그인하실 수 있습니다.</string>
+    <string name="logout_confirm">로그아웃</string>
+
+    <!-- 로그아웃 처리 중 -->
+    <string name="logout_processing_title">로그아웃 중</string>
+    <string name="logout_processing_message">잠시만 기다려주세요...</string>
+
+    <string name="change_password_title">비밀번호 변경</string>
+    <string name="current_password_label">현재 비밀번호</string>
+    <string name="change_password_info">새로운 비밀번호를 \n입력해주세요.</string>
+    <string name="current_password_hint">현재 비밀번호를 입력하세요</string>
+    <string name="new_password_instruction">새로운 비밀번호를 입력해주세요</string>
+    <string name="new_password_label">새 비밀번호</string>
+    <string name="update_profile">프로필 저장</string>
+    <string name="update_password">비밀번호 변경</string>
+    <string name="updating_profile">프로필 저장 중...</string>
+    <string name="updating_password">비밀번호 변경 중...</string>
+    <string name="success_update_password">비밀번호가 변경되었습니다</string>
+    <string name="error_current_password_empty">현재 비밀번호를 입력해주세요</string>
+    <string name="error_current_password_invalid">현재 비밀번호가 올바르지 않습니다</string>
+    <string name="error_update_password_failed">비밀번호 변경에 실패했습니다</string>
+    <string name="error_update_profile_failed">개인정보 변경에 실패했습니다</string>
 
 </resources>

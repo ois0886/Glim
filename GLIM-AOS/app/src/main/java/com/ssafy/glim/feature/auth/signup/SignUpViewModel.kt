@@ -65,13 +65,6 @@ internal class SignUpViewModel @Inject constructor(
         }
 
         reduce { state.copy(code = filteredCode, codeError = error) }
-
-        if (filteredCode.length == 6 &&
-            validationResult is ValidationResult.Valid &&
-            filteredCode == state.actualVerificationCode
-        ) {
-            certifyValidCode()
-        }
     }
 
     fun onPasswordChanged(password: String) = intent {
@@ -224,7 +217,15 @@ internal class SignUpViewModel @Inject constructor(
         )
 
         when (validation) {
-            is ValidationResult.Valid -> certifyValidCode()
+            is ValidationResult.Valid -> {
+                if (state.code == state.actualVerificationCode) {
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_verify_code))
+                    moveToNextStep()
+                } else {
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_incorrect))
+                    reduce { state.copy(codeError = R.string.error_code_incorrect) }
+                }
+            }
             is ValidationResult.Invalid -> handleCodeValidationError(validation.errorMessageRes)
         }
     }
@@ -232,16 +233,6 @@ internal class SignUpViewModel @Inject constructor(
     private fun handleCodeValidationError(errorRes: Int) = intent {
         postSideEffect(SignUpSideEffect.ShowToast(errorRes))
         reduce { state.copy(codeError = errorRes) }
-    }
-
-    private fun certifyValidCode() = intent {
-        if (state.code == state.actualVerificationCode) {
-            postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_verify_code))
-            moveToNextStep()
-        } else {
-            postSideEffect(SignUpSideEffect.ShowToast(R.string.error_code_incorrect))
-            reduce { state.copy(codeError = R.string.error_code_incorrect) }
-        }
     }
 
     private fun validatePasswordStep() = intent {
@@ -359,7 +350,7 @@ internal class SignUpViewModel @Inject constructor(
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
             postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_success))
-            navigator.navigate(route = Route.Login, launchSingleTop = true, saveState = true, inclusive = true)
+            navigator.navigateAndClearBackStack(Route.Login)
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
             postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))

@@ -1,6 +1,8 @@
 package com.ssafy.glim.core.common.extensions
 
+import android.annotation.SuppressLint
 import androidx.core.util.PatternsCompat
+import com.ssafy.glim.core.domain.model.user.Gender
 import java.util.Calendar
 
 /**
@@ -48,15 +50,15 @@ fun String.isValidName(): Boolean {
 sealed class BirthDateValidation {
     object Valid : BirthDateValidation()
 
-    object InvalidFormat : BirthDateValidation() // 8자리 숫자가 아님
+    object InvalidFormat : BirthDateValidation()
 
-    object InvalidYear : BirthDateValidation() // 연도 범위 오류 (1900~현재년도)
+    object InvalidYear : BirthDateValidation()
 
-    object InvalidMonth : BirthDateValidation() // 월 범위 오류 (1~12)
+    object InvalidMonth : BirthDateValidation()
 
-    object InvalidDay : BirthDateValidation() // 일 범위 오류 (월별 최대일수 초과)
+    object InvalidDay : BirthDateValidation()
 
-    object FutureDate : BirthDateValidation() // 미래 날짜
+    object FutureDate : BirthDateValidation()
 }
 
 /**
@@ -143,7 +145,7 @@ fun String.formatBirthDate(): List<Int> {
         val year = this.substring(0, 4).toInt()
         val month = this.substring(4, 6).toInt()
         val day = this.substring(6, 8).toInt()
-        listOf(year, month, day, 0, 0) // [년, 월, 일, 시, 분]
+        listOf(year, month, day, 0, 0)
     } else {
         listOf(1999, 1, 1, 0, 0)
     }
@@ -167,4 +169,14 @@ fun String.formatGender(): String {
  */
 fun String.toCommaSeparatedPrice(): String {
     return this.replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
+}
+
+/**
+ * Gender enum을 한국어 문자열로 변환
+ */
+fun Gender.formatGenderToString(): String {
+    return when (this) {
+        Gender.MALE -> "남자"
+        Gender.FEMALE -> "여자"
+    }
 }

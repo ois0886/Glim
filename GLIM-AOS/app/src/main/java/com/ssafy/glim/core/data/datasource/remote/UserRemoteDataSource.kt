@@ -8,7 +8,7 @@ class UserRemoteDataSource @Inject constructor(
     private val service: UserService,
 ) {
 
-    suspend fun getUserByEmail(email: String) = service.getUserByEmail(email)
+    suspend fun getUserById(memberId: String) = service.getUserById(memberId)
 
     suspend fun updateUser(memberId: Long, request: UpdateUserRequest) =
         service.updateUser(memberId, request)

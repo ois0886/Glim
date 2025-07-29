@@ -6,5 +6,5 @@ import jakarta.inject.Inject
 class DeleteUserUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
-    suspend operator fun invoke(memberId: Long) = repository.deleteUser(memberId)
+    suspend operator fun invoke() = repository.deleteUser()
 }
