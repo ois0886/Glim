@@ -16,7 +16,7 @@ public class BookScheduler {
     private final BookService bookService;
     private int currentPage = 0;
 
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 0 * * * *")
     public void syncBestSellerBooks() {
         for (int i = 0; i <= 100; i++) {
             List<AladdinBookResponse> books = bookService.getBestSellerBooks(AladdinListQueryType.BESTSELLER, currentPage);
