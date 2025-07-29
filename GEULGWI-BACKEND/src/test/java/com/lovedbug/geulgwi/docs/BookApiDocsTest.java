@@ -103,21 +103,15 @@ public class BookApiDocsTest extends RestDocsTestSupport {
                 fieldWithPath("[].description").description("책 설명"),
                 fieldWithPath("[].isbn").description("ISBN (10자리)"),
                 fieldWithPath("[].isbn13").description("ISBN (13자리)"),
-                fieldWithPath("[].itemId").description("알라딘 아이템 ID"),
                 fieldWithPath("[].priceSales").description("판매가"),
                 fieldWithPath("[].priceStandard").description("정가"),
                 fieldWithPath("[].mallType").description("상품 유형"),
-                fieldWithPath("[].stockStatus").description("재고 상태"),
-                fieldWithPath("[].mileage").description("마일리지"),
                 fieldWithPath("[].coverUrl").description("표지 이미지 URL"),
                 fieldWithPath("[].categoryId").description("카테고리 ID"),
                 fieldWithPath("[].categoryName").description("카테고리 이름"),
                 fieldWithPath("[].publisher").description("출판사"),
                 fieldWithPath("[].translator").description("번역자"),
-                fieldWithPath("[].salesPoint").description("판매 지수"),
-                fieldWithPath("[].adult").description("성인 도서 여부"),
-                fieldWithPath("[].fixedPrice").description("정가제 여부"),
-                fieldWithPath("[].customerReviewRank").description("고객 리뷰 평점")
+                fieldWithPath("[].adult").description("성인 도서 여부")
         );
     }
 }

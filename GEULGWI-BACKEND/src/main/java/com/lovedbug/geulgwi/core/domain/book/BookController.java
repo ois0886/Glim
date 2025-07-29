@@ -1,12 +1,12 @@
 package com.lovedbug.geulgwi.core.domain.book;
 
+import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookResponse;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinListQueryType;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinSearchQueryType;
-import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookDto;
 
 @RestController
 @RequestMapping("/api/v1/books")
@@ -16,7 +16,7 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping("")
-    public ResponseEntity<List<AladdinBookDto>> getBooksByKeyword(
+    public ResponseEntity<List<AladdinBookResponse>> getBooksByKeyword(
         @RequestParam(name = "keyword") String keyword,
         @RequestParam(name = "page", required = false, defaultValue = "1") int page,
         @RequestParam(defaultValue = "KEYWORD") AladdinSearchQueryType searchQueryType) {
@@ -27,7 +27,7 @@ public class BookController {
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<List<AladdinBookDto>> getBestSellerBooks(
+    public ResponseEntity<List<AladdinBookResponse>> getBestSellerBooks(
         @RequestParam(name = "page", required = false, defaultValue = "1") int page,
         @RequestParam(defaultValue = "BESTSELLER") AladdinListQueryType listQueryType) {
 

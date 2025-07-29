@@ -61,8 +61,7 @@ public class CurationService {
 
     public CurationItemResponse getPopularBookCuration() {
         List<CurationContentResponse> contents = CurationMapper.toCurationContentListFromBooks(
-            bookService.getBestSellerBooks(AladdinListQueryType.BESTSELLER, 1)
-        );
+            bookService.getPopularBooks());
 
         return CurationItemResponse.builder()
             .title("현재 인기 많은 도서")
