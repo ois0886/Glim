@@ -81,4 +81,19 @@ class AuthManager @Inject constructor(
             authDataStore.deleteUserId()
         }
     }
+
+    fun canAutoLogin(): Boolean {
+        val hasAccessToken = !cachedAccessToken.isNullOrBlank()
+        val hasRefreshToken = !cachedRefreshToken.isNullOrBlank()
+        val hasUserId = !cachedUserId.isNullOrBlank()
+
+        Log.d("AuthManager", "canAutoLogin - access: $hasAccessToken, refresh: $hasRefreshToken, userId: $hasUserId")
+
+        val canLogin = hasAccessToken && hasRefreshToken && hasUserId
+        if (!canLogin) {
+            Log.d("AuthManager", "Missing auth data, clearing all")
+            deleteAll()
+        }
+        return canLogin
+    }
 }

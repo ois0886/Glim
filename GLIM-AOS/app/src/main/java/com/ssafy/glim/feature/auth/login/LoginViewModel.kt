@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
+import com.ssafy.glim.core.domain.usecase.auth.LoggedInUseCase
 import com.ssafy.glim.core.domain.usecase.auth.LoginUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
@@ -18,9 +19,24 @@ import javax.inject.Inject
 @HiltViewModel
 internal class LoginViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val loggedInUseCase: LoggedInUseCase
 ) : ViewModel(), ContainerHost<LoginUiState, LoginSideEffect> {
     override val container = container<LoginUiState, LoginSideEffect>(initialState = LoginUiState())
+
+    init {
+        checkAutoLogin()
+    }
+
+    private fun checkAutoLogin() = intent {
+        runCatching {
+            loggedInUseCase()
+        }.onSuccess {
+            navigateToHome()
+        }.onFailure { exception ->
+            Log.d("LoginViewModel", "Auto login failed: ${exception.message}")
+        }
+    }
 
     fun onEmailChanged(email: String) =
         intent {
@@ -99,11 +115,11 @@ internal class LoginViewModel @Inject constructor(
             )
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
-            Log.d("LoginViewModel", "success")
+            Log.d("LoginViewModel", "Manual login success")
             navigateToHome()
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
-            Log.d("LoginViewModel", "failed")
+            Log.d("LoginViewModel", "Manual login failed: ${exception.message}")
             postSideEffect(LoginSideEffect.ShowError(R.string.login_failed))
         }
     }

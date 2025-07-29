@@ -54,4 +54,10 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun logOut() {
         authManager.deleteAll()
     }
+
+    override suspend fun loggedIn() {
+        if (!authManager.canAutoLogin()) {
+            throw Exception("로그인 정보가 없습니다.")
+        }
+    }
 }
