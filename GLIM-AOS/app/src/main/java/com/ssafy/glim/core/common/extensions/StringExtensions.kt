@@ -50,15 +50,15 @@ fun String.isValidName(): Boolean {
 sealed class BirthDateValidation {
     object Valid : BirthDateValidation()
 
-    object InvalidFormat : BirthDateValidation() // 8자리 숫자가 아님
+    object InvalidFormat : BirthDateValidation()
 
-    object InvalidYear : BirthDateValidation() // 연도 범위 오류 (1900~현재년도)
+    object InvalidYear : BirthDateValidation()
 
-    object InvalidMonth : BirthDateValidation() // 월 범위 오류 (1~12)
+    object InvalidMonth : BirthDateValidation()
 
-    object InvalidDay : BirthDateValidation() // 일 범위 오류 (월별 최대일수 초과)
+    object InvalidDay : BirthDateValidation()
 
-    object FutureDate : BirthDateValidation() // 미래 날짜
+    object FutureDate : BirthDateValidation()
 }
 
 /**
@@ -179,45 +179,4 @@ fun Gender.formatGenderToString(): String {
         Gender.MALE -> "남자"
         Gender.FEMALE -> "여자"
     }
-}
-
-/**
- * 한국어 성별 문자열을 Gender enum으로 변환
- */
-fun String.toGenderEnum(): Gender {
-    return when (this) {
-        "남자" -> Gender.MALE
-        "여자" -> Gender.FEMALE
-        else -> Gender.MALE // 기본값
-    }
-}
-
-/**
- * 생년월일 문자열(YYYY-MM-DD)을 YYYYMMDD 형식으로 변환
- */
-fun String.formatBirthDateToString(): String {
-    return if (this.contains("-") && this.length == 10) {
-        this.replace("-", "")
-    } else {
-        this
-    }
-}
-
-/**
- * List<Int> 형식의 날짜를 YYYY-MM-DD 문자열로 변환
- */
-@SuppressLint("DefaultLocale")
-fun List<Int>.formatDateToString(): String {
-    return if (this.size >= 3) {
-        "${this[0]}-${String.format("%02d", this[1])}-${String.format("%02d", this[2])}"
-    } else {
-        "1999-01-01"
-    }
-}
-
-/**
- * YYYY-MM-DD 형식의 문자열을 YYYYMMDD로 변환하여 검증용으로 사용
- */
-fun String.toValidationFormat(): String {
-    return this.replace("-", "").replace("/", "").replace(".", "")
 }

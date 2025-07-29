@@ -139,21 +139,6 @@ object ValidationUtils {
     }
 
     /**
-     * 생년월일 유효성 검사
-     */
-    fun validateBirthDate(
-        birthDate: String,
-        @StringRes emptyErrorRes: Int,
-        @StringRes invalidErrorRes: Int
-    ): ValidationResult {
-        return when {
-            birthDate.isBlank() -> ValidationResult.Invalid(emptyErrorRes)
-            !birthDate.toValidationFormat().validateBirthDateDetailed().isValid() -> ValidationResult.Invalid(invalidErrorRes)
-            else -> ValidationResult.Valid
-        }
-    }
-
-    /**
      * BirthDateValidation 결과를 Boolean으로 변환하는 확장함수
      */
     fun BirthDateValidation.isValid(): Boolean {

@@ -51,8 +51,6 @@ private fun InternalLaunchedNavigator(
                             popUpTo(0) {
                                 inclusive = true
                             }
-                            launchSingleTop = true
-                            restoreState = false
                         }
                     }
                 }
