@@ -175,7 +175,7 @@ internal fun UpdateScreen(
                     else -> stringResource(R.string.update_password)
                 },
                 onClick = onSaveClicked,
-                enabled = state.isSaveEnabled && !state.isLoading
+                enabled = state.isSaveEnabled,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -187,30 +187,12 @@ internal fun UpdateScreen(
 @Composable
 fun UpdateProfileScreenPreview() {
     UpdateScreen(
-        state =
-        UpdateInfoUiState(
+        state = UpdateInfoUiState(
             email = "hong@example.com",
-            newName = "홍길동",
-        ),
-        padding = PaddingValues(0.dp),
-        onNameChanged = {},
-        onProfileImageClicked = {},
-        onSaveClicked = {},
-        onBackClick = {},
-        onNewPasswordChanged = {},
-        onConfirmPasswordChanged = {},
-        onCurrentPasswordChanged = {}
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun UpdateProfileScreenErrorPreview() {
-    UpdateScreen(
-        state =
-        UpdateInfoUiState(
-            email = "hong@example.com",
-            newNameError = R.string.error_name_empty,
+            name = "홍길동",
+            newName = "홍길동2",
+            gender = "남자",
+            birthDate = "1990-01-01"
         ),
         padding = PaddingValues(0.dp),
         onNameChanged = {},

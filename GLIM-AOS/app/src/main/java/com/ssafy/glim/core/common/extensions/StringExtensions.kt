@@ -145,7 +145,7 @@ fun String.formatBirthDate(): List<Int> {
         val year = this.substring(0, 4).toInt()
         val month = this.substring(4, 6).toInt()
         val day = this.substring(6, 8).toInt()
-        listOf(year, month, day, 0, 0) // [년, 월, 일, 시, 분]
+        listOf(year, month, day, 0, 0)
     } else {
         listOf(1999, 1, 1, 0, 0)
     }

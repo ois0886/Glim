@@ -39,9 +39,8 @@ internal class UpdateViewModel @Inject constructor(
                     email = user.email,
                     gender = user.gender.formatGenderToString(),
                     birthDate = user.birthDate,
-                    newName = user.nickname,
-                    selectedGender = user.gender.formatGenderToString(),
-                    newBirthDate = user.birthDate
+                    // 이름만 수정 가능하므로 newName만 초기화
+                    newName = user.nickname
                 )
             }
         }.onFailure { exception ->
@@ -71,25 +70,6 @@ internal class UpdateViewModel @Inject constructor(
         }
 
         reduce { state.copy(newName = name, newNameError = error) }
-    }
-
-    fun onGenderChanged(gender: String) = intent {
-        reduce { state.copy(selectedGender = gender) }
-    }
-
-    fun onBirthDateChanged(birthDate: String) = intent {
-        val validationResult = ValidationUtils.validateBirthDate(
-            birthDate = birthDate,
-            emptyErrorRes = R.string.error_birth_empty,
-            invalidErrorRes = R.string.error_birth_format
-        )
-
-        val error = when (validationResult) {
-            is ValidationResult.Valid -> null
-            is ValidationResult.Invalid -> validationResult.errorMessageRes
-        }
-
-        reduce { state.copy(newBirthDate = birthDate, birthDateError = error) }
     }
 
     fun onProfileImageClicked() = intent {
@@ -178,31 +158,6 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     private fun updatePersonalInfo() = intent {
-        val nameValidation = ValidationUtils.validateName(
-            name = state.newName,
-            emptyErrorRes = R.string.error_name_empty,
-            invalidErrorRes = R.string.error_name_invalid,
-        )
-
-        val birthDateValidation = ValidationUtils.validateBirthDate(
-            birthDate = state.newBirthDate,
-            emptyErrorRes = R.string.error_birth_empty,
-            invalidErrorRes = R.string.error_birth_format
-        )
-
-        val nameError = if (nameValidation is ValidationResult.Invalid) nameValidation.errorMessageRes else null
-        val birthDateError = if (birthDateValidation is ValidationResult.Invalid) birthDateValidation.errorMessageRes else null
-
-        if (nameError != null || birthDateError != null) {
-            reduce {
-                state.copy(
-                    newNameError = nameError,
-                    birthDateError = birthDateError
-                )
-            }
-            return@intent
-        }
-
         reduce { state.copy(isLoading = true) }
 
         runCatching {
@@ -210,16 +165,14 @@ internal class UpdateViewModel @Inject constructor(
                 memberId = state.userId,
                 password = state.password,
                 nickname = state.newName,
-                gender = state.selectedGender.formatGender(),
-                birthDate = state.newBirthDate.formatBirthDate()
+                gender = state.gender.formatGender(),
+                birthDate = state.birthDate.formatBirthDate()
             )
         }.onSuccess { updatedUser ->
             reduce {
                 state.copy(
                     isLoading = false,
-                    name = updatedUser.nickname,
-                    gender = updatedUser.gender.formatGenderToString(),
-                    birthDate = updatedUser.birthDate
+                    name = updatedUser.nickname
                 )
             }
             postSideEffect(UpdateInfoSideEffect.ProfileUpdated)
@@ -230,20 +183,13 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     private fun updatePassword() = intent {
-        val currentValid = state.password.isNotBlank() && state.currentPasswordError == null
-        val newValid = state.newPasswordError == null && state.newPassword.isNotBlank()
-        val confirmValid = state.confirmPasswordError == null && state.confirmPassword.isNotBlank()
-
-        if (!currentValid || !newValid || !confirmValid) {
-            return@intent
-        }
-
         reduce { state.copy(isLoading = true) }
 
         runCatching {
             updateUserUseCase(
                 memberId = state.userId,
                 password = state.newPassword,
+                // 기존 값 그대로 전달 (변경하지 않음)
                 nickname = state.name,
                 gender = state.gender.formatGender(),
                 birthDate = state.birthDate.formatBirthDate()
@@ -252,6 +198,7 @@ internal class UpdateViewModel @Inject constructor(
             reduce {
                 state.copy(
                     isLoading = false,
+                    // 비밀번호 변경 후 필드 초기화
                     password = "",
                     newPassword = "",
                     confirmPassword = "",
