@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -44,8 +46,6 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<JwtResponse> refresh(HttpServletRequest request) {
 
-        String authHeader = request.getHeader(JwtUtil.HEADER_AUTH);
-        String token = authHeader.substring(JwtUtil.TOKEN_PREFIX.length()).trim();
-        return ResponseEntity.ok(authService.refresh(token));
+        return ResponseEntity.ok(authService.refresh(request.getHeader(JwtUtil.HEADER_AUTH)));
     }
 }

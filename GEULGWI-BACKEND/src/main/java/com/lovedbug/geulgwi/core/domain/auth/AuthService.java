@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import static com.lovedbug.geulgwi.core.security.JwtUtil.TOKEN_PREFIX;
 
 @Slf4j
 @Service
@@ -45,9 +46,16 @@ public class AuthService {
         }
     }
 
-    public JwtResponse refresh(String refreshToken) {
+    public JwtResponse refresh(String authHeader) {
+
+        String refreshToken = extractTokenFromHeader(authHeader);
+
+        if (!jwtUtil.validateRefreshToken(refreshToken)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired refresh token");
+        }
 
         String email = jwtUtil.extractEmail(refreshToken);
+
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "존재하지 않는 사용자입니다."));
 
@@ -55,6 +63,13 @@ public class AuthService {
         jwtUtil.generateRefreshToken(email, member.getMemberId());
 
         return toJwtResponse(newAccessToken, null, email, member.getMemberId());
+    }
+
+    private String extractTokenFromHeader(String authHeader){
+        if (authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization 헤더가 없거나 형식이 잘못되었습니다.");
+        }
+        return authHeader.substring(TOKEN_PREFIX.length());
     }
 
     private JwtResponse toJwtResponse(String accessToken, String refreshToken, String email, Long memberId){

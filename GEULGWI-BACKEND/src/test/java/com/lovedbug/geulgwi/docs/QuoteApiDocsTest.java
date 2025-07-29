@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lovedbug.geulgwi.external.image.ImageMetaData;
@@ -34,7 +35,7 @@ import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.quote.QuoteRepository;
 
-
+@ActiveProfiles("test")
 class QuoteApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
@@ -181,7 +182,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
 
         given(this.spec)
             .header("Authorization", "Bearer " + accessToken)
-            .multiPart("quoteData", "quoteData.json", objectMapper.writeValueAsBytes(createQuoteCreateDto()), "application/json")
+            .multiPart("quoteData", "quoteData.json", objectMapper.writeValueAsBytes(createQuoteCreateDto(member.getMemberId())), "application/json")
             .multiPart("quoteImage", "quote.jpg", "fake-image-content".getBytes(), "image/jpeg")
             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
             .filter(document("{class_name}/{method_name}",
@@ -242,9 +243,9 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
             .build();
     }
 
-    static QuoteCreateRequest createQuoteCreateDto() {
+    static QuoteCreateRequest createQuoteCreateDto(Long memberId) {
         return QuoteCreateRequest.builder()
-            .memberId(100L)
+            .memberId(memberId)
             .visibility("PUBLIC")
             .content("테스트용 글귀 내용입니다.")
             .isbn("1234567890")
