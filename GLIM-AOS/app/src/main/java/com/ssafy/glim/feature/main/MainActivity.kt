@@ -11,6 +11,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.net.toUri
+import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.LaunchedNavigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.service.LockServiceManager
@@ -64,7 +65,8 @@ class MainActivity : ComponentActivity() {
                         launchSingleTop = true
                     }
                 } else if (initialRoute == "glim") {
-                    navigator.clearBackStackAndNavigate(MainTab.REELS.route)
+                    val quoteId = intent.getLongExtra("quote_id", -1L)
+                    navigator.clearBackStackAndNavigate(BottomTabRoute.Reels(quoteId))
                 }
             }
 

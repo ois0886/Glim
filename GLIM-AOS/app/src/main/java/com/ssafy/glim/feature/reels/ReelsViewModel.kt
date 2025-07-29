@@ -27,7 +27,7 @@ constructor(
     override val container: Container<ReelsState, ReelsSideEffect> = container(ReelsState())
 
     companion object {
-        private const val SIZE = 10 // 한 번에 가져올 인용구의 개수
+        private const val SIZE = 10
     }
 
     fun toggleLike() =
@@ -47,7 +47,6 @@ constructor(
 
             reduce { state.copy(quotes = updatedQuotes) }
 
-            // 서버에 실제 업데이트
             viewModelScope.launch {
                 // TODO: API 호출
                 // toggleLikeUseCase(state.currentQuoteId)
@@ -65,8 +64,8 @@ constructor(
                         currentQuoteId = state.currentQuote?.quoteId ?: -1,
                     )
                 }
+                Log.d("ReelsViewModel", "현재 Quote Idx: ${state.currentIdx} / ${state.quotes.size}")
                 if (state.currentIdx >= state.quotes.size - 3) {
-                    // 마지막 페이지에 도달했을 때 새로운 인용구를 가져옴
                     refresh()
                 }
                 runCatching { updateQuoteViewCountUseCase(state.currentQuoteId) }

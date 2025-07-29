@@ -62,7 +62,6 @@ internal fun ReelsRoute(
     popBackStack: () -> Unit,
     viewModel: ReelsViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.collectAsState()
     val context = LocalContext.current
 
     SideEffect {
@@ -74,7 +73,6 @@ internal fun ReelsRoute(
         }
     }
 
-    // Side effects 처리
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is ReelsSideEffect.ShowToast -> {
@@ -99,10 +97,10 @@ internal fun ReelsRoute(
             is ReelsSideEffect.CaptureError -> {
                 Toast.makeText(context, sideEffect.error, Toast.LENGTH_SHORT).show()
             }
-
-            else -> Unit
         }
     }
+
+    val state by viewModel.collectAsState()
 
     val pagerState = rememberPagerState(pageCount = { state.quotes.size })
     val graphicsLayer = rememberGraphicsLayer()
