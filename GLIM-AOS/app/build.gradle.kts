@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -57,6 +58,49 @@ android {
         kotlinCompilerExtensionVersion = "1.5.13"
     }
 }
+
+ktlint {
+    version.set("1.0.1")
+    debug.set(false)
+    verbose.set(true)
+    android.set(true)
+    outputToConsole.set(true)
+    outputColorName.set("RED")
+    ignoreFailures.set(false)
+
+    filter {
+        exclude("**/generated/**")
+        exclude("**/build/**")
+    }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom("$projectDir/config/detekt/detekt.yml")
+    baseline = file("$projectDir/config/detekt/baseline.xml")
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    reports {
+        html.required.set(true)
+        html.outputLocation.set(file("build/reports/detekt/detekt.html"))
+
+        xml.required.set(true)
+        xml.outputLocation.set(file("build/reports/detekt/detekt.xml"))
+
+        txt.required.set(true)
+        txt.outputLocation.set(file("build/reports/detekt/detekt.txt"))
+
+        sarif.required.set(true)
+        sarif.outputLocation.set(file("build/reports/detekt/detekt.sarif"))
+
+        md.required.set(true)
+        md.outputLocation.set(file("build/reports/detekt/detekt.md"))
+    }
+}
+
+tasks.getByPath("preBuild").dependsOn("ktlintCheck")
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
@@ -120,4 +164,19 @@ dependencies {
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)
+
+    // detekt
+    detektPlugins(libs.detekt.formatting)
+}
+
+tasks.register("codeQualityCheck") {
+    group = "verification"
+    description = "코드 품질 전체 검사"
+    dependsOn("ktlintCheck", "detekt", "test")
+}
+
+tasks.register("codeQualityFix") {
+    group = "formatting"
+    description = "코드 포맷팅 자동 수정"
+    dependsOn("ktlintFormat")
 }
