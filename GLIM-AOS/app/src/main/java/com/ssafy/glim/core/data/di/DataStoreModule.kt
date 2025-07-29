@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.ssafy.glim.app.searchHistoryDataStore
-import com.ssafy.glim.core.data.datastore.SearchHistoryDataStore
+import com.ssafy.glim.core.data.datastore.SearchQueryDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +29,7 @@ object DataStoreModule {
     @Singleton
     fun provideSearchHistoryDataStore(
         @Named("search_history") dataStore: DataStore<Preferences>
-    ): SearchHistoryDataStore {
-        return SearchHistoryDataStore(dataStore)
+    ): SearchQueryDataStore {
+        return SearchQueryDataStore(dataStore)
     }
 }

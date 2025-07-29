@@ -10,9 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SearchHistoryDataStore
-@Inject
-constructor(
+class SearchQueryDataStore @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) {
     companion object {

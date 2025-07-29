@@ -26,7 +26,6 @@ fun PasswordChangeContent(
     onConfirmPasswordChanged: (String) -> Unit
 ) {
     Column {
-
         Text(
             text = stringResource(R.string.change_password_info),
             style = MaterialTheme.typography.titleLarge,

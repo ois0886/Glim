@@ -55,7 +55,7 @@ fun UserProfileInputContent(
         )
 
         Spacer(modifier = Modifier.height(32.dp))
-        
+
         Text(text = stringResource(id = R.string.profile_label_name))
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
