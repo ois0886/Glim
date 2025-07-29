@@ -1,12 +1,10 @@
 package com.ssafy.glim.core.common.utils
 
-import androidx.annotation.StringRes
 import com.ssafy.glim.core.common.extensions.BirthDateValidation
 import com.ssafy.glim.core.common.extensions.isValidCode
 import com.ssafy.glim.core.common.extensions.isValidEmail
 import com.ssafy.glim.core.common.extensions.isValidName
 import com.ssafy.glim.core.common.extensions.isValidPassword
-import com.ssafy.glim.core.common.extensions.toValidationFormat
 import com.ssafy.glim.core.common.extensions.validateBirthDateDetailed
 
 /**
