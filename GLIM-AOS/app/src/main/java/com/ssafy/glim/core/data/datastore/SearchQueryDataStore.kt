@@ -17,8 +17,8 @@ constructor(
 ) {
     companion object {
         private val SEARCH_HISTORY_KEY = stringPreferencesKey("search_history")
-        private const val DELIMITER = "|" // 구분자
-        private const val MAX_HISTORY_SIZE = 10 // 최대 저장할 검색어 개수
+        private const val DELIMITER = "|"
+        private const val MAX_HISTORY_SIZE = 10
     }
 
     /**

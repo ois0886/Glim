@@ -1,6 +1,8 @@
 package com.ssafy.glim.core.common.extensions
 
+import android.annotation.SuppressLint
 import androidx.core.util.PatternsCompat
+import com.ssafy.glim.core.domain.model.user.Gender
 import java.util.Calendar
 
 /**
@@ -167,4 +169,55 @@ fun String.formatGender(): String {
  */
 fun String.toCommaSeparatedPrice(): String {
     return this.replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
+}
+
+/**
+ * Gender enum을 한국어 문자열로 변환
+ */
+fun Gender.formatGenderToString(): String {
+    return when (this) {
+        Gender.MALE -> "남자"
+        Gender.FEMALE -> "여자"
+    }
+}
+
+/**
+ * 한국어 성별 문자열을 Gender enum으로 변환
+ */
+fun String.toGenderEnum(): Gender {
+    return when (this) {
+        "남자" -> Gender.MALE
+        "여자" -> Gender.FEMALE
+        else -> Gender.MALE // 기본값
+    }
+}
+
+/**
+ * 생년월일 문자열(YYYY-MM-DD)을 YYYYMMDD 형식으로 변환
+ */
+fun String.formatBirthDateToString(): String {
+    return if (this.contains("-") && this.length == 10) {
+        this.replace("-", "")
+    } else {
+        this
+    }
+}
+
+/**
+ * List<Int> 형식의 날짜를 YYYY-MM-DD 문자열로 변환
+ */
+@SuppressLint("DefaultLocale")
+fun List<Int>.formatDateToString(): String {
+    return if (this.size >= 3) {
+        "${this[0]}-${String.format("%02d", this[1])}-${String.format("%02d", this[2])}"
+    } else {
+        "1999-01-01"
+    }
+}
+
+/**
+ * YYYY-MM-DD 형식의 문자열을 YYYYMMDD로 변환하여 검증용으로 사용
+ */
+fun String.toValidationFormat(): String {
+    return this.replace("-", "").replace("/", "").replace(".", "")
 }

@@ -166,7 +166,11 @@ fun BookInfoSection(book: Book) {
 }
 
 @Composable
-fun QuoteCard(quote: QuoteSummary, modifier: Modifier, onClickCard: (Long) -> Unit) {
+fun QuoteCard(
+    quote: QuoteSummary,
+    modifier: Modifier,
+    onClickCard: (Long) -> Unit
+) {
     Card(
         modifier = modifier
             .clickable { onClickCard(quote.quoteId) },
@@ -208,4 +212,3 @@ fun QuoteCard(quote: QuoteSummary, modifier: Modifier, onClickCard: (Long) -> Un
         }
     }
 }
-    

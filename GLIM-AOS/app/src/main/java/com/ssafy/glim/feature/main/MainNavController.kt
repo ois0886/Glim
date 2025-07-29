@@ -65,7 +65,7 @@ internal class MainNavController(
         navigate(MainTab.REELS)
     }
 
-    fun clearBackStackAndNavigate(route : Route) {
+    fun clearBackStackAndNavigate(route: Route) {
         val options =
             NavOptions.Builder()
                 .setPopUpTo(startDestination, inclusive = true)

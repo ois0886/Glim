@@ -31,8 +31,8 @@ import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.main.excludeSystemBars
 import com.ssafy.glim.feature.update.component.PasswordChangeContent
-import org.orbitmvi.orbit.compose.collectSideEffect
 import com.ssafy.glim.feature.update.component.PersonalInfoContent
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 internal fun UpdateRoute(
@@ -44,9 +44,12 @@ internal fun UpdateRoute(
     val uiState by viewModel.container.stateFlow.collectAsState()
     val context = LocalContext.current
 
-    // 화면 진입 시 업데이트 타입 설정
     LaunchedEffect(updateType) {
         viewModel.setUpdateType(updateType)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getUseCurrentInfo()
     }
 
     val imagePickerLauncher =
@@ -172,7 +175,7 @@ internal fun UpdateScreen(
                     else -> stringResource(R.string.update_password)
                 },
                 onClick = onSaveClicked,
-                enabled = state.isSaveEnabled && !state.isLoading,
+                enabled = state.isSaveEnabled && !state.isLoading
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -186,11 +189,8 @@ fun UpdateProfileScreenPreview() {
     UpdateScreen(
         state =
         UpdateInfoUiState(
-            profileImageUri = null,
-            name = "홍길동",
-            nameError = null,
             email = "hong@example.com",
-            isLoading = false,
+            newName = "홍길동",
         ),
         padding = PaddingValues(0.dp),
         onNameChanged = {},
@@ -209,11 +209,8 @@ fun UpdateProfileScreenErrorPreview() {
     UpdateScreen(
         state =
         UpdateInfoUiState(
-            profileImageUri = null,
-            name = "",
-            nameError = R.string.error_name_empty,
             email = "hong@example.com",
-            isLoading = false,
+            newNameError = R.string.error_name_empty,
         ),
         padding = PaddingValues(0.dp),
         onNameChanged = {},

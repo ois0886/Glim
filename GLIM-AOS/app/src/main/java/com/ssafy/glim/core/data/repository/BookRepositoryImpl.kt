@@ -13,7 +13,7 @@ class BookRepositoryImpl @Inject constructor(
     private val books = mutableListOf<Book>()
 
     override suspend fun searchBooks(query: String, page: Int): List<Book> {
-        if(page == 0) books.clear()
+        if (page == 0) books.clear()
 
         val searchedBooks = bookRemoteDataSource.getBooks(query, page).map { it.toDomain() }
         books.addAll(searchedBooks)

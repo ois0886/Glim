@@ -336,7 +336,6 @@ private fun PreviewLogoutProcessingDialog() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewEditProfileDialog() {
-
     val mockState = ProfileUiState(
         editProfileDialogState = EditProfileDialogState.Showing
     )

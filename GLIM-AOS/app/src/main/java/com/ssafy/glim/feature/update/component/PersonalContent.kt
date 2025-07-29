@@ -28,23 +28,23 @@ fun PersonalInfoContent(
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    Column (modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = stringResource(id = R.string.profile_label_name))
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
-            value = state.name,
+            value = state.newName,
             onValueChange = onNameChanged,
             label = { Text(stringResource(id = R.string.profile_hint_name)) },
-            isError = state.nameError != null,
+            isError = state.newNameError != null,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (state.nameError != null) {
+        if (state.newNameError != null) {
             Text(
-                text = stringResource(state.nameError),
+                text = stringResource(state.newNameError),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.error,
             )

@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,8 +42,6 @@ import coil.compose.AsyncImage
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
 
 enum class SearchTab(val displayName: String) {
     BOOKS("도서"),
@@ -170,7 +167,8 @@ private fun BookListContent(
                 .collect { (totalItems, lastVisible) ->
                     if (!isRefreshing &&
                         !hasRequestedMore &&
-                        lastVisible >= (totalItems - 1)) {
+                        lastVisible >= (totalItems - 1)
+                    ) {
                         hasRequestedMore = true
                         Log.d("SearchResult", "Loading more books...")
                         onLoadMore()

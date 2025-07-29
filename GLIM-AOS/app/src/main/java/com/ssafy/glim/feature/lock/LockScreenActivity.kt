@@ -24,10 +24,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -114,7 +112,7 @@ class LockScreenActivity : ComponentActivity() {
                             this.startActivity(
                                 Intent(this, MainActivity::class.java).apply {
                                     putExtra("nav_route", "book")
-                                    putExtra("book_num",effect.bookId)
+                                    putExtra("book_num", effect.bookId)
                                 }
                             )
                             (this as? Activity)?.finish()

@@ -1,10 +1,12 @@
 package com.ssafy.glim.core.common.utils
 
+import androidx.annotation.StringRes
 import com.ssafy.glim.core.common.extensions.BirthDateValidation
 import com.ssafy.glim.core.common.extensions.isValidCode
 import com.ssafy.glim.core.common.extensions.isValidEmail
 import com.ssafy.glim.core.common.extensions.isValidName
 import com.ssafy.glim.core.common.extensions.isValidPassword
+import com.ssafy.glim.core.common.extensions.toValidationFormat
 import com.ssafy.glim.core.common.extensions.validateBirthDateDetailed
 
 /**
@@ -134,6 +136,28 @@ object ValidationUtils {
         } else {
             ValidationResult.Valid
         }
+    }
+
+    /**
+     * 생년월일 유효성 검사
+     */
+    fun validateBirthDate(
+        birthDate: String,
+        @StringRes emptyErrorRes: Int,
+        @StringRes invalidErrorRes: Int
+    ): ValidationResult {
+        return when {
+            birthDate.isBlank() -> ValidationResult.Invalid(emptyErrorRes)
+            !birthDate.toValidationFormat().validateBirthDateDetailed().isValid() -> ValidationResult.Invalid(invalidErrorRes)
+            else -> ValidationResult.Valid
+        }
+    }
+
+    /**
+     * BirthDateValidation 결과를 Boolean으로 변환하는 확장함수
+     */
+    fun BirthDateValidation.isValid(): Boolean {
+        return this is BirthDateValidation.Valid
     }
 }
 

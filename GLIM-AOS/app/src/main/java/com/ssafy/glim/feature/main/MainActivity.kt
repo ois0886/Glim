@@ -54,17 +54,16 @@ class MainActivity : ComponentActivity() {
             val initialRoute = intent.getStringExtra("nav_route")
 
             LaunchedEffect(initialRoute) {
-                if(initialRoute == "book"){
+                if (initialRoute == "book") {
                     val bookId = intent.getLongExtra("book_num", -1L)
-                    Log.d("test",bookId.toString())
-                    navigator.navController.navigate(Route.BookDetail(bookId)){
+                    Log.d("test", bookId.toString())
+                    navigator.navController.navigate(Route.BookDetail(bookId)) {
                         popUpTo(navigator.startDestination) {
                             inclusive = true
                         }
                         launchSingleTop = true
                     }
-                }
-                else if(initialRoute == "glim"){
+                } else if (initialRoute == "glim") {
                     navigator.clearBackStackAndNavigate(MainTab.REELS.route)
                 }
             }

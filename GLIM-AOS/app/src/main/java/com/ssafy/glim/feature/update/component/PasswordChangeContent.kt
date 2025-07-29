@@ -32,7 +32,7 @@ fun PasswordChangeContent(
         )
 
         PasswordInputTextField(
-            value = state.currentPassword,
+            value = state.password,
             onValueChange = onCurrentPasswordChanged,
             error = state.currentPasswordError?.let { stringResource(it) },
             label = stringResource(R.string.current_password_hint),
