@@ -1,11 +1,13 @@
 package com.ssafy.glim.feature.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.core.domain.model.CurationType
 import com.ssafy.glim.core.domain.usecase.curation.GetMainCurationsUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
+import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,9 +32,10 @@ class HomeViewModel @Inject constructor(
             navigator.navigate(BottomTabRoute.Reels(quoteId))
         }
 
-    fun navigateToBookDetail(bookId: String) =
+    fun navigateToBookDetail(bookId: Long) =
         viewModelScope.launch {
-            // 책 상세 정보로 navigate :  navigator.navigate()
+            Log.d("HomeViewModel", "Navigating to BookDetail with bookId: $bookId")
+            navigator.navigate(Route.BookDetail(bookId = bookId))
         }
 
     init {

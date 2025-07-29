@@ -25,8 +25,13 @@ class BookRepositoryImpl @Inject constructor(
     override suspend fun updateBookViewCount(isbn: Long) =
         bookRemoteDataSource.updateBookViewCount(isbn)
 
-    override fun getBookDetail(isbn: String?, bookId: Long?): Book {
-        // TODO: bookId로 상세 정보 요청
+    override suspend fun getBookDetail(isbn: String?, bookId: Long?): Book {
+        if (isbn == null) {
+            if (bookId == null) {
+                throw IllegalArgumentException("Either isbn or bookId must be provided")
+            }
+            return bookRemoteDataSource.getBook(bookId).toDomain()
+        }
 
         Log.d("BookRepositoryImpl", "getBookDetail called with isbn: $isbn, bookId: $bookId")
         return books.first {

@@ -22,7 +22,8 @@ data class Book(
     val pubDate: String = "",
     val publisher: String = "",
     val title: String = "",
-    val translator: String = ""
+    val translator: String = "",
+    val views: Long = 0L
 ) {
     val priceText
         get() = if (priceStandard > 0) {
