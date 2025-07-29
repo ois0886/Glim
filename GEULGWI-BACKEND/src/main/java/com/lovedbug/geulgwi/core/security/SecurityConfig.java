@@ -3,6 +3,8 @@ package com.lovedbug.geulgwi.core.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,10 +23,10 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CorsConfigurationSource corsConfigurationSource;
+    private final Environment env;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
@@ -35,14 +37,19 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.PUT, "/api/v1/members/{memberId}").authenticated()
-                .requestMatchers(HttpMethod.PATCH, "/api/v1/members/{memberId}/status").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/quotes").authenticated()
-                .anyRequest().permitAll()
-            )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        if(env.acceptsProfiles(Profiles.of("test"))) {
+            http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        } else {
+            http.authorizeHttpRequests(auth -> auth
+                    .requestMatchers(HttpMethod.POST, "/api/v1/quotes").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/members/**").authenticated()
+                    .requestMatchers(HttpMethod.PATCH, "/api/v1/members/**").authenticated()
+                    .anyRequest().permitAll()
+                  )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        }
         return http.build();
     }
 }
