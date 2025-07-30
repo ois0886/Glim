@@ -11,6 +11,8 @@ data class QuoteResponse(
     val page: Int,
     val publisher: String,
     val quoteId: Long,
+    val likes: Long,
+    val isLike: Boolean,
     val quoteImageName: String,
     val quoteViews: Long? = null,
 )

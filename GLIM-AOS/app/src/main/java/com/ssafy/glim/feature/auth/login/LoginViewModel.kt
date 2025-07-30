@@ -1,6 +1,7 @@
 package com.ssafy.glim.feature.auth.login
 
 import android.util.Log
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.ValidationResult
@@ -38,11 +39,11 @@ internal class LoginViewModel @Inject constructor(
         }
     }
 
-    fun onEmailChanged(email: String) =
+    fun onEmailChanged(email: TextFieldValue) =
         intent {
             val validationResult =
                 ValidationUtils.validateEmail(
-                    email = email,
+                    email = email.text,
                     emptyErrorRes = R.string.error_email_empty,
                     invalidErrorRes = R.string.error_email_invalid,
                 )
@@ -56,11 +57,11 @@ internal class LoginViewModel @Inject constructor(
             reduce { state.copy(email = email, emailError = error) }
         }
 
-    fun onPasswordChanged(password: String) =
+    fun onPasswordChanged(password: TextFieldValue) =
         intent {
             val validationResult =
                 ValidationUtils.validatePassword(
-                    password = password,
+                    password = password.text,
                     emptyErrorRes = R.string.error_password_empty,
                     invalidErrorRes = R.string.error_password_invalid,
                 )
@@ -76,13 +77,13 @@ internal class LoginViewModel @Inject constructor(
 
     fun onLoginClicked() = intent {
         val emailValidation = ValidationUtils.validateEmail(
-            email = state.email,
+            email = state.email.text,
             emptyErrorRes = R.string.error_email_empty,
             invalidErrorRes = R.string.error_email_invalid,
         )
 
         val passwordValidation = ValidationUtils.validatePassword(
-            password = state.password,
+            password = state.password.text,
             emptyErrorRes = R.string.error_password_empty,
             invalidErrorRes = R.string.error_password_invalid,
         )
@@ -110,8 +111,8 @@ internal class LoginViewModel @Inject constructor(
 
         runCatching {
             loginUseCase(
-                email = state.email,
-                password = state.password,
+                email = state.email.text,
+                password = state.password.text,
             )
         }.onSuccess {
             reduce { state.copy(isLoading = false) }

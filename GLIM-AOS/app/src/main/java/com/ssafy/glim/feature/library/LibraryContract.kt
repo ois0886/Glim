@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.library
 
+import androidx.compose.ui.text.input.TextFieldValue
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.model.SearchItem
@@ -13,7 +14,7 @@ enum class SearchMode {
 
 data class LibraryState(
     val searchQuery: String = "",
-    val currentQuery: String = "",
+    val currentQuery: TextFieldValue = TextFieldValue(""),
     val searchMode: SearchMode = SearchMode.POPULAR,
     val selectedTab: SearchTab = SearchTab.BOOKS,
     val isLoading: Boolean = false,

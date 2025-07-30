@@ -1,14 +1,15 @@
 package com.ssafy.glim.feature.auth.signup
 
 import androidx.annotation.StringRes
+import androidx.compose.ui.text.input.TextFieldValue
 
 data class SignUpUiState(
     val currentStep: SignUpStep = SignUpStep.Email,
-    val email: String = "",
-    val code: String = "",
-    val password: String = "",
-    val confirmPassword: String = "",
-    val name: String = "",
+    val email: TextFieldValue = TextFieldValue(""),
+    val code: TextFieldValue = TextFieldValue(""),
+    val password: TextFieldValue = TextFieldValue(""),
+    val confirmPassword: TextFieldValue = TextFieldValue(""),
+    val name: TextFieldValue = TextFieldValue(""),
     val birthDate: String = "",
     val gender: String? = null,
     val actualVerificationCode: String = "",
@@ -22,16 +23,16 @@ data class SignUpUiState(
 ) {
     val isCurrentStepValid: Boolean
         get() = when (currentStep) {
-            SignUpStep.Email -> email.isNotBlank() && emailError == null
-            SignUpStep.Code -> code.isNotBlank() && codeError == null
+            SignUpStep.Email -> email.text.isNotBlank() && emailError == null
+            SignUpStep.Code -> code.text.isNotBlank() && codeError == null
             SignUpStep.Password ->
-                password.isNotBlank() &&
-                    confirmPassword.isNotBlank() &&
+                password.text.isNotBlank() &&
+                    confirmPassword.text.isNotBlank() &&
                     passwordError == null &&
                     confirmPasswordError == null
 
             SignUpStep.Profile ->
-                name.isNotBlank() &&
+                name.text.isNotBlank() &&
                     birthDate.isNotBlank() &&
                     gender != null &&
                     nameError == null &&

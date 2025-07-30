@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -74,8 +75,8 @@ internal fun LoginRoute(
 internal fun LoginScreen(
     state: LoginUiState,
     padding: PaddingValues,
-    onEmailChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
+    onEmailChanged: (TextFieldValue) -> Unit,
+    onPasswordChanged: (TextFieldValue) -> Unit,
     onLoginClicked: () -> Unit,
     navigateToSignUp: () -> Unit,
     navigateToForgotPassword: () -> Unit,
@@ -208,8 +209,8 @@ fun PreviewLoginScreen_Errors() {
     LoginScreen(
         state =
         LoginUiState(
-            email = "invalid-email",
-            password = "short",
+            email = TextFieldValue("invalid-email"),
+            password = TextFieldValue("short"),
             emailError = R.string.error_email_invalid,
             passwordError = R.string.error_password_invalid,
         ),
@@ -230,8 +231,8 @@ fun PreviewLoginScreen_Valid() {
     LoginScreen(
         state =
         LoginUiState(
-            email = "user@example.com",
-            password = "Aa1!abcd",
+            email = TextFieldValue("user@example.com"),
+            password = TextFieldValue("Aa1!abcd"),
         ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
@@ -250,8 +251,8 @@ fun PreviewLoginScreen_Loading() {
     LoginScreen(
         state =
         LoginUiState(
-            email = "user@example.com",
-            password = "Aa1!abcd",
+            email = TextFieldValue("user@example.com"),
+            password = TextFieldValue("Aa1!abcd"),
             isLoading = true,
         ),
         padding = PaddingValues(0.dp),

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -22,13 +23,13 @@ import kotlin.math.roundToInt
 
 @Composable
 fun EditableTextField(
-    text: String,
+    text: TextFieldValue,
     textStyle: TextStyleState,
     isFocused: Boolean,
     isDragging: Boolean,
     offsetX: Float,
     offsetY: Float,
-    onTextChange: (String) -> Unit,
+    onTextChange: (TextFieldValue) -> Unit,
     onFocusChanged: (Boolean) -> Unit,
     onDragStart: () -> Unit,
     onDragEnd: () -> Unit,

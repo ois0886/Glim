@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 import com.ssafy.glim.feature.update.UpdateInfoUiState
@@ -18,7 +19,7 @@ import com.ssafy.glim.feature.update.UpdateInfoUiState
 @Composable
 fun PersonalInfoContent(
     state: UpdateInfoUiState,
-    onNameChanged: (String) -> Unit,
+    onNameChanged: (TextFieldValue) -> Unit,
     onProfileImageClicked: () -> Unit
 ) {
     ProfileImageSection(

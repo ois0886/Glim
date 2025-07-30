@@ -1,6 +1,7 @@
 package com.ssafy.glim.feature.library
 
 import android.util.Log
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
@@ -52,7 +53,7 @@ constructor(
                         state.copy(
                             searchMode = SearchMode.POPULAR,
                             searchQuery = "",
-                            currentQuery = "",
+                            currentQuery = TextFieldValue(""),
                         )
                     }
                 }
@@ -62,7 +63,7 @@ constructor(
                         state.copy(
                             searchMode = SearchMode.RECENT,
                             searchQuery = "",
-                            currentQuery = "",
+                            currentQuery = TextFieldValue(""),
                         )
                     }
                 }
@@ -74,7 +75,7 @@ constructor(
         }
 
     // 검색어 입력 처리
-    fun onSearchQueryChanged(query: String) =
+    fun onSearchQueryChanged(query: TextFieldValue) =
         intent {
             reduce { state.copy(currentQuery = query) }
         }
@@ -83,7 +84,7 @@ constructor(
     fun onSearchExecuted() =
         intent {
             Log.d("LibraryViewModel", "Search executed with query: ${state.currentQuery}")
-            val query = state.currentQuery.trim()
+            val query = state.currentQuery.text.trim()
             if (query.isNotEmpty()) {
                 performSearch(query)
                 reduce {
@@ -123,7 +124,7 @@ constructor(
     // 인기 검색어 항목 클릭
     fun onPopularSearchItemClicked(query: String) =
         intent {
-            reduce { state.copy(searchQuery = query, currentQuery = query) }
+            reduce { state.copy(searchQuery = query, currentQuery = TextFieldValue(query)) }
             performSearch(query)
             reduce {
                 state.copy(
@@ -136,7 +137,7 @@ constructor(
     // 최근 검색어 항목 클릭
     fun onRecentSearchItemClicked(query: String) =
         intent {
-            reduce { state.copy(searchQuery = query, currentQuery = query) }
+            reduce { state.copy(searchQuery = query, currentQuery = TextFieldValue(query)) }
             performSearch(query)
             reduce {
                 state.copy(

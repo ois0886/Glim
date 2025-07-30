@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -109,11 +110,11 @@ internal fun UpdateRoute(
 internal fun UpdateScreen(
     state: UpdateInfoUiState,
     padding: PaddingValues,
-    onNameChanged: (String) -> Unit,
+    onNameChanged: (TextFieldValue) -> Unit,
     onProfileImageClicked: () -> Unit,
-    onCurrentPasswordChanged: (String) -> Unit,
-    onNewPasswordChanged: (String) -> Unit,
-    onConfirmPasswordChanged: (String) -> Unit,
+    onCurrentPasswordChanged: (TextFieldValue) -> Unit,
+    onNewPasswordChanged: (TextFieldValue) -> Unit,
+    onConfirmPasswordChanged: (TextFieldValue) -> Unit,
     onSaveClicked: () -> Unit,
     onBackClick: () -> Unit,
 ) {
@@ -191,7 +192,7 @@ fun UpdateProfileScreenPreview() {
         state = UpdateInfoUiState(
             email = "hong@example.com",
             name = "홍길동",
-            newName = "홍길동2",
+            newName = TextFieldValue("홍길동2"),
             gender = "남자",
             birthDate = "1990-01-01"
         ),

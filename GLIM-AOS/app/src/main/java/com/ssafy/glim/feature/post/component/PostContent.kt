@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ssafy.glim.core.domain.model.Book
@@ -35,7 +36,7 @@ import com.ssafy.glim.feature.post.component.editabletext.EditableTextField
 @Composable
 fun PostContent(
     state: PostState,
-    onTextChanged: (String) -> Unit,
+    onTextChanged: (TextFieldValue) -> Unit,
     onTextFocusChanged: (Boolean) -> Unit,
     onBackgroundClick: () -> Unit,
     onDragStart: () -> Unit,

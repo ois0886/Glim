@@ -21,14 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 
 @Composable
 fun UserProfileInputContent(
-    name: String,
-    onNameChange: (String) -> Unit,
+    name: TextFieldValue,
+    onNameChange: (TextFieldValue) -> Unit,
     nameError: String? = null,
     birthYear: String,
     onBirthYearChange: (String) -> Unit,
@@ -133,7 +134,7 @@ fun UserProfileInputContent(
 @Preview(showBackground = true)
 @Composable
 fun UserProfileInputContentPreview() {
-    var name by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf(TextFieldValue("")) }
     var birthYear by remember { mutableStateOf("") }
     var gender by remember { mutableStateOf<String?>(null) }
 
@@ -153,7 +154,7 @@ fun UserProfileInputContentPreview() {
 @Composable
 fun UserProfileInputContentPreviewWithErrors() {
     UserProfileInputContent(
-        name = "A",
+        name = TextFieldValue("A"),
         onNameChange = {},
         nameError = "이름은 2~16자로 입력해주세요.",
         birthYear = "202",

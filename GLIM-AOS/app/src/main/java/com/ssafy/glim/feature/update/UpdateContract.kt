@@ -1,6 +1,7 @@
 package com.ssafy.glim.feature.update
 
 import androidx.annotation.StringRes
+import androidx.compose.ui.text.input.TextFieldValue
 
 data class UpdateInfoUiState(
     val userId: Long = 0L,
@@ -8,11 +9,11 @@ data class UpdateInfoUiState(
     val email: String = "",
     val gender: String = "",
     val birthDate: String = "",
-    val newName: String = "",
+    val newName: TextFieldValue = TextFieldValue(""),
     val profileImageUri: String? = null,
-    val password: String = "",
-    val newPassword: String = "",
-    val confirmPassword: String = "",
+    val password: TextFieldValue = TextFieldValue(""),
+    val newPassword: TextFieldValue = TextFieldValue(""),
+    val confirmPassword: TextFieldValue = TextFieldValue(""),
     @StringRes val newNameError: Int? = null,
     @StringRes val currentPasswordError: Int? = null,
     @StringRes val newPasswordError: Int? = null,
@@ -24,17 +25,17 @@ data class UpdateInfoUiState(
         get() = when (updateType) {
             UpdateType.PERSONAL -> {
                 newNameError == null &&
-                    newName.isNotBlank() &&
-                    newName != name
+                    newName.text.isNotBlank() &&
+                    newName.text != name
             }
 
             UpdateType.PASSWORD -> {
                 currentPasswordError == null &&
                     newPasswordError == null &&
                     confirmPasswordError == null &&
-                    password.isNotBlank() &&
-                    newPassword.isNotBlank() &&
-                    confirmPassword.isNotBlank()
+                    password.text.isNotBlank() &&
+                    newPassword.text.isNotBlank() &&
+                    confirmPassword.text.isNotBlank()
             }
         }
 }
