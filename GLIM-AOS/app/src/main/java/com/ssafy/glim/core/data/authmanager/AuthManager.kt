@@ -38,7 +38,7 @@ class AuthManager @Inject constructor(
             launch {
                 authDataStore.userIdFlow.collect { id ->
                     Log.d("Init AuthManager user id", "$id")
-                    cachedRefreshToken = id
+                    cachedUserId = id
                 }
             }
         }
