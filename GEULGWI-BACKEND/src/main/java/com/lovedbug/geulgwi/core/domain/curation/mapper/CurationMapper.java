@@ -43,6 +43,7 @@ public class CurationMapper {
 
     public static CurationContentResponse toCurationContent(PopularBookResponse popularBook) {
         return CurationContentResponse.builder()
+            .bookId(popularBook.bookId())
             .bookTitle(popularBook.bookTitle())
             .author(popularBook.author())
             .publisher(popularBook.publisher())
@@ -50,8 +51,8 @@ public class CurationMapper {
             .build();
     }
 
-    public static List<CurationContentResponse> toCurationContentListFromBooks(List<PopularBookResponse> aladdinBooks) {
-        return aladdinBooks.stream()
+    public static List<CurationContentResponse> toCurationContentListFromBooks(List<PopularBookResponse> popularBooks) {
+        return popularBooks.stream()
             .map(CurationMapper::toCurationContent)
             .toList();
     }
