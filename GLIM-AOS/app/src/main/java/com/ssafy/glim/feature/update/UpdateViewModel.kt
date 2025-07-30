@@ -1,6 +1,7 @@
 package com.ssafy.glim.feature.update
 
 import android.net.Uri
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.extensions.formatBirthDate
@@ -39,7 +40,7 @@ internal class UpdateViewModel @Inject constructor(
                     email = user.email,
                     gender = user.gender.formatGenderToString(),
                     birthDate = user.birthDate,
-                    newName = user.nickname
+                    newName = TextFieldValue(user.nickname)
                 )
             }
         }.onFailure { exception ->
@@ -64,9 +65,9 @@ internal class UpdateViewModel @Inject constructor(
         reduce { state.copy(profileImageUri = uri.toString()) }
     }
 
-    fun onNameChanged(name: String) = intent {
+    fun onNameChanged(name: TextFieldValue) = intent {
         val validationResult = ValidationUtils.validateName(
-            name = name,
+            name = name.text,
             emptyErrorRes = R.string.error_name_empty,
             invalidErrorRes = R.string.error_name_invalid,
         )
@@ -83,10 +84,10 @@ internal class UpdateViewModel @Inject constructor(
         postSideEffect(UpdateInfoSideEffect.ShowImagePicker)
     }
 
-    fun onCurrentPasswordChanged(password: String) = intent {
-        val validationResult = if (password.isNotBlank()) {
+    fun onCurrentPasswordChanged(password: TextFieldValue) = intent {
+        val validationResult = if (password.text.isNotBlank()) {
             ValidationUtils.validatePassword(
-                password = password,
+                password = password.text,
                 emptyErrorRes = R.string.error_current_password_empty,
                 invalidErrorRes = R.string.error_current_password_invalid
             )
@@ -102,10 +103,10 @@ internal class UpdateViewModel @Inject constructor(
         reduce { state.copy(password = password, currentPasswordError = error) }
     }
 
-    fun onNewPasswordChanged(password: String) = intent {
-        val passwordValidation = if (password.isNotBlank()) {
+    fun onNewPasswordChanged(password: TextFieldValue) = intent {
+        val passwordValidation = if (password.text.isNotBlank()) {
             ValidationUtils.validatePassword(
-                password = password,
+                password = password.text,
                 emptyErrorRes = R.string.error_password_empty,
                 invalidErrorRes = R.string.error_password_invalid
             )
@@ -118,10 +119,10 @@ internal class UpdateViewModel @Inject constructor(
             is ValidationResult.Invalid -> passwordValidation.errorMessageRes
         }
 
-        val confirmValidation = if (state.confirmPassword.isNotBlank()) {
+        val confirmValidation = if (state.confirmPassword.text.isNotBlank()) {
             ValidationUtils.validatePasswordConfirm(
-                password = password,
-                confirmPassword = state.confirmPassword,
+                password = password.text,
+                confirmPassword = state.confirmPassword.text,
                 mismatchErrorRes = R.string.error_password_mismatch
             )
         } else {
@@ -142,10 +143,10 @@ internal class UpdateViewModel @Inject constructor(
         }
     }
 
-    fun onConfirmPasswordChanged(confirmPassword: String) = intent {
+    fun onConfirmPasswordChanged(confirmPassword: TextFieldValue) = intent {
         val validationResult = ValidationUtils.validatePasswordConfirm(
-            password = state.newPassword,
-            confirmPassword = confirmPassword,
+            password = state.newPassword.text,
+            confirmPassword = confirmPassword.text,
             mismatchErrorRes = R.string.error_password_mismatch
         )
 
@@ -166,7 +167,7 @@ internal class UpdateViewModel @Inject constructor(
 
     private fun updatePersonalInfo() = intent {
         val nameValidation = ValidationUtils.validateName(
-            name = state.newName,
+            name = state.newName.text,
             emptyErrorRes = R.string.error_name_empty,
             invalidErrorRes = R.string.error_name_invalid,
         )
@@ -188,8 +189,8 @@ internal class UpdateViewModel @Inject constructor(
         runCatching {
             updateUserUseCase(
                 memberId = state.userId,
-                password = state.password,
-                nickname = state.newName,
+                password = state.password.text,
+                nickname = state.newName.text,
                 gender = state.gender.formatGender(),
                 birthDate = state.birthDate.formatBirthDate()
             )
@@ -198,7 +199,7 @@ internal class UpdateViewModel @Inject constructor(
                 state.copy(
                     isLoading = false,
                     name = updatedUser.nickname,
-                    newName = updatedUser.nickname
+                    newName = TextFieldValue(updatedUser.nickname)
                 )
             }
             postSideEffect(UpdateInfoSideEffect.ProfileUpdated)
@@ -210,20 +211,20 @@ internal class UpdateViewModel @Inject constructor(
 
     private fun updatePassword() = intent {
         val currentPasswordValidation = ValidationUtils.validatePassword(
-            password = state.password,
+            password = state.password.text,
             emptyErrorRes = R.string.error_current_password_empty,
             invalidErrorRes = R.string.error_current_password_invalid
         )
 
         val newPasswordValidation = ValidationUtils.validatePassword(
-            password = state.newPassword,
+            password = state.newPassword.text,
             emptyErrorRes = R.string.error_password_empty,
             invalidErrorRes = R.string.error_password_invalid
         )
 
         val confirmValidation = ValidationUtils.validatePasswordConfirm(
-            password = state.newPassword,
-            confirmPassword = state.confirmPassword,
+            password = state.newPassword.text,
+            confirmPassword = state.confirmPassword.text,
             mismatchErrorRes = R.string.error_password_mismatch
         )
 
@@ -261,7 +262,7 @@ internal class UpdateViewModel @Inject constructor(
         runCatching {
             updateUserUseCase(
                 memberId = state.userId,
-                password = state.newPassword,
+                password = state.newPassword.text,
                 nickname = state.name,
                 gender = state.gender.formatGender(),
                 birthDate = state.birthDate.formatBirthDate()
@@ -270,9 +271,9 @@ internal class UpdateViewModel @Inject constructor(
             reduce {
                 state.copy(
                     isLoading = false,
-                    password = "",
-                    newPassword = "",
-                    confirmPassword = "",
+                    password = TextFieldValue(""),
+                    newPassword = TextFieldValue(""),
+                    confirmPassword = TextFieldValue(""),
                     currentPasswordError = null,
                     newPasswordError = null,
                     confirmPasswordError = null

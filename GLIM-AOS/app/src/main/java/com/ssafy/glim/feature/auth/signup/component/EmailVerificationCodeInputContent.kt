@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,8 +23,8 @@ import com.ssafy.glim.R
 @Composable
 fun EmailVerificationCodeInputContent(
     modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     error: String? = null,
 ) {
     Column(modifier = modifier) {
@@ -48,7 +49,7 @@ fun EmailVerificationCodeInputContent(
         TextField(
             value = value,
             onValueChange = { input ->
-                if (input.all { it.isDigit() }) {
+                if (input.text.all { it.isDigit() }) {
                     onValueChange(input)
                 }
             },
@@ -78,7 +79,7 @@ fun EmailVerificationCodeInputContent(
 @Composable
 fun PreviewEmailVerificationCodeInputContent_Empty() {
     EmailVerificationCodeInputContent(
-        value = "",
+        value = TextFieldValue(""),
         onValueChange = {},
         error = null,
     )
@@ -88,7 +89,7 @@ fun PreviewEmailVerificationCodeInputContent_Empty() {
 @Composable
 fun PreviewEmailVerificationCodeInputContent_WithError() {
     EmailVerificationCodeInputContent(
-        value = "123",
+        value = TextFieldValue("123"),
         onValueChange = {},
         error = "인증번호가 올바르지 않아요",
     )

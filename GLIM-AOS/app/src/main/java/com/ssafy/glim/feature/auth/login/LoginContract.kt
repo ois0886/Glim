@@ -1,10 +1,11 @@
 package com.ssafy.glim.feature.auth.login
 
 import androidx.annotation.StringRes
+import androidx.compose.ui.text.input.TextFieldValue
 
 data class LoginUiState(
-    val email: String = "",
-    val password: String = "",
+    val email: TextFieldValue = TextFieldValue(""),
+    val password: TextFieldValue = TextFieldValue(""),
     @StringRes val emailError: Int? = null,
     @StringRes val passwordError: Int? = null,
     val isLoading: Boolean = false,
@@ -13,8 +14,8 @@ data class LoginUiState(
         get() =
             emailError == null &&
                 passwordError == null &&
-                email.isNotBlank() &&
-                password.isNotBlank()
+                email.text.isNotBlank() &&
+                password.text.isNotBlank()
 }
 
 sealed interface LoginSideEffect {

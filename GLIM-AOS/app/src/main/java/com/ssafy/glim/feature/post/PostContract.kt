@@ -3,6 +3,7 @@ package com.ssafy.glim.feature.post
 import android.net.Uri
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.core.domain.model.Book
@@ -18,7 +19,7 @@ sealed interface PostSideEffect {
 }
 
 data class PostState(
-    val recognizedText: String = "",
+    val recognizedText: TextFieldValue = TextFieldValue(""),
     val selectedImageUri: Uri? = null,
     val backgroundImageUri: Uri? = null,
     val showExitDialog: Boolean = false,

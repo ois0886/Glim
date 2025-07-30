@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,11 +68,11 @@ internal fun SignUpRoute(
 private fun SignUpScreen(
     state: SignUpUiState,
     padding: PaddingValues,
-    onEmailChanged: (String) -> Unit,
-    onCodeChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onConfirmPasswordChanged: (String) -> Unit,
-    onNameChanged: (String) -> Unit,
+    onEmailChanged: (TextFieldValue) -> Unit,
+    onCodeChanged: (TextFieldValue) -> Unit,
+    onPasswordChanged: (TextFieldValue) -> Unit,
+    onConfirmPasswordChanged: (TextFieldValue) -> Unit,
+    onNameChanged: (TextFieldValue) -> Unit,
     onBirthYearChanged: (String) -> Unit,
     onGenderSelected: (String) -> Unit,
     onNextStep: () -> Unit,
@@ -165,7 +166,7 @@ private fun PreviewSignUpScreen_EmailStep() {
     SignUpScreen(
         state = SignUpUiState(
             currentStep = SignUpStep.Email,
-            email = "user@example.com",
+            email = TextFieldValue("user@example.com"),
             emailError = null,
         ),
         padding = PaddingValues(0.dp),
@@ -187,7 +188,7 @@ private fun PreviewSignUpScreen_EmailStepWithError() {
     SignUpScreen(
         state = SignUpUiState(
             currentStep = SignUpStep.Email,
-            email = "invalid-email",
+            email = TextFieldValue("invalid-email"),
             emailError = R.string.error_email_invalid,
         ),
         padding = PaddingValues(0.dp),
@@ -209,7 +210,7 @@ private fun PreviewSignUpScreen_CodeStep() {
     SignUpScreen(
         state = SignUpUiState(
             currentStep = SignUpStep.Code,
-            code = "123456",
+            code = TextFieldValue("123456"),
             codeError = null,
         ),
         padding = PaddingValues(0.dp),
@@ -231,8 +232,8 @@ private fun PreviewSignUpScreen_PasswordStep() {
     SignUpScreen(
         state = SignUpUiState(
             currentStep = SignUpStep.Password,
-            password = "Aa1!aaaa",
-            confirmPassword = "Aa1!aaaa",
+            password = TextFieldValue("Aa1!aaaa"),
+            confirmPassword = TextFieldValue("Aa1!aaaa"),
             passwordError = null,
             confirmPasswordError = null,
         ),
@@ -255,8 +256,8 @@ private fun PreviewSignUpScreen_PasswordStepWithError() {
     SignUpScreen(
         state = SignUpUiState(
             currentStep = SignUpStep.Password,
-            password = "short",
-            confirmPassword = "different",
+            password = TextFieldValue("short"),
+            confirmPassword = TextFieldValue("different"),
             passwordError = R.string.error_password_invalid,
             confirmPasswordError = R.string.error_password_mismatch,
         ),
@@ -279,7 +280,7 @@ private fun PreviewSignUpScreen_ProfileStep() {
     SignUpScreen(
         state = SignUpUiState(
             currentStep = SignUpStep.Profile,
-            name = "인성",
+            name = TextFieldValue("인성"),
             birthDate = "1998",
             gender = "남성",
             nameError = null,

@@ -1,6 +1,7 @@
 package com.ssafy.glim.feature.auth.signup
 
 import android.util.Log
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.extensions.extractDigits
@@ -27,16 +28,12 @@ internal class SignUpViewModel @Inject constructor(
 
     override val container = container<SignUpUiState, SignUpSideEffect>(SignUpUiState())
 
-    fun onEmailChanged(email: String) = intent {
-        val validationResult = if (email.isNotBlank()) {
-            ValidationUtils.validateEmail(
-                email = email,
-                emptyErrorRes = R.string.error_email_empty,
-                invalidErrorRes = R.string.error_email_invalid
-            )
-        } else {
-            ValidationResult.Valid
-        }
+    fun onEmailChanged(email: TextFieldValue) = intent {
+        val validationResult = ValidationUtils.validateEmail(
+            email = email.text,
+            emptyErrorRes = R.string.error_email_empty,
+            invalidErrorRes = R.string.error_email_invalid
+        )
 
         val error = when (validationResult) {
             is ValidationResult.Valid -> null
@@ -46,8 +43,8 @@ internal class SignUpViewModel @Inject constructor(
         reduce { state.copy(email = email, emailError = error) }
     }
 
-    fun onCodeChanged(code: String) = intent {
-        val filteredCode = code.extractDigits(6)
+    fun onCodeChanged(code: TextFieldValue) = intent {
+        val filteredCode = code.text.extractDigits(6)
 
         val validationResult = if (filteredCode.isNotBlank()) {
             ValidationUtils.validateCode(
@@ -64,13 +61,13 @@ internal class SignUpViewModel @Inject constructor(
             is ValidationResult.Invalid -> validationResult.errorMessageRes
         }
 
-        reduce { state.copy(code = filteredCode, codeError = error) }
+        reduce { state.copy(code = TextFieldValue(filteredCode), codeError = error) }
     }
 
-    fun onPasswordChanged(password: String) = intent {
-        val passwordValidation = if (password.isNotBlank()) {
+    fun onPasswordChanged(password: TextFieldValue) = intent {
+        val passwordValidation = if (password.text.isNotBlank()) {
             ValidationUtils.validatePassword(
-                password = password,
+                password = password.text,
                 emptyErrorRes = R.string.error_password_empty,
                 invalidErrorRes = R.string.error_password_invalid
             )
@@ -84,8 +81,8 @@ internal class SignUpViewModel @Inject constructor(
         }
 
         val confirmValidation = ValidationUtils.validatePasswordConfirm(
-            password = password,
-            confirmPassword = state.confirmPassword,
+            password = password.text,
+            confirmPassword = state.confirmPassword.text,
             mismatchErrorRes = R.string.error_password_mismatch
         )
 
@@ -103,10 +100,10 @@ internal class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun onConfirmPasswordChanged(confirmPassword: String) = intent {
+    fun onConfirmPasswordChanged(confirmPassword: TextFieldValue) = intent {
         val validationResult = ValidationUtils.validatePasswordConfirm(
-            password = state.password,
-            confirmPassword = confirmPassword,
+            password = state.password.text,
+            confirmPassword = confirmPassword.text,
             mismatchErrorRes = R.string.error_password_mismatch
         )
 
@@ -118,10 +115,10 @@ internal class SignUpViewModel @Inject constructor(
         reduce { state.copy(confirmPassword = confirmPassword, confirmPasswordError = error) }
     }
 
-    fun onNameChanged(name: String) = intent {
-        val validationResult = if (name.isNotBlank()) {
+    fun onNameChanged(name: TextFieldValue) = intent {
+        val validationResult = if (name.text.isNotBlank()) {
             ValidationUtils.validateName(
-                name = name,
+                name = name.text,
                 emptyErrorRes = R.string.error_name_empty,
                 invalidErrorRes = R.string.error_name_invalid
             )
@@ -177,7 +174,7 @@ internal class SignUpViewModel @Inject constructor(
 
     private fun sendVerificationCode() = intent {
         val validation = ValidationUtils.validateEmail(
-            email = state.email,
+            email = state.email.text,
             emptyErrorRes = R.string.error_email_empty,
             invalidErrorRes = R.string.error_email_invalid
         )
@@ -190,7 +187,7 @@ internal class SignUpViewModel @Inject constructor(
                 reduce { state.copy(isLoading = true) }
                 Log.d("SignUp", "Starting verification for email: ${state.email}")
                 runCatching {
-                    verifyEmailUseCase(state.email)
+                    verifyEmailUseCase(state.email.text)
                 }.onSuccess { response ->
                     Log.d("SignUp", "Verification success: ${response.verificationCode}")
                     reduce { state.copy(isLoading = false, actualVerificationCode = response.verificationCode) }
@@ -211,13 +208,13 @@ internal class SignUpViewModel @Inject constructor(
 
     private fun validateCodeStep() = intent {
         val validation = ValidationUtils.validateCode(
-            code = state.code,
+            code = state.code.text,
             emptyErrorRes = R.string.error_code_empty,
             invalidErrorRes = R.string.error_code_invalid
         )
 
         val codeError = if (validation is ValidationResult.Valid) {
-            if (state.code == state.actualVerificationCode) {
+            if (state.code.text == state.actualVerificationCode) {
                 null
             } else {
                 R.string.error_code_incorrect
@@ -230,7 +227,7 @@ internal class SignUpViewModel @Inject constructor(
 
         when (validation) {
             is ValidationResult.Valid -> {
-                if (state.code == state.actualVerificationCode) {
+                if (state.code.text == state.actualVerificationCode) {
                     postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_verify_code))
                     moveToNextStep()
                 } else {
@@ -246,14 +243,14 @@ internal class SignUpViewModel @Inject constructor(
 
     private fun validatePasswordStep() = intent {
         val passwordValidation = ValidationUtils.validatePassword(
-            password = state.password,
+            password = state.password.text,
             emptyErrorRes = R.string.error_password_empty,
             invalidErrorRes = R.string.error_password_invalid
         )
 
         val confirmValidation = ValidationUtils.validatePasswordConfirm(
-            password = state.password,
-            confirmPassword = state.confirmPassword,
+            password = state.password.text,
+            confirmPassword = state.confirmPassword.text,
             mismatchErrorRes = R.string.error_password_mismatch
         )
 
@@ -277,7 +274,7 @@ internal class SignUpViewModel @Inject constructor(
 
     private fun validateProfileStep() = intent {
         val nameValidation = ValidationUtils.validateName(
-            name = state.name,
+            name = state.name.text,
             emptyErrorRes = R.string.error_name_empty,
             invalidErrorRes = R.string.error_name_invalid
         )
@@ -337,9 +334,9 @@ internal class SignUpViewModel @Inject constructor(
 
         runCatching {
             signUpUseCase(
-                email = state.email,
-                nickname = state.name,
-                password = state.password,
+                email = state.email.text,
+                nickname = state.name.text,
+                password = state.password.text,
                 gender = formattedGender,
                 birthDate = formattedBirthDate
             )

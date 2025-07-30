@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -27,8 +28,8 @@ import com.ssafy.glim.R
 @Composable
 fun PasswordInputTextField(
     modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     label: String = stringResource(id = R.string.login_password_placeholder),
     error: String? = null,
 ) {
@@ -77,7 +78,7 @@ fun PasswordInputTextField(
 @Composable
 @Preview(showBackground = true)
 fun PasswordInputTextFieldPreview() {
-    var text by remember { mutableStateOf("") }
+    var text by remember { mutableStateOf(TextFieldValue("")) }
 
     PasswordInputTextField(
         value = text,

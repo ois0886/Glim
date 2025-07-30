@@ -3,6 +3,7 @@ package com.ssafy.glim.feature.post
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
@@ -30,7 +31,7 @@ class PostViewModel @Inject constructor(
         intent {
             if (state.showBottomSheet) {
                 reduce { state.copy(showBottomSheet = false) }
-            } else if (state.recognizedText.isNotEmpty()) {
+            } else if (state.recognizedText.text.isNotEmpty()) {
                 reduce { state.copy(showExitDialog = true) }
             } else {
                 postSideEffect(PostSideEffect.NavigateBack)
@@ -48,7 +49,7 @@ class PostViewModel @Inject constructor(
             reduce { state.copy(showExitDialog = false) }
         }
 
-    fun textChanged(text: String) =
+    fun textChanged(text: TextFieldValue) =
         intent {
             reduce { state.copy(recognizedText = text) }
         }
@@ -115,7 +116,7 @@ class PostViewModel @Inject constructor(
                     val result = imageProcessor.recognizeText(uri)
                     reduce {
                         state.copy(
-                            recognizedText = result,
+                            recognizedText = TextFieldValue(result),
                         )
                     }
                 } catch (e: Exception) {
@@ -156,7 +157,7 @@ class PostViewModel @Inject constructor(
                     state.book?.let {
                         runCatching {
                             createQuoteUseCase(
-                                content = state.recognizedText,
+                                content = state.recognizedText.text,
                                 isbn = it.isbn,
                                 book = it,
                                 bitmap = bitmap ?: throw IllegalArgumentException("Bitmap cannot be null"),

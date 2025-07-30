@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,10 +21,10 @@ import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
 @Composable
 fun PasswordConfirmInputContent(
     modifier: Modifier = Modifier,
-    password: String,
-    onPasswordChange: (String) -> Unit,
-    confirmPassword: String,
-    onConfirmPasswordChange: (String) -> Unit,
+    password: TextFieldValue,
+    onPasswordChange: (TextFieldValue) -> Unit,
+    confirmPassword: TextFieldValue,
+    onConfirmPasswordChange: (TextFieldValue) -> Unit,
     passwordError: String? = null,
     confirmPasswordError: String? = null,
 ) {
@@ -75,9 +76,9 @@ fun PasswordConfirmInputContent(
 @Composable
 fun PreviewPasswordConfirmInputContent_Default() {
     PasswordConfirmInputContent(
-        password = "",
+        password = TextFieldValue(""),
         onPasswordChange = {},
-        confirmPassword = "",
+        confirmPassword = TextFieldValue(""),
         onConfirmPasswordChange = {},
         passwordError = null,
         confirmPasswordError = null,
@@ -88,9 +89,9 @@ fun PreviewPasswordConfirmInputContent_Default() {
 @Composable
 fun PreviewPasswordConfirmInputContent_Errors() {
     PasswordConfirmInputContent(
-        password = "123",
+        password = TextFieldValue("123"),
         onPasswordChange = {},
-        confirmPassword = "1234",
+        confirmPassword = TextFieldValue("1234"),
         onConfirmPasswordChange = {},
         passwordError = "8~16자, 대소문자/숫자/특수문자 포함",
         confirmPasswordError = "비밀번호가 일치하지 않습니다.",
