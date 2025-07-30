@@ -15,9 +15,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class TokenAuthenticator @Inject constructor(
     private val authManager: AuthManager,
     private val authService: AuthService
