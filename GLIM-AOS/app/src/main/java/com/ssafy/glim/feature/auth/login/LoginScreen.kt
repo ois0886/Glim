@@ -67,7 +67,7 @@ internal fun LoginRoute(
         navigateToSignUp = viewModel::navigateToSignUp,
         navigateToForgotPassword = viewModel::navigateToForgotPassword,
         navigateToSocialLogin = viewModel::navigateToSocialLogin,
-        navigateToSignUpOnGuest = viewModel::navigateToHome,
+        navigateToSignUpOnGuest = viewModel::navigateToSignUpOnGuest,
     )
 }
 
