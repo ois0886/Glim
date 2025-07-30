@@ -31,6 +31,7 @@ import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.feature.library.LibraryRoute
 import com.ssafy.glim.feature.post.PostState
 import com.ssafy.glim.feature.post.component.editabletext.EditableTextField
+import com.ssafy.glim.feature.reels.CaptureActions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +49,7 @@ fun PostContent(
     onToggleItalic: () -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageClick: () -> Unit,
-    onCompleteClick: (Bitmap?) -> Unit,
+    onCompleteClick: (CaptureActions) -> Unit,
     onConfirmExit: () -> Unit,
     onCancelExit: () -> Unit,
     updateBottomSheetState: (Boolean) -> Unit,
@@ -127,6 +128,7 @@ fun PostContent(
             onBackgroundImageButtonClick = onBackgroundImageClick,
             onCreateTextClick = onTextFocusChanged,
             onCompleteClick = onCompleteClick,
+            clearFocus = {focusManager.clearFocus()},
             graphicsLayer = imageGraphicsLayer,
             modifier = Modifier.align(Alignment.BottomEnd),
         )

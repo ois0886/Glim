@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.post
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
@@ -8,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
 import com.ssafy.glim.core.navigation.Navigator
+import com.ssafy.glim.feature.reels.CaptureActions
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -150,11 +151,24 @@ class PostViewModel @Inject constructor(
             reduce { state.copy(book = book, showBottomSheet = false) }
         }
 
-    fun completeClick(bitmap: Bitmap?) =
+    fun completeClick(captureActions: CaptureActions) =
         intent {
+            if(state.isLoading) {
+                postSideEffect(PostSideEffect.ShowToast("이미 업로드 중 입니다."))
+                return@intent
+            }
+            reduce {
+                state.copy(
+                    isFocused = false,
+                    isLoading = true
+                )
+            }
             state.backgroundImageUri?.let { uri ->
                 try {
                     state.book?.let {
+                        delay(20) // 리컴포지션 대기 1프레임 16ms + 여유 시간
+                        Log.d("PostViewModel focus", "비트맵 생성")
+                        val bitmap = captureActions.getBitmap()
                         runCatching {
                             createQuoteUseCase(
                                 content = state.recognizedText.text,
@@ -177,6 +191,11 @@ class PostViewModel @Inject constructor(
                 }
             } ?: run {
                 postSideEffect(PostSideEffect.ShowToast("배경 이미지를 선택해주세요."))
+            }
+            reduce {
+                state.copy(
+                    isLoading = false
+                )
             }
         }
 

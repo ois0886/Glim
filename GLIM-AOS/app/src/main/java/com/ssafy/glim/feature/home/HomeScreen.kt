@@ -50,6 +50,7 @@ import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.GlimErrorLoader
 import com.ssafy.glim.core.ui.GlimLoader
+import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.ui.theme.GlimColor.LightGray600
 import com.ssafy.glim.ui.theme.GlimColor.LightGray700
@@ -207,23 +208,9 @@ fun QuoteCarousel(
                     shape = RoundedCornerShape(12.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 ) {
-                    SubcomposeAsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data("${BuildConfig.BASE_URL}/images/${quote.quoteImageName}")
-                            .crossfade(true)
-                            .diskCachePolicy(CachePolicy.ENABLED)
-                            .memoryCachePolicy(CachePolicy.ENABLED)
-                            .build(),
-                        contentDescription = null,
-                        modifier = Modifier.size(itemSize),
-                        contentScale = ContentScale.Crop,
-                        imageLoader = imageLoader,
-                        loading = {
-                            GlimLoader(Modifier)
-                        },
-                        error = {
-                            GlimErrorLoader(Modifier)
-                        }
+                    GlimSubcomposeAsyncImage(
+                        context = context,
+                        imageUrl = "${BuildConfig.BASE_URL}/images/${quote.quoteImageName}"
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))

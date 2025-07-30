@@ -45,10 +45,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.LocalImageLoader
 import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.DarkThemeScreen
+import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
 import com.ssafy.glim.feature.main.excludeSystemBars
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
 import org.orbitmvi.orbit.compose.collectAsState
@@ -162,9 +164,9 @@ fun QuoteItem(
     )
 
     Box(modifier = modifier) {
-        AsyncImage(
-            model = "${BuildConfig.BASE_URL}/images/${quote.quoteImageName}",
-            contentDescription = null,
+        GlimSubcomposeAsyncImage(
+            context = LocalContext.current,
+            imageUrl = "${BuildConfig.BASE_URL}/images/${quote.quoteImageName}",
             modifier = Modifier
                 .fillMaxSize()
                 .drawWithCache {
@@ -175,10 +177,9 @@ fun QuoteItem(
                         }
                         drawLayer(imageGraphicsLayer)
                     }
-                },
-            contentScale = ContentScale.Crop,
-            error = painterResource(R.drawable.example_glim_2),
+                }
         )
+
 
         QuoteBookContent(
             modifier = Modifier.align(Alignment.BottomEnd),

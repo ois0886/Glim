@@ -49,14 +49,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.SubcomposeAsyncImage
 import coil.imageLoader
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
-import com.ssafy.glim.core.ui.GlimErrorLoader
-import com.ssafy.glim.core.ui.GlimLoader
+import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
 import com.ssafy.glim.feature.lock.component.SwipeButton
 import com.ssafy.glim.feature.lock.component.SwipeDirection
 import com.ssafy.glim.feature.main.MainActivity
@@ -199,23 +197,9 @@ fun LockScreenContent(
     ) {
         val currentQuote = state.quotes.getOrNull(state.currentIndex)
         if (currentQuote != null) {
-            SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data("${BuildConfig.BASE_URL}/images/${currentQuote.quoteImageName}")
-                    .crossfade(true)
-                    .diskCachePolicy(CachePolicy.ENABLED)
-                    .memoryCachePolicy(CachePolicy.ENABLED)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-                imageLoader = imageLoader,
-                loading = {
-                    GlimLoader(Modifier)
-                },
-                error = {
-                    GlimErrorLoader(Modifier)
-                }
+            GlimSubcomposeAsyncImage(
+                context = context,
+                imageUrl = "${BuildConfig.BASE_URL}/images/${currentQuote.quoteImageName}"
             )
         } else {
             Image(

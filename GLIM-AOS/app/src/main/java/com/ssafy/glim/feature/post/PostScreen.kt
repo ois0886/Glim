@@ -4,14 +4,20 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.wear.compose.material.CircularProgressIndicator
 import com.ssafy.glim.core.ui.DarkThemeScreen
 import com.ssafy.glim.feature.main.excludeSystemBars
 import com.ssafy.glim.feature.post.component.PostContent
@@ -62,27 +68,36 @@ internal fun PostRoute(
         viewModel.initialize()
     }
 
-    DarkThemeScreen {
-        PostContent(
-            state = state,
-            onTextChanged = viewModel::textChanged,
-            onTextFocusChanged = viewModel::onTextFocusChanged,
-            onBackgroundClick = viewModel::onBackgroundClick,
-            onDragStart = viewModel::onDragStart,
-            onDragEnd = viewModel::onDragEnd,
-            onDrag = viewModel::updateTextPosition,
-            onIncreaseFontSize = viewModel::increaseFontSize,
-            onDecreaseFontSize = viewModel::decreaseFontSize,
-            onToggleBold = viewModel::toggleBold,
-            onToggleItalic = viewModel::toggleItalic,
-            onTextExtractionClick = viewModel::textExtractionClick,
-            onBackgroundImageClick = viewModel::backgroundImageClick,
-            onCompleteClick = { viewModel.completeClick(it) },
-            onConfirmExit = viewModel::confirmExit,
-            onCancelExit = viewModel::cancelExit,
-            updateBottomSheetState = viewModel::updateBottomSheetState,
-            selectedBook = viewModel::selectedBook,
-            modifier = Modifier.padding(padding.excludeSystemBars()),
-        )
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        DarkThemeScreen {
+            PostContent(
+                state = state,
+                onTextChanged = viewModel::textChanged,
+                onTextFocusChanged = viewModel::onTextFocusChanged,
+                onBackgroundClick = viewModel::onBackgroundClick,
+                onDragStart = viewModel::onDragStart,
+                onDragEnd = viewModel::onDragEnd,
+                onDrag = viewModel::updateTextPosition,
+                onIncreaseFontSize = viewModel::increaseFontSize,
+                onDecreaseFontSize = viewModel::decreaseFontSize,
+                onToggleBold = viewModel::toggleBold,
+                onToggleItalic = viewModel::toggleItalic,
+                onTextExtractionClick = viewModel::textExtractionClick,
+                onBackgroundImageClick = viewModel::backgroundImageClick,
+                onCompleteClick = viewModel::completeClick,
+                onConfirmExit = viewModel::confirmExit,
+                onCancelExit = viewModel::cancelExit,
+                updateBottomSheetState = viewModel::updateBottomSheetState,
+                selectedBook = viewModel::selectedBook,
+                modifier = Modifier.padding(padding.excludeSystemBars()),
+            )
+        }
+
+        if(state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(52.dp).align(Alignment.Center)
+            )
+        }
     }
 }
