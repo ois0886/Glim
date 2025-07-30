@@ -25,7 +25,7 @@ public class QuoteController {
     public ResponseEntity<List<QuoteWithBookResponse>> getQuotes(
         @PageableDefault(size = 10, sort = "views", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return ResponseEntity.ok(quoteService.getQuotes(pageable));
+        return ResponseEntity.ok(quoteService.getQuotesByRandom(pageable));
     }
 
     @GetMapping("/{isbn}")
