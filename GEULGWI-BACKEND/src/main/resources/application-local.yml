@@ -1,4 +1,4 @@
-spring:
+0spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/geulgwi
     username: postgres
