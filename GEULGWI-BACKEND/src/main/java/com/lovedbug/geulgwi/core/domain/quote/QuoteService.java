@@ -37,6 +37,14 @@ public class QuoteService {
             .toList();
     }
 
+    public List<QuoteWithBookResponse> getQuotesByRandom(Pageable pageable) {
+        List<Quote> quotes = quoteRepository.findPublicQuotesByRandom(pageable);
+
+        return quotes.stream()
+            .map(QuoteService::toDto)
+            .toList();
+    }
+
     public List<QuoteResponse> getPublicQuotesByIsbn(String isbn){
         List<Quote> quotes = quoteRepository.findAllByBookIsbnAndVisibility(isbn, "PUBLIC");
 

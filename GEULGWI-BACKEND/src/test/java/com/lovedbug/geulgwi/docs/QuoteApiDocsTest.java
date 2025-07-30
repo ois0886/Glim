@@ -115,9 +115,9 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
             .statusCode(200);
     }
 
-    @DisplayName("특정 조건으로 정렬된 글귀 목록을 조회한다")
+    @DisplayName("글귀 목록을 조회한다")
     @Test
-    void get_quotes_order_by_condition() {
+    void get_quotes() {
         Book book = createBook();
         bookRepository.save(book);
 
