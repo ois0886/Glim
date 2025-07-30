@@ -25,12 +25,13 @@ public class BookScheduler {
 
     @Scheduled(cron = "0 0/30 * * * *")
     public void syncBestSellerBooks() {
-        if (!keywords.isEmpty()) {
+        log.info("현재 키워드 목록 {}", keywords);
 
+        if (!keywords.isEmpty()) {
             String keyword = keywords.iterator().next();
+            log.info("book 마이그레이션 스케줄링 시작, keyword = " + keyword);
 
             for (int i = 0; i <= 50; i++) {
-                log.info("book 마이그레이션 스케줄링 시작, keyword = " + keyword);
                 List<AladdinBookResponse> books = bookService.getBooksByKeyword(AladdinSearchQueryType.KEYWORD, keyword, i);
                 bookService.saveBooksFromExternal(books);
             }
