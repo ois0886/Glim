@@ -10,7 +10,7 @@ sealed interface Route {
     data object SignUp : Route
 
     @Serializable
-    data class BookDetail(val bookId: Long) : BottomTabRoute
+    data class BookDetail(val isbn: String? = null, val bookId: Long? = null) : BottomTabRoute
 }
 
 sealed interface MyGlimsRoute : Route {

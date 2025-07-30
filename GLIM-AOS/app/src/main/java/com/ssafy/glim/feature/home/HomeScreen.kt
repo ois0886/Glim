@@ -82,7 +82,7 @@ private fun HomeScreen(
     padding: PaddingValues,
     homeUiState: HomeUiState,
     onQuoteClick: (Long) -> Unit,
-    onBookClick: (String) -> Unit,
+    onBookClick: (Long) -> Unit,
 ) {
     LazyColumn(
         modifier =
@@ -239,7 +239,7 @@ fun QuoteCarousel(
 @Composable
 fun BookCarousel(
     books: List<Book>,
-    onItemClick: (String) -> Unit,
+    onItemClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
     itemWidth: Dp = 100.dp,
@@ -268,7 +268,7 @@ fun BookCarousel(
                 modifier =
                 Modifier
                     .width(itemWidth)
-                    .clickable { onItemClick(book.itemId.toString()) },
+                    .clickable { onItemClick(book.bookId) },
                 horizontalAlignment = Alignment.Start
             ) {
                 Card(

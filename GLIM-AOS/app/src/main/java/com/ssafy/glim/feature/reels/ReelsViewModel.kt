@@ -135,6 +135,6 @@ constructor(
 
     fun onBookInfoClick(bookId: Long) =
         intent {
-            navigator.navigate(Route.BookDetail(bookId))
+            navigator.navigate(Route.BookDetail(bookId = bookId))
         }
 }

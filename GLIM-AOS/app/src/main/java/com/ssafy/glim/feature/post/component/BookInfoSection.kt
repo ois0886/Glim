@@ -30,7 +30,7 @@ fun BookInfoSection(
     if (book != null) {
         QuoteBookContent(
             modifier = modifier,
-            bookId = book.itemId,
+            bookId = book.bookId,
             author = book.author,
             bookName = book.title,
             bookCover = book.cover,

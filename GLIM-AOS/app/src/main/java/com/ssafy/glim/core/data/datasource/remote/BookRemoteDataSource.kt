@@ -15,4 +15,6 @@ class BookRemoteDataSource @Inject constructor(
     suspend fun updateBookViewCount(
         bookId: Long,
     ) = bookService.updateViewCount(bookId)
+
+    suspend fun getBook(bookId: Long) = bookService.getBook(bookId)
 }

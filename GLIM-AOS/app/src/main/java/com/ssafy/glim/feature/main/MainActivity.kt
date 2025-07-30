@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -56,9 +55,8 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(initialRoute) {
                 if (initialRoute == "book") {
-                    val bookId = intent.getLongExtra("book_num", -1L)
-                    Log.d("test", bookId.toString())
-                    navigator.navController.navigate(Route.BookDetail(bookId)) {
+                    val isbn = intent.getStringExtra("isbn") ?: ""
+                    navigator.navController.navigate(Route.BookDetail(isbn)) {
                         popUpTo(navigator.startDestination) {
                             inclusive = true
                         }
