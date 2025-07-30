@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.post.component
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
+import com.ssafy.glim.feature.reels.CaptureActions
 import com.ssafy.glim.feature.reels.rememberCaptureActions
 import kotlinx.coroutines.launch
 
@@ -31,7 +31,8 @@ fun ActionButtons(
     onTextExtractionClick: () -> Unit,
     onBackgroundImageButtonClick: () -> Unit,
     onCreateTextClick: (Boolean) -> Unit,
-    onCompleteClick: (Bitmap?) -> Unit,
+    onCompleteClick: (CaptureActions) -> Unit,
+    clearFocus: () -> Unit,
     graphicsLayer: GraphicsLayer,
     modifier: Modifier = Modifier,
 ) {
@@ -52,7 +53,8 @@ fun ActionButtons(
     ) {
         TextButton(onClick = {
             coroutineScope.launch {
-                onCompleteClick(captureAction.getBitmap())
+                clearFocus()
+                onCompleteClick(captureAction)
             }
         }) {
             Text("완료", color = Color.White, fontWeight = FontWeight.Bold)
