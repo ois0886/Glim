@@ -40,10 +40,13 @@ constructor(
         }
 
     fun nextQuote() = intent {
-        val nextIdx = state.currentIndex + 1
-        // 뒤에서 5개 남았을 때 추가 로드
+        val lastIndex = state.quotes.lastIndex
+        val nextIdx = (state.currentIndex + 1).coerceAtMost(lastIndex)
+
         if (nextIdx >= state.quotes.size - 5) loadQuotes()
-        reduce { state.copy(currentIndex = nextIdx) }
+        if (nextIdx != state.currentIndex) {
+            reduce { state.copy(currentIndex = nextIdx) }
+        }
     }
     fun prevQuote() = intent {
         var prevIdx = state.currentIndex - 1
@@ -78,17 +81,17 @@ constructor(
             postSideEffect(LockSideEffect.NavigateQuotes(state.quotes[state.currentIndex].quoteId))
         }
 
-    private fun loadQuotes() =
-        intent {
-            val page = state.page
-            runCatching { getQuotesUseCase(page, state.size) }
-                .onSuccess {
-                    reduce {
-                        state.copy(
-                            quotes = state.quotes + it,
-                            page = page + 1,
-                        )
-                    }
-                }
+    private fun loadQuotes() = intent {
+        runCatching {
+            getQuotesUseCase(state.page, state.size)
+        }.onSuccess { newQuotes ->
+            reduce {
+                val updatedQuotes = state.quotes + newQuotes
+                state.copy(
+                    quotes = updatedQuotes,
+                    page = state.page + 1
+                )
+            }
         }
+    }
 }

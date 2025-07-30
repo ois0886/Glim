@@ -9,7 +9,7 @@ data class Quote(
     val publisher: Any,
     val quoteId: Long,
     val quoteImageName: String,
-    val quoteViews: Any,
+    val quoteViews: Long,
     val isLike: Boolean = false,
     val likes: Long = 0L,
 )
