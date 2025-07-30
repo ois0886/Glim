@@ -167,6 +167,10 @@ dependencies {
 
     // detekt
     detektPlugins(libs.detekt.formatting)
+
+    // MockK
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockk.android)
 }
 
 tasks.register("codeQualityCheck") {
