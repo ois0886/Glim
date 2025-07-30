@@ -45,7 +45,7 @@ internal class UpdateViewModel @Inject constructor(
             }
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
-            postSideEffect(UpdateInfoSideEffect.ShowErrorRes(R.string.error_load_profile_failed))
+            postSideEffect(UpdateInfoSideEffect.ShowError(R.string.error_load_profile_failed))
         }
     }
 
@@ -81,7 +81,8 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     fun onProfileImageClicked() = intent {
-        postSideEffect(UpdateInfoSideEffect.ShowImagePicker)
+        // TODO: 이미지 변경
+        postSideEffect(UpdateInfoSideEffect.ShowError(R.string.not_ready_function))
     }
 
     fun onCurrentPasswordChanged(password: TextFieldValue) = intent {
@@ -180,7 +181,7 @@ internal class UpdateViewModel @Inject constructor(
         reduce { state.copy(newNameError = nameError) }
 
         if (nameError != null) {
-            postSideEffect(UpdateInfoSideEffect.ShowErrorRes(nameError))
+            postSideEffect(UpdateInfoSideEffect.ShowError(nameError))
             return@intent
         }
 
@@ -205,7 +206,7 @@ internal class UpdateViewModel @Inject constructor(
             postSideEffect(UpdateInfoSideEffect.ProfileUpdated)
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
-            postSideEffect(UpdateInfoSideEffect.ShowErrorRes(R.string.error_update_profile_failed))
+            postSideEffect(UpdateInfoSideEffect.ShowError(R.string.error_update_profile_failed))
         }
     }
 
@@ -253,7 +254,7 @@ internal class UpdateViewModel @Inject constructor(
 
         if (currentPasswordError != null || newPasswordError != null || confirmError != null) {
             val firstError = currentPasswordError ?: newPasswordError ?: confirmError!!
-            postSideEffect(UpdateInfoSideEffect.ShowErrorRes(firstError))
+            postSideEffect(UpdateInfoSideEffect.ShowError(firstError))
             return@intent
         }
 
@@ -282,7 +283,7 @@ internal class UpdateViewModel @Inject constructor(
             postSideEffect(UpdateInfoSideEffect.PasswordUpdated)
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
-            postSideEffect(UpdateInfoSideEffect.ShowErrorRes(R.string.error_update_password_failed))
+            postSideEffect(UpdateInfoSideEffect.ShowError(R.string.error_update_password_failed))
         }
     }
 }

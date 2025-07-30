@@ -5,7 +5,6 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.usecase.auth.LogOutUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
 import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
-import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.navigation.UpdateInfoRoute
@@ -28,11 +27,13 @@ class ProfileViewModel @Inject constructor(
         container(initialState = ProfileUiState())
 
     fun navigateToGlimLikedList() = intent {
-        navigator.navigate(MyGlimsRoute.Liked)
+        // TODO: 글림리스트 구현
+        postSideEffect(ProfileSideEffect.ShowError(R.string.not_ready_function))
     }
 
     fun navigateToGlimUploadList() = intent {
-        navigator.navigate(MyGlimsRoute.Upload)
+        // TODO: 글림리스트 구현
+        postSideEffect(ProfileSideEffect.ShowError(R.string.not_ready_function))
     }
 
     fun navigateToEditProfile() = intent {

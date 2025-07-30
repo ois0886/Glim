@@ -65,7 +65,7 @@ internal fun UpdateRoute(
 
     viewModel.collectSideEffect { effect ->
         when (effect) {
-            is UpdateInfoSideEffect.ShowErrorRes ->
+            is UpdateInfoSideEffect.ShowError ->
                 Toast.makeText(context, context.getString(effect.messageRes), Toast.LENGTH_SHORT)
                     .show()
 

@@ -46,7 +46,7 @@ enum class UpdateType {
 }
 
 sealed interface UpdateInfoSideEffect {
-    data class ShowErrorRes(@StringRes val messageRes: Int) : UpdateInfoSideEffect
+    data class ShowError(@StringRes val messageRes: Int) : UpdateInfoSideEffect
     data object ShowImagePicker : UpdateInfoSideEffect
     data object ProfileUpdated : UpdateInfoSideEffect
     data object PasswordUpdated : UpdateInfoSideEffect
