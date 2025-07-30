@@ -130,6 +130,12 @@ internal class LoginViewModel @Inject constructor(
             navigator.navigate(Route.SignUp)
         }
 
+    fun navigateToSignUpOnGuest() =
+        intent {
+            // TODO: 비회원으로 입장하기 기능 구현
+            postSideEffect(LoginSideEffect.ShowError(R.string.not_ready_function))
+        }
+
     fun navigateToHome() =
         intent {
             navigator.navigateAndClearBackStack(BottomTabRoute.Home)
