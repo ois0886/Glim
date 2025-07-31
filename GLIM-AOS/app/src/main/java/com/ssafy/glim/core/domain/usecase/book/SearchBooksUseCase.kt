@@ -6,5 +6,9 @@ import javax.inject.Inject
 class SearchBooksUseCase @Inject constructor(
     private val bookRepository: BookRepository,
 ) {
-    suspend operator fun invoke(query: String, page: Int) = bookRepository.searchBooks(query, page)
+    suspend operator fun invoke(
+        query: String,
+        page: Int,
+        searchQueryType: String
+    ) = bookRepository.searchBooks(query, page, searchQueryType)
 }

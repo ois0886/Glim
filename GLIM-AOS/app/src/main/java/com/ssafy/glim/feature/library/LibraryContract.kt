@@ -12,6 +12,13 @@ enum class SearchMode {
     RESULT,
 }
 
+enum class SearchFilter(val filterName: String) {
+    KEYWORD("전체"),
+    TITLE("제목"),
+    AUTHOR("작가"),
+    PUBLISHER("출판사")
+}
+
 data class LibraryState(
     val searchQuery: String = "",
     val currentQuery: TextFieldValue = TextFieldValue(""),
@@ -25,6 +32,7 @@ data class LibraryState(
     val recentSearchItems: List<String> = emptyList(),
     val searchBooks: List<Book> = emptyList(),
     val searchQuotes: List<Quote> = emptyList(),
+    val selectedFilter: SearchFilter = SearchFilter.KEYWORD
 )
 
 sealed class LibrarySideEffect {

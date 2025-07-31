@@ -20,8 +20,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,6 +47,7 @@ import coil.compose.AsyncImage
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.feature.library.SearchFilter
 
 enum class SearchTab(val displayName: String) {
     BOOKS("도서"),
@@ -54,10 +60,13 @@ fun SearchResultSection(
     searchQuery: String,
     bookList: List<Book>,
     quoteList: List<Quote>,
+    selectedFilter: SearchFilter,
+    isLoading: Boolean = false,
     isRefreshing: Boolean = false,
     onLoadMore: () -> Unit = {},
     onBookClick: (Book) -> Unit = {},
     onQuoteClick: (Quote) -> Unit = {},
+    onSelectFilter: (SearchFilter) -> Unit = {}
 ) {
     var selectedTab by remember { mutableStateOf(SearchTab.BOOKS) }
 
@@ -67,45 +76,55 @@ fun SearchResultSection(
             .fillMaxSize()
             .background(Color.White),
     ) {
-        // 탭 메뉴
-//        TabRow(
-//            selectedTabIndex = selectedTab.ordinal,
-//            modifier = Modifier.padding(horizontal = 20.dp),
-//            containerColor = Color.White,
-//            contentColor = Color.Black,
-//            indicator = { tabPositions ->
-//                SecondaryIndicator(
-//                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab.ordinal]),
-//                    height = 2.dp,
-//                    color = Color.Black
-//                )
-//            },
-//            divider = {}
-//        ) {
-//            SearchTab.entries.forEach { tab ->
-//                Tab(
-//                    selected = selectedTab == tab,
-//                    onClick = { selectedTab = tab },
-//                    text = {
-//                        Text(
-//                            text = tab.displayName,
-//                            style = MaterialTheme.typography.bodyLarge,
-//                            fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Normal,
-//                            color = Color.Black
-//                        )
-//                    }
-//                )
-//            }
-//        }
-//
-//        // 탭 하단 구분선
-//        HorizontalDivider(
-//            modifier = Modifier.padding(horizontal = 20.dp),
-//            thickness = 0.5.dp,
-//            color = Color.LightGray
-//        )
-//
-//        Spacer(modifier = Modifier.height(8.dp))
+        TabRow(
+            selectedTabIndex = selectedTab.ordinal,
+            modifier = Modifier.padding(horizontal = 20.dp),
+            containerColor = Color.White,
+            contentColor = Color.Black,
+            indicator = { tabPositions ->
+                SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab.ordinal]),
+                    height = 2.dp,
+                    color = Color.Black
+                )
+            },
+            divider = {}
+        ) {
+            SearchTab.entries.forEach { tab ->
+                Tab(
+                    selected = selectedTab == tab,
+                    onClick = { selectedTab = tab },
+                    text = {
+                        Text(
+                            text = tab.displayName,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Normal,
+                            color = Color.Black
+                        )
+                    }
+                )
+            }
+        }
+
+        // 탭 하단 구분선
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 20.dp),
+            thickness = 0.5.dp,
+            color = Color.LightGray
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (isLoading && !isRefreshing) {
+            Box(modifier = modifier.padding(40.dp).fillMaxSize()) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp).align(Alignment.Center),
+                    color = MaterialTheme.colorScheme.primary,
+                    strokeWidth = 2.dp
+                )
+            }
+            return@Column
+        }
 
         // 검색 결과 헤더
         Text(
@@ -124,8 +143,11 @@ fun SearchResultSection(
                     isRefreshing = isRefreshing,
                     onLoadMore = onLoadMore,
                     onBookClick = { onBookClick(it) },
+                    onSelectFilter = { onSelectFilter(it) },
+                    selectedFilter = selectedFilter
                 )
             }
+
             SearchTab.QUOTES -> {
                 QuoteListContent(
                     quotes = quoteList,
@@ -140,71 +162,81 @@ fun SearchResultSection(
 private fun BookListContent(
     books: List<Book>,
     isRefreshing: Boolean = false,
+    selectedFilter: SearchFilter,
+    onSelectFilter: (SearchFilter) -> Unit,
     onLoadMore: () -> Unit,
     onBookClick: (Book) -> Unit,
 ) {
+    val listState = rememberLazyListState()
+    var hasRequestedMore by remember { mutableStateOf(false) }
+
+    LaunchedEffect(books.size) {
+        hasRequestedMore = false
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow {
+            listState.layoutInfo.let { layoutInfo ->
+                val totalItems = layoutInfo.totalItemsCount
+                val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                totalItems to lastVisible
+            }
+        }
+            .collect { (totalItems, lastVisible) ->
+                if (!isRefreshing &&
+                    !hasRequestedMore &&
+                    lastVisible >= (totalItems - 1)
+                ) {
+                    hasRequestedMore = true
+                    Log.d("SearchResult", "Loading more books...")
+                    onLoadMore()
+                }
+            }
+    }
+
+    SearchFilterChip(
+        modifier = Modifier.fillMaxWidth(),
+        filters = SearchFilter.entries,
+        selectedFilter = selectedFilter,
+        onFilterSelected = { onSelectFilter(it) },
+        toText = { this.filterName }
+    )
+
     if (books.isEmpty()) {
         NoSearchResult(
             message = stringResource(R.string.no_search_result),
             modifier = Modifier.fillMaxSize(),
         )
-    } else {
-        val listState = rememberLazyListState()
-        var hasRequestedMore by remember { mutableStateOf(false) }
+    }
 
-        LaunchedEffect(books.size) {
-            hasRequestedMore = false
-        }
-
-        LaunchedEffect(listState) {
-            snapshotFlow {
-                listState.layoutInfo.let { layoutInfo ->
-                    val totalItems = layoutInfo.totalItemsCount
-                    val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
-                    totalItems to lastVisible
-                }
+    LazyColumn(
+        state = listState,
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+        contentPadding = PaddingValues(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        items(books.size) { index ->
+            if (index < books.size) {
+                val book = books[index]
+                BookCard(
+                    book = book,
+                    onClick = { onBookClick(book) },
+                )
             }
-                .collect { (totalItems, lastVisible) ->
-                    if (!isRefreshing &&
-                        !hasRequestedMore &&
-                        lastVisible >= (totalItems - 1)
-                    ) {
-                        hasRequestedMore = true
-                        Log.d("SearchResult", "Loading more books...")
-                        onLoadMore()
-                    }
-                }
         }
 
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            items(books.size) { index ->
-                if (index < books.size) {
-                    val book = books[index]
-                    BookCard(
-                        book = book,
-                        onClick = { onBookClick(book) },
+        if (isRefreshing) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp
                     )
-                }
-            }
-
-            if (isRefreshing) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            strokeWidth = 2.dp
-                        )
-                    }
                 }
             }
         }

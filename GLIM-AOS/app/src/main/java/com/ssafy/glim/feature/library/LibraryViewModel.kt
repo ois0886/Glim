@@ -105,7 +105,7 @@ constructor(
                 isRefreshing = true
             )
         }
-        runCatching { searchBooksUseCase(state.searchQuery, state.currentPage) }
+        runCatching { searchBooksUseCase(state.searchQuery, state.currentPage, state.selectedFilter.name) }
             .onSuccess {
                 reduce {
                     state.copy(
@@ -174,6 +174,14 @@ constructor(
             navigator.navigate(BottomTabRoute.Reels(quote.quoteId))
         }
 
+    fun onSelectFilter(filter: SearchFilter) = intent {
+        reduce {
+            state.copy(selectedFilter = filter)
+        }
+
+        performSearch(state.currentQuery.text, filter.name)
+    }
+
     // 인기 검색어 로드
     private fun loadPopularSearchItems() =
         intent {
@@ -208,10 +216,10 @@ constructor(
         }
 
     // 검색 수행
-    private fun performSearch(query: String) =
+    private fun performSearch(query: String, searchQueryType: String = "KEYWORD") =
         intent {
             reduce { state.copy(isLoading = true) }
-            runCatching { searchBooksUseCase(query, state.currentPage) }
+            runCatching { searchBooksUseCase(query, state.currentPage, searchQueryType) }
                 .onSuccess {
                     reduce {
                         state.copy(
@@ -236,6 +244,8 @@ constructor(
                         )
                     }
                 }
+
+            reduce { state.copy(isLoading = false) }
         }
 
     fun updateSearchMode(searchMode: SearchMode) =
