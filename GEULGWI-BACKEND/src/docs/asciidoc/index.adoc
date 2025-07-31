@@ -79,15 +79,15 @@ include::{snippets}/book_api_docs_test/increase_book_view_count/http-response.ad
 
 ==== 요청
 
-include::{snippets}/quote_api_docs_test/get_quotes_order_by_condition/http-request.adoc[]
+include::{snippets}/quote_api_docs_test/get_quotes/http-request.adoc[]
 
-include::{snippets}/quote_api_docs_test/get_quotes_order_by_condition/query-parameters.adoc[]
+include::{snippets}/quote_api_docs_test/get_quotes/query-parameters.adoc[]
 
 ==== 응답
 
-include::{snippets}/quote_api_docs_test/get_quotes_order_by_condition/http-response.adoc[]
+include::{snippets}/quote_api_docs_test/get_quotes/http-response.adoc[]
 
-include::{snippets}/quote_api_docs_test/get_quotes_order_by_condition/response-fields.adoc[]
+include::{snippets}/quote_api_docs_test/get_quotes/response-fields.adoc[]
 
 === 특정 도서의 isbn으로 글귀 목록 조회
 
