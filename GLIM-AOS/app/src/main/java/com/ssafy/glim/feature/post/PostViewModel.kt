@@ -153,7 +153,7 @@ class PostViewModel @Inject constructor(
 
     fun completeClick(captureActions: CaptureActions) =
         intent {
-            if(state.isLoading) {
+            if (state.isLoading) {
                 postSideEffect(PostSideEffect.ShowToast("이미 업로드 중 입니다."))
                 return@intent
             }

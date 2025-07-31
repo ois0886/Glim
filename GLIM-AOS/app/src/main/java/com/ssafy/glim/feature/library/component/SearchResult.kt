@@ -72,9 +72,9 @@ fun SearchResultSection(
 
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .background(Color.White),
+        modifier
+            .fillMaxSize()
+            .background(Color.White),
     ) {
         TabRow(
             selectedTabIndex = selectedTab.ordinal,
@@ -167,7 +167,6 @@ private fun BookListContent(
     onLoadMore: () -> Unit,
     onBookClick: (Book) -> Unit,
 ) {
-
     val listState = rememberLazyListState()
     var hasRequestedMore by remember { mutableStateOf(false) }
 
@@ -242,7 +241,6 @@ private fun BookListContent(
             }
         }
     }
-
 }
 
 @Composable
@@ -278,9 +276,9 @@ private fun BookCard(
 ) {
     Card(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
@@ -336,9 +334,9 @@ private fun QuoteCard(
 ) {
     Card(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {

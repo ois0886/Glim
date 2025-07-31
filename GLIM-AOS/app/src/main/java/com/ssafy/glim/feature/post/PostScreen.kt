@@ -68,7 +68,6 @@ internal fun PostRoute(
         viewModel.initialize()
     }
 
-
     Box(modifier = Modifier.fillMaxSize()) {
         DarkThemeScreen {
             PostContent(
@@ -94,7 +93,7 @@ internal fun PostRoute(
             )
         }
 
-        if(state.isLoading) {
+        if (state.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.size(52.dp).align(Alignment.Center)
             )

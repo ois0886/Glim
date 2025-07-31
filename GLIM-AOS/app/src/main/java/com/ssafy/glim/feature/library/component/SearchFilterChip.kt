@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun <T>SearchFilterChip(
+fun <T> SearchFilterChip(
     modifier: Modifier = Modifier,
     filters: List<T>,
     selectedFilter: T,
@@ -67,7 +67,9 @@ private fun FilterChip(
         },
         border = if (!isSelected) {
             BorderStroke(1.dp, Color(0xffE0E0E0))
-        } else null,
+        } else {
+            null
+        },
         shadowElevation = if (isSelected) 4.dp else 0.dp,
     ) {
         Text(

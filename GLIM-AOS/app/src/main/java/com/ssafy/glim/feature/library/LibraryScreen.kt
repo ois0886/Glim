@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -13,12 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -26,7 +23,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -81,11 +77,11 @@ fun LibraryRoute(
 
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .systemBarsPadding()
-                .imePadding(),
+        modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .systemBarsPadding()
+            .imePadding(),
     ) {
         if (state.searchMode == SearchMode.POPULAR) {
             Column(
@@ -121,46 +117,46 @@ fun LibraryRoute(
                 )
             },
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 8.dp)
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused && state.searchMode == SearchMode.POPULAR) {
-                            viewModel.updateSearchMode(SearchMode.RECENT)
-                        }
-                    },
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 8.dp)
+                .onFocusChanged { focusState ->
+                    if (focusState.isFocused && state.searchMode == SearchMode.POPULAR) {
+                        viewModel.updateSearchMode(SearchMode.RECENT)
+                    }
+                },
             shape = RoundedCornerShape(8.dp),
             colors =
-                OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black,
-                    focusedBorderColor = Color.LightGray,
-                    unfocusedBorderColor = Color.LightGray,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                ),
+            OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
+                focusedBorderColor = Color.LightGray,
+                unfocusedBorderColor = Color.LightGray,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+            ),
             singleLine = true,
             suffix = {
                 Icon(
                     painter = painterResource(R.drawable.ic_search),
                     contentDescription = null,
                     modifier =
-                        Modifier.clickable {
-                            viewModel.onSearchExecuted()
-                        },
+                    Modifier.clickable {
+                        viewModel.onSearchExecuted()
+                    },
                     tint = Color.Black
                 )
             },
             keyboardOptions =
-                KeyboardOptions(
-                    imeAction = ImeAction.Search,
-                ),
+            KeyboardOptions(
+                imeAction = ImeAction.Search,
+            ),
             keyboardActions =
-                KeyboardActions(
-                    onSearch = {
-                        viewModel.onSearchExecuted()
-                    },
-                ),
+            KeyboardActions(
+                onSearch = {
+                    viewModel.onSearchExecuted()
+                },
+            ),
         )
 
         when (state.searchMode) {
@@ -216,7 +212,6 @@ fun LibraryRoute(
                     selectedFilter = state.selectedFilter,
                     onSelectFilter = viewModel::onSelectFilter,
                 )
-
             }
         }
     }
