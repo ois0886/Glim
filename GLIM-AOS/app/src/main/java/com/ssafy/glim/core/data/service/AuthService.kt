@@ -6,7 +6,6 @@ import com.ssafy.glim.core.data.dto.request.VerifyEmailRequest
 import com.ssafy.glim.core.data.dto.response.SignUpResponse
 import com.ssafy.glim.core.data.dto.response.VerifyEmailResponse
 import com.ssafy.glim.core.data.dto.token.AuthToken
-import com.ssafy.glim.core.data.dto.token.AuthTokenRefresh
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -30,7 +29,7 @@ interface AuthService {
     @POST("api/v1/auth/refresh")
     fun refreshToken(
         @Header("Authorization") refreshToken: String
-    ): Response<AuthTokenRefresh>
+    ): Response<AuthToken>
 
     // 이메일 인증
     @POST("api/v1/auth/email-verification-code")

@@ -1,7 +1,7 @@
 package com.ssafy.glim.core.data.authmanager
 
 import android.util.Log
-import com.ssafy.glim.core.data.dto.token.AuthTokenRefresh
+import com.ssafy.glim.core.data.dto.token.AuthToken
 import com.ssafy.glim.core.data.service.AuthService
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -303,7 +303,7 @@ class TokenAuthenticator @Inject constructor(
 
     // 토큰 갱신 결과를 나타내는 sealed class
     private sealed class RefreshResult {
-        data class Success(val tokenData: AuthTokenRefresh) : RefreshResult()
+        data class Success(val tokenData: AuthToken) : RefreshResult()
         data class Failure(val error: String) : RefreshResult()
     }
 }
