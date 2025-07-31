@@ -133,6 +133,7 @@ dependencies {
     implementation(libs.orbit.compose)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.lifecycle.process)
     testImplementation(libs.orbit.test)
 
     // Kotlin Serialization & Immutable Collections
