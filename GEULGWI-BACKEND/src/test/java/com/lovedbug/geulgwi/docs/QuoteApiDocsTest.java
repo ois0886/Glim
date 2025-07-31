@@ -79,21 +79,8 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
         Book book = createBook();
         bookRepository.save(book);
 
-        Quote quote1 = Quote.builder()
-            .content("첫번째 글귀")
-            .views(5)
-            .page(10)
-            .book(book)
-            .memberId(42L)
-            .build();
-
-        Quote quote2 = Quote.builder()
-            .content("두번째 글귀")
-            .views(3)
-            .page(20)
-            .book(book)
-            .memberId(42L)
-            .build();
+        Quote quote1 = createQuote(book);
+        Quote quote2 = createQuote(book);
 
         quoteRepository.saveAll(List.of(quote1, quote2));
 
@@ -121,14 +108,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
         Book book = createBook();
         bookRepository.save(book);
 
-        Quote quote = Quote.builder()
-            .imagePath("/root")
-            .imageName("image.jpg")
-            .views(10)
-            .memberId(1L)
-            .book(book)
-            .build();
-
+        Quote quote = createQuote(book);
         quoteRepository.save(quote);
 
         given(this.spec)
@@ -164,15 +144,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
     @Test
     void create_quote() throws Exception {
 
-        Member member = Member.builder()
-            .email("hong@naver.com")
-            .nickname("홍홍홍")
-            .password("pass")
-            .status(MemberStatus.ACTIVE)
-            .role(MemberRole.USER)
-            .gender(MemberGender.MALE)
-            .build();
-
+        Member member = createMember();
         member = memberRepository.save(member);
 
         String accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getMemberId());
@@ -203,15 +175,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
         Book book = createBook();
         bookRepository.save(book);
 
-        Quote quote = Quote.builder()
-            .imagePath("/root")
-            .imageName("image.jpg")
-            .views(10)
-            .page(12)
-            .memberId(1L)
-            .book(book)
-            .build();
-
+        Quote quote = createQuote(book);
         quote = quoteRepository.save(quote);
 
         given(this.spec)
@@ -224,6 +188,46 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
             .patch("/api/v1/quotes/{id}/views", quote.getQuoteId())
             .then().log().all()
             .statusCode(204);
+    }
+
+    @DisplayName("내용으로 글귀를 검색한다")
+    @Test
+    void search_quotes_by_content() {
+        Book book = createBook();
+        bookRepository.save(book);
+
+        Quote quote = createQuote(book);
+        quoteRepository.save(quote);
+
+        String contentKeyword = "글귀";
+
+        given(this.spec)
+            .param("content", contentKeyword)
+            .param("page", 0)
+            .param("size", 10)
+            .filter(document("{class-name}/{method-name}",
+                queryParameters(
+                    parameterWithName("content").description("검색할 글귀 내용 키워드"),
+                    parameterWithName("page").description("페이지 번호 (0부터 시작)").optional(),
+                    parameterWithName("size").description("페이지 크기").optional()
+                ),
+                responseFields(
+                    fieldWithPath("currentPage").description("현재 페이지 번호"),
+                    fieldWithPath("totalPages").description("총 페이지 수"),
+                    fieldWithPath("totalResults").description("검색된 전체 결과 수"),
+                    fieldWithPath("contents[].quoteId").description("글귀 ID"),
+                    fieldWithPath("contents[].bookTitle").description("책 제목"),
+                    fieldWithPath("contents[].content").description("글귀 내용"),
+                    fieldWithPath("contents[].views").description("글귀 조회수"),
+                    fieldWithPath("contents[].page").description("글귀가 등장하는 책 페이지"),
+                    fieldWithPath("contents[].likes").description("글귀 좋아요 수"),
+                    fieldWithPath("contents[].isliked").description("현재 로그인한 사용자가 좋아요를 눌렀는지 여부")
+                )
+            ))
+            .when()
+            .get("/api/v1/quotes/by-content")
+            .then().log().all()
+            .statusCode(200);
     }
 
     static BookCreateRequest createBookCreateDto() {
@@ -259,6 +263,29 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
             .author("작가 : 김작가")
             .isbn("1234567890")
             .coverUrl("/aladdin/image.jpg")
+            .build();
+    }
+
+    static Quote createQuote(Book book) {
+        return Quote.builder()
+            .imagePath("/root")
+            .imageName("image.jpg")
+            .content("너무 좋은 글귀에용")
+            .views(10)
+            .page(12)
+            .memberId(1L)
+            .book(book)
+            .build();
+    }
+
+    static Member createMember() {
+        return Member.builder()
+            .email("hong@naver.com")
+            .nickname("홍홍홍")
+            .password("pass")
+            .status(MemberStatus.ACTIVE)
+            .role(MemberRole.USER)
+            .gender(MemberGender.MALE)
             .build();
     }
 }
