@@ -2,6 +2,7 @@ package com.lovedbug.geulgwi.core.domain.quote.entity;
 
 import com.lovedbug.geulgwi.core.common.entity.BaseTimeEntity;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
+import com.lovedbug.geulgwi.core.domain.like.entity.MemberLikeQuote;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

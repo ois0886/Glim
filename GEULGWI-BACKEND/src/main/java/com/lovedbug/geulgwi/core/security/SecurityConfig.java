@@ -46,6 +46,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/api/v1/quotes").authenticated()
                     .requestMatchers(HttpMethod.PUT, "/api/v1/members/**").authenticated()
                     .requestMatchers(HttpMethod.PATCH, "/api/v1/members/**").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/api/v1/likes/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/api/v1/likes/**").authenticated()
                     .anyRequest().permitAll()
                   )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -13,12 +13,17 @@ public class QuoteResponse {
     private Integer views;
     private Integer page;
 
-    public static QuoteResponse toResponseDto(Quote quote){
+    private boolean isLiked;
+    private Long likeCount;
+
+    public static QuoteResponse toResponseDto(Quote quote, boolean isLiked, long likeCounts){
         return QuoteResponse.builder()
             .quoteId(quote.getQuoteId())
             .content(quote.getContent())
             .views(quote.getViews())
             .page(quote.getPage())
+            .isLiked(isLiked)
+            .likeCount(likeCounts)
             .build();
     }
 }

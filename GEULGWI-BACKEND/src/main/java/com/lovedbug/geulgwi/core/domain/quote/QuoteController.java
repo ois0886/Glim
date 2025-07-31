@@ -24,15 +24,22 @@ public class QuoteController {
 
     @GetMapping("")
     public ResponseEntity<List<QuoteWithBookResponse>> getQuotes(
+        @CurrentUser AuthenticatedUser user,
         @PageableDefault(size = 10, sort = "views", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return ResponseEntity.ok(quoteService.getQuotesByRandom(pageable));
+        Long memberId = (user != null) ? user.getMemberId() : null;
+
+
+        return ResponseEntity.ok(quoteService.getQuotesByRandom(pageable, memberId));
     }
 
     @GetMapping("/{isbn}")
-    public ResponseEntity<List<QuoteResponse>> getQuotesByIsbn(@PathVariable String isbn) {
+    public ResponseEntity<List<QuoteResponse>> getQuotesByIsbn(@CurrentUser AuthenticatedUser user,
+                                                               @PathVariable String isbn) {
 
-        return ResponseEntity.ok(quoteService.getPublicQuotesByIsbn(isbn));
+        Long memberId = (user != null) ? user.getMemberId() : null;
+
+        return ResponseEntity.ok(quoteService.getPublicQuotesByIsbn(isbn, memberId));
     }
 
     @PostMapping("")
