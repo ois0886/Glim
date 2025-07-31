@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class GeulgwiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(GeulgwiApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GeulgwiApplication.class, args);
+    }
 }

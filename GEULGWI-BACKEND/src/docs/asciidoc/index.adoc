@@ -238,3 +238,18 @@ include::{snippets}/auth_api_docs_test/refresh_token_test/http-request.adoc[]
 include::{snippets}/auth_api_docs_test/refresh_token_test/http-response.adoc[]
 
 include::{snippets}/auth_api_docs_test/refresh_token_test/response-fields.adoc[]
+
+
+== Admin API
+
+=== Admin 메인 큐레이션 조회
+
+==== 요청
+
+include::{snippets}/admin_api_docs_test/get_main_curation/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_api_docs_test/get_main_curation/http-response.adoc[]
+
+include::{snippets}/admin_api_docs_test/get_main_curation/response-fields.adoc[]

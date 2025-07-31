@@ -49,6 +49,14 @@ public class QuoteService {
             .collect(Collectors.toList());
     }
 
+    public List<QuoteWithBookResponse> getQuotesByRandom(Pageable pageable) {
+        List<Quote> quotes = quoteRepository.findPublicQuotesByRandom(pageable);
+
+        return quotes.stream()
+            .map(QuoteService::toDto)
+            .toList();
+    }
+
     @Transactional
     public void increaseViewCount(Long quoteId) {
         Quote quote = quoteRepository.findById(quoteId)
@@ -98,5 +106,4 @@ public class QuoteService {
             .bookCoverUrl(quote.getBook().getCoverUrl())
             .build();
     }
-
 }
