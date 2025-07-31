@@ -5,7 +5,7 @@
  */
 "use client"
 
-import { Users, FileText, BarChart3, PieChart, Star, BookOpen } from "lucide-react"
+import { Users, FileText, BarChart3, PieChart, Star } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -40,7 +40,7 @@ const menuItems = [
   },
   {
     id: "posts",
-    title: "게시물 관리",
+    title: "글귀 관리",
     icon: FileText,
   },
   {
@@ -70,7 +70,7 @@ export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps)
     <Sidebar>
       <SidebarHeader className="border-b p-4">
         <div className="flex items-center gap-2">
-          <BookOpen className="h-6 w-6" />
+          
           <span className="text-lg font-semibold">글:림 Admin</span>
         </div>
       </SidebarHeader>
