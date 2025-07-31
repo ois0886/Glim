@@ -63,29 +63,28 @@ class MainActivity : ComponentActivity() {
             val navigator: MainNavController = rememberMainNavController()
             LaunchedNavigator(navigator.navController)
             val initialRoute = intent.getStringExtra("nav_route")
-
-            LaunchedEffect(initialRoute) {
-                if (initialRoute == "book") {
-                    val isbn = intent.getStringExtra("isbn") ?: ""
-                    navigator.navController.navigate(Route.BookDetail(isbn)) {
-                        popUpTo(navigator.startDestination) {
-                            inclusive = true
-                        }
-                        launchSingleTop = true
-                    }
-                } else if (initialRoute == "glim") {
-                    val quoteId = intent.getLongExtra("quote_id", -1L)
-                    navigator.clearBackStackAndNavigate(BottomTabRoute.Reels(quoteId))
-                }
-            }
-
             MyApplicationTheme {
                 if (!isLoading) {
                     MainScreen(
                         navigator = navigator,
                     )
+                    LaunchedEffect(initialRoute) {
+                        if (initialRoute == "book") {
+                            val isbn = intent.getStringExtra("isbn") ?: ""
+                            navigator.navController.navigate(Route.BookDetail(isbn)) {
+                                popUpTo(navigator.startDestination) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        } else if (initialRoute == "glim") {
+                            val quoteId = intent.getLongExtra("quote_id", -1L)
+                            navigator.clearBackStackAndNavigate(BottomTabRoute.Reels(quoteId))
+                        }
+                    }
                 }
             }
+
         }
     }
 

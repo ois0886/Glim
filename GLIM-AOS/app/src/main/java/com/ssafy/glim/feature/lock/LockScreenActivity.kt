@@ -54,6 +54,7 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
+import com.ssafy.glim.core.ui.GlimErrorLoader
 import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
 import com.ssafy.glim.feature.lock.component.SwipeButton
 import com.ssafy.glim.feature.lock.component.SwipeDirection
@@ -68,8 +69,12 @@ import java.time.format.DateTimeFormatter
 @AndroidEntryPoint
 @SuppressLint("SourceLockedOrientationActivity")
 class LockScreenActivity : ComponentActivity() {
+    private var launchMainAfterUnlock = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        launchMainAfterUnlock = intent
+            .getBooleanExtra("launch_main_after_unlock", false)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
@@ -99,7 +104,17 @@ class LockScreenActivity : ComponentActivity() {
 
                 viewModel.collectSideEffect { effect ->
                     when (effect) {
-                        is LockSideEffect.Unlock -> finish()
+                        is LockSideEffect.Unlock -> {
+                            if (launchMainAfterUnlock) {
+                                startActivity(
+                                    Intent(this, MainActivity::class.java).apply {
+                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                                            Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                    }
+                                )
+                            }
+                            finish()
+                        }
                         is LockSideEffect.ShowToast -> Toast.makeText(
                             this,
                             this.getString(effect.messageRes),
@@ -202,12 +217,7 @@ fun LockScreenContent(
                 imageUrl = "${BuildConfig.BASE_URL}/images/${currentQuote.quoteImageName}"
             )
         } else {
-            Image(
-                painter = painterResource(R.drawable.example_glim_2),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-            )
+            GlimErrorLoader(Modifier)
         }
 
         Row(
