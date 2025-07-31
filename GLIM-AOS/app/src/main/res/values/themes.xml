@@ -11,4 +11,12 @@
         <!-- 기본 배경(월페이퍼) 보여주지 않음 -->
         <item name="android:windowShowWallpaper">false</item>
     </style>
+
+    <!-- 스플래쉬 테마 추가 -->
+    <style name="Theme.MyApplication.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.MyApplication</item>
+    </style>
+
 </resources>

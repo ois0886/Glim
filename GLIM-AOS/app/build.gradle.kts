@@ -117,6 +117,7 @@ dependencies {
     implementation(libs.material3)
 
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.androidx.core.splashscreen)
 
     // Coil
     implementation(libs.coil.compose)

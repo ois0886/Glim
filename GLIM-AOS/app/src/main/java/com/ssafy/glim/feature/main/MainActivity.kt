@@ -9,7 +9,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.LaunchedNavigator
 import com.ssafy.glim.core.navigation.Route
@@ -39,14 +43,22 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var lockServiceManager: LockServiceManager
 
+    private var isLoading by mutableStateOf(true)
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
         if (PermissionUtil.alertPermissionCheck(this)) {
             PermissionUtil.onObtainingPermissionOverlayWindow(this)
         }
         enableEdgeToEdge()
 
-        startLockService()
+        // 초기화 작업
+        performInitialization()
+
+        // 로딩 상태에 따라 스플래쉬 화면 제어
+        splashScreen.setKeepOnScreenCondition { isLoading }
 
         setContent {
             val navigator: MainNavController = rememberMainNavController()
@@ -69,11 +81,29 @@ class MainActivity : ComponentActivity() {
             }
 
             MyApplicationTheme {
-                MainScreen(
-                    navigator = navigator,
-                )
+                if (!isLoading) {
+                    MainScreen(
+                        navigator = navigator,
+                    )
+                }
             }
         }
+    }
+
+    private fun performInitialization() {
+        Thread {
+            try {
+                startLockService()
+                // 최소 표시 시간 (선택사항)
+                Thread.sleep(1500)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                runOnUiThread {
+                    isLoading = false
+                }
+            }
+        }.start()
     }
 
     private fun startLockService() {
