@@ -1,6 +1,7 @@
 package com.lovedbug.geulgwi.core.domain.quote;
 
 import java.util.List;
+import java.util.Optional;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +26,6 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
     @Query("SELECT q FROM Quote q JOIN FETCH q.book WHERE q.visibility = 'PUBLIC' ORDER BY function('random')")
     List<Quote> findPublicQuotesByRandom(Pageable pageable);
 
+    @EntityGraph(attributePaths = {"book", "likes"})
+    Optional<Quote> findByQuoteIdAndVisibility(Long quoteId, String visibility);
 }
