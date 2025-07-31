@@ -21,7 +21,6 @@ object ScreenReceiver : BroadcastReceiver() {
         context.startActivity(
             Intent(context, LockScreenActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
             },
         )
