@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,6 +45,9 @@ public class Quote extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id",  nullable = false, updatable = false)
     private Book book;
+
+    @OneToMany(mappedBy = "quote", fetch = FetchType.LAZY)
+    private List<MemberLikeQuote> likes;
 
     @Column(nullable = false)
     private Long memberId;
