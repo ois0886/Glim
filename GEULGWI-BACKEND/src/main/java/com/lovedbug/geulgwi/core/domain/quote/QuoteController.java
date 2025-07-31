@@ -64,8 +64,11 @@ public class QuoteController {
     }
 
     @GetMapping("/by-content")
-    public ResponseEntity<QuoteSearchResponse> searchQuotesByContent(@RequestParam("content") String content, Pageable pageable) {
+    public ResponseEntity<QuoteSearchResponse> searchQuotesByContent(
+        @CurrentUser AuthenticatedUser user, @RequestParam("content") String content, Pageable pageable) {
 
-        return ResponseEntity.ok(quoteService.searchQuotesByContent(content, pageable));
+        Long memberId = (user != null) ? user.getMemberId() : null;
+
+        return ResponseEntity.ok(quoteService.searchQuotesByContent(memberId, content, pageable));
     }
 }

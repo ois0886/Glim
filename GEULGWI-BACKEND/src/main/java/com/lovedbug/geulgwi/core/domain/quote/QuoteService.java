@@ -107,14 +107,11 @@ public class QuoteService {
         quoteRepository.save(QuoteCreateRequest.toEntity(quoteData, book, imageMetaData));
     }
 
-    public QuoteSearchResponse searchQuotesByContent(String content, Pageable pageable) {
+    public QuoteSearchResponse searchQuotesByContent(Long memberId, String content, Pageable pageable) {
         Page<Quote> quotes = quoteRepository.findByContentContainingAndVisibility(
             content, Visibility.PUBLIC.name(), pageable);
 
-        // TODO : 사용자 id로 변경
-        long tempUserId = 0;
-
-        return QuoteMapper.toQuoteSearchResponse(quotes, tempUserId);
+        return QuoteMapper.toQuoteSearchResponse(quotes, memberId);
     }
 
     public List<QuoteWithBookResponse> getPopularQuotesWithBook() {
