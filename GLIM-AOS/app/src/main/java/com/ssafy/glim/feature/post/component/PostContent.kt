@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.post.component
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -128,7 +127,7 @@ fun PostContent(
             onBackgroundImageButtonClick = onBackgroundImageClick,
             onCreateTextClick = onTextFocusChanged,
             onCompleteClick = onCompleteClick,
-            clearFocus = {focusManager.clearFocus()},
+            clearFocus = { focusManager.clearFocus() },
             graphicsLayer = imageGraphicsLayer,
             modifier = Modifier.align(Alignment.BottomEnd),
         )

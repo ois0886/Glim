@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -13,12 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -26,7 +23,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -198,31 +194,24 @@ fun LibraryRoute(
 
             SearchMode.RESULT -> {
                 Spacer(modifier = Modifier.height(8.dp))
-                if (state.isLoading && !state.isRefreshing) {
-                    Box(modifier = modifier.padding(40.dp).fillMaxWidth()) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp).align(Alignment.Center),
-                            color = MaterialTheme.colorScheme.primary,
-                            strokeWidth = 2.dp
-                        )
-                    }
-                } else {
-                    SearchResultSection(
-                        searchQuery = state.searchQuery,
-                        bookList = state.searchBooks,
-                        quoteList = state.searchQuotes,
-                        isRefreshing = state.isRefreshing,
-                        onLoadMore = { viewModel.loadMoreBooks() },
-                        onBookClick = {
-                            if (onBookSelected == null) {
-                                viewModel.onBookClicked(it)
-                            } else {
-                                onBookSelected(it)
-                            }
-                        },
-                        onQuoteClick = { viewModel.onQuoteClicked(it) },
-                    )
-                }
+                SearchResultSection(
+                    searchQuery = state.searchQuery,
+                    bookList = state.searchBooks,
+                    quoteList = state.searchQuotes,
+                    isLoading = state.isLoading,
+                    isRefreshing = state.isRefreshing,
+                    onLoadMore = { viewModel.loadMoreBooks() },
+                    onBookClick = {
+                        if (onBookSelected == null) {
+                            viewModel.onBookClicked(it)
+                        } else {
+                            onBookSelected(it)
+                        }
+                    },
+                    onQuoteClick = { viewModel.onQuoteClicked(it) },
+                    selectedFilter = state.selectedFilter,
+                    onSelectFilter = viewModel::onSelectFilter,
+                )
             }
         }
     }
