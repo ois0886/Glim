@@ -87,7 +87,7 @@ internal fun LoginScreen(
         modifier =
         Modifier
             .fillMaxSize()
-            .padding(padding.excludeSystemBars())
+            .padding(padding)
             .imePadding()
             .navigationBarsPadding()
     ) {

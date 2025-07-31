@@ -11,6 +11,9 @@ sealed interface Route {
 
     @Serializable
     data class BookDetail(val isbn: String? = null, val bookId: Long? = null) : BottomTabRoute
+
+    @Serializable
+    data class Celebration(val nickname: String) : Route
 }
 
 sealed interface MyGlimsRoute : Route {

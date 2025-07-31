@@ -11,4 +11,12 @@
         <!-- 기본 배경(월페이퍼) 보여주지 않음 -->
         <item name="android:windowShowWallpaper">false</item>
     </style>
+
+    <!-- 이렇게 해야 됨 -->
+    <style name="Theme.MyApplication.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/neural10</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash</item>
+        <item name="postSplashScreenTheme">@style/Theme.MyApplication</item>
+    </style>
+
 </resources>

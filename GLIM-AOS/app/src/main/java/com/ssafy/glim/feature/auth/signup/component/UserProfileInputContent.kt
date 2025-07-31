@@ -31,8 +31,8 @@ fun UserProfileInputContent(
     name: TextFieldValue,
     onNameChange: (TextFieldValue) -> Unit,
     nameError: String? = null,
-    birthYear: String,
-    onBirthYearChange: (String) -> Unit,
+    birthYear: TextFieldValue,
+    onBirthYearChange: (TextFieldValue) -> Unit,
     birthYearError: String? = null,
     selectedGender: String?,
     onGenderSelect: (String) -> Unit,
@@ -135,7 +135,7 @@ fun UserProfileInputContent(
 @Composable
 fun UserProfileInputContentPreview() {
     var name by remember { mutableStateOf(TextFieldValue("")) }
-    var birthYear by remember { mutableStateOf("") }
+    var birthYear by remember { mutableStateOf(TextFieldValue("")) }
     var gender by remember { mutableStateOf<String?>(null) }
 
     UserProfileInputContent(
@@ -157,7 +157,7 @@ fun UserProfileInputContentPreviewWithErrors() {
         name = TextFieldValue("A"),
         onNameChange = {},
         nameError = "이름은 2~16자로 입력해주세요.",
-        birthYear = "202",
+        birthYear = TextFieldValue("202"),
         onBirthYearChange = {},
         birthYearError = "4자리 숫자로 입력해주세요.",
         selectedGender = null,
