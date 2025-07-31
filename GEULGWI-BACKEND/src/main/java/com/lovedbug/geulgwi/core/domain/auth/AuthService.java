@@ -60,9 +60,9 @@ public class AuthService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "존재하지 않는 사용자입니다."));
 
         String newAccessToken = jwtUtil.generateAccessToken(email, member.getMemberId());
-        jwtUtil.generateRefreshToken(email, member.getMemberId());
+        String newRefreshToken =  jwtUtil.generateRefreshToken(email, member.getMemberId());
 
-        return toJwtResponse(newAccessToken, null, email, member.getMemberId());
+        return toJwtResponse(newAccessToken, newRefreshToken, email, member.getMemberId());
     }
 
     private String extractTokenFromHeader(String authHeader){

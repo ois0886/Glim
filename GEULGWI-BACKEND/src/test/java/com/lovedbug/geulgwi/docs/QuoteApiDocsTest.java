@@ -68,6 +68,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
         jdbcTemplate.execute("TRUNCATE TABLE quote");
         jdbcTemplate.execute("TRUNCATE TABLE book");
         jdbcTemplate.execute("TRUNCATE TABLE member");
+        jdbcTemplate.execute("TRUNCATE TABLE member_like_quote");
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
 
         entityManager.clear();
@@ -93,7 +94,10 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("[].quoteId").description("글귀 ID"),
                     fieldWithPath("[].content").description("글귀 내용"),
                     fieldWithPath("[].views").description("조회수"),
-                    fieldWithPath("[].page").description("도서 내 페이지 번호")
+                    fieldWithPath("[].page").description("도서 내 페이지 번호"),
+                    fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
+                    fieldWithPath("[].liked").description("사용자 좋아요 여부")
+
                 )
                 ))
             .when()
@@ -131,7 +135,10 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("[].bookTitle").description("책 제목"),
                     fieldWithPath("[].author").description("책 저자"),
                     fieldWithPath("[].publisher").description("출판사"),
-                    fieldWithPath("[].bookCoverUrl").description("책 표지 URL")
+                    fieldWithPath("[].bookCoverUrl").description("책 표지 URL"),
+                    fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
+                    fieldWithPath("[].liked").description("사용자 글귀 좋아요 여부")
+
                 )
             ))
             .when()

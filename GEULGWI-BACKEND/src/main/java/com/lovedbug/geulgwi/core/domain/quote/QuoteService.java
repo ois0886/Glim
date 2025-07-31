@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.core.domain.quote;
 
+import com.lovedbug.geulgwi.core.domain.like.MemberLikeQuoteService;
 import com.lovedbug.geulgwi.core.domain.quote.constant.Visibility;
 import com.lovedbug.geulgwi.core.domain.quote.dto.request.QuoteCreateRequest;
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteResponse;
@@ -32,20 +33,51 @@ public class QuoteService {
     private final QuoteRepository quoteRepository;
     private final BookRepository bookRepository;
     private final ImageHandler imageHandler;
+    private final MemberLikeQuoteService memberLikeQuoteService;
 
-    public List<QuoteWithBookResponse> getQuotes(Pageable pageable) {
+    public List<QuoteWithBookResponse> getQuotes(Pageable pageable, Long memberId) {
         List<Quote> quotes = quoteRepository.findPublicQuotes(pageable);
+
+        return quotes.stream()
+            .map(quote -> {
+                boolean isLiked = (memberId != null) && memberLikeQuoteService.isLikedBy(memberId, quote.getQuoteId());
+                long likeCount = memberLikeQuoteService.countLikes(quote.getQuoteId());
+
+                return QuoteWithBookResponse.builder()
+                    .quoteId(quote.getQuoteId())
+                    .quoteImageName(quote.getImageName())
+                    .page(quote.getPage())
+                    .bookId(quote.getBook().getBookId())
+                    .bookTitle(quote.getBook().getTitle())
+                    .author(quote.getBook().getAuthor())
+                    .publisher(quote.getBook().getPublisher())
+                    .bookCoverUrl(quote.getBook().getCoverUrl())
+                    .isLiked(isLiked)
+                    .likeCount(likeCount)
+                    .build();
+            })
+            .collect(Collectors.toList());
+    }
+
+    public List<QuoteWithBookResponse> getQuotesByRandom(Pageable pageable, Long memberId) {
+        List<Quote> quotes = quoteRepository.findPublicQuotesByRandom(pageable);
 
         return quotes.stream()
             .map(QuoteService::toDto)
             .toList();
     }
 
-    public List<QuoteResponse> getPublicQuotesByIsbn(String isbn) {
-        List<Quote> quotes = quoteRepository.findAllByBookIsbnAndVisibility(isbn, Visibility.PUBLIC.name());
+    public List<QuoteResponse> getPublicQuotesByIsbn(String isbn, Long memberId){
+
+        List<Quote> quotes = quoteRepository.findAllByBookIsbnAndVisibility(isbn, "PUBLIC");
 
         return quotes.stream()
-            .map(QuoteResponse::toResponseDto)
+            .map(quote -> {
+                boolean isLiked = (memberId != null) && memberLikeQuoteService.isLikedBy(memberId, quote.getQuoteId());
+                long likeCount = memberLikeQuoteService.countLikes(quote.getQuoteId());
+
+                return QuoteResponse.toResponseDto(quote, isLiked, likeCount);
+            })
             .collect(Collectors.toList());
     }
 

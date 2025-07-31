@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.time.LocalDateTime;
+
 import static com.lovedbug.geulgwi.core.security.JwtUtil.HEADER_AUTH;
 import static com.lovedbug.geulgwi.core.security.JwtUtil.TOKEN_PREFIX;
 import static org.mockito.ArgumentMatchers.any;
@@ -120,10 +121,11 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
             .header(HEADER_AUTH, TOKEN_PREFIX + refreshToken)
             .filter(document("{class_name}/{method_name}",
                 requestHeaders(
-                    headerWithName(HEADER_AUTH).description("Bearer 리프레시 토큰")
+                    headerWithName(HEADER_AUTH).description("로그인한 사용자의 리프레시 토큰")
                 ),
                 responseFields(
                     fieldWithPath("accessToken").description("새로 발급된 액세스 토큰"),
+                    fieldWithPath("refreshToken").description("새로 발급된 리프레쉬 토큰"),
                     fieldWithPath("memberEmail").description("토큰 소유자 이메일"),
                     fieldWithPath("memberId").description("토큰 소유자 ID")
                 )
