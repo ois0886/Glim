@@ -16,8 +16,8 @@ fun QuoteResponse.toDomain() =
         quoteId = quoteId,
         quoteImageName = quoteImageName,
         quoteViews = quoteViews,
-        likes = likes,
-        isLike = isLike
+        likes = likeCount,
+        isLike = liked
     )
 
 fun QuoteSummaryResponse.toDomain() =

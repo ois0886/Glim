@@ -272,10 +272,12 @@ constructor(
                     reduce {
                         state.copy(
                             searchQuotes = it.quoteSummaries,
+                            totalResults = it.totalResults,
                             isLoading = false,
                             error = null
                         )
                     }
+                    Log.d("LibraryViewModel like", "${it.quoteSummaries.map{it.isLiked}}")
                 }
 
             reduce { state.copy(isLoading = false) }

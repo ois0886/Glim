@@ -24,7 +24,7 @@ interface QuoteService {
         @Query("sort") sort: String,
     ): List<QuoteResponse>
 
-    @GET("api/v1/quotes/{isbn}")
+    @GET("api/v1/quotes/book/{isbn}")
     suspend fun getQuoteByIsbn(
         @Path("isbn") isbn: String
     ): List<QuoteSummaryResponse>

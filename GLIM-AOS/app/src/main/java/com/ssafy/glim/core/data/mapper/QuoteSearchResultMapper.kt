@@ -21,6 +21,6 @@ private fun Content.toDomain(): QuoteSummary {
         views = this.views,
         bookTitle = this.bookTitle,
         likes = this.likes,
-        isLiked = this.isLiked
+        isLiked = this.isliked
     )
 }

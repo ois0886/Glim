@@ -62,6 +62,7 @@ enum class SearchTab(val displayName: String) {
 fun SearchResultSection(
     modifier: Modifier = Modifier,
     searchQuery: String,
+    totalResults: Int,
     selectedTab: SearchTab,
     bookList: List<Book>,
     quoteList: List<QuoteSummary>,
@@ -138,7 +139,7 @@ fun SearchResultSection(
 
         // 검색 결과 헤더
         Text(
-            text = "'$searchQuery' 검색 결과 ${if (selectedTab == SearchTab.BOOKS) "${bookList.size}건" else "${quoteList.size}건"}",
+            text = "'$searchQuery' 검색 결과 ${if (selectedTab == SearchTab.BOOKS) "${bookList.size}건" else "${totalResults}건"}",
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Normal,
             color = Color.Black,
@@ -435,6 +436,7 @@ private fun QuoteCard(
                 )
 
                 Row(
+                    modifier = Modifier.padding(start = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {

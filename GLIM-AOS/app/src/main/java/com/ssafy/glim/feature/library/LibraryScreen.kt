@@ -81,8 +81,7 @@ fun LibraryRoute(
         modifier
             .fillMaxSize()
             .background(Color.White)
-            .systemBarsPadding()
-            .imePadding(),
+            .padding(padding)
     ) {
         if (state.searchMode == SearchMode.POPULAR) {
             Column(
@@ -199,6 +198,7 @@ fun LibraryRoute(
                     searchQuery = state.searchQuery,
                     bookList = state.searchBooks,
                     quoteList = state.searchQuotes,
+                    totalResults = state.totalResults,
                     isLoading = state.isLoading,
                     isRefreshing = state.isRefreshing,
                     selectedTab = state.selectedTab,

@@ -22,6 +22,7 @@ enum class SearchFilter(val filterName: String) {
 data class LibraryState(
     val searchQuery: String = "",
     val currentQuery: TextFieldValue = TextFieldValue(""),
+    val totalResults: Int = 0,
     val searchMode: SearchMode = SearchMode.POPULAR,
     val selectedTab: SearchTab = SearchTab.BOOKS,
     val isLoading: Boolean = false,
