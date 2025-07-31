@@ -39,6 +39,7 @@ import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.feature.library.component.PopularSearchSection
 import com.ssafy.glim.feature.library.component.RecentSearchSection
 import com.ssafy.glim.feature.library.component.SearchResultSection
+import com.ssafy.glim.feature.library.component.SearchTab
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -200,7 +201,14 @@ fun LibraryRoute(
                     quoteList = state.searchQuotes,
                     isLoading = state.isLoading,
                     isRefreshing = state.isRefreshing,
-                    onLoadMore = { viewModel.loadMoreBooks() },
+                    selectedTab = state.selectedTab,
+                    onLoadMore = {
+                        if (state.selectedTab == SearchTab.BOOKS) {
+                            viewModel.loadMoreBooks()
+                        } else {
+                            viewModel.loadMoreQuotes()
+                        }
+                    },
                     onBookClick = {
                         if (onBookSelected == null) {
                             viewModel.onBookClicked(it)
@@ -210,6 +218,7 @@ fun LibraryRoute(
                     },
                     onQuoteClick = { viewModel.onQuoteClicked(it) },
                     selectedFilter = state.selectedFilter,
+                    onSelectTab = viewModel::onSelectTab,
                     onSelectFilter = viewModel::onSelectFilter,
                 )
             }

@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.core.domain.usecase.book.SearchBooksUseCase
 import com.ssafy.glim.core.domain.usecase.quote.SearchQuotesUseCase
@@ -15,6 +14,7 @@ import com.ssafy.glim.core.domain.usecase.search.SaveRecentSearchQueryUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
+import com.ssafy.glim.feature.library.component.SearchTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -99,14 +99,14 @@ constructor(
         }
 
     fun loadMoreBooks() = intent {
-        Log.d("LibraryViewModel", "Loading more books for query: ${state.searchQuery}, page: ${state.currentPage + 1}")
+        Log.d("LibraryViewModel", "Loading more books for query: ${state.searchQuery}, page: ${state.bookCurrentPage + 1}")
         reduce {
             state.copy(
-                currentPage = state.currentPage + 1,
+                bookCurrentPage = state.bookCurrentPage + 1,
                 isRefreshing = true
             )
         }
-        runCatching { searchBooksUseCase(state.searchQuery, state.currentPage, state.selectedFilter.name) }
+        runCatching { searchBooksUseCase(state.searchQuery, state.bookCurrentPage, state.selectedFilter.name) }
             .onSuccess {
                 reduce {
                     state.copy(
@@ -119,6 +119,33 @@ constructor(
             .onFailure {
                 Log.d("LibraryViewModel", "Error searching books: ${it.message}")
                 postSideEffect(LibrarySideEffect.ShowToast("검색 중 오류가 발생했습니다."))
+            }
+    }
+
+    fun loadMoreQuotes() = intent {
+        Log.d("LibraryViewModel", "Loading more quotes for query: ${state.searchQuery}, page: ${state.quoteCurrentPage + 1}")
+        reduce {
+            state.copy(
+                quoteCurrentPage = state.quoteCurrentPage + 1,
+                isRefreshing = true
+            )
+        }
+        runCatching { searchQuotesUseCase(state.searchQuery, state.quoteCurrentPage) }
+            .onSuccess { result ->
+                reduce {
+                    state.copy(
+                        searchQuotes = state.searchQuotes + result.quoteSummaries,
+                        isRefreshing = false,
+                        error = null,
+                    )
+                }
+            }
+            .onFailure {
+                Log.d("LibraryViewModel", "Error searching quotes: ${it.message}")
+                postSideEffect(LibrarySideEffect.ShowToast("검색 중 오류가 발생했습니다."))
+                reduce {
+                    state.copy(isRefreshing = false)
+                }
             }
     }
 
@@ -175,6 +202,11 @@ constructor(
             navigator.navigate(BottomTabRoute.Reels(quote.quoteId))
         }
 
+    fun onSelectTab(tab: SearchTab) = intent {
+        reduce {
+            state.copy(selectedTab = tab)
+        }
+    }
     fun onSelectFilter(filter: SearchFilter) = intent {
         reduce {
             state.copy(selectedFilter = filter)
@@ -220,7 +252,7 @@ constructor(
     private fun performSearch(query: String, searchQueryType: String = "KEYWORD") =
         intent {
             reduce { state.copy(isLoading = true) }
-            runCatching { searchBooksUseCase(query, state.currentPage, searchQueryType) }
+            runCatching { searchBooksUseCase(query, state.bookCurrentPage, searchQueryType) }
                 .onSuccess {
                     reduce {
                         state.copy(

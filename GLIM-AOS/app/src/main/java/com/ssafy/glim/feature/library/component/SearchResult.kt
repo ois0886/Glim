@@ -62,6 +62,7 @@ enum class SearchTab(val displayName: String) {
 fun SearchResultSection(
     modifier: Modifier = Modifier,
     searchQuery: String,
+    selectedTab: SearchTab,
     bookList: List<Book>,
     quoteList: List<QuoteSummary>,
     selectedFilter: SearchFilter,
@@ -70,10 +71,9 @@ fun SearchResultSection(
     onLoadMore: () -> Unit = {},
     onBookClick: (Book) -> Unit = {},
     onQuoteClick: (QuoteSummary) -> Unit = {},
+    onSelectTab: (SearchTab) -> Unit = {},
     onSelectFilter: (SearchFilter) -> Unit = {}
 ) {
-    var selectedTab by remember { mutableStateOf(SearchTab.BOOKS) }
-
     Column(
         modifier =
             modifier
@@ -97,7 +97,7 @@ fun SearchResultSection(
             SearchTab.entries.forEach { tab ->
                 Tab(
                     selected = selectedTab == tab,
-                    onClick = { selectedTab = tab },
+                    onClick = { onSelectTab(tab) },
                     text = {
                         Text(
                             text = tab.displayName,
@@ -161,7 +161,9 @@ fun SearchResultSection(
             SearchTab.QUOTES -> {
                 QuoteListContent(
                     quotes = quoteList,
+                    isRefreshing = isRefreshing,
                     onQuoteClick = onQuoteClick,
+                    onLoadMore = onLoadMore,
                 )
             }
         }
@@ -256,8 +258,40 @@ private fun BookListContent(
 @Composable
 private fun QuoteListContent(
     quotes: List<QuoteSummary>,
+    isRefreshing: Boolean = false,
+    onLoadMore: () -> Unit = {},
     onQuoteClick: (QuoteSummary) -> Unit,
 ) {
+    val listState = rememberLazyListState()
+    var hasRequestedMore by remember { mutableStateOf(false) }
+
+    // quotes 리스트가 변경될 때마다 hasRequestedMore 초기화
+    LaunchedEffect(quotes.size) {
+        hasRequestedMore = false
+    }
+
+    // 무한 스크롤 처리
+    LaunchedEffect(listState) {
+        snapshotFlow {
+            listState.layoutInfo.let { layoutInfo ->
+                val totalItems = layoutInfo.totalItemsCount
+                val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                totalItems to lastVisible
+            }
+        }
+            .collect { (totalItems, lastVisible) ->
+                if (!isRefreshing &&
+                    !hasRequestedMore &&
+                    lastVisible >= (totalItems - 1) &&
+                    totalItems > 0
+                ) {
+                    hasRequestedMore = true
+                    Log.d("SearchResult", "Loading more quotes...")
+                    onLoadMore()
+                }
+            }
+    }
+
     if (quotes.isEmpty()) {
         NoSearchResult(
             message = stringResource(R.string.no_search_result),
@@ -266,15 +300,36 @@ private fun QuoteListContent(
     }
 
     LazyColumn(
-        Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+        state = listState,
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(quotes) { quote ->
-            QuoteCard(
-                quote = quote,
-                onClick = { onQuoteClick(quote) },
-            )
+        items(quotes.size) { index ->
+            if (index < quotes.size) {
+                val quote = quotes[index]
+                QuoteCard(
+                    quote = quote,
+                    onClick = { onQuoteClick(quote) },
+                )
+            }
+        }
+
+        // 로딩 인디케이터
+        if (isRefreshing) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp
+                    )
+                }
+            }
         }
     }
 }

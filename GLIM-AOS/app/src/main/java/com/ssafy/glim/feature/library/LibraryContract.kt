@@ -2,7 +2,6 @@ package com.ssafy.glim.feature.library
 
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.core.domain.model.SearchItem
 import com.ssafy.glim.feature.library.component.SearchTab
@@ -27,7 +26,8 @@ data class LibraryState(
     val selectedTab: SearchTab = SearchTab.BOOKS,
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
-    val currentPage: Int = 0,
+    val bookCurrentPage: Int = 0,
+    val quoteCurrentPage: Int = 0,
     val error: String? = null,
     val popularSearchItems: List<SearchItem> = emptyList(),
     val recentSearchItems: List<String> = emptyList(),
