@@ -117,6 +117,7 @@ constructor(
                         error = null
                     )
                 }
+                updateQuoteViewCountUseCase(quoteId)
                 refresh()
             }
             .onFailure {

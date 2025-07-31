@@ -15,7 +15,7 @@ class QuoteRemoteDataSource @Inject constructor(
         size: Int,
         sort: String
     ) = quoteService.getQuotes(
-        page = page,
+        page = 0,
         size = size,
         sort = sort
     )

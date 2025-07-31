@@ -195,5 +195,7 @@
     <string name="welcome_message">%1$s님 \n환영합니다!</string>
     <string name="welcome_image_description">환영 이미지</string>
     <string name="celebration_image_description">축하 이미지</string>
+    <string name="exit_dialog_title">종료하시겠습니까?</string>
+    <string name="exit_dialog_description">화면 이탈 시 생성중인 글귀 이미지는\n저장되지 않습니다.</string>
 
 </resources>
