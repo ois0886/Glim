@@ -23,5 +23,13 @@ management:
       export:
         enabled: true
 
+logging:
+  level:
+    root: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: ERROR
+    org.flywaydb: WARN
+
 log:
   path: /logs
