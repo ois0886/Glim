@@ -210,37 +210,38 @@ fun QuoteItem(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // 좋아요 기능 추가 될 시 주석 해제 및 공유 기능 구현
-//            Column(
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//            ) {
-//                IconButton(onClick = onLikeClick) {
-//                    Icon(
-//                        painter =
-//                        painterResource(
-//                            if (quote.isLike) {
-//                                R.drawable.ic_favorite_fill
-//                            } else {
-//                                R.drawable.ic_favorite
-//                            },
-//                        ),
-//                        contentDescription = stringResource(R.string.like),
-//                        tint = if (quote.isLike) Color.Red else Color.White,
-//                    )
-//                }
-//                Text(
-//                    "${quote.likes}",
-//                    style = MaterialTheme.typography.labelMedium,
-//                    fontWeight = FontWeight.Bold,
-//                )
-//            }
-//
-//            IconButton(onClick = onShareClick) {
-//                Icon(
-//                    painter = painterResource(R.drawable.ic_share),
-//                    contentDescription = stringResource(R.string.share),
-//                )
-//            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                IconButton(onClick = onLikeClick) {
+                    Icon(
+                        painter =
+                        painterResource(
+                            if (quote.isLike) {
+                                R.drawable.ic_favorite_fill
+                            } else {
+                                R.drawable.ic_favorite
+                            },
+                        ),
+                        contentDescription = stringResource(R.string.like),
+                        tint = if (quote.isLike) Color.Red else Color.White,
+                    )
+                }
+                Text(
+                    "${quote.likes}",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+
+            IconButton(onClick = onShareClick) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_share),
+                    contentDescription = stringResource(R.string.share),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
 //
 //            IconButton(onClick = onMoreClick) {
 //                Icon(

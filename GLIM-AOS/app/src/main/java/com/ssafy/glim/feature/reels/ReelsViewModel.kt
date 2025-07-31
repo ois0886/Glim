@@ -32,13 +32,18 @@ constructor(
 
     fun toggleLike() =
         intent {
+            val currentQuote = state.currentQuote
+            if(currentQuote==null) {
+                postSideEffect(ReelsSideEffect.ShowToast("오류 발생"))
+                return@intent
+            }
             val updatedQuotes =
                 state.quotes.map { quote ->
-                    if (quote.quoteId == state.currentQuoteId) {
+                    if (quote.quoteId == currentQuote.quoteId) {
                         val newIsLike = !quote.isLike
                         quote.copy(
                             isLike = newIsLike,
-                            likes = if (newIsLike) quote.likes + 1 else quote.likes - 1,
+                            likes = (if (newIsLike) quote.likes + 1 else quote.likes - 1).coerceAtLeast(0)
                         )
                     } else {
                         quote
@@ -48,27 +53,31 @@ constructor(
             reduce { state.copy(quotes = updatedQuotes) }
 
             viewModelScope.launch {
-                // TODO: API 호출
-                // toggleLikeUseCase(state.currentQuoteId)
+
             }
         }
 
     fun onPageChanged(page: Int) =
         intent {
             Log.d("ReelsViewModel", "$page / ${state.quotes.size} 페이지로 변경됨")
-            // 페이지가 변경될 때 currentQuoteId도 업데이트
+            // 페이지가 변경될 때 currentQuote.quoteId도 업데이트
             if (page >= 0 && page < state.quotes.size) {
                 reduce {
                     state.copy(
                         currentIdx = page,
-                        currentQuoteId = state.currentQuote?.quoteId ?: -1,
                     )
                 }
+                val currentQuote = state.currentQuote
+                if(currentQuote==null) {
+                    postSideEffect(ReelsSideEffect.ShowToast("오류 발생"))
+                    return@intent
+                }
+
                 Log.d("ReelsViewModel", "현재 Quote Idx: ${state.currentIdx} / ${state.quotes.size}")
                 if (state.currentIdx >= state.quotes.size - 3) {
                     refresh()
                 }
-                runCatching { updateQuoteViewCountUseCase(state.currentQuoteId) }
+                runCatching { updateQuoteViewCountUseCase(currentQuote.quoteId) }
                     .onSuccess {
                         Log.d("ReelsViewModel", "Quote view count updated successfully")
                     }
@@ -80,9 +89,7 @@ constructor(
 
     fun onShareClick() =
         intent {
-            state.currentQuote?.let {
-                postSideEffect(ReelsSideEffect.ShareQuote(it))
-            }
+            postSideEffect(ReelsSideEffect.ShowToast("아직 구현되지 않은 기능!"))
         }
 
     fun loadQuote(quoteId: Long) = intent {
@@ -92,7 +99,6 @@ constructor(
                 reduce {
                     state.copy(
                         quotes = listOf(it),
-                        currentQuoteId = it.quoteId,
                         isLoading = false,
                         error = null
                     )
@@ -108,22 +114,25 @@ constructor(
                 }
             }
     }
+    
+    fun loadQuotes() = intent { 
+        
+    }
 
     fun refresh() =
         intent {
             runCatching { getQuotesUseCase(page = state.currentPage + 1, size = SIZE) }
                 .onSuccess {
-                    val newQuotes = it.filter { quote -> quote.quoteId != state.currentQuoteId }
-                    if (newQuotes.isNotEmpty()) {
+                    if (it.isNotEmpty()) {
                         reduce {
                             state.copy(
-                                quotes = state.quotes + newQuotes,
+                                quotes = state.quotes + it,
                                 currentPage = state.currentPage + 1,
                                 isLoading = false,
                                 error = null
                             )
                         }
-                        Log.d("ReelsViewModel", "Loaded ${newQuotes.size} new quotes")
+                        Log.d("ReelsViewModel", "Loaded ${it.size} new quotes")
                         Log.d("ReelsViewModel", "Total quotes: ${state.quotes.size}")
                     }
                 }
