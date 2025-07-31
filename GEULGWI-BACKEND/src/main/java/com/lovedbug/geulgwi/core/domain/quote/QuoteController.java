@@ -29,17 +29,25 @@ public class QuoteController {
 
         Long memberId = (user != null) ? user.getMemberId() : null;
 
-
         return ResponseEntity.ok(quoteService.getQuotesByRandom(pageable, memberId));
     }
 
-    @GetMapping("/{isbn}")
+    @GetMapping("/book/{isbn}")
     public ResponseEntity<List<QuoteResponse>> getQuotesByIsbn(@CurrentUser AuthenticatedUser user,
                                                                @PathVariable String isbn) {
 
         Long memberId = (user != null) ? user.getMemberId() : null;
 
         return ResponseEntity.ok(quoteService.getPublicQuotesByIsbn(isbn, memberId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<QuoteWithBookResponse> getQuoteById(@CurrentUser AuthenticatedUser user,
+                                                                 @PathVariable(value = "id") Long quoteId) {
+
+        Long memberId = (user != null) ? user.getMemberId() : null;
+
+        return ResponseEntity.ok(quoteService.getPublicQuoteById(quoteId, memberId));
     }
 
     @PostMapping("")

@@ -2,6 +2,7 @@ package com.lovedbug.geulgwi.core.domain.quote.mapper;
 
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteSearchContentResponse;
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteSearchResponse;
+import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteWithBookResponse;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import org.springframework.data.domain.Page;
 import java.util.List;
@@ -31,6 +32,35 @@ public class QuoteMapper {
             .totalPages(quotes.getTotalPages())
             .totalResults(quotes.getTotalElements())
             .contents(contents)
+            .build();
+    }
+
+    public static QuoteWithBookResponse toQuoteWithBookResponse(Quote quote) {
+        return QuoteWithBookResponse.builder()
+            .quoteId(quote.getQuoteId())
+            .quoteImageName(quote.getImageName())
+            .page(quote.getPage())
+            .bookId(quote.getBook().getBookId())
+            .bookTitle(quote.getBook().getTitle())
+            .author(quote.getBook().getAuthor())
+            .publisher(quote.getBook().getPublisher())
+            .bookCoverUrl(quote.getBook().getCoverUrl())
+            .build();
+    }
+
+    public static QuoteWithBookResponse toQuoteWithBookResponse(Quote quote, Long memberId) {
+        return QuoteWithBookResponse.builder()
+            .quoteId(quote.getQuoteId())
+            .quoteImageName(quote.getImageName())
+            .quoteViews(quote.getViews())
+            .page(quote.getPage())
+            .bookId(quote.getBook().getBookId())
+            .bookTitle(quote.getBook().getTitle())
+            .author(quote.getBook().getAuthor())
+            .publisher(quote.getBook().getPublisher())
+            .bookCoverUrl(quote.getBook().getCoverUrl())
+            .isLiked(quote.getLikes().stream()
+                .anyMatch(like -> like.getMemberId().equals(memberId)))
             .build();
     }
 }

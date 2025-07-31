@@ -101,6 +101,18 @@ include::{snippets}/quote_api_docs_test/get_public_quotes_by_isbn/http-response.
 
 include::{snippets}/quote_api_docs_test/get_public_quotes_by_isbn/response-fields.adoc[]
 
+=== 글귀 id로 글귀 조회
+
+==== 요청
+
+include::{snippets}/quote_api_docs_test/get_quote_by_id/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/quote_api_docs_test/get_quote_by_id/http-response.adoc[]
+
+include::{snippets}/quote_api_docs_test/get_quote_by_id/response-fields.adoc[]
+
 === 글귀 생성
 
 ==== 요청

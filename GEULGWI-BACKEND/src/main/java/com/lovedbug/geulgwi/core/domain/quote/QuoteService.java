@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.core.domain.quote;
 
+import com.lovedbug.geulgwi.core.common.exception.GeulgwiException;
 import com.lovedbug.geulgwi.core.domain.like.MemberLikeQuoteService;
 import com.lovedbug.geulgwi.core.domain.quote.constant.Visibility;
 import com.lovedbug.geulgwi.core.domain.quote.dto.request.QuoteCreateRequest;
@@ -35,20 +36,20 @@ public class QuoteService {
     private final ImageHandler imageHandler;
     private final MemberLikeQuoteService memberLikeQuoteService;
 
-    public List<QuoteWithBookResponse> getQuotes(Pageable pageable, Long memberId) {
-        List<Quote> quotes = quoteRepository.findPublicQuotes(pageable);
+    public List<QuoteWithBookResponse> getQuotesByRandom(Pageable pageable, Long memberId) {
+        List<Quote> quotes = quoteRepository.findPublicQuotesByRandom(pageable);
 
         return quotes.stream()
             .map(quote -> {
                 boolean isLiked = (memberId != null) && memberLikeQuoteService.isLikedBy(memberId, quote.getQuoteId());
                 long likeCount = memberLikeQuoteService.countLikes(quote.getQuoteId());
 
-
                 return QuoteWithBookResponse.builder()
                     .quoteId(quote.getQuoteId())
                     .quoteImageName(quote.getImageName())
                     .page(quote.getPage())
                     .bookId(quote.getBook().getBookId())
+                    .quoteViews(quote.getViews())
                     .bookTitle(quote.getBook().getTitle())
                     .author(quote.getBook().getAuthor())
                     .publisher(quote.getBook().getPublisher())
@@ -60,15 +61,7 @@ public class QuoteService {
             .collect(Collectors.toList());
     }
 
-    public List<QuoteWithBookResponse> getQuotesByRandom(Pageable pageable, Long memberId) {
-        List<Quote> quotes = quoteRepository.findPublicQuotesByRandom(pageable);
-
-        return quotes.stream()
-            .map(QuoteService::toDto)
-            .toList();
-    }
-
-    public List<QuoteResponse> getPublicQuotesByIsbn(String isbn, Long memberId){
+    public List<QuoteResponse> getPublicQuotesByIsbn(String isbn, Long memberId) {
 
         List<Quote> quotes = quoteRepository.findAllByBookIsbnAndVisibility(isbn, "PUBLIC");
 
@@ -82,12 +75,11 @@ public class QuoteService {
             .collect(Collectors.toList());
     }
 
-    public List<QuoteWithBookResponse> getQuotesByRandom(Pageable pageable) {
-        List<Quote> quotes = quoteRepository.findPublicQuotesByRandom(pageable);
+    public QuoteWithBookResponse getPublicQuoteById(Long quoteId, Long memberId) {
+        Quote quote = quoteRepository.findByQuoteIdAndVisibility(quoteId, Visibility.PUBLIC.name())
+            .orElseThrow(() -> new GeulgwiException("없는 글귀 입니다. id = " + quoteId));
 
-        return quotes.stream()
-            .map(QuoteService::toDto)
-            .toList();
+        return QuoteMapper.toQuoteWithBookResponse(quote, memberId);
     }
 
     @Transactional
@@ -120,20 +112,9 @@ public class QuoteService {
             PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "views")));
 
         return quotes.stream()
-            .map(QuoteService::toDto)
+            .map(QuoteMapper::toQuoteWithBookResponse)
             .toList();
     }
 
-    public static QuoteWithBookResponse toDto(Quote quote) {
-        return QuoteWithBookResponse.builder()
-            .quoteId(quote.getQuoteId())
-            .quoteImageName(quote.getImageName())
-            .page(quote.getPage())
-            .bookId(quote.getBook().getBookId())
-            .bookTitle(quote.getBook().getTitle())
-            .author(quote.getBook().getAuthor())
-            .publisher(quote.getBook().getPublisher())
-            .bookCoverUrl(quote.getBook().getCoverUrl())
-            .build();
-    }
+
 }

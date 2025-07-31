@@ -76,7 +76,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
 
     @DisplayName("특정 도서의 isbn으로 관련있는 글귀 목록을 조회한다")
     @Test
-    void get_public_quotes_by_isbn(){
+    void get_public_quotes_by_isbn() {
         Book book = createBook();
         bookRepository.save(book);
 
@@ -99,9 +99,9 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("[].liked").description("사용자 좋아요 여부")
 
                 )
-                ))
+            ))
             .when()
-            .get("/api/v1/quotes/{isbn}", book.getIsbn())
+            .get("/api/v1/quotes/book/{isbn}", book.getIsbn())
             .then()
             .statusCode(200);
     }
@@ -236,6 +236,43 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
             .then().log().all()
             .statusCode(200);
     }
+
+    @DisplayName("ID로 특정 글귀를 조회한다")
+    @Test
+    void get_quote_by_id() {
+
+        Book book = createBook();
+        bookRepository.save(book);
+
+        Quote quote = createQuote(book);
+        quoteRepository.save(quote);
+
+        given(this.spec)
+            .filter(document("{class_name}/{method_name}",
+                pathParameters(
+                    parameterWithName("id").description("조회할 글귀 ID")
+                ),
+                responseFields(
+                    fieldWithPath("quoteId").description("글귀 ID"),
+                    fieldWithPath("quoteImageName").description("글귀 이미지 파일 이름"),
+                    fieldWithPath("quoteViews").description("글귀 조회수"),
+                    fieldWithPath("page").description("글귀가 포함된 도서 페이지 번호"),
+
+                    fieldWithPath("bookId").description("도서 ID"),
+                    fieldWithPath("bookTitle").description("도서 제목"),
+                    fieldWithPath("author").description("도서 저자"),
+                    fieldWithPath("publisher").description("도서 출판사"),
+                    fieldWithPath("bookCoverUrl").description("도서 커버 이미지 URL"),
+                    fieldWithPath("liked").description("사용자의 좋아요 여부"),
+                    fieldWithPath("likeCount").description("글귀 좋아요 수")
+                )
+            ))
+            .when()
+            .get("/api/v1/quotes/{id}", quote.getQuoteId())
+            .then()
+            .statusCode(200);
+    }
+
 
     static BookCreateRequest createBookCreateDto() {
         return BookCreateRequest.builder()
