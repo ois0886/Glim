@@ -29,7 +29,8 @@ public class QuoteController {
 
         Long memberId = (user != null) ? user.getMemberId() : null;
 
-        return ResponseEntity.ok(quoteService.getQuotes(pageable, memberId));
+
+        return ResponseEntity.ok(quoteService.getQuotesByRandom(pageable, memberId));
     }
 
     @GetMapping("/{isbn}")
