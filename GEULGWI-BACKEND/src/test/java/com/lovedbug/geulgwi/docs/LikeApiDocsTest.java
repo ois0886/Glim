@@ -2,8 +2,6 @@ package com.lovedbug.geulgwi.docs;
 
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
-import com.lovedbug.geulgwi.core.domain.like.dto.request.MemberLikeQuoteRequest;
-import com.lovedbug.geulgwi.core.domain.like.repository.MemberLikeQuoteRepository;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
@@ -25,7 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
 public class LikeApiDocsTest extends RestDocsTestSupport {
@@ -77,24 +76,19 @@ public class LikeApiDocsTest extends RestDocsTestSupport {
     @Test
     void like_to_quote(){
 
-        MemberLikeQuoteRequest memberLikeQuoteRequest = MemberLikeQuoteRequest.builder()
-            .quoteId(quote.getQuoteId())
-            .build();
-
         given(this.spec)
             .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(memberLikeQuoteRequest)
             .filter(document("{class_name}/{method_name}",
                 requestHeaders(
                     headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
                 ),
-                requestFields(
-                    fieldWithPath("quoteId").description("사용자가 좋아요 누른 글귀 id(필수)")
+                pathParameters(
+                    parameterWithName("quoteId").description("사용자가 좋아요 누른 글귀 id(필수)")
                 )
             ))
             .when()
-            .post("/api/v1/likes/quotes")
+            .post("/api/v1/likes/quotes/{quoteId}", quote.getQuoteId())
             .then()
             .log().all()
             .statusCode(200);
@@ -104,29 +98,23 @@ public class LikeApiDocsTest extends RestDocsTestSupport {
     @Test
     void unlike_to_quote(){
 
-        MemberLikeQuoteRequest memberLikeQuoteRequest = MemberLikeQuoteRequest.builder()
-            .quoteId(quote.getQuoteId())
-            .build();
-
         given(this.spec)
             .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(memberLikeQuoteRequest)
             .filter(document("{class_name}/{method_name}",
                 requestHeaders(
                     headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
                 ),
-                requestFields(
-                    fieldWithPath("quoteId").description("사용자가 좋아요 누른 글귀 id(필수)")
+                pathParameters(
+                    parameterWithName("quoteId").description("사용자가 좋아요 누른 글귀 id(필수)")
                 )
             ))
             .when()
-            .delete("/api/v1/likes/quotes")
+            .delete("/api/v1/likes/quotes/{quoteId}", quote.getQuoteId())
             .then()
             .log().all()
             .statusCode(200);
     }
-
 
     private Member createTestMember() {
         return Member.builder()

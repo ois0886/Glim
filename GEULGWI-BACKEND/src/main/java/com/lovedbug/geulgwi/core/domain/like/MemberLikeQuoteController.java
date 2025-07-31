@@ -14,21 +14,21 @@ public class MemberLikeQuoteController {
 
     private final MemberLikeQuoteService memberLikeQuoteService;
 
-    @PostMapping("/quotes")
+    @PostMapping("/quotes/{quoteId}")
     public ResponseEntity<Void> memberLikeQuote(
-        @RequestBody MemberLikeQuoteRequest likeQuoteRequest,
+        @PathVariable Long quoteId,
         @CurrentUser AuthenticatedUser user) {
 
-        memberLikeQuoteService.likeQuote(user.getMemberId(), likeQuoteRequest.getQuoteId());
+        memberLikeQuoteService.likeQuote(user.getMemberId(), quoteId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/quotes")
+    @DeleteMapping("/quotes/{quoteId}")
     public ResponseEntity<Void> memberUnLikeQuote(
-        @RequestBody MemberLikeQuoteRequest likeQuoteRequest,
+        @PathVariable Long quoteId,
         @CurrentUser AuthenticatedUser user) {
 
-        memberLikeQuoteService.unlikeQuote(user.getMemberId(), likeQuoteRequest.getQuoteId());
+        memberLikeQuoteService.unlikeQuote(user.getMemberId(), quoteId);
         return ResponseEntity.ok().build();
     }
 
