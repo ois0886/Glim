@@ -3,7 +3,6 @@ package com.lovedbug.geulgwi.core.domain.like;
 import com.lovedbug.geulgwi.core.domain.like.dto.request.MemberLikeQuoteRequest;
 import com.lovedbug.geulgwi.core.security.annotation.CurrentUser;
 import com.lovedbug.geulgwi.core.security.dto.AuthenticatedUser;
-import feign.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

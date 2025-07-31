@@ -94,6 +94,9 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         given(this.spec)
             .filter(document("{class_name}/{method_name}",
+                pathParameters(
+                    parameterWithName("memberId").description("조회할 사용자 id(필수)")
+                ),
                 responseFields(memberItemFields())
             ))
             .when()

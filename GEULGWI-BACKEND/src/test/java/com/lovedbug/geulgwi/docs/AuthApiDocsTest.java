@@ -121,7 +121,7 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
             .header(HEADER_AUTH, TOKEN_PREFIX + refreshToken)
             .filter(document("{class_name}/{method_name}",
                 requestHeaders(
-                    headerWithName(HEADER_AUTH).description("Bearer 리프레시 토큰")
+                    headerWithName(HEADER_AUTH).description("로그인한 사용자의 리프레시 토큰")
                 ),
                 responseFields(
                     fieldWithPath("accessToken").description("새로 발급된 액세스 토큰"),
