@@ -49,4 +49,8 @@ class QuoteRemoteDataSource @Inject constructor(
     suspend fun unLikeQuote(
         quoteId: Long
     ) = quoteService.unLikeQuote(quoteId)
+
+    suspend fun getQuoteById(
+        quoteId: Long
+    ) = quoteService.getQuoteById(quoteId)
 }

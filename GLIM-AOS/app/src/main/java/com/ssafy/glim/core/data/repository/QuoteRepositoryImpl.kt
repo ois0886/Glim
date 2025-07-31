@@ -63,7 +63,7 @@ class QuoteRepositoryImpl @Inject constructor(
         quoteRemoteDataSource.getQuoteByIsbn(isbn).map { it.toDomain() }
 
     override suspend fun getQuoteById(quoteId: Long) =
-        quoteLocalDataSource.getQuote(quoteId)
+        quoteRemoteDataSource.getQuoteById(quoteId).toDomain()
 
     override suspend fun likeQuote(quoteId: Long) =
         quoteRemoteDataSource.likeQuote(quoteId)

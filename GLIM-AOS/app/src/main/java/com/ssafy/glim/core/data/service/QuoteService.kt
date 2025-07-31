@@ -57,4 +57,9 @@ interface QuoteService {
     suspend fun unLikeQuote(
         @Body quoteId: Long
     )
+
+    @GET("/api/v1/quotes/{quoteId}")
+    suspend fun getQuoteById(
+        @Path("quoteId") quoteId: Long
+    ): QuoteResponse
 }
