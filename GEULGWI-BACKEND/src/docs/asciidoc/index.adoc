@@ -147,6 +147,8 @@ include::{snippets}/search_api_docs_test/get_search_popular_history/response-fie
 
 include::{snippets}/member_api_docs_test/create_member/http-request.adoc[]
 
+include::{snippets}/member_api_docs_test/create_member/request-fields.adoc[]
+
 ==== 응답
 
 include::{snippets}/member_api_docs_test/create_member/http-response.adoc[]
@@ -158,6 +160,8 @@ include::{snippets}/member_api_docs_test/create_member/response-fields.adoc[]
 ==== 요청
 
 include::{snippets}/member_api_docs_test/get_member_by_id/http-request.adoc[]
+
+include::{snippets}/member_api_docs_test/get_member_by_id/path-parameters.adoc[]
 
 ==== 응답
 
@@ -171,6 +175,8 @@ include::{snippets}/member_api_docs_test/get_member_by_id/response-fields.adoc[]
 
 include::{snippets}/member_api_docs_test/update_member/http-request.adoc[]
 
+include::{snippets}/member_api_docs_test/update_member/request-fields.adoc[]
+
 ==== 응답
 
 include::{snippets}/member_api_docs_test/update_member/http-response.adoc[]
@@ -182,6 +188,8 @@ include::{snippets}/member_api_docs_test/update_member/response-fields.adoc[]
 ==== 요청
 
 include::{snippets}/member_api_docs_test/soft_delete_member/http-request.adoc[]
+
+include::{snippets}/member_api_docs_test/soft_delete_member/path-parameters.adoc[]
 
 ==== 응답
 
@@ -197,6 +205,8 @@ include::{snippets}/member_api_docs_test/soft_delete_member/response-fields.adoc
 
 include::{snippets}/auth_api_docs_test/verify_email_code_test/http-request.adoc[]
 
+include::{snippets}/auth_api_docs_test/verify_email_code_test/request-fields.adoc[]
+
 ==== 응답
 
 include::{snippets}/auth_api_docs_test/verify_email_code_test/http-response.adoc[]
@@ -208,6 +218,8 @@ include::{snippets}/auth_api_docs_test/verify_email_code_test/response-fields.ad
 ==== 요청
 
 include::{snippets}/auth_api_docs_test/login_test/http-request.adoc[]
+
+include::{snippets}/auth_api_docs_test/login_test/request-fields.adoc[]
 
 ==== 응답
 
@@ -221,8 +233,36 @@ include::{snippets}/auth_api_docs_test/login_test/response-fields.adoc[]
 
 include::{snippets}/auth_api_docs_test/refresh_token_test/http-request.adoc[]
 
+include::{snippets}/auth_api_docs_test/refresh_token_test/request-headers.adoc[]
+
 ==== 응답
 
 include::{snippets}/auth_api_docs_test/refresh_token_test/http-response.adoc[]
 
 include::{snippets}/auth_api_docs_test/refresh_token_test/response-fields.adoc[]
+
+== 좋아요 API
+
+=== 좋아요
+
+==== 요청
+
+include::{snippets}/like_api_docs_test/like_to_quote/http-request.adoc[]
+
+include::{snippets}/like_api_docs_test/like_to_quote/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/like_api_docs_test/like_to_quote/http-response.adoc[]
+
+=== 좋아요 취소
+
+==== 요청
+
+include::{snippets}/like_api_docs_test/unlike_to_quote/http-request.adoc[]
+
+include::{snippets}/like_api_docs_test/unlike_to_quote/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/like_api_docs_test/unlike_to_quote/http-response.adoc[]
