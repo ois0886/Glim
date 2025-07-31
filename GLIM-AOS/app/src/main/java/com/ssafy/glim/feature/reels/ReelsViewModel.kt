@@ -62,6 +62,7 @@ constructor(
                         likeQuoteUseCase(currentQuote.quoteId)
                     }
                 }.onFailure {
+                    Log.d("ReelsViewModel", "${it.message}")
                     postSideEffect(ReelsSideEffect.ShowToast("좋아요 오류 발생"))
                 }
             }
@@ -116,6 +117,7 @@ constructor(
                         error = null
                     )
                 }
+                refresh()
             }
             .onFailure {
                 Log.d("ReelsViewModel", "Failed to load quote: ${it.message}")
