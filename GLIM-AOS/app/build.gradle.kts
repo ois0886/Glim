@@ -117,6 +117,7 @@ dependencies {
     implementation(libs.material3)
 
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.androidx.core.splashscreen)
 
     // Coil
     implementation(libs.coil.compose)
@@ -132,6 +133,7 @@ dependencies {
     implementation(libs.orbit.compose)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.lifecycle.process)
     testImplementation(libs.orbit.test)
 
     // Kotlin Serialization & Immutable Collections
