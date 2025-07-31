@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -41,12 +43,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.feature.library.SearchFilter
 
 enum class SearchTab(val displayName: String) {
@@ -59,22 +63,22 @@ fun SearchResultSection(
     modifier: Modifier = Modifier,
     searchQuery: String,
     bookList: List<Book>,
-    quoteList: List<Quote>,
+    quoteList: List<QuoteSummary>,
     selectedFilter: SearchFilter,
     isLoading: Boolean = false,
     isRefreshing: Boolean = false,
     onLoadMore: () -> Unit = {},
     onBookClick: (Book) -> Unit = {},
-    onQuoteClick: (Quote) -> Unit = {},
+    onQuoteClick: (QuoteSummary) -> Unit = {},
     onSelectFilter: (SearchFilter) -> Unit = {}
 ) {
     var selectedTab by remember { mutableStateOf(SearchTab.BOOKS) }
 
     Column(
         modifier =
-        modifier
-            .fillMaxSize()
-            .background(Color.White),
+            modifier
+                .fillMaxSize()
+                .background(Color.White),
     ) {
         TabRow(
             selectedTabIndex = selectedTab.ordinal,
@@ -116,9 +120,15 @@ fun SearchResultSection(
         Spacer(modifier = Modifier.height(8.dp))
 
         if (isLoading && !isRefreshing) {
-            Box(modifier = modifier.padding(40.dp).fillMaxSize()) {
+            Box(
+                modifier = modifier
+                    .padding(40.dp)
+                    .fillMaxSize()
+            ) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp).align(Alignment.Center),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .align(Alignment.Center),
                     color = MaterialTheme.colorScheme.primary,
                     strokeWidth = 2.dp
                 )
@@ -245,8 +255,8 @@ private fun BookListContent(
 
 @Composable
 private fun QuoteListContent(
-    quotes: List<Quote>,
-    onQuoteClick: (Quote) -> Unit,
+    quotes: List<QuoteSummary>,
+    onQuoteClick: (QuoteSummary) -> Unit,
 ) {
     if (quotes.isEmpty()) {
         NoSearchResult(
@@ -256,7 +266,7 @@ private fun QuoteListContent(
     }
 
     LazyColumn(
-        Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+        Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
@@ -276,9 +286,9 @@ private fun BookCard(
 ) {
     Card(
         modifier =
-        Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
+            Modifier
+                .fillMaxWidth()
+                .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
@@ -329,26 +339,28 @@ private fun BookCard(
 
 @Composable
 private fun QuoteCard(
-    quote: Quote,
+    quote: QuoteSummary,
     onClick: () -> Unit,
 ) {
     Card(
         modifier =
-        Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
+            Modifier
+                .fillMaxWidth()
+                .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
         ) {
-            // TODO: quote 텍스트 추가
             Text(
-                text = "",
+                text = quote.content,
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black,
+                fontWeight = FontWeight.Bold,
                 lineHeight = 24.sp,
+                maxLines = 5,
+                overflow = TextOverflow.Ellipsis
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -359,9 +371,12 @@ private fun QuoteCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
+                    modifier = Modifier.weight(1f),
                     text = "${quote.bookTitle} (${quote.page})",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Row(
@@ -369,16 +384,37 @@ private fun QuoteCard(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_image),
+                        painter = painterResource(R.drawable.ic_views),
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
-                        tint = Color.Gray,
+                        tint = Color.Black,
                     )
-                    // TODO: 좋아요 개수 추가
                     Text(
-                        text = "",
+                        text = quote.views.toString(),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
+                        color = Color.Black,
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            if (quote.isLiked) R.drawable.ic_like_200_fill
+                            else R.drawable.ic_like_200
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint =
+                            if (quote.isLiked) Color.Red
+                            else Color.Black,
+                    )
+                    Text(
+                        text = quote.likes.toString(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black,
                     )
                 }
             }

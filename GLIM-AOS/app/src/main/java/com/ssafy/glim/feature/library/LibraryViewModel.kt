@@ -5,6 +5,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.core.domain.usecase.book.SearchBooksUseCase
 import com.ssafy.glim.core.domain.usecase.quote.SearchQuotesUseCase
 import com.ssafy.glim.core.domain.usecase.search.DeleteRecentSearchQueryUseCase
@@ -169,7 +170,7 @@ constructor(
         }
 
     // 글귀 아이템 클릭
-    fun onQuoteClicked(quote: Quote) =
+    fun onQuoteClicked(quote: QuoteSummary) =
         intent {
             navigator.navigate(BottomTabRoute.Reels(quote.quoteId))
         }
@@ -238,7 +239,7 @@ constructor(
                 .onSuccess {
                     reduce {
                         state.copy(
-                            searchQuotes = it,
+                            searchQuotes = it.quoteSummaries,
                             isLoading = false,
                             error = null
                         )

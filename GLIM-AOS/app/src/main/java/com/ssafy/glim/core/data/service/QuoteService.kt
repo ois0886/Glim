@@ -1,9 +1,12 @@
 package com.ssafy.glim.core.data.service
 
 import com.ssafy.glim.core.data.dto.response.QuoteResponse
+import com.ssafy.glim.core.data.dto.response.QuoteSearchResultResponse
 import com.ssafy.glim.core.data.dto.response.QuoteSummaryResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
@@ -26,6 +29,13 @@ interface QuoteService {
         @Path("isbn") isbn: String
     ): List<QuoteSummaryResponse>
 
+    @GET("/api/v1/quotes/by-content")
+    suspend fun searchQuotes(
+        @Query("content") content: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+    ): QuoteSearchResultResponse
+
     @Multipart
     @POST("api/v1/quotes")
     suspend fun createQuote(
@@ -36,5 +46,15 @@ interface QuoteService {
     @PATCH("api/v1/quotes/{id}/views")
     suspend fun updateQuoteViewCount(
         @Path("id") quoteId: Long,
+    )
+
+    @POST("/api/v1/likes/quotes")
+    suspend fun likeQuote(
+        @Body quoteId: Long
+    )
+
+    @DELETE("/api/v1/likes/quotes")
+    suspend fun unLikeQuote(
+        @Body quoteId: Long
     )
 }

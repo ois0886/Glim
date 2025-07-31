@@ -195,9 +195,36 @@ fun QuoteCard(
                 Text(
                     text = "p.${quote.page}",
                     style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.weight(1f)
                 )
 
-                Row(verticalAlignment = Alignment.Bottom) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            if (quote.isLiked) R.drawable.ic_like_200_fill
+                            else R.drawable.ic_like_200
+                        ),
+                        contentDescription = null,
+                        tint =
+                            if (quote.isLiked) Color.Red
+                            else Color.Black,
+                    )
+                    Text(
+                        text = quote.likes.toString(),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color.Black,
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.Bottom
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_views),
                         contentDescription = stringResource(R.string.views),

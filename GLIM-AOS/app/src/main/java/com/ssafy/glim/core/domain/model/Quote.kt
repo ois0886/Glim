@@ -1,6 +1,7 @@
 package com.ssafy.glim.core.domain.model
 
 data class Quote(
+    val content: String = "",
     val author: String,
     val bookCoverUrl: String,
     val bookId: Long,

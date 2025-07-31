@@ -15,7 +15,9 @@ fun QuoteResponse.toDomain() =
         publisher = publisher,
         quoteId = quoteId,
         quoteImageName = quoteImageName,
-        quoteViews = quoteViews
+        quoteViews = quoteViews,
+        likes = likes,
+        isLike = isLike
     )
 
 fun QuoteSummaryResponse.toDomain() =
@@ -24,4 +26,6 @@ fun QuoteSummaryResponse.toDomain() =
         quoteId = quoteId,
         page = if (page > 0) page.toString() else "-",
         views = views,
+        likes = likeCount,
+        isLiked = liked
     )

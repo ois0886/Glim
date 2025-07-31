@@ -8,5 +8,6 @@ class SearchQuotesUseCase
 constructor(
     private val quoteRepository: QuoteRepository,
 ) {
-    operator fun invoke(query: String) = quoteRepository.searchQuotes(query)
+    suspend operator fun invoke(query: String, page: Int = 0, size: Int = 10) =
+        quoteRepository.searchQuotes(query, page, size)
 }

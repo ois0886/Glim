@@ -36,9 +36,8 @@ class QuoteRepositoryImpl @Inject constructor(
         quoteRemoteDataSource.createQuote(jsonRequestBody, image)
     }
 
-    override fun searchQuotes(query: String): List<Quote> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun searchQuotes(query: String, page: Int, size: Int) =
+        quoteRemoteDataSource.searchQuotes(query, page, size).toDomain()
 
     override suspend fun getQuotes(
         page: Int,
@@ -59,6 +58,12 @@ class QuoteRepositoryImpl @Inject constructor(
 
     override suspend fun getQuoteById(quoteId: Long) =
         quoteLocalDataSource.getQuote(quoteId)
+
+    override suspend fun likeQuote(quoteId: Long) =
+        quoteRemoteDataSource.likeQuote(quoteId)
+
+    override suspend fun unLikeQuote(quoteId: Long) =
+        quoteRemoteDataSource.unLikeQuote(quoteId)
 
     private fun createQuoteMultipartData(
         bitmap: Bitmap

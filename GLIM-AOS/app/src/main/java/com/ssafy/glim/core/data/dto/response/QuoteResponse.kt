@@ -1,5 +1,6 @@
 package com.ssafy.glim.core.data.dto.response
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -11,8 +12,8 @@ data class QuoteResponse(
     val page: Int,
     val publisher: String,
     val quoteId: Long,
-    val likes: Long,
-    val isLike: Boolean,
+    @SerialName("likeCount") val likes: Long,
+    @SerialName("liked") val isLike: Boolean,
     val quoteImageName: String,
     val quoteViews: Long,
 )

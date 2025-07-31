@@ -3,6 +3,7 @@ package com.ssafy.glim.feature.library
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.core.domain.model.SearchItem
 import com.ssafy.glim.feature.library.component.SearchTab
 
@@ -31,7 +32,7 @@ data class LibraryState(
     val popularSearchItems: List<SearchItem> = emptyList(),
     val recentSearchItems: List<String> = emptyList(),
     val searchBooks: List<Book> = emptyList(),
-    val searchQuotes: List<Quote> = emptyList(),
+    val searchQuotes: List<QuoteSummary> = emptyList(),
     val selectedFilter: SearchFilter = SearchFilter.KEYWORD
 )
 

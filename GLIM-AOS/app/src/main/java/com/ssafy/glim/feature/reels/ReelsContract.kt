@@ -5,7 +5,6 @@ import com.ssafy.glim.core.domain.model.Quote
 // ReelsContract.kt
 data class ReelsState(
     val quotes: List<Quote> = emptyList(),
-    val currentQuoteId: Long = -1,
     val currentIdx: Int = 0,
     val currentPage: Int = -1,
     val isLoading: Boolean = false,
