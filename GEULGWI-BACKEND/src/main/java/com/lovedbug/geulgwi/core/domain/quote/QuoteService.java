@@ -1,15 +1,19 @@
 package com.lovedbug.geulgwi.core.domain.quote;
 
 import com.lovedbug.geulgwi.core.domain.like.MemberLikeQuoteService;
+import com.lovedbug.geulgwi.core.domain.quote.constant.Visibility;
 import com.lovedbug.geulgwi.core.domain.quote.dto.request.QuoteCreateRequest;
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteResponse;
+import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteSearchResponse;
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteWithBookResponse;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
+import com.lovedbug.geulgwi.core.domain.quote.mapper.QuoteMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -56,7 +60,7 @@ public class QuoteService {
     }
 
     public List<QuoteResponse> getPublicQuotesByIsbn(String isbn, Long memberId){
-        List<Quote> quotes = quoteRepository.findAllByBookIsbnAndVisibility(isbn, "PUBLIC");
+        List<Quote> quotes = quoteRepository.findAllByBookIsbnAndVisibility(isbn, Visibility.PUBLIC.name());
 
         return quotes.stream()
             .map(quote -> {
@@ -66,6 +70,14 @@ public class QuoteService {
                 return QuoteResponse.toResponseDto(quote, isLiked, likeCount);
             })
             .collect(Collectors.toList());
+    }
+
+    public List<QuoteWithBookResponse> getQuotesByRandom(Pageable pageable) {
+        List<Quote> quotes = quoteRepository.findPublicQuotesByRandom(pageable);
+
+        return quotes.stream()
+            .map(QuoteService::toDto)
+            .toList();
     }
 
     @Transactional
@@ -84,6 +96,16 @@ public class QuoteService {
         ImageMetaData imageMetaData = imageHandler.saveImage(quoteImage);
 
         quoteRepository.save(QuoteCreateRequest.toEntity(quoteData, book, imageMetaData));
+    }
+
+    public QuoteSearchResponse searchQuotesByContent(String content, Pageable pageable) {
+        Page<Quote> quotes = quoteRepository.findByContentContainingAndVisibility(
+            content, Visibility.PUBLIC.name(), pageable);
+
+        // TODO : 사용자 id로 변경
+        long tempUserId = 0;
+
+        return QuoteMapper.toQuoteSearchResponse(quotes, tempUserId);
     }
 
     public List<QuoteWithBookResponse> getPopularQuotesWithBook() {
@@ -107,5 +129,4 @@ public class QuoteService {
             .bookCoverUrl(quote.getBook().getCoverUrl())
             .build();
     }
-
 }

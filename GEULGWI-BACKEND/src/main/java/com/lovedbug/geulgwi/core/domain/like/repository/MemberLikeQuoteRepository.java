@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberLikeQuoteRepository extends JpaRepository<MemberLikeQuote, Long> {
 
-    boolean existsByMemberIdAndQuoteId(Long memberId, Long quoteId);
-    void deleteByMemberIdAndQuoteId(Long memberId, Long quoteId);
-    long countByQuoteId(Long quoteId);
+    boolean existsByMemberIdAndQuote_QuoteId(Long memberId, Long quoteId);
+    void deleteByMemberIdAndQuote_QuoteId(Long memberId, Long quoteId);
+    long countByQuote_QuoteId(Long quoteId);
 }

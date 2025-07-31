@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.core.domain.quote;
 
+import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteSearchResponse;
 import com.lovedbug.geulgwi.core.security.annotation.CurrentUser;
 import com.lovedbug.geulgwi.core.security.dto.AuthenticatedUser;
 import lombok.RequiredArgsConstructor;
@@ -59,5 +60,11 @@ public class QuoteController {
         return ResponseEntity
             .noContent()
             .build();
+    }
+
+    @GetMapping("/by-content")
+    public ResponseEntity<QuoteSearchResponse> searchQuotesByContent(@RequestParam("content") String content, Pageable pageable) {
+
+        return ResponseEntity.ok(quoteService.searchQuotesByContent(content, pageable));
     }
 }

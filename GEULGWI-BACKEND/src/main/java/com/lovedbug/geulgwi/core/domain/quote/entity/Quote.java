@@ -2,11 +2,13 @@ package com.lovedbug.geulgwi.core.domain.quote.entity;
 
 import com.lovedbug.geulgwi.core.common.entity.BaseTimeEntity;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
+import com.lovedbug.geulgwi.core.domain.like.entity.MemberLikeQuote;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,6 +46,9 @@ public class Quote extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id",  nullable = false, updatable = false)
     private Book book;
+
+    @OneToMany(mappedBy = "quote", fetch = FetchType.LAZY)
+    private List<MemberLikeQuote> likes;
 
     @Column(nullable = false)
     private Long memberId;
