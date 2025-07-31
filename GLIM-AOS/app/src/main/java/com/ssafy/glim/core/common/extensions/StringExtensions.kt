@@ -1,8 +1,18 @@
 package com.ssafy.glim.core.common.extensions
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.core.util.PatternsCompat
 import com.ssafy.glim.core.domain.model.user.Gender
 import java.util.Calendar
+
+/**
+ * TextFieldValue의 텍스트를 YYYY-MM-DD 형식으로 변환
+ */
+fun TextFieldValue.formatBirthDate(): List<Int> {
+    return this.text.formatBirthDate()
+}
+
+// 기존 String 확장 함수들...
 
 /**
  * 이메일 형식이 유효한지 확인합니다.
@@ -95,9 +105,9 @@ fun String.validateBirthDateDetailed(): BirthDateValidation {
         // 월별 최대 일수 검사
         val maxDaysInMonth =
             when (month) {
-                2 -> if (isLeapYear(year)) 29 else 28 // 2월 (윤년 고려)
-                4, 6, 9, 11 -> 30 // 4, 6, 9, 11월은 30일
-                else -> 31 // 1, 3, 5, 7, 8, 10, 12월은 31일
+                2 -> if (isLeapYear(year)) 29 else 28
+                4, 6, 9, 11 -> 30
+                else -> 31
             }
 
         if (day > maxDaysInMonth) {

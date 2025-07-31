@@ -10,7 +10,7 @@ data class SignUpUiState(
     val password: TextFieldValue = TextFieldValue(""),
     val confirmPassword: TextFieldValue = TextFieldValue(""),
     val name: TextFieldValue = TextFieldValue(""),
-    val birthDate: String = "",
+    val birthDate: TextFieldValue = TextFieldValue(""),
     val gender: String? = null,
     val actualVerificationCode: String = "",
     @StringRes val emailError: Int? = null,
@@ -34,12 +34,12 @@ data class SignUpUiState(
 
             SignUpStep.Profile ->
                 name.text.isNotBlank() &&
-                    birthDate.isNotBlank() &&
+                    birthDate.text.isNotBlank() &&
                     gender != null &&
                     nameError == null &&
                     birthDateError == null
 
-            SignUpStep.Celebration -> true // 축하 화면은 항상 유효
+            SignUpStep.Celebration -> true
         }
 }
 

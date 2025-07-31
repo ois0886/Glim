@@ -45,11 +45,9 @@ internal class SignUpViewModel @Inject constructor(
     }
 
     fun onCodeChanged(code: TextFieldValue) = intent {
-        val filteredCode = code.text.extractDigits(6)
-
-        val validationResult = if (filteredCode.isNotBlank()) {
+        val validationResult = if (code.text.isNotBlank()) {
             ValidationUtils.validateCode(
-                code = filteredCode,
+                code = code.text,
                 emptyErrorRes = R.string.error_code_empty,
                 invalidErrorRes = R.string.error_code_invalid
             )
@@ -62,7 +60,7 @@ internal class SignUpViewModel @Inject constructor(
             is ValidationResult.Invalid -> validationResult.errorMessageRes
         }
 
-        reduce { state.copy(code = TextFieldValue(filteredCode), codeError = error) }
+        reduce { state.copy(code = code, codeError = error) }
     }
 
     fun onPasswordChanged(password: TextFieldValue) = intent {
@@ -135,12 +133,11 @@ internal class SignUpViewModel @Inject constructor(
         reduce { state.copy(name = name, nameError = error) }
     }
 
-    fun onBirthChanged(birth: String) = intent {
-        val filteredBirth = birth.extractDigits(8)
-
-        val validationResult = if (filteredBirth.isNotBlank()) {
+    fun onBirthChanged(birth: TextFieldValue) = intent {
+        val birthDate = birth.text.extractDigits(8)
+        val validationResult = if (birthDate.isNotBlank()) {
             ValidationUtils.validateBirthDate(
-                birthDate = filteredBirth,
+                birthDate = birthDate,
                 emptyErrorRes = R.string.error_birth_empty,
                 formatErrorRes = R.string.error_birth_format,
                 yearErrorRes = R.string.error_birth_year,
@@ -157,7 +154,7 @@ internal class SignUpViewModel @Inject constructor(
             is ValidationResult.Invalid -> validationResult.errorMessageRes
         }
 
-        reduce { state.copy(birthDate = filteredBirth, birthDateError = error) }
+        reduce { state.copy(birthDate = birth, birthDateError = error) }
     }
 
     fun onGenderSelected(gender: String) = intent {
