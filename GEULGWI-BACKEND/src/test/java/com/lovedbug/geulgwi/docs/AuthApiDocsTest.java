@@ -125,6 +125,7 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
                 ),
                 responseFields(
                     fieldWithPath("accessToken").description("새로 발급된 액세스 토큰"),
+                    fieldWithPath("refreshToken").description("새로 발급된 리프레쉬 토큰"),
                     fieldWithPath("memberEmail").description("토큰 소유자 이메일"),
                     fieldWithPath("memberId").description("토큰 소유자 ID")
                 )
