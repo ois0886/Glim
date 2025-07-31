@@ -39,7 +39,6 @@ import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
 import com.ssafy.glim.feature.auth.login.component.SocialButton
 import com.ssafy.glim.feature.auth.login.component.SocialProvider
-import com.ssafy.glim.feature.main.excludeSystemBars
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
@@ -85,11 +84,11 @@ internal fun LoginScreen(
 ) {
     Column(
         modifier =
-        Modifier
-            .fillMaxSize()
-            .padding(padding.excludeSystemBars())
-            .imePadding()
-            .navigationBarsPadding()
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .imePadding()
+                .navigationBarsPadding()
     ) {
         GlimTopBar(
             title = stringResource(id = R.string.login_title),
@@ -100,9 +99,9 @@ internal fun LoginScreen(
         )
         Column(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(PaddingValues(16.dp)),
+                Modifier
+                    .fillMaxSize()
+                    .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -132,11 +131,11 @@ internal fun LoginScreen(
 
             GlimButton(
                 text =
-                if (state.isLoading) {
-                    stringResource(R.string.login_loading)
-                } else {
-                    stringResource(R.string.login_button)
-                },
+                    if (state.isLoading) {
+                        stringResource(R.string.login_loading)
+                    } else {
+                        stringResource(R.string.login_button)
+                    },
                 onClick = onLoginClicked,
                 enabled = state.isLoginEnabled && !state.isLoading,
             )
@@ -208,12 +207,12 @@ fun PreviewLoginScreen_Empty() {
 fun PreviewLoginScreen_Errors() {
     LoginScreen(
         state =
-        LoginUiState(
-            email = TextFieldValue("invalid-email"),
-            password = TextFieldValue("short"),
-            emailError = R.string.error_email_invalid,
-            passwordError = R.string.error_password_invalid,
-        ),
+            LoginUiState(
+                email = TextFieldValue("invalid-email"),
+                password = TextFieldValue("short"),
+                emailError = R.string.error_email_invalid,
+                passwordError = R.string.error_password_invalid,
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},
@@ -230,10 +229,10 @@ fun PreviewLoginScreen_Errors() {
 fun PreviewLoginScreen_Valid() {
     LoginScreen(
         state =
-        LoginUiState(
-            email = TextFieldValue("user@example.com"),
-            password = TextFieldValue("Aa1!abcd"),
-        ),
+            LoginUiState(
+                email = TextFieldValue("user@example.com"),
+                password = TextFieldValue("Aa1!abcd"),
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},
@@ -250,11 +249,11 @@ fun PreviewLoginScreen_Valid() {
 fun PreviewLoginScreen_Loading() {
     LoginScreen(
         state =
-        LoginUiState(
-            email = TextFieldValue("user@example.com"),
-            password = TextFieldValue("Aa1!abcd"),
-            isLoading = true,
-        ),
+            LoginUiState(
+                email = TextFieldValue("user@example.com"),
+                password = TextFieldValue("Aa1!abcd"),
+                isLoading = true,
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},
