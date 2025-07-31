@@ -19,5 +19,5 @@ public class QuoteWithBookResponse {
     private String bookCoverUrl;
 
     private boolean isLiked;
-    private Long likeCount;
+    private long likeCount;
 }

@@ -43,6 +43,7 @@ public class QuoteService {
                 boolean isLiked = (memberId != null) && memberLikeQuoteService.isLikedBy(memberId, quote.getQuoteId());
                 long likeCount = memberLikeQuoteService.countLikes(quote.getQuoteId());
 
+
                 return QuoteWithBookResponse.builder()
                     .quoteId(quote.getQuoteId())
                     .quoteImageName(quote.getImageName())
