@@ -14,9 +14,9 @@
 
     <!-- 이렇게 해야 됨 -->
     <style name="Theme.MyApplication.Splash" parent="Theme.SplashScreen">
-        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="windowSplashScreenBackground">@color/neural10</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash</item>
         <item name="postSplashScreenTheme">@style/Theme.MyApplication</item>
-        <item name="windowSplashScreenAnimatedIcon">@null</item>
     </style>
 
 </resources>
