@@ -37,26 +37,29 @@ public class BookService {
 
     public List<AladdinBookResponse> getBooksByKeyword(AladdinSearchQueryType queryType, String keyword, int page) {
         AladdinBookSearchConditionDto searchCondition = AladdinBookSearchConditionDto.builder()
-                .queryType(queryType.name())
-                .query(keyword)
-                .start(page)
-                .build();
+            .queryType(queryType.name())
+            .query(keyword)
+            .start(page)
+            .build();
+
+        // TODO: 키워드 관리
+        BookScheduler.keywords.add(keyword);
 
         return bookProviderClient.searchBooksByCondition(searchCondition).getItems();
     }
 
     public BookInfoResponse getBookInfoById(long bookId) {
         Book book = bookRepository.findBookByBookId(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("해당하는 책이 없습니다 bookId = " + bookId));
+            .orElseThrow(() -> new EntityNotFoundException("해당하는 책이 없습니다 bookId = " + bookId));
 
         return BookMapper.toBookInfoResponse(book);
     }
 
     public List<AladdinBookResponse> getBestSellerBooks(AladdinListQueryType listQueryType, int page) {
         AladdinBookListConditionDto listCondition = AladdinBookListConditionDto.builder()
-                .queryType(listQueryType.name())
-                .start(page)
-                .build();
+            .queryType(listQueryType.name())
+            .start(page)
+            .build();
 
         return bookProviderClient.getBooks(listCondition).getItems();
     }
@@ -65,14 +68,14 @@ public class BookService {
         List<Book> books = bookRepository.findTop10ByOrderByViewsDesc();
 
         return books.stream()
-                .map(book -> new PopularBookResponse(book.getBookId(), book.getTitle(), book.getAuthor(), book.getPublisher(), book.getCoverUrl()))
-                .toList();
+            .map(book -> new PopularBookResponse(book.getBookId(), book.getTitle(), book.getAuthor(), book.getPublisher(), book.getCoverUrl()))
+            .toList();
     }
 
     @Transactional
     public void increaseViewCount(Long bookId) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("없는 책 id 입니다. 책 id = " + bookId));
+            .orElseThrow(() -> new EntityNotFoundException("없는 책 id 입니다. 책 id = " + bookId));
 
         book.increaseViewCount();
     }
@@ -90,20 +93,20 @@ public class BookService {
             }
 
             Book book = Book.builder()
-                    .isbn(aladdinBook.getIsbn())
-                    .title(aladdinBook.getTitle())
-                    .author(aladdinBook.getAuthor())
-                    .category(aladdinBook.getCategoryName())
-                    .categoryId(aladdinBook.getCategoryId())
-                    .publisher(aladdinBook.getPublisher())
-                    .description(aladdinBook.getDescription())
-                    .isbn(aladdinBook.getIsbn())
-                    .isbn13(aladdinBook.getIsbn13())
-                    .publishedDate(
-                            LocalDate.parse(aladdinBook.getPublishedDate(), DateTimeFormatter.ISO_LOCAL_DATE))
-                    .coverUrl(aladdinBook.getCoverUrl())
-                    .linkUrl(aladdinBook.getLinkUrl())
-                    .build();
+                .isbn(aladdinBook.getIsbn())
+                .title(aladdinBook.getTitle())
+                .author(aladdinBook.getAuthor())
+                .category(aladdinBook.getCategoryName())
+                .categoryId(aladdinBook.getCategoryId())
+                .publisher(aladdinBook.getPublisher())
+                .description(aladdinBook.getDescription())
+                .isbn(aladdinBook.getIsbn())
+                .isbn13(aladdinBook.getIsbn13())
+                .publishedDate(
+                    LocalDate.parse(aladdinBook.getPublishedDate(), DateTimeFormatter.ISO_LOCAL_DATE))
+                .coverUrl(aladdinBook.getCoverUrl())
+                .linkUrl(aladdinBook.getLinkUrl())
+                .build();
 
             bookRepository.save(book);
         }

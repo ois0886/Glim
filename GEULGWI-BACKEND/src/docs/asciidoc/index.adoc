@@ -266,3 +266,18 @@ include::{snippets}/like_api_docs_test/unlike_to_quote/request-fields.adoc[]
 ==== 응답
 
 include::{snippets}/like_api_docs_test/unlike_to_quote/http-response.adoc[]
+=======
+
+== Admin API
+
+=== Admin 메인 큐레이션 조회
+
+==== 요청
+
+include::{snippets}/admin_api_docs_test/get_main_curation/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_api_docs_test/get_main_curation/http-response.adoc[]
+
+include::{snippets}/admin_api_docs_test/get_main_curation/response-fields.adoc[]

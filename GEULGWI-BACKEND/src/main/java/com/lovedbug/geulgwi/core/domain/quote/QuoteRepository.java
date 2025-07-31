@@ -17,4 +17,7 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
 
     @EntityGraph(attributePaths = {"book"})
     List<Quote> findAllByBookIsbnAndVisibility(String isbn, String visibility);
+
+    @Query("SELECT q FROM Quote q JOIN FETCH q.book WHERE q.visibility = 'PUBLIC' ORDER BY function('random')")
+    List<Quote> findPublicQuotesByRandom(Pageable pageable);
 }
