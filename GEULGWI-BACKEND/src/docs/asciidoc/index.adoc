@@ -127,6 +127,18 @@ include::{snippets}/quote_api_docs_test/increase_quote_view_count/path-parameter
 
 include::{snippets}/quote_api_docs_test/increase_quote_view_count/http-response.adoc[]
 
+=== 키워드로 글귀 검색
+
+==== 요청
+
+include::{snippets}/quote_api_docs_test/search_quotes_by_content/http-request.adoc[]
+
+include::{snippets}/quote_api_docs_test/search_quotes_by_content/query-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/quote_api_docs_test/search_quotes_by_content/http-response.adoc[]
+
 == 검색 API
 
 === 인기 검색어 조회
