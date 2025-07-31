@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.navigation.compose.NavHost
 import com.ssafy.glim.feature.auth.navigation.authNavGraph
 import com.ssafy.glim.feature.bookdetail.navigation.bookDetailNavGraph
+import com.ssafy.glim.feature.celebrations.navigation.celebrationsNavGraph
 import com.ssafy.glim.feature.glimlist.navigation.glimListNavGraph
 import com.ssafy.glim.feature.home.navigation.homeNavGraph
 import com.ssafy.glim.feature.library.navigation.libraryNavGraph
@@ -51,30 +52,42 @@ internal fun MainScreen(navigator: MainNavController = rememberMainNavController
             startDestination = navigator.startDestination,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
-            modifier = Modifier.fillMaxSize().background(color = Color.White),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.White),
         ) {
+            celebrationsNavGraph(
+                padding = innerPadding,
+            )
+
             authNavGraph(
                 padding = innerPadding,
             )
+
             homeNavGraph(
                 padding = innerPadding,
             )
+
             postNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,
             )
+
             libraryNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,
             )
+
             profileNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,
             )
+
             reelsNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,
             )
+
             glimListNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,

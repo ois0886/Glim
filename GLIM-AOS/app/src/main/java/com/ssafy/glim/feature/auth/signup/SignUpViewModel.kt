@@ -15,7 +15,6 @@ import com.ssafy.glim.core.domain.usecase.auth.VerifyEmailUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -167,7 +166,6 @@ internal class SignUpViewModel @Inject constructor(
             SignUpStep.Code -> validateCodeStep()
             SignUpStep.Password -> validatePasswordStep()
             SignUpStep.Profile -> validateProfileStep()
-            SignUpStep.Celebration -> performCelebrations()
         }
     }
 
@@ -341,15 +339,10 @@ internal class SignUpViewModel @Inject constructor(
             )
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
-            moveToNextStep()
+            navigator.navigateAndClearBackStack(Route.Celebration(state.name.text))
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
             postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
         }
-    }
-
-    private fun performCelebrations() = intent {
-        delay(2000)
-        navigator.navigateAndClearBackStack(Route.Login)
     }
 }

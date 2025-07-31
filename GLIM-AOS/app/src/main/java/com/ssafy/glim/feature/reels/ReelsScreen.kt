@@ -45,7 +45,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import coil.compose.LocalImageLoader
 import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Quote
@@ -179,7 +178,6 @@ fun QuoteItem(
                     }
                 }
         )
-
 
         QuoteBookContent(
             modifier = Modifier.align(Alignment.BottomEnd),
