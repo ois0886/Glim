@@ -81,11 +81,11 @@ fun LibraryRoute(
 
     Column(
         modifier =
-        modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .systemBarsPadding()
-            .imePadding(),
+            modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .systemBarsPadding()
+                .imePadding(),
     ) {
         if (state.searchMode == SearchMode.POPULAR) {
             Column(
@@ -121,46 +121,46 @@ fun LibraryRoute(
                 )
             },
             modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 8.dp)
-                .onFocusChanged { focusState ->
-                    if (focusState.isFocused && state.searchMode == SearchMode.POPULAR) {
-                        viewModel.updateSearchMode(SearchMode.RECENT)
-                    }
-                },
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 8.dp)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused && state.searchMode == SearchMode.POPULAR) {
+                            viewModel.updateSearchMode(SearchMode.RECENT)
+                        }
+                    },
             shape = RoundedCornerShape(8.dp),
             colors =
-            OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
-                focusedBorderColor = Color.LightGray,
-                unfocusedBorderColor = Color.LightGray,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-            ),
+                OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    focusedBorderColor = Color.LightGray,
+                    unfocusedBorderColor = Color.LightGray,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                ),
             singleLine = true,
             suffix = {
                 Icon(
                     painter = painterResource(R.drawable.ic_search),
                     contentDescription = null,
                     modifier =
-                    Modifier.clickable {
-                        viewModel.onSearchExecuted()
-                    },
+                        Modifier.clickable {
+                            viewModel.onSearchExecuted()
+                        },
                     tint = Color.Black
                 )
             },
             keyboardOptions =
-            KeyboardOptions(
-                imeAction = ImeAction.Search,
-            ),
+                KeyboardOptions(
+                    imeAction = ImeAction.Search,
+                ),
             keyboardActions =
-            KeyboardActions(
-                onSearch = {
-                    viewModel.onSearchExecuted()
-                },
-            ),
+                KeyboardActions(
+                    onSearch = {
+                        viewModel.onSearchExecuted()
+                    },
+                ),
         )
 
         when (state.searchMode) {
@@ -198,31 +198,25 @@ fun LibraryRoute(
 
             SearchMode.RESULT -> {
                 Spacer(modifier = Modifier.height(8.dp))
-                if (state.isLoading && !state.isRefreshing) {
-                    Box(modifier = modifier.padding(40.dp).fillMaxWidth()) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp).align(Alignment.Center),
-                            color = MaterialTheme.colorScheme.primary,
-                            strokeWidth = 2.dp
-                        )
-                    }
-                } else {
-                    SearchResultSection(
-                        searchQuery = state.searchQuery,
-                        bookList = state.searchBooks,
-                        quoteList = state.searchQuotes,
-                        isRefreshing = state.isRefreshing,
-                        onLoadMore = { viewModel.loadMoreBooks() },
-                        onBookClick = {
-                            if (onBookSelected == null) {
-                                viewModel.onBookClicked(it)
-                            } else {
-                                onBookSelected(it)
-                            }
-                        },
-                        onQuoteClick = { viewModel.onQuoteClicked(it) },
-                    )
-                }
+                SearchResultSection(
+                    searchQuery = state.searchQuery,
+                    bookList = state.searchBooks,
+                    quoteList = state.searchQuotes,
+                    isLoading = state.isLoading,
+                    isRefreshing = state.isRefreshing,
+                    onLoadMore = { viewModel.loadMoreBooks() },
+                    onBookClick = {
+                        if (onBookSelected == null) {
+                            viewModel.onBookClicked(it)
+                        } else {
+                            onBookSelected(it)
+                        }
+                    },
+                    onQuoteClick = { viewModel.onQuoteClicked(it) },
+                    selectedFilter = state.selectedFilter,
+                    onSelectFilter = viewModel::onSelectFilter,
+                )
+
             }
         }
     }
