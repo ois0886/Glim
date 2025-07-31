@@ -48,14 +48,14 @@ interface QuoteService {
         @Path("id") quoteId: Long,
     )
 
-    @POST("/api/v1/likes/quotes")
+    @POST("/api/v1/likes/quotes/{quoteId}")
     suspend fun likeQuote(
-        @Body quoteId: Long
+        @Path("quoteId") quoteId: Long
     )
 
-    @DELETE("/api/v1/likes/quotes")
+    @DELETE("/api/v1/likes/quotes/{quoteId}")
     suspend fun unLikeQuote(
-        @Body quoteId: Long
+        @Path("quoteId") quoteId: Long
     )
 
     @GET("/api/v1/quotes/{quoteId}")
