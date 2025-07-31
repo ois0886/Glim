@@ -227,7 +227,7 @@ fun QuoteItem(
                 }
                 Text(
                     "${quote.likes}",
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
                 )
             }
@@ -295,7 +295,7 @@ fun QuoteBookContent(
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "$bookName ($page)",
+                    text = bookName,
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,

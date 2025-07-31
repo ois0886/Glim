@@ -131,7 +131,7 @@ class PostViewModel @Inject constructor(
             }
         }
 
-    fun backgroundImageSelected(uri: Uri?) =
+    fun backgroundImageSelected(uri: Uri) =
         intent {
             reduce { state.copy(backgroundImageUri = uri) }
         }

@@ -53,6 +53,7 @@ fun PostContent(
     onCancelExit: () -> Unit,
     updateBottomSheetState: (Boolean) -> Unit,
     selectedBook: (Book) -> Unit,
+    onBackPress: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
@@ -128,6 +129,7 @@ fun PostContent(
             onCreateTextClick = onTextFocusChanged,
             onCompleteClick = onCompleteClick,
             clearFocus = { focusManager.clearFocus() },
+            onBackPress = onBackPress,
             graphicsLayer = imageGraphicsLayer,
             modifier = Modifier.align(Alignment.BottomEnd),
         )
@@ -139,6 +141,8 @@ fun PostContent(
                 updateBottomSheetState(true)
             },
         )
+
+
 
         val bottomSheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = false
