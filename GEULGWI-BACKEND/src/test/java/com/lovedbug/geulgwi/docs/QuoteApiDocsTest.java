@@ -205,7 +205,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
             .param("content", contentKeyword)
             .param("page", 0)
             .param("size", 10)
-            .filter(document("{class-name}/{method-name}",
+            .filter(document("{class_name}/{method_name}",
                 queryParameters(
                     parameterWithName("content").description("검색할 글귀 내용 키워드"),
                     parameterWithName("page").description("페이지 번호 (0부터 시작)").optional(),
