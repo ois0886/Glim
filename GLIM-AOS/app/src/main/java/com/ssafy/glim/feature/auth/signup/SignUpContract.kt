@@ -20,6 +20,7 @@ data class SignUpUiState(
     @StringRes val nameError: Int? = null,
     @StringRes val birthDateError: Int? = null,
     val isLoading: Boolean = false,
+    val showCelebrations: Boolean = false,
 ) {
     val isCurrentStepValid: Boolean
         get() = when (currentStep) {
@@ -37,6 +38,8 @@ data class SignUpUiState(
                     gender != null &&
                     nameError == null &&
                     birthDateError == null
+
+            SignUpStep.Celebration -> true // 축하 화면은 항상 유효
         }
 }
 
@@ -48,18 +51,21 @@ enum class SignUpStep(val progress: Float) {
     Email(0.25f),
     Code(0.5f),
     Password(0.75f),
-    Profile(1f);
+    Profile(1f),
+    Celebration(0f);
 
     fun next(): SignUpStep? =
         when (this) {
             Email -> Code
             Code -> Password
             Password -> Profile
-            Profile -> null
+            Profile -> Celebration
+            Celebration -> null
         }
 
     fun prev(): SignUpStep? =
         when (this) {
+            Celebration -> Profile
             Profile -> Password
             Password -> Code
             Code -> Email

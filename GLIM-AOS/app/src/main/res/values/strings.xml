@@ -192,4 +192,8 @@
     <string name="error_update_password_failed">비밀번호 변경에 실패했습니다</string>
     <string name="error_update_profile_failed">개인정보 변경에 실패했습니다</string>
 
+    <string name="welcome_message">%1$s님 \n환영합니다!</string>
+    <string name="welcome_image_description">환영 이미지</string>
+    <string name="celebration_image_description">축하 이미지</string>
+
 </resources>

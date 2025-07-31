@@ -46,7 +46,9 @@ class MainActivity : ComponentActivity() {
     private var isLoading by mutableStateOf(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        android.util.Log.d("Splash", "스플래쉬 시작")
         val splashScreen = installSplashScreen()
+        android.util.Log.d("Splash", "스플래쉬 설치됨")
         super.onCreate(savedInstanceState)
 
         if (PermissionUtil.alertPermissionCheck(this)) {
@@ -54,10 +56,7 @@ class MainActivity : ComponentActivity() {
         }
         enableEdgeToEdge()
 
-        // 초기화 작업
         performInitialization()
-
-        // 로딩 상태에 따라 스플래쉬 화면 제어
         splashScreen.setKeepOnScreenCondition { isLoading }
 
         setContent {
@@ -94,7 +93,6 @@ class MainActivity : ComponentActivity() {
         Thread {
             try {
                 startLockService()
-                // 최소 표시 시간 (선택사항)
                 Thread.sleep(1500)
             } catch (e: Exception) {
                 e.printStackTrace()
