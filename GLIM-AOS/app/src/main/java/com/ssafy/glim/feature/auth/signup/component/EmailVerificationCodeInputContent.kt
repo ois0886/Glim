@@ -49,20 +49,18 @@ fun EmailVerificationCodeInputContent(
         TextField(
             value = value,
             onValueChange = { input ->
+
                 if (input.text.all { it.isDigit() }) {
                     onValueChange(input)
                 }
             },
-            modifier =
-            modifier
-                .fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             isError = error != null,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             label = {
                 Text(
                     text = error ?: stringResource(id = R.string.verification_code_placeholder),
-                    color =
-                    if (error != null) {
+                    color = if (error != null) {
                         MaterialTheme.colorScheme.error
                     } else {
                         Color.Gray

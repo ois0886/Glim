@@ -24,7 +24,6 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.ui.GlimTopBar
 import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.GlimButton
-import com.ssafy.glim.feature.auth.signup.component.CelebrationsContent
 import com.ssafy.glim.feature.auth.signup.component.EmailAuthInputContent
 import com.ssafy.glim.feature.auth.signup.component.EmailVerificationCodeInputContent
 import com.ssafy.glim.feature.auth.signup.component.PasswordConfirmInputContent
@@ -58,7 +57,7 @@ internal fun SignUpRoute(
         onPasswordChanged = viewModel::onPasswordChanged,
         onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
         onNameChanged = viewModel::onNameChanged,
-        onBirthYearChanged = viewModel::onBirthChanged,
+        onBirthChanged = viewModel::onBirthChanged,
         onGenderSelected = viewModel::onGenderSelected,
         onNextStep = viewModel::onNextStep,
         onBackStep = viewModel::onBackStep,
@@ -74,7 +73,7 @@ private fun SignUpScreen(
     onPasswordChanged: (TextFieldValue) -> Unit,
     onConfirmPasswordChanged: (TextFieldValue) -> Unit,
     onNameChanged: (TextFieldValue) -> Unit,
-    onBirthYearChanged: (String) -> Unit,
+    onBirthChanged: (TextFieldValue) -> Unit,
     onGenderSelected: (String) -> Unit,
     onNextStep: () -> Unit,
     onBackStep: () -> Unit,
@@ -90,18 +89,16 @@ private fun SignUpScreen(
             .imePadding()
             .navigationBarsPadding()
     ) {
-        if (state.currentStep != SignUpStep.Celebration) {
-            GlimTopBar(
-                title = stringResource(R.string.login_signup),
-                showBack = state.currentStep != SignUpStep.Email,
-                onBack = onBackStep,
-                alignment = TitleAlignment.Center,
-                titleColor = Color.Black,
-                titleSize = 20.sp,
-            )
+        GlimTopBar(
+            title = stringResource(R.string.login_signup),
+            showBack = state.currentStep != SignUpStep.Email,
+            onBack = onBackStep,
+            alignment = TitleAlignment.Center,
+            titleColor = Color.Black,
+            titleSize = 20.sp,
+        )
 
-            ProgressIndicatorBar(progress = state.currentStep.progress)
-        }
+        ProgressIndicatorBar(progress = state.currentStep.progress)
 
         Column(
             modifier = Modifier
@@ -140,35 +137,25 @@ private fun SignUpScreen(
                         onNameChange = onNameChanged,
                         nameError = state.nameError?.let { stringResource(it) },
                         birthYear = state.birthDate,
-                        onBirthYearChange = onBirthYearChanged,
+                        onBirthYearChange = onBirthChanged,
                         birthYearError = state.birthDateError?.let { stringResource(it) },
                         selectedGender = state.gender,
                         onGenderSelect = onGenderSelected,
-                    )
-
-                SignUpStep.Celebration ->
-                    CelebrationsContent(
-                        nickname = state.name.text
                     )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            if (state.currentStep != SignUpStep.Celebration) {
-                Spacer(modifier = Modifier.weight(1f))
-
-                GlimButton(
-                    text = when (state.currentStep) {
-                        SignUpStep.Email -> stringResource(R.string.signup_send_verification_code)
-                        SignUpStep.Code -> stringResource(R.string.signup_verify_code)
-                        SignUpStep.Password -> stringResource(R.string.signup_confirm)
-                        SignUpStep.Profile -> stringResource(R.string.login_signup)
-                        else -> ""
-                    },
-                    onClick = onNextStep,
-                    enabled = state.isCurrentStepValid && !state.isLoading,
-                )
-            }
+            GlimButton(
+                text = when (state.currentStep) {
+                    SignUpStep.Email -> stringResource(R.string.signup_send_verification_code)
+                    SignUpStep.Code -> stringResource(R.string.signup_verify_code)
+                    SignUpStep.Password -> stringResource(R.string.signup_confirm)
+                    SignUpStep.Profile -> stringResource(R.string.login_signup)
+                },
+                onClick = onNextStep,
+                enabled = state.isCurrentStepValid && !state.isLoading,
+            )
         }
     }
 }
@@ -188,7 +175,7 @@ private fun PreviewSignUpScreen_EmailStep() {
         onPasswordChanged = {},
         onConfirmPasswordChanged = {},
         onNameChanged = {},
-        onBirthYearChanged = {},
+        onBirthChanged = {},
         onGenderSelected = {},
         onNextStep = {},
         onBackStep = {},
@@ -210,7 +197,7 @@ private fun PreviewSignUpScreen_EmailStepWithError() {
         onPasswordChanged = {},
         onConfirmPasswordChanged = {},
         onNameChanged = {},
-        onBirthYearChanged = {},
+        onBirthChanged = {},
         onGenderSelected = {},
         onNextStep = {},
         onBackStep = {},
@@ -232,7 +219,7 @@ private fun PreviewSignUpScreen_CodeStep() {
         onPasswordChanged = {},
         onConfirmPasswordChanged = {},
         onNameChanged = {},
-        onBirthYearChanged = {},
+        onBirthChanged = {},
         onGenderSelected = {},
         onNextStep = {},
         onBackStep = {},
@@ -256,7 +243,7 @@ private fun PreviewSignUpScreen_PasswordStep() {
         onPasswordChanged = {},
         onConfirmPasswordChanged = {},
         onNameChanged = {},
-        onBirthYearChanged = {},
+        onBirthChanged = {},
         onGenderSelected = {},
         onNextStep = {},
         onBackStep = {},
@@ -280,7 +267,7 @@ private fun PreviewSignUpScreen_PasswordStepWithError() {
         onPasswordChanged = {},
         onConfirmPasswordChanged = {},
         onNameChanged = {},
-        onBirthYearChanged = {},
+        onBirthChanged = {},
         onGenderSelected = {},
         onNextStep = {},
         onBackStep = {},
@@ -294,7 +281,7 @@ private fun PreviewSignUpScreen_ProfileStep() {
         state = SignUpUiState(
             currentStep = SignUpStep.Profile,
             name = TextFieldValue("인성"),
-            birthDate = "1998",
+            birthDate = TextFieldValue("1998"),
             gender = "남성",
             nameError = null,
             birthDateError = null,
@@ -305,28 +292,7 @@ private fun PreviewSignUpScreen_ProfileStep() {
         onPasswordChanged = {},
         onConfirmPasswordChanged = {},
         onNameChanged = {},
-        onBirthYearChanged = {},
-        onGenderSelected = {},
-        onNextStep = {},
-        onBackStep = {},
-    )
-}
-
-@Preview(name = "Step 5 - Celebration", showBackground = true)
-@Composable
-private fun PreviewSignUpScreen_CelebrationStep() {
-    SignUpScreen(
-        state = SignUpUiState(
-            currentStep = SignUpStep.Celebration,
-            name = TextFieldValue("홍길동"),
-        ),
-        padding = PaddingValues(0.dp),
-        onEmailChanged = {},
-        onCodeChanged = {},
-        onPasswordChanged = {},
-        onConfirmPasswordChanged = {},
-        onNameChanged = {},
-        onBirthYearChanged = {},
+        onBirthChanged = {},
         onGenderSelected = {},
         onNextStep = {},
         onBackStep = {},

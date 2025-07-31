@@ -10,7 +10,7 @@ data class SignUpUiState(
     val password: TextFieldValue = TextFieldValue(""),
     val confirmPassword: TextFieldValue = TextFieldValue(""),
     val name: TextFieldValue = TextFieldValue(""),
-    val birthDate: String = "",
+    val birthDate: TextFieldValue = TextFieldValue(""),
     val gender: String? = null,
     val actualVerificationCode: String = "",
     @StringRes val emailError: Int? = null,
@@ -34,12 +34,10 @@ data class SignUpUiState(
 
             SignUpStep.Profile ->
                 name.text.isNotBlank() &&
-                    birthDate.isNotBlank() &&
+                    birthDate.text.isNotBlank() &&
                     gender != null &&
                     nameError == null &&
                     birthDateError == null
-
-            SignUpStep.Celebration -> true // 축하 화면은 항상 유효
         }
 }
 
@@ -51,21 +49,18 @@ enum class SignUpStep(val progress: Float) {
     Email(0.25f),
     Code(0.5f),
     Password(0.75f),
-    Profile(1f),
-    Celebration(0f);
+    Profile(1f);
 
     fun next(): SignUpStep? =
         when (this) {
             Email -> Code
             Code -> Password
             Password -> Profile
-            Profile -> Celebration
-            Celebration -> null
+            Profile -> null
         }
 
     fun prev(): SignUpStep? =
         when (this) {
-            Celebration -> Profile
             Profile -> Password
             Password -> Code
             Code -> Email
