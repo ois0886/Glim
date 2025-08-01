@@ -221,7 +221,7 @@ class TokenAuthenticator @Inject constructor(
         }
     }
 
-    private fun performTokenRefresh(refreshToken: String): RefreshResult {
+    private suspend fun performTokenRefresh(refreshToken: String): RefreshResult {
         return try {
             // Header에 Bearer 토큰 형식으로 전송
             val authHeader = "Bearer $refreshToken"
