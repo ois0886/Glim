@@ -107,6 +107,8 @@ include::{snippets}/quote_api_docs_test/get_public_quotes_by_isbn/response-field
 
 include::{snippets}/quote_api_docs_test/get_quote_by_id/http-request.adoc[]
 
+include::{snippets}/quote_api_docs_test/get_quote_by_id/path-parameters.adoc[]
+
 ==== 응답
 
 include::{snippets}/quote_api_docs_test/get_quote_by_id/http-response.adoc[]
