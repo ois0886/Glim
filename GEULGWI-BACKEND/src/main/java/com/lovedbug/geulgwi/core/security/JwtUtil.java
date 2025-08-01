@@ -24,7 +24,7 @@ public class JwtUtil {
 
     private SecretKey hmacKey;
 
-    private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 60;
+    private static final long ACCESS_TOKEN_EXPIRY = 1000L * 10;
     private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 60 * 24 * 30;
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_AUTH  = "Authorization";
