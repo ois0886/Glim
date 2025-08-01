@@ -61,6 +61,7 @@ public class QuoteMapper {
             .bookCoverUrl(quote.getBook().getCoverUrl())
             .isLiked(quote.getLikes().stream()
                 .anyMatch(like -> like.getMemberId().equals(memberId)))
+            .likeCount(quote.getLikes().size())
             .build();
     }
 }
