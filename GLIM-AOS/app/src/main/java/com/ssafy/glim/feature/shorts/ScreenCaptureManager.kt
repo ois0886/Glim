@@ -1,5 +1,5 @@
 // Enhanced CaptureUtils.kt
-package com.ssafy.glim.feature.reels
+package com.ssafy.glim.feature.shorts
 
 import android.content.ContentValues
 import android.content.Context

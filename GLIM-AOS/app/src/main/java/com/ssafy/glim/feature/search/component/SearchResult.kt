@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.library.component
+package com.ssafy.glim.feature.search.component
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -12,12 +12,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -49,9 +47,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.model.QuoteSummary
-import com.ssafy.glim.feature.library.SearchFilter
+import com.ssafy.glim.feature.search.SearchFilter
 
 enum class SearchTab(val displayName: String) {
     BOOKS("도서"),

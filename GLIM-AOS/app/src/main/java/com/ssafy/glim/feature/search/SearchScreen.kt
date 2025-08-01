@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.library
+package com.ssafy.glim.feature.search
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,20 +34,20 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.feature.library.component.PopularSearchSection
-import com.ssafy.glim.feature.library.component.RecentSearchSection
-import com.ssafy.glim.feature.library.component.SearchResultSection
-import com.ssafy.glim.feature.library.component.SearchTab
+import com.ssafy.glim.feature.search.component.PopularSearchSection
+import com.ssafy.glim.feature.search.component.RecentSearchSection
+import com.ssafy.glim.feature.search.component.SearchResultSection
+import com.ssafy.glim.feature.search.component.SearchTab
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
-fun LibraryRoute(
+fun SearchRoute(
     modifier: Modifier = Modifier,
     padding: PaddingValues,
     popBackStack: () -> Unit,
     onBookSelected: ((Book) -> Unit)? = null,
-    viewModel: LibraryViewModel = hiltViewModel(),
+    viewModel: SearchViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -62,11 +60,11 @@ fun LibraryRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            is LibrarySideEffect.NavigateBack -> {
+            is SearchSideEffect.NavigateBack -> {
                 popBackStack()
             }
 
-            is LibrarySideEffect.ShowToast -> {
+            is SearchSideEffect.ShowToast -> {
                 Toast.makeText(
                     context,
                     sideEffect.message,

@@ -23,8 +23,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
-import com.ssafy.glim.feature.reels.CaptureActions
-import com.ssafy.glim.feature.reels.rememberCaptureActions
+import com.ssafy.glim.feature.shorts.CaptureActions
+import com.ssafy.glim.feature.shorts.rememberCaptureActions
 import kotlinx.coroutines.launch
 
 @Composable

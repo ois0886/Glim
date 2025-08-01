@@ -1,10 +1,10 @@
-package com.ssafy.glim.feature.library
+package com.ssafy.glim.feature.search
 
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.core.domain.model.SearchItem
-import com.ssafy.glim.feature.library.component.SearchTab
+import com.ssafy.glim.feature.search.component.SearchTab
 
 enum class SearchMode {
     POPULAR,
@@ -19,7 +19,7 @@ enum class SearchFilter(val filterName: String) {
     PUBLISHER("출판사")
 }
 
-data class LibraryState(
+data class SearchState(
     val searchQuery: String = "",
     val currentQuery: TextFieldValue = TextFieldValue(""),
     val totalResults: Int = 0,
@@ -37,8 +37,8 @@ data class LibraryState(
     val selectedFilter: SearchFilter = SearchFilter.KEYWORD
 )
 
-sealed class LibrarySideEffect {
-    data object NavigateBack : LibrarySideEffect()
+sealed class SearchSideEffect {
+    data object NavigateBack : SearchSideEffect()
 
-    data class ShowToast(val message: String) : LibrarySideEffect()
+    data class ShowToast(val message: String) : SearchSideEffect()
 }

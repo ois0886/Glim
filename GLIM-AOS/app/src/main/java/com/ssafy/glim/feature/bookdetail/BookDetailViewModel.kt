@@ -43,7 +43,7 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun onClickQuote(quoteId: Long) = intent {
-        navigator.navigate(BottomTabRoute.Reels(quoteId))
+        navigator.navigate(BottomTabRoute.Shorts(quoteId))
     }
 
     fun openUrl() = intent {

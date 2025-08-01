@@ -1,29 +1,29 @@
-package com.ssafy.glim.feature.glimlist.navigation
+package com.ssafy.glim.feature.myglims.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.ssafy.glim.core.navigation.MyGlimsRoute
-import com.ssafy.glim.feature.glimlist.GlimListRoute
-import com.ssafy.glim.feature.glimlist.GlimListType
+import com.ssafy.glim.feature.myglims.MyGlimsRoute
+import com.ssafy.glim.feature.myglims.MyGlimsType
 
-fun NavGraphBuilder.glimListNavGraph(
+fun NavGraphBuilder.myGlimsNavGraph(
     popBackStack: () -> Unit,
     padding: PaddingValues,
 ) {
     composable<MyGlimsRoute.Liked> { backStackEntry ->
-        GlimListRoute(
+        MyGlimsRoute(
             padding = padding,
             popBackStack = popBackStack,
-            listType = GlimListType.LIKED,
+            listType = MyGlimsType.LIKED,
         )
     }
 
     composable<MyGlimsRoute.Upload> { backStackEntry ->
-        GlimListRoute(
+        MyGlimsRoute(
             padding = padding,
             popBackStack = popBackStack,
-            listType = GlimListType.UPLOADED,
+            listType = MyGlimsType.UPLOADED,
         )
     }
 }

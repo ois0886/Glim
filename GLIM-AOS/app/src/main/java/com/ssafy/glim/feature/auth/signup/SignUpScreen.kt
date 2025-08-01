@@ -150,7 +150,7 @@ private fun SignUpScreen(
                 text = when (state.currentStep) {
                     SignUpStep.Email -> stringResource(R.string.signup_send_verification_code)
                     SignUpStep.Code -> stringResource(R.string.signup_verify_code)
-                    SignUpStep.Password -> stringResource(R.string.signup_confirm)
+                    SignUpStep.Password -> stringResource(R.string.password_confirm)
                     SignUpStep.Profile -> stringResource(R.string.login_signup)
                 },
                 onClick = onNextStep,
