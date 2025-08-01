@@ -103,7 +103,7 @@ constructor(
 
     fun onShareClick() =
         intent {
-            postSideEffect(ReelsSideEffect.ShowToast("개발중 입니다!"))
+            postSideEffect(ReelsSideEffect.ShowToast("개발 중 입니다!"))
         }
 
     fun loadQuote(quoteId: Long) = intent {
