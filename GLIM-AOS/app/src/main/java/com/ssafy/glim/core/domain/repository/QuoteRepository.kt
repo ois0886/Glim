@@ -3,17 +3,22 @@ package com.ssafy.glim.core.domain.repository
 import android.graphics.Bitmap
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.Quote
+import com.ssafy.glim.core.domain.model.QuoteSearchResult
 import com.ssafy.glim.core.domain.model.QuoteSummary
 
 interface QuoteRepository {
-
-    fun searchQuotes(query: String): List<Quote>
 
     suspend fun getQuotes(
         page: Int = 0,
         size: Int = 10,
         sort: String
     ): List<Quote>
+
+    suspend fun searchQuotes(
+        query: String,
+        page: Int,
+        size: Int
+    ): QuoteSearchResult
 
     suspend fun createQuote(
         content: String,
@@ -33,4 +38,8 @@ interface QuoteRepository {
     suspend fun getQuoteById(
         quoteId: Long
     ): Quote
+
+    suspend fun likeQuote(quoteId: Long)
+
+    suspend fun unLikeQuote(quoteId: Long)
 }

@@ -1,7 +1,7 @@
 package com.ssafy.glim.core.data.authmanager
 
 import android.util.Log
-import com.ssafy.glim.core.data.dto.token.AuthTokenRefresh
+import com.ssafy.glim.core.data.dto.token.AuthToken
 import com.ssafy.glim.core.data.service.AuthService
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -185,7 +185,7 @@ class TokenAuthenticator @Inject constructor(
             when (result) {
                 is RefreshResult.Success -> {
                     // 새 토큰 저장 (refreshToken은 응답에 포함되지 않으므로 기존 것 유지)
-                    authManager.saveToken(result.tokenData.accessToken, tokens.refreshToken)
+                    authManager.saveToken(result.tokenData.accessToken, result.tokenData.refreshToken)
 
                     // 성공 상태로 변경하고 대기 중인 스레드들에게 알림
                     refreshState.set(RefreshState.Success)
@@ -303,7 +303,7 @@ class TokenAuthenticator @Inject constructor(
 
     // 토큰 갱신 결과를 나타내는 sealed class
     private sealed class RefreshResult {
-        data class Success(val tokenData: AuthTokenRefresh) : RefreshResult()
+        data class Success(val tokenData: AuthToken) : RefreshResult()
         data class Failure(val error: String) : RefreshResult()
     }
 }

@@ -4,6 +4,7 @@ import com.ssafy.glim.core.data.dto.response.QuoteResponse
 import com.ssafy.glim.core.data.service.QuoteService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.http.Query
 import javax.inject.Inject
 
 class QuoteRemoteDataSource @Inject constructor(
@@ -13,11 +14,17 @@ class QuoteRemoteDataSource @Inject constructor(
         page: Int,
         size: Int,
         sort: String
-    ): List<QuoteResponse> = quoteService.getQuotes(
-        page = page,
+    ) = quoteService.getQuotes(
+        page = 0,
         size = size,
         sort = sort
     )
+
+    suspend fun searchQuotes(
+        content: String,
+        page: Int,
+        size: Int,
+    ) = quoteService.searchQuotes(content, page, size)
 
     suspend fun createQuote(
         quoteData: RequestBody,
@@ -34,4 +41,16 @@ class QuoteRemoteDataSource @Inject constructor(
     suspend fun getQuoteByIsbn(
         isbn: String
     ) = quoteService.getQuoteByIsbn(isbn)
+
+    suspend fun likeQuote(
+        quoteId: Long
+    ) = quoteService.likeQuote(quoteId)
+
+    suspend fun unLikeQuote(
+        quoteId: Long
+    ) = quoteService.unLikeQuote(quoteId)
+
+    suspend fun getQuoteById(
+        quoteId: Long
+    ) = quoteService.getQuoteById(quoteId)
 }

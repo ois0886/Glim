@@ -2,6 +2,7 @@ package com.ssafy.glim.feature.post.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -33,6 +34,7 @@ fun ActionButtons(
     onCreateTextClick: (Boolean) -> Unit,
     onCompleteClick: (CaptureActions) -> Unit,
     clearFocus: () -> Unit,
+    onBackPress: () -> Unit,
     graphicsLayer: GraphicsLayer,
     modifier: Modifier = Modifier,
 ) {
@@ -51,14 +53,28 @@ fun ActionButtons(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End,
     ) {
-        TextButton(onClick = {
-            coroutineScope.launch {
-                clearFocus()
-                onCompleteClick(captureAction)
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            IconButton(
+                onClick = onBackPress
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_close),
+                    contentDescription = null
+                )
             }
-        }) {
-            Text("완료", color = Color.White, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.weight(1f))
+            TextButton(onClick = {
+                coroutineScope.launch {
+                    clearFocus()
+                    onCompleteClick(captureAction)
+                }
+            }) {
+                Text("완료", color = Color.White, fontWeight = FontWeight.Bold)
+            }
         }
+
 
         Spacer(modifier = Modifier.weight(1f))
 
