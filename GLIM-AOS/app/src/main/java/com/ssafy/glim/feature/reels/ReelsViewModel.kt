@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.core.domain.usecase.quote.GetQuoteByIdUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
+import com.ssafy.glim.core.domain.usecase.quote.LikeQuoteUseCase
+import com.ssafy.glim.core.domain.usecase.quote.UnLikeQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.quote.UpdateQuoteViewCountUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
@@ -22,6 +24,8 @@ constructor(
     private val getQuotesUseCase: GetQuotesUseCase,
     private val updateQuoteViewCountUseCase: UpdateQuoteViewCountUseCase,
     private val getQuoteByIdUseCase: GetQuoteByIdUseCase,
+    private val likeQuoteUseCase: LikeQuoteUseCase,
+    private val unLikeQuoteUseCase: UnLikeQuoteUseCase,
     private val navigator: Navigator
 ) : ViewModel(), ContainerHost<ReelsState, ReelsSideEffect> {
     override val container: Container<ReelsState, ReelsSideEffect> = container(ReelsState())
@@ -32,9 +36,14 @@ constructor(
 
     fun toggleLike() =
         intent {
+            val currentQuote = state.currentQuote
+            if(currentQuote == null) {
+                postSideEffect(ReelsSideEffect.ShowToast("오류 발생"))
+                return@intent
+            }
             val updatedQuotes =
                 state.quotes.map { quote ->
-                    if (quote.quoteId == state.currentQuoteId) {
+                    if (quote.quoteId == currentQuote.quoteId) {
                         val newIsLike = !quote.isLike
                         quote.copy(
                             isLike = newIsLike,
@@ -45,30 +54,44 @@ constructor(
                     }
                 }
 
+            viewModelScope.launch {
+                runCatching {
+                    if (currentQuote.isLike) {
+                        unLikeQuoteUseCase(currentQuote.quoteId)
+                    } else {
+                        likeQuoteUseCase(currentQuote.quoteId)
+                    }
+                }.onFailure {
+                    Log.d("ReelsViewModel", "${it.message}")
+                    postSideEffect(ReelsSideEffect.ShowToast("좋아요 오류 발생"))
+                }
+            }
+
             reduce { state.copy(quotes = updatedQuotes) }
 
-            viewModelScope.launch {
-                // TODO: API 호출
-                // toggleLikeUseCase(state.currentQuoteId)
-            }
+
         }
 
     fun onPageChanged(page: Int) =
         intent {
             Log.d("ReelsViewModel", "$page / ${state.quotes.size} 페이지로 변경됨")
-            // 페이지가 변경될 때 currentQuoteId도 업데이트
+            // 페이지가 변경될 때 currentQuote.quoteId도 업데이트
             if (page >= 0 && page < state.quotes.size) {
                 reduce {
                     state.copy(
                         currentIdx = page,
-                        currentQuoteId = state.currentQuote?.quoteId ?: -1,
                     )
                 }
                 Log.d("ReelsViewModel", "현재 Quote Idx: ${state.currentIdx} / ${state.quotes.size}")
                 if (state.currentIdx >= state.quotes.size - 3) {
                     refresh()
                 }
-                runCatching { updateQuoteViewCountUseCase(state.currentQuoteId) }
+                val currentQuote = state.currentQuote
+                if(currentQuote == null) {
+                    postSideEffect(ReelsSideEffect.ShowToast("오류 발생"))
+                    return@intent
+                }
+                runCatching { updateQuoteViewCountUseCase(currentQuote.quoteId) }
                     .onSuccess {
                         Log.d("ReelsViewModel", "Quote view count updated successfully")
                     }
@@ -80,9 +103,7 @@ constructor(
 
     fun onShareClick() =
         intent {
-            state.currentQuote?.let {
-                postSideEffect(ReelsSideEffect.ShareQuote(it))
-            }
+            postSideEffect(ReelsSideEffect.ShowToast("개발 중 입니다!"))
         }
 
     fun loadQuote(quoteId: Long) = intent {
@@ -92,11 +113,12 @@ constructor(
                 reduce {
                     state.copy(
                         quotes = listOf(it),
-                        currentQuoteId = it.quoteId,
                         isLoading = false,
                         error = null
                     )
                 }
+                updateQuoteViewCountUseCase(quoteId)
+                refresh()
             }
             .onFailure {
                 Log.d("ReelsViewModel", "Failed to load quote: ${it.message}")
@@ -113,17 +135,16 @@ constructor(
         intent {
             runCatching { getQuotesUseCase(page = state.currentPage + 1, size = SIZE) }
                 .onSuccess {
-                    val newQuotes = it.filter { quote -> quote.quoteId != state.currentQuoteId }
-                    if (newQuotes.isNotEmpty()) {
+                    if (it.isNotEmpty()) {
                         reduce {
                             state.copy(
-                                quotes = state.quotes + newQuotes,
+                                quotes = state.quotes + it,
                                 currentPage = state.currentPage + 1,
                                 isLoading = false,
                                 error = null
                             )
                         }
-                        Log.d("ReelsViewModel", "Loaded ${newQuotes.size} new quotes")
+                        Log.d("ReelsViewModel", "Loaded ${it.size} new quotes")
                         Log.d("ReelsViewModel", "Total quotes: ${state.quotes.size}")
                     }
                 }

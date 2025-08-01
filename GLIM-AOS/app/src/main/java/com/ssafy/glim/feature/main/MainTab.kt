@@ -18,9 +18,9 @@ internal enum class MainTab(
         route = BottomTabRoute.Home,
     ),
     LIBRARY(
-        iconResId = R.drawable.ic_library,
+        iconResId = R.drawable.ic_search_24,
         contentDescription = "Library Icon",
-        label = "서재",
+        label = "검색",
         route = BottomTabRoute.Library,
     ),
     POST(
@@ -30,9 +30,9 @@ internal enum class MainTab(
         route = BottomTabRoute.Post,
     ),
     REELS(
-        iconResId = R.drawable.ic_reels,
+        iconResId = R.drawable.ic_glim,
         contentDescription = "Reels Icon",
-        label = "릴스",
+        label = "글:림",
         route = BottomTabRoute.Reels(),
     ),
     PROFILE(

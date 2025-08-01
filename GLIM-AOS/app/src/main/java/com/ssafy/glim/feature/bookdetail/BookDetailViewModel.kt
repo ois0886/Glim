@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.usecase.book.GetBookDetailUseCase
 import com.ssafy.glim.core.domain.usecase.book.UpdateBookViewCountUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetQuoteByIsbnUseCase
+import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +43,7 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun onClickQuote(quoteId: Long) = intent {
-        navigator.navigate(MainTab.REELS.route)
+        navigator.navigate(BottomTabRoute.Reels(quoteId))
     }
 
     fun openUrl() = intent {

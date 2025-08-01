@@ -17,13 +17,13 @@ fun GlimLoader(modifier: Modifier = Modifier) {
         modifier = modifier
             .size(80.dp)
             .background(
-                color = Color.Gray.copy(alpha = 0.1f),
+                color = Color(0xFF1C1B1F),
             ),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
             modifier = Modifier.size(24.dp),
-            color = MaterialTheme.colorScheme.primary,
+            color = Color.White,
             strokeWidth = 2.dp
         )
     }
