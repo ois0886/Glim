@@ -40,7 +40,7 @@ class QuoteRepositoryImpl @Inject constructor(
 
     override suspend fun searchQuotes(query: String, page: Int, size: Int): QuoteSearchResult {
         val data = quoteRemoteDataSource.searchQuotes(query, page, size).toDomain()
-        Log.d("LibraryViewModel lik2", "${data.quoteSummaries.map{it.isLiked}}")
+        Log.d("SearchViewModel lik2", "${data.quoteSummaries.map{it.isLiked}}")
         return data
     }
 

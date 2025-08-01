@@ -12,10 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.home.navigation.navigateToHome
-import com.ssafy.glim.feature.library.navigation.navigateToLibrary
+import com.ssafy.glim.feature.search.navigation.navigateToSearch
 import com.ssafy.glim.feature.post.navigation.navigateToPost
 import com.ssafy.glim.feature.profile.navigation.navigateToProfile
-import com.ssafy.glim.feature.reels.navigation.navigateToReels
+import com.ssafy.glim.feature.shorts.navigation.navigateToShorts
 
 internal class MainNavController(
     val navController: NavHostController,
@@ -50,9 +50,9 @@ internal class MainNavController(
 
         when (tab) {
             MainTab.HOME -> navController.navigateToHome(navOptions)
-            MainTab.LIBRARY -> navController.navigateToLibrary(navOptions)
+            MainTab.LIBRARY -> navController.navigateToSearch(navOptions)
             MainTab.POST -> navController.navigateToPost(navOptions)
-            MainTab.REELS -> navController.navigateToReels(navOptions)
+            MainTab.REELS -> navController.navigateToShorts(navOptions)
             MainTab.PROFILE -> navController.navigateToProfile(navOptions)
         }
     }

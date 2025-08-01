@@ -284,7 +284,7 @@ fun LockScreenContent(
                 onSwipe = viewBook,
                 backgroundColor = Gray.copy(alpha = 0.4f),
                 swipeDirection = SwipeDirection.RightToLeft,
-                paintRes = R.drawable.ic_library,
+                paintRes = R.drawable.ic_search,
             )
             Spacer(modifier = Modifier.weight(3F))
             SwipeButton(
@@ -297,7 +297,7 @@ fun LockScreenContent(
                 isComplete = state.isComplete,
                 onSwipe = viewQuote,
                 backgroundColor = Gray.copy(alpha = 0.4f),
-                paintRes = R.drawable.ic_reels
+                paintRes = R.drawable.ic_shorts
             )
         }
 */

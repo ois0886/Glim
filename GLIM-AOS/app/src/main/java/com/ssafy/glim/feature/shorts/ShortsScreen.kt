@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.reels
+package com.ssafy.glim.feature.shorts
 
 import android.util.Log
 import android.widget.Toast
@@ -56,16 +56,16 @@ import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
-internal fun ReelsRoute(
+internal fun ShortsRoute(
     quoteId: Long,
     padding: PaddingValues,
     popBackStack: () -> Unit,
-    viewModel: ReelsViewModel = hiltViewModel(),
+    viewModel: ShortsViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        Log.d("ReelsRoute", "ReelsRoute SideEffect triggered with quoteId: $quoteId")
+        Log.d("ShortsRoute", "ShortsRoute SideEffect triggered with quoteId: $quoteId")
         if (quoteId >= 0) {
             viewModel.loadQuote(quoteId)
         } else {
@@ -75,26 +75,26 @@ internal fun ReelsRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            is ReelsSideEffect.ShowToast -> {
+            is ShortsSideEffect.ShowToast -> {
                 Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
             }
 
-            is ReelsSideEffect.ShareQuote -> {
+            is ShortsSideEffect.ShareQuote -> {
                 // 공유 기능 구현
                 Toast.makeText(context, "준비 중인 기능입니다.", Toast.LENGTH_SHORT).show()
             }
 
-            is ReelsSideEffect.ShowMoreOptions -> {
+            is ShortsSideEffect.ShowMoreOptions -> {
                 // 더보기 옵션 표시
                 Toast.makeText(context, "준비 중인 기능입니다.", Toast.LENGTH_SHORT).show()
             }
 
-            is ReelsSideEffect.CaptureSuccess -> {
+            is ShortsSideEffect.CaptureSuccess -> {
                 Toast.makeText(context, "이미지가 저장되었습니다: ${sideEffect.fileName}", Toast.LENGTH_SHORT)
                     .show()
             }
 
-            is ReelsSideEffect.CaptureError -> {
+            is ShortsSideEffect.CaptureError -> {
                 Toast.makeText(context, sideEffect.error, Toast.LENGTH_SHORT).show()
             }
         }
@@ -106,7 +106,7 @@ internal fun ReelsRoute(
     val graphicsLayer = rememberGraphicsLayer()
 
     LaunchedEffect(pagerState) {
-        Log.d("ReelsRoute", "PagerState initialized with ${state.quotes.size} quotes")
+        Log.d("ShortsRoute", "PagerState initialized with ${state.quotes.size} quotes")
         snapshotFlow { pagerState.currentPage }.collect { page ->
             viewModel.onPageChanged(page)
         }

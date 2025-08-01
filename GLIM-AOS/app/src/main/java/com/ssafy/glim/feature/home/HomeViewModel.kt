@@ -29,7 +29,7 @@ class HomeViewModel @Inject constructor(
 
     fun navigateToQuote(quoteId: Long) =
         viewModelScope.launch {
-            navigator.navigate(BottomTabRoute.Reels(quoteId))
+            navigator.navigate(BottomTabRoute.Shorts(quoteId))
         }
 
     fun navigateToBookDetail(bookId: Long) =

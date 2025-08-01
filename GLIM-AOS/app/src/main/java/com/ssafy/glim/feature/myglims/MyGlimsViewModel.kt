@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.glimlist
+package com.ssafy.glim.feature.myglims
 
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.navigation.Navigator
@@ -9,13 +9,13 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-internal class GlimListViewModel
+internal class MyGlimsViewModel
 @Inject
 constructor(
     private val navigator: Navigator,
-) : ViewModel(), ContainerHost<GlimListUiState, GlimListSideEffect> {
+) : ViewModel(), ContainerHost<MyGlimsUiState, MyGlimsSideEffect> {
     override val container =
-        container<GlimListUiState, GlimListSideEffect>(initialState = GlimListUiState())
+        container<MyGlimsUiState, MyGlimsSideEffect>(initialState = MyGlimsUiState())
 
     private val mockLikedGlims =
         listOf(
@@ -60,7 +60,7 @@ constructor(
             ),
         )
 
-    fun loadGlimList(listType: GlimListType) =
+    fun loadMyGlims(listType: MyGlimsType) =
         intent {
             reduce { state.copy(isLoading = true, currentListType = listType) }
 
@@ -68,15 +68,15 @@ constructor(
                 // 실제로는 리포지토리에서 데이터를 가져와야 함
                 delay(1000) // 로딩 시뮬레이션
 
-                val glimList =
+                val myGlims =
                     when (listType) {
-                        GlimListType.LIKED -> mockLikedGlims
-                        GlimListType.UPLOADED -> mockUploadedGlims
+                        MyGlimsType.LIKED -> mockLikedGlims
+                        MyGlimsType.UPLOADED -> mockUploadedGlims
                     }
 
                 reduce {
                     state.copy(
-                        glimList = glimList,
+                        myGlims = myGlims,
                         isLoading = false,
                         errorMessage = null,
                     )
@@ -88,13 +88,13 @@ constructor(
                         errorMessage = e.message,
                     )
                 }
-                postSideEffect(GlimListSideEffect.ShowToast("데이터를 불러오는데 실패했습니다."))
+                postSideEffect(MyGlimsSideEffect.ShowToast("데이터를 불러오는데 실패했습니다."))
             }
         }
 
     fun toggleLike(glimId: Long) =
         intent {
-            val currentList = state.glimList
+            val currentList = state.myGlims
             val updatedList =
                 currentList.map { glim ->
                     if (glim.id == glimId) {
@@ -107,7 +107,7 @@ constructor(
                     }
                 }
 
-            reduce { state.copy(glimList = updatedList) }
+            reduce { state.copy(myGlims = updatedList) }
 
             // 실제로는 서버에 좋아요 상태 업데이트 API 호출
             try {
@@ -116,9 +116,9 @@ constructor(
                     updatedList.find { it.id == glimId }?.let { glim ->
                         if (glim.isLiked) "좋아요를 눌렀습니다." else "좋아요를 취소했습니다."
                     } ?: ""
-                postSideEffect(GlimListSideEffect.ShowToast(message))
+                postSideEffect(MyGlimsSideEffect.ShowToast(message))
             } catch (e: Exception) {
-                postSideEffect(GlimListSideEffect.ShowToast("좋아요 처리에 실패했습니다."))
+                postSideEffect(MyGlimsSideEffect.ShowToast("좋아요 처리에 실패했습니다."))
             }
         }
 }

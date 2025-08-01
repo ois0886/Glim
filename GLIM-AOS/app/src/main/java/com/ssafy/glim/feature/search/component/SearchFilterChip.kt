@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.library.component
+package com.ssafy.glim.feature.search.component
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

@@ -27,10 +27,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.feature.library.LibraryRoute
+import com.ssafy.glim.feature.search.SearchRoute
 import com.ssafy.glim.feature.post.PostState
 import com.ssafy.glim.feature.post.component.editabletext.EditableTextField
-import com.ssafy.glim.feature.reels.CaptureActions
+import com.ssafy.glim.feature.shorts.CaptureActions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -159,7 +159,7 @@ fun PostContent(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 contentWindowInsets = { WindowInsets(0.dp, 0.dp, 0.dp, 0.dp) },
             ) {
-                LibraryRoute(
+                SearchRoute(
                     padding = PaddingValues(0.dp),
                     popBackStack = {
                         updateBottomSheetState(false)

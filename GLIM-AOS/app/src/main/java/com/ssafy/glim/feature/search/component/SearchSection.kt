@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.library.component
+package com.ssafy.glim.feature.search.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.library
+package com.ssafy.glim.feature.search
 
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
@@ -14,7 +14,7 @@ import com.ssafy.glim.core.domain.usecase.search.SaveRecentSearchQueryUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
-import com.ssafy.glim.feature.library.component.SearchTab
+import com.ssafy.glim.feature.search.component.SearchTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -22,7 +22,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class LibraryViewModel
+class SearchViewModel
 @Inject
 constructor(
     private val searchBooksUseCase: SearchBooksUseCase,
@@ -32,8 +32,8 @@ constructor(
     private val saveRecentSearchQueryUseCase: SaveRecentSearchQueryUseCase,
     private val deleteRecentSearchQueryUseCase: DeleteRecentSearchQueryUseCase,
     private val navigator: Navigator,
-) : ViewModel(), ContainerHost<LibraryState, LibrarySideEffect> {
-    override val container: Container<LibraryState, LibrarySideEffect> = container(LibraryState())
+) : ViewModel(), ContainerHost<SearchState, SearchSideEffect> {
+    override val container: Container<SearchState, SearchSideEffect> = container(SearchState())
 
     init {
         initialize()
@@ -70,7 +70,7 @@ constructor(
                 }
 
                 SearchMode.POPULAR -> {
-                    postSideEffect(LibrarySideEffect.NavigateBack)
+                    postSideEffect(SearchSideEffect.NavigateBack)
                 }
             }
         }
@@ -84,7 +84,7 @@ constructor(
     // 검색 실행
     fun onSearchExecuted() =
         intent {
-            Log.d("LibraryViewModel", "Search executed with query: ${state.currentQuery}")
+            Log.d("SearchViewModel", "Search executed with query: ${state.currentQuery}")
             val query = state.currentQuery.text.trim()
             if (query.isNotEmpty()) {
                 performSearch(query)
@@ -99,7 +99,7 @@ constructor(
         }
 
     fun loadMoreBooks() = intent {
-        Log.d("LibraryViewModel", "Loading more books for query: ${state.searchQuery}, page: ${state.bookCurrentPage + 1}")
+        Log.d("SearchViewModel", "Loading more books for query: ${state.searchQuery}, page: ${state.bookCurrentPage + 1}")
         reduce {
             state.copy(
                 bookCurrentPage = state.bookCurrentPage + 1,
@@ -117,13 +117,13 @@ constructor(
                 }
             }
             .onFailure {
-                Log.d("LibraryViewModel", "Error searching books: ${it.message}")
-                postSideEffect(LibrarySideEffect.ShowToast("검색 중 오류가 발생했습니다."))
+                Log.d("SearchViewModel", "Error searching books: ${it.message}")
+                postSideEffect(SearchSideEffect.ShowToast("검색 중 오류가 발생했습니다."))
             }
     }
 
     fun loadMoreQuotes() = intent {
-        Log.d("LibraryViewModel", "Loading more quotes for query: ${state.searchQuery}, page: ${state.quoteCurrentPage + 1}")
+        Log.d("SearchViewModel", "Loading more quotes for query: ${state.searchQuery}, page: ${state.quoteCurrentPage + 1}")
         reduce {
             state.copy(
                 quoteCurrentPage = state.quoteCurrentPage + 1,
@@ -141,8 +141,8 @@ constructor(
                 }
             }
             .onFailure {
-                Log.d("LibraryViewModel", "Error searching quotes: ${it.message}")
-                postSideEffect(LibrarySideEffect.ShowToast("검색 중 오류가 발생했습니다."))
+                Log.d("SearchViewModel", "Error searching quotes: ${it.message}")
+                postSideEffect(SearchSideEffect.ShowToast("검색 중 오류가 발생했습니다."))
                 reduce {
                     state.copy(isRefreshing = false)
                 }
@@ -199,7 +199,7 @@ constructor(
     // 글귀 아이템 클릭
     fun onQuoteClicked(quote: QuoteSummary) =
         intent {
-            navigator.navigate(BottomTabRoute.Reels(quote.quoteId))
+            navigator.navigate(BottomTabRoute.Shorts(quote.quoteId))
         }
 
     fun onSelectTab(tab: SearchTab) = intent {
@@ -228,10 +228,10 @@ constructor(
                             error = null,
                         )
                     }
-                    Log.d("LibraryViewModel", "Popular search items loaded: $it")
+                    Log.d("SearchViewModel", "Popular search items loaded: $it")
                 }
                 .onFailure {
-                    Log.d("LibraryViewModel", "Error loading popular search items: ${it.message}")
+                    Log.d("SearchViewModel", "Error loading popular search items: ${it.message}")
                 }
         }
 
@@ -263,8 +263,8 @@ constructor(
                     }
                 }
                 .onFailure {
-                    Log.d("LibraryViewModel", "Error searching books: ${it.message}")
-                    postSideEffect(LibrarySideEffect.ShowToast("검색 중 오류가 발생했습니다."))
+                    Log.d("SearchViewModel", "Error searching books: ${it.message}")
+                    postSideEffect(SearchSideEffect.ShowToast("검색 중 오류가 발생했습니다."))
                 }
 
             runCatching { searchQuotesUseCase(query) }
@@ -277,7 +277,7 @@ constructor(
                             error = null
                         )
                     }
-                    Log.d("LibraryViewModel like", "${it.quoteSummaries.map{it.isLiked}}")
+                    Log.d("SearchViewModel like", "${it.quoteSummaries.map{it.isLiked}}")
                 }
 
             reduce { state.copy(isLoading = false) }

@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.reels
+package com.ssafy.glim.feature.shorts
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -18,7 +18,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class ReelsViewModel
+class ShortsViewModel
 @Inject
 constructor(
     private val getQuotesUseCase: GetQuotesUseCase,
@@ -27,8 +27,8 @@ constructor(
     private val likeQuoteUseCase: LikeQuoteUseCase,
     private val unLikeQuoteUseCase: UnLikeQuoteUseCase,
     private val navigator: Navigator
-) : ViewModel(), ContainerHost<ReelsState, ReelsSideEffect> {
-    override val container: Container<ReelsState, ReelsSideEffect> = container(ReelsState())
+) : ViewModel(), ContainerHost<ShortsState, ShortsSideEffect> {
+    override val container: Container<ShortsState, ShortsSideEffect> = container(ShortsState())
 
     companion object {
         private const val SIZE = 10
@@ -38,7 +38,7 @@ constructor(
         intent {
             val currentQuote = state.currentQuote
             if(currentQuote == null) {
-                postSideEffect(ReelsSideEffect.ShowToast("오류 발생"))
+                postSideEffect(ShortsSideEffect.ShowToast("오류 발생"))
                 return@intent
             }
             val updatedQuotes =
@@ -62,8 +62,8 @@ constructor(
                         likeQuoteUseCase(currentQuote.quoteId)
                     }
                 }.onFailure {
-                    Log.d("ReelsViewModel", "${it.message}")
-                    postSideEffect(ReelsSideEffect.ShowToast("좋아요 오류 발생"))
+                    Log.d("ShortsViewModel", "${it.message}")
+                    postSideEffect(ShortsSideEffect.ShowToast("좋아요 오류 발생"))
                 }
             }
 
@@ -74,7 +74,7 @@ constructor(
 
     fun onPageChanged(page: Int) =
         intent {
-            Log.d("ReelsViewModel", "$page / ${state.quotes.size} 페이지로 변경됨")
+            Log.d("ShortsViewModel", "$page / ${state.quotes.size} 페이지로 변경됨")
             // 페이지가 변경될 때 currentQuote.quoteId도 업데이트
             if (page >= 0 && page < state.quotes.size) {
                 reduce {
@@ -82,34 +82,34 @@ constructor(
                         currentIdx = page,
                     )
                 }
-                Log.d("ReelsViewModel", "현재 Quote Idx: ${state.currentIdx} / ${state.quotes.size}")
+                Log.d("ShortsViewModel", "현재 Quote Idx: ${state.currentIdx} / ${state.quotes.size}")
                 if (state.currentIdx >= state.quotes.size - 3) {
                     refresh()
                 }
                 val currentQuote = state.currentQuote
                 if(currentQuote == null) {
-                    postSideEffect(ReelsSideEffect.ShowToast("오류 발생"))
+                    postSideEffect(ShortsSideEffect.ShowToast("오류 발생"))
                     return@intent
                 }
                 runCatching { updateQuoteViewCountUseCase(currentQuote.quoteId) }
                     .onSuccess {
-                        Log.d("ReelsViewModel", "Quote view count updated successfully")
+                        Log.d("ShortsViewModel", "Quote view count updated successfully")
                     }
                     .onFailure {
-                        Log.d("ReelsViewModel", "Failed to update quote view count: ${it.message}")
+                        Log.d("ShortsViewModel", "Failed to update quote view count: ${it.message}")
                     }
             }
         }
 
     fun onShareClick() =
         intent {
-            postSideEffect(ReelsSideEffect.ShowToast("개발 중 입니다!"))
+            postSideEffect(ShortsSideEffect.ShowToast("개발 중 입니다!"))
         }
 
     fun loadQuote(quoteId: Long) = intent {
         runCatching { getQuoteByIdUseCase(quoteId) }
             .onSuccess {
-                Log.d("ReelsViewModel", "Loaded quote: $it")
+                Log.d("ShortsViewModel", "Loaded quote: $it")
                 reduce {
                     state.copy(
                         quotes = listOf(it),
@@ -121,7 +121,7 @@ constructor(
                 refresh()
             }
             .onFailure {
-                Log.d("ReelsViewModel", "Failed to load quote: ${it.message}")
+                Log.d("ShortsViewModel", "Failed to load quote: ${it.message}")
                 reduce {
                     state.copy(
                         isLoading = false,
@@ -144,12 +144,12 @@ constructor(
                                 error = null
                             )
                         }
-                        Log.d("ReelsViewModel", "Loaded ${it.size} new quotes")
-                        Log.d("ReelsViewModel", "Total quotes: ${state.quotes.size}")
+                        Log.d("ShortsViewModel", "Loaded ${it.size} new quotes")
+                        Log.d("ShortsViewModel", "Total quotes: ${state.quotes.size}")
                     }
                 }
                 .onFailure {
-                    Log.d("ReelsViewModel", "Loaded failed: ${it.message}")
+                    Log.d("ShortsViewModel", "Loaded failed: ${it.message}")
                     reduce { state.copy(isLoading = false, error = it.message) }
                 }
         }

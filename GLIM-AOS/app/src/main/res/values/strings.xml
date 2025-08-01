@@ -1,52 +1,88 @@
 <resources>
     <string name="app_name">글:림</string>
 
+    <!-- 로그인/인증 관련 -->
     <string name="login_title">로그인</string>
     <string name="login_failed">로그인 실패</string>
     <string name="login_subtitle">로그인하고\n풍부하게 감성을 채워보세요.</string>
-    <string name="login_loading">로딩중</string>
+    <string name="login_loading">로딩 중</string>
     <string name="login_button">로그인</string>
     <string name="login_signup">회원가입</string>
     <string name="login_forgot_password">비밀번호를 잊어버렸나요?</string>
     <string name="login_sns_title">SNS 간편 로그인</string>
     <string name="login_guest">비회원으로 둘러보기</string>
-
-    <string name="social_login_message">소셜 로그인은 준비중입니다.</string>
-    <string name="not_ready_function">준비 중인 기능입니다.</string>
-
     <string name="login_email_placeholder">이메일을 입력해주세요.</string>
     <string name="login_password_placeholder">비밀번호를 입력해주세요.</string>
-    <string name="password_confirm">비밀번호 확인</string>
 
+    <!-- 공통 메시지 -->
+    <string name="social_login_message">소셜 로그인은 준비 중입니다.</string>
+    <string name="not_ready_function">준비 중인 기능입니다.</string>
+    <string name="loading">로딩 중…</string>
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
+    <string name="exit">나가기</string>
+    <string name="update">변경</string>
+    <string name="save">저장</string>
+
+    <!-- 회원가입 관련 -->
     <string name="auth_greeting">반가워요!</string>
     <string name="email_auth_instruction">사용하실 이메일을 입력해주세요.</string>
     <string name="verification_code_placeholder">인증번호 입력</string>
     <string name="verification_code_instruction">이메일로 인증번호를 보냈어요!</string>
     <string name="verification_code_failed">해당 이메일로 인증번호 요청이 실패하였어요!</string>
+    <string name="signup_send_verification_code">인증번호 발송</string>
+    <string name="signup_verify_code">인증완료</string>
+    <string name="signup_success">회원가입이 완료되었습니다.</string>
+    <string name="signup_failed">회원가입에 실패했습니다.</string>
 
+    <!-- 비밀번호 관련 -->
+    <string name="password_confirm">비밀번호 확인</string>
     <string name="password_instruction">사용하실 비밀번호를 입력해주세요.</string>
     <string name="password_hint">대소문자, 영문, 숫자, 특수문자를 포함해 8~16자를 입력해주세요.</string>
 
+    <!-- 프로필 관련 -->
     <string name="profile_title">반가워요!</string>
     <string name="profile_subtitle">회원님을 더 알고 싶어요.</string>
     <string name="profile_label_name">이름</string>
     <string name="profile_hint_name">2~16글자를 입력해주세요.</string>
     <string name="profile_note_name">사람들에게 보여지는 이름으로,\n불쾌감을 줄 수 있는 이름은 경고없이 변경돼요.</string>
     <string name="profile_label_birth">출생년도</string>
-    <string name="profile_hint_birth">YYYYMMDD </string>
+    <string name="profile_hint_birth">YYYYMMDD</string>
     <string name="profile_label_gender">성별</string>
+    <string name="profile_label_email">이메일</string>
     <string name="profile_gender_male">남자</string>
     <string name="profile_gender_female">여자</string>
-    <string name="profile_button_confirm">확인</string>
+    <string name="profile_liked_articles">좋아요한 글귀</string>
+    <string name="profile_recent_articles">업로드한 글귀</string>
+    <string name="profile_view_all">전체보기</string>
+    <string name="edit_profile_title">프로필 변경</string>
+    <string name="update_profile">프로필 저장</string>
+    <string name="updating_profile">프로필 저장 중…</string>
+    <string name="profile_update_success">프로필이 변경되었습니다.</string>
+    <string name="profile_update_failed">프로필 변경이 실패되었습니다.</string>
 
-    <!-- 회원가입 유효성 검사 메시지 -->
+    <!-- 비밀번호 변경 관련 -->
+    <string name="change_password_title">비밀번호 변경</string>
+    <string name="current_password_label">현재 비밀번호</string>
+    <string name="current_password_hint">현재 비밀번호를 입력하세요</string>
+    <string name="new_password_label">새 비밀번호</string>
+    <string name="new_password_instruction">새로운 비밀번호를 입력해주세요</string>
+    <string name="change_password_info">새로운 비밀번호를\n입력해주세요.</string>
+    <string name="update_password">비밀번호 변경</string>
+    <string name="updating_password">비밀번호 변경 중…</string>
+    <string name="success_update_password">비밀번호가 변경되었습니다</string>
+
+    <!-- 유효성 검사 메시지 -->
     <string name="error_email_empty">이메일을 입력해주세요.</string>
     <string name="error_email_invalid">유효한 이메일을 입력해주세요.</string>
     <string name="error_code_empty">인증 코드를 입력해주세요.</string>
     <string name="error_code_invalid">6자리 숫자를 입력해주세요.</string>
+    <string name="error_code_incorrect">인증 코드가 올바르지 않습니다.</string>
     <string name="error_password_empty">비밀번호를 입력해주세요.</string>
     <string name="error_password_invalid">대소문자·숫자·특수문자 포함 8~16자</string>
     <string name="error_password_mismatch">비밀번호가 일치하지 않습니다.</string>
+    <string name="error_current_password_empty">현재 비밀번호를 입력해주세요</string>
+    <string name="error_current_password_invalid">현재 비밀번호가 올바르지 않습니다</string>
     <string name="error_name_empty">이름을 입력해주세요.</string>
     <string name="error_name_invalid">이름은 2~16자로 입력해주세요.</string>
     <string name="error_birth_empty">생년월일을 입력해주세요</string>
@@ -57,15 +93,9 @@
     <string name="error_birth_future">미래 날짜는 입력할 수 없습니다</string>
     <string name="error_birth_invalid">8자리 숫자로 입력해주세요.</string>
     <string name="error_gender_empty">성별을 선택해주세요.</string>
-
-    <!-- 회원가입 처리 관련 메시지 -->
-
-    <string name="error_code_incorrect">인증 코드가 올바르지 않습니다.</string>
-
-    <!-- 프로필 관련 문자열 -->
-    <string name="profile_liked_articles">좋아요한 글귀</string>
-    <string name="profile_recent_articles">업로드한 글귀</string>
-    <string name="profile_view_all">전체보기</string>
+    <string name="error_load_profile_failed">프로필 정보를 불러오는데 실패했습니다.</string>
+    <string name="error_update_password_failed">비밀번호 변경에 실패했습니다</string>
+    <string name="error_update_profile_failed">개인정보 변경에 실패했습니다</string>
 
     <!-- 설정 메뉴 -->
     <string name="settings_personal_info_password">개인정보 &amp; 비밀번호 변경</string>
@@ -73,28 +103,25 @@
     <string name="settings_notification">알림 설정</string>
     <string name="settings_logout">로그아웃</string>
     <string name="settings_withdrawal">회원 탈퇴하기</string>
-    <!-- 메시지 -->
-    <string name="success_update_profile">프로필 정보를 수정하였습니다.</string>
+    <string name="lock_settings_message">잠금 설정 화면으로 이동</string>
+    <string name="notification_settings_message">알림 설정 화면으로 이동</string>
 
-    <!-- 접근성 -->
-    <string name="content_description_profile_image">프로필 이미지</string>
-    <string name="content_description_edit_profile">프로필 편집</string>
-    <string name="content_description_like">좋아요</string>
-    <string name="content_description_unlike">좋아요 취소</string>
-    <string name="content_description_navigate">이동</string>
+    <!-- 검색 관련 -->
     <string name="search_book_title">도서 검색</string>
     <string name="search_description">글귀, 책제목, 작가이름으로 찾아보세요.</string>
     <string name="search_hint_description">도서명, 작가, 글귀 검색어를 입력해 주세요.</string>
     <string name="popular_search_query">인기 검색어</string>
     <string name="no_search_result">검색 결과가 없습니다.</string>
+
+    <!-- 글귀/도서 관련 -->
+    <string name="today_glim">오늘의 글림</string>
+    <string name="glim_home_description">잠시 멈춰 서서, 글귀를 둘러보세요.</string>
     <string name="text_size_down">텍스트 크기 줄이기</string>
     <string name="bold">굵게</string>
     <string name="italic">기울이기</string>
     <string name="recognize_text">텍스트 인식</string>
     <string name="background_image">배경 이미지</string>
     <string name="add_book_info">책 정보 추가</string>
-    <string name="cancel">취소</string>
-    <string name="exit">나가기</string>
     <string name="download">다운로드</string>
     <string name="like">좋아요</string>
     <string name="share">공유</string>
@@ -102,48 +129,29 @@
     <string name="relative_quote">관련 글귀</string>
     <string name="book_summary">도서 개요</string>
     <string name="author_intro">작가 소개</string>
-    <string name="open_url">open url</string>
     <string name="book_cover">Book Cover</string>
     <string name="publication_date">발행일</string>
     <string name="price">정가</string>
-    <string name="back">Back</string>
-    <string name="today_glim">오늘의 글림</string>
-    <string name="glim_home_description">잠시 멈춰 서서, 글귀를 둘러보세요.</string>
-
-
-    <string name="edit_profile_title">프로필 변경</string>
-    <string name="updating">변경 중</string>
-    <string name="update">변경</string>
-    <string name="profile_label_email">이메일 </string>
-
-    <string name="signup_success">회원가입이 완료되었습니다.</string>
-    <string name="signup_failed">회원가입에 실패했습니다.</string>
-    <string name="profile_update_success">프로필이 변경되었습니다.</string>
-    <string name="profile_update_failed">프로필이 변경이 실패되었습니다.</string>
-    <string name="saved">저장했습니다!</string>
-    <string name="i_love_it">좋아요!</string>
-    <string name="save">저장</string>
-    <string name="time_format_date">(%1$s)</string>
     <string name="read_book">도서 보기</string>
     <string name="read_glim">글귀 보기</string>
-    <string name="lock_screen_slide_description"><![CDATA[밀어서 잠금 해제 >>]]></string>
-
-    <string name="logout_success">로그아웃되었습니다.</string>
-    <string name="logout_failed">로그아웃에 실패하였습니다.</string>
-    <string name="withdrawal_success">성공적으로 회원 탈퇴하였습니다.</string>
-    <string name="withdrawal_failed">회원 탈퇴 실패하였습니다.</string>
-    <string name="lock_settings_message">잠금 설정 화면으로 이동</string>
-    <string name="notification_settings_message">알림 설정 화면으로 이동</string>
+    <string name="views">조회수</string>
+    <string name="saved">저장했습니다!</string>
+    <string name="i_love_it">좋아요!</string>
     <string name="like_added_message">좋아요를 눌렀습니다.</string>
     <string name="like_removed_message">좋아요를 취소했습니다.</string>
-    <string name="error_load_profile_failed">프로필 정보를 불러오는데 실패했습니다.</string>
+    <string name="time_format_date">(%1$s)</string>
 
-    <string name="signup_send_verification_code">인증번호 발송</string>
-    <string name="signup_verify_code">인증완료</string>
-    <string name="signup_confirm">확인</string>
-    <string name="views">조회수</string>
+    <!-- 로그아웃 다이얼로그 -->
+    <string name="logout_title">로그아웃</string>
+    <string name="logout_message">정말 로그아웃하시겠습니까?</string>
+    <string name="logout_info_message">언제든지 다시 로그인하실 수 있습니다.</string>
+    <string name="logout_confirm">로그아웃</string>
+    <string name="logout_processing_title">로그아웃 중</string>
+    <string name="logout_processing_message">잠시만 기다려주세요…</string>
+    <string name="logout_success">로그아웃되었습니다.</string>
+    <string name="logout_failed">로그아웃에 실패하였습니다.</string>
 
-    <!-- 회원탈퇴 경고 다이얼로그 -->
+    <!-- 회원탈퇴 관련 -->
     <string name="withdrawal_title">회원탈퇴</string>
     <string name="withdrawal_warning_description">회원탈퇴하셔도 다음과 같은 정보는 남아있습니다:</string>
     <string name="withdrawal_retained_glims">작성한 모든 글림(Glim)</string>
@@ -151,8 +159,6 @@
     <string name="withdrawal_retained_profile">프로필 정보</string>
     <string name="withdrawal_warning_caution">그 외 삭제된 데이터는 복구할 수 없습니다.</string>
     <string name="withdrawal_continue">계속 진행</string>
-
-    <!-- 회원탈퇴 확인 다이얼로그 -->
     <string name="withdrawal_confirmation_title">회원탈퇴 확인</string>
     <string name="withdrawal_confirmation_question">회원탈퇴를 진행하시겠습니까?</string>
     <string name="withdrawal_rejoin_info">탈퇴 후에도 동일한 이메일로 재가입하실 수 있습니다.</string>
@@ -161,41 +167,29 @@
     <string name="withdrawal_countdown">%d초 후 확인 가능</string>
     <string name="withdrawal_ready">✓ 탈퇴 준비 완료</string>
     <string name="withdrawal_confirm">탈퇴하기</string>
-
-    <!-- 회원탈퇴 처리 다이얼로그 -->
     <string name="withdrawal_processing_title">회원탈퇴 처리중</string>
-    <string name="withdrawal_processing_message">잠시만 기다려주세요...</string>
+    <string name="withdrawal_processing_message">잠시만 기다려주세요…</string>
+    <string name="withdrawal_success">성공적으로 회원 탈퇴하였습니다.</string>
+    <string name="withdrawal_failed">회원 탈퇴 실패하였습니다.</string>
 
-    <!-- 로그아웃 다이얼로그 -->
-    <string name="logout_title">로그아웃</string>
-    <string name="logout_message">정말 로그아웃하시겠습니까?</string>
-    <string name="logout_info_message">언제든지 다시 로그인하실 수 있습니다.</string>
-    <string name="logout_confirm">로그아웃</string>
+    <!-- 잠금화면 관련 -->
+    <string name="lock_screen_slide_description"><![CDATA[밀어서 잠금 해제 >>]]></string>
 
-    <!-- 로그아웃 처리 중 -->
-    <string name="logout_processing_title">로그아웃 중</string>
-    <string name="logout_processing_message">잠시만 기다려주세요...</string>
+    <!-- 환영 메시지 -->
+    <string name="welcome_message">%1$s님\n환영합니다!</string>
 
-    <string name="change_password_title">비밀번호 변경</string>
-    <string name="current_password_label">현재 비밀번호</string>
-    <string name="change_password_info">새로운 비밀번호를 \n입력해주세요.</string>
-    <string name="current_password_hint">현재 비밀번호를 입력하세요</string>
-    <string name="new_password_instruction">새로운 비밀번호를 입력해주세요</string>
-    <string name="new_password_label">새 비밀번호</string>
-    <string name="update_profile">프로필 저장</string>
-    <string name="update_password">비밀번호 변경</string>
-    <string name="updating_profile">프로필 저장 중...</string>
-    <string name="updating_password">비밀번호 변경 중...</string>
-    <string name="success_update_password">비밀번호가 변경되었습니다</string>
-    <string name="error_current_password_empty">현재 비밀번호를 입력해주세요</string>
-    <string name="error_current_password_invalid">현재 비밀번호가 올바르지 않습니다</string>
-    <string name="error_update_password_failed">비밀번호 변경에 실패했습니다</string>
-    <string name="error_update_profile_failed">개인정보 변경에 실패했습니다</string>
-
-    <string name="welcome_message">%1$s님 \n환영합니다!</string>
+    <!-- 접근성 관련 -->
+    <string name="content_description_profile_image">프로필 이미지</string>
+    <string name="content_description_edit_profile">프로필 편집</string>
+    <string name="content_description_like">좋아요</string>
+    <string name="content_description_unlike">좋아요 취소</string>
+    <string name="content_description_navigate">이동</string>
     <string name="welcome_image_description">환영 이미지</string>
     <string name="celebration_image_description">축하 이미지</string>
-    <string name="exit_dialog_title">종료하시겠습니까?</string>
-    <string name="exit_dialog_description">화면 이탈 시 생성중인 글귀 이미지는\n저장되지 않습니다.</string>
+    <string name="open_url">open url</string>
+    <string name="back">Back</string>
+
+    <!-- 메시지 -->
+    <string name="success_update_profile">프로필 정보를 수정하였습니다.</string>
 
 </resources>

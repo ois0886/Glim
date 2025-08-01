@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.glimlist
+package com.ssafy.glim.feature.myglims
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
@@ -43,15 +42,15 @@ import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
-internal fun GlimListRoute(
+internal fun MyGlimsRoute(
     padding: PaddingValues,
     popBackStack: () -> Unit,
-    listType: GlimListType = GlimListType.LIKED,
-    viewModel: GlimListViewModel = hiltViewModel()
+    listType: MyGlimsType = MyGlimsType.LIKED,
+    viewModel: MyGlimsViewModel = hiltViewModel()
 ) {
     viewModel.collectSideEffect { effect ->
         when (effect) {
-            is GlimListSideEffect.ShowToast ->
+            is MyGlimsSideEffect.ShowToast ->
                 // TODO: Toast(effect.message)
                 Unit
         }
@@ -60,26 +59,26 @@ internal fun GlimListRoute(
     val uiState by viewModel.collectAsState()
 
     LaunchedEffect(listType) {
-        viewModel.loadGlimList(listType)
+        viewModel.loadMyGlims(listType)
     }
 
-    GlimListScreen(
+    MyGlimsScreen(
         uiState = uiState,
         listType = listType,
         onBackClick = popBackStack,
         onLikeClick = { glimId -> viewModel.toggleLike(glimId) },
-        onTabChange = { newType -> viewModel.loadGlimList(newType) }
+        onTabChange = { newType -> viewModel.loadMyGlims(newType) }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun GlimListScreen(
-    uiState: GlimListUiState,
-    listType: GlimListType,
+private fun MyGlimsScreen(
+    uiState: MyGlimsUiState,
+    listType: MyGlimsType,
     onBackClick: () -> Unit,
     onLikeClick: (Long) -> Unit,
-    onTabChange: (GlimListType) -> Unit
+    onTabChange: (MyGlimsType) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -126,11 +125,11 @@ private fun GlimListScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(
-                    count = uiState.glimList.size,
-                    key = { index -> uiState.glimList[index].id }
+                    count = uiState.myGlims.size,
+                    key = { index -> uiState.myGlims[index].id }
                 ) { index ->
-                    val glim = uiState.glimList[index]
-                    GlimListItem(
+                    val glim = uiState.myGlims[index]
+                    MyGlimsItem(
                         glim = glim,
                         onLikeClick = { onLikeClick(glim.id) }
                     )
@@ -141,7 +140,7 @@ private fun GlimListScreen(
 }
 
 @Composable
-private fun GlimListItem(
+private fun MyGlimsItem(
     glim: GlimItem,
     onLikeClick: () -> Unit
 ) {
