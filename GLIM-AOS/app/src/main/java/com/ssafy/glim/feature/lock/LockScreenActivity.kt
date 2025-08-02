@@ -64,7 +64,7 @@ class LockScreenActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         launchMainAfterUnlock = intent
-            .getBooleanExtra("launch_main_after_unlock", false)
+            .getBooleanExtra("was_in_app_before_lock", false)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
@@ -102,8 +102,11 @@ class LockScreenActivity : ComponentActivity() {
                                             Intent.FLAG_ACTIVITY_NEW_TASK
                                     }
                                 )
+                                finish()
                             }
-                            finish()
+                            else{
+                                finishAffinity()
+                            }
                         }
                         is LockSideEffect.ShowToast -> Toast.makeText(
                             this,
