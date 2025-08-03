@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -24,10 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,11 +32,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
@@ -57,10 +50,7 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.ui.GlimErrorLoader
 import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
 import com.ssafy.glim.feature.lock.component.SwipeButton
-import com.ssafy.glim.feature.lock.component.SwipeDirection
 import com.ssafy.glim.feature.main.MainActivity
-import com.ssafy.glim.ui.theme.GlimColor.LightRed
-import com.ssafy.glim.ui.theme.GlimColor.MainColor
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -108,8 +98,8 @@ class LockScreenActivity : ComponentActivity() {
                             if (launchMainAfterUnlock) {
                                 startActivity(
                                     Intent(this, MainActivity::class.java).apply {
-                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                                            Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                            Intent.FLAG_ACTIVITY_NEW_TASK
                                     }
                                 )
                             }
@@ -219,7 +209,7 @@ fun LockScreenContent(
         } else {
             GlimErrorLoader(Modifier)
         }
-
+/*
         Row(
             modifier =
             Modifier
@@ -243,6 +233,8 @@ fun LockScreenContent(
                 )
             }
         }
+
+ */
 
         Column(
             modifier =
@@ -272,6 +264,7 @@ fun LockScreenContent(
                 )
             }
         }
+        /*
         Row(
             modifier =
             Modifier
@@ -291,7 +284,7 @@ fun LockScreenContent(
                 onSwipe = viewBook,
                 backgroundColor = Gray.copy(alpha = 0.4f),
                 swipeDirection = SwipeDirection.RightToLeft,
-                paintRes = R.drawable.ic_library,
+                paintRes = R.drawable.ic_search,
             )
             Spacer(modifier = Modifier.weight(3F))
             SwipeButton(
@@ -304,10 +297,10 @@ fun LockScreenContent(
                 isComplete = state.isComplete,
                 onSwipe = viewQuote,
                 backgroundColor = Gray.copy(alpha = 0.4f),
-                paintRes = R.drawable.ic_reels
+                paintRes = R.drawable.ic_shorts
             )
         }
-
+*/
         SwipeButton(
             modifier =
             Modifier

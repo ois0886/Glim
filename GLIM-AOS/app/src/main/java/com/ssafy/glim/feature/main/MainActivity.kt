@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                             }
                         } else if (initialRoute == "glim") {
                             val quoteId = intent.getLongExtra("quote_id", -1L)
-                            navigator.clearBackStackAndNavigate(BottomTabRoute.Reels(quoteId))
+                            navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
                         }
                     }
                 }

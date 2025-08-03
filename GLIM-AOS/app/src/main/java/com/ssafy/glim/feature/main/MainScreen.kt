@@ -20,13 +20,13 @@ import androidx.navigation.compose.NavHost
 import com.ssafy.glim.feature.auth.navigation.authNavGraph
 import com.ssafy.glim.feature.bookdetail.navigation.bookDetailNavGraph
 import com.ssafy.glim.feature.celebrations.navigation.celebrationsNavGraph
-import com.ssafy.glim.feature.glimlist.navigation.glimListNavGraph
+import com.ssafy.glim.feature.myglims.navigation.myGlimsNavGraph
 import com.ssafy.glim.feature.home.navigation.homeNavGraph
-import com.ssafy.glim.feature.library.navigation.libraryNavGraph
+import com.ssafy.glim.feature.search.navigation.searchNavGraph
 import com.ssafy.glim.feature.main.component.MainBottomBar
 import com.ssafy.glim.feature.post.navigation.postNavGraph
 import com.ssafy.glim.feature.profile.navigation.profileNavGraph
-import com.ssafy.glim.feature.reels.navigation.reelsNavGraph
+import com.ssafy.glim.feature.shorts.navigation.shortsNavGraph
 import com.ssafy.glim.feature.update.navigation.updateNavGraph
 import kotlinx.collections.immutable.toImmutableList
 
@@ -73,7 +73,7 @@ internal fun MainScreen(navigator: MainNavController = rememberMainNavController
                 popBackStack = navigator::popBackStack,
             )
 
-            libraryNavGraph(
+            searchNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,
             )
@@ -83,12 +83,12 @@ internal fun MainScreen(navigator: MainNavController = rememberMainNavController
                 popBackStack = navigator::popBackStack,
             )
 
-            reelsNavGraph(
+            shortsNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,
             )
 
-            glimListNavGraph(
+            myGlimsNavGraph(
                 padding = innerPadding,
                 popBackStack = navigator::popBackStack,
             )

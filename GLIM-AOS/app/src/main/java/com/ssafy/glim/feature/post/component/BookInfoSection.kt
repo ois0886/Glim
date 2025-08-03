@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.feature.reels.QuoteBookContent
+import com.ssafy.glim.feature.shorts.QuoteBookContent
 
 @Composable
 fun BookInfoSection(

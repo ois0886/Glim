@@ -38,13 +38,13 @@ sealed interface BottomTabRoute : Route {
     data object Home : BottomTabRoute
 
     @Serializable
-    data object Library : BottomTabRoute
+    data object Search : BottomTabRoute
 
     @Serializable
     data object Post : BottomTabRoute
 
     @Serializable
-    data class Reels(val quoteId: Long = -1) : BottomTabRoute
+    data class Shorts(val quoteId: Long = -1) : BottomTabRoute
 
     @Serializable
     data object Profile : BottomTabRoute

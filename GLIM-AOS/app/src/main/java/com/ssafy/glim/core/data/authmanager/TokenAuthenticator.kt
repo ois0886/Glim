@@ -184,7 +184,7 @@ class TokenAuthenticator @Inject constructor(
 
             when (result) {
                 is RefreshResult.Success -> {
-                    // 새 토큰 저장 (accessToken과 refreshToken 모두 갱신)
+                    // 새 토큰 저장 (refreshToken은 응답에 포함되지 않으므로 기존 것 유지)
                     authManager.saveToken(result.tokenData.accessToken, result.tokenData.refreshToken)
 
                     // 성공 상태로 변경하고 대기 중인 스레드들에게 알림
@@ -221,7 +221,7 @@ class TokenAuthenticator @Inject constructor(
         }
     }
 
-    private fun performTokenRefresh(refreshToken: String): RefreshResult {
+    private suspend fun performTokenRefresh(refreshToken: String): RefreshResult {
         return try {
             // Header에 Bearer 토큰 형식으로 전송
             val authHeader = "Bearer $refreshToken"

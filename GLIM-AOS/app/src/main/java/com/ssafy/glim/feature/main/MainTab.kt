@@ -18,10 +18,10 @@ internal enum class MainTab(
         route = BottomTabRoute.Home,
     ),
     LIBRARY(
-        iconResId = R.drawable.ic_library,
-        contentDescription = "Library Icon",
-        label = "서재",
-        route = BottomTabRoute.Library,
+        iconResId = R.drawable.ic_search_24,
+        contentDescription = "Search Icon",
+        label = "검색",
+        route = BottomTabRoute.Search,
     ),
     POST(
         iconResId = R.drawable.icon_post,
@@ -30,10 +30,10 @@ internal enum class MainTab(
         route = BottomTabRoute.Post,
     ),
     REELS(
-        iconResId = R.drawable.ic_reels,
-        contentDescription = "Reels Icon",
-        label = "릴스",
-        route = BottomTabRoute.Reels(),
+        iconResId = R.drawable.ic_glim,
+        contentDescription = "Shorts Icon",
+        label = "글:림",
+        route = BottomTabRoute.Shorts(),
     ),
     PROFILE(
         iconResId = R.drawable.ic_profile,

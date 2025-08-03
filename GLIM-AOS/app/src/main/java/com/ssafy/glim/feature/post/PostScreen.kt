@@ -46,7 +46,7 @@ internal fun PostRoute(
         rememberLauncherForActivityResult(
             ActivityResultContracts.GetContent(),
         ) { uri ->
-            viewModel.backgroundImageSelected(uri)
+            if(uri != null) viewModel.backgroundImageSelected(uri)
         }
 
     viewModel.collectSideEffect { sideEffect ->
@@ -87,6 +87,7 @@ internal fun PostRoute(
                 onCompleteClick = viewModel::completeClick,
                 onConfirmExit = viewModel::confirmExit,
                 onCancelExit = viewModel::cancelExit,
+                onBackPress = viewModel::backPressed,
                 updateBottomSheetState = viewModel::updateBottomSheetState,
                 selectedBook = viewModel::selectedBook,
                 modifier = Modifier.padding(padding.excludeSystemBars()),
