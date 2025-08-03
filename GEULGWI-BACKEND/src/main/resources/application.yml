@@ -64,3 +64,7 @@ app:
 
 log:
   path: ./logs
+
+firebase:
+  service-account:
+    path: "/firebase/service-account.json"
