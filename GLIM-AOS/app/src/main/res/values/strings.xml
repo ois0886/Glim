@@ -193,5 +193,8 @@
 
     <!-- 메시지 -->
     <string name="success_update_profile">프로필 정보를 수정하였습니다.</string>
+    <string name="finish">완료</string>
+    <string name="reset">초기화</string>
+    <string name="undo">실행 취소</string>
 
 </resources>

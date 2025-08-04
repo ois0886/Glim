@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ActionButtons(
+    onTextExtractionWithCameraClick: () -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageButtonClick: () -> Unit,
     onCreateTextClick: (Boolean) -> Unit,
@@ -48,7 +49,7 @@ fun ActionButtons(
         modifier =
         modifier
             .fillMaxHeight()
-            .padding(vertical = 16.dp, horizontal = 8.dp)
+            .padding(4.dp)
             .systemBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End,
@@ -79,6 +80,12 @@ fun ActionButtons(
         Spacer(modifier = Modifier.weight(1f))
 
         ActionButton(
+            onClick = onTextExtractionWithCameraClick,
+            iconRes = R.drawable.ic_recognize,
+            contentDescription = stringResource(R.string.recognize_text),
+        )
+
+        ActionButton(
             onClick = onTextExtractionClick,
             iconRes = R.drawable.ic_recognize,
             contentDescription = stringResource(R.string.recognize_text),
@@ -101,7 +108,7 @@ fun ActionButtons(
 }
 
 @Composable
-private fun ActionButton(
+fun ActionButton(
     onClick: () -> Unit,
     iconRes: Int,
     contentDescription: String,

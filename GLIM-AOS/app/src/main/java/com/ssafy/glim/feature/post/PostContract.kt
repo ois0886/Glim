@@ -11,6 +11,8 @@ import com.ssafy.glim.core.domain.model.Book
 sealed interface PostSideEffect {
     data object NavigateBack : PostSideEffect
 
+    data object OpenTextExtractionCamera: PostSideEffect
+
     data object OpenTextImagePicker : PostSideEffect
 
     data object OpenBackgroundImagePicker : PostSideEffect
@@ -20,6 +22,7 @@ sealed interface PostSideEffect {
 
 data class PostState(
     val recognizedText: TextFieldValue = TextFieldValue(""),
+    val capturedTextExtractionImageUri: Uri? = null,
     val selectedImageUri: Uri? = null,
     val backgroundImageUri: Uri? = null,
     val showExitDialog: Boolean = false,

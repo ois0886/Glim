@@ -103,11 +103,16 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun textImageCaptured(uri: Uri?) = intent {
+        reduce { state.copy(capturedTextExtractionImageUri = uri) }
+    }
+
     fun textImageSelected(uri: Uri?) =
         intent {
             uri?.let {
                 reduce {
                     state.copy(
+                        capturedTextExtractionImageUri = null,
                         selectedImageUri = uri,
                         error = null,
                     )
@@ -135,6 +140,10 @@ class PostViewModel @Inject constructor(
         intent {
             reduce { state.copy(backgroundImageUri = uri) }
         }
+
+    fun textExtractionWithCameraClick() = intent {
+        postSideEffect(PostSideEffect.OpenTextExtractionCamera)
+    }
 
     fun textExtractionClick() =
         intent {
@@ -251,4 +260,8 @@ class PostViewModel @Inject constructor(
                 )
             }
         }
+
+    fun clearTextExtractionImage() = intent {
+        reduce { state.copy(capturedTextExtractionImageUri = null) }
+    }
 }
