@@ -8,7 +8,6 @@ import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemRespon
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItem;
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItemBook;
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItemQuote;
-import com.lovedbug.geulgwi.core.domain.curation.entity.MainCuration;
 import com.lovedbug.geulgwi.core.domain.curation.mapper.CurationMapper;
 import com.lovedbug.geulgwi.core.domain.curation.repository.CurationItemBookRepository;
 import com.lovedbug.geulgwi.core.domain.curation.repository.CurationItemQuoteRepository;
@@ -53,48 +52,43 @@ public class AdminService {
     }
 
     @Transactional
-    public CreateCurationResponse createCuration(CreateCurationRequest req) {
+    public CreateCurationResponse createCuration(CreateCurationRequest createCurationRequest) {
 
-        MainCuration main = createMainCuration();
+        final long MAIN_CURATION_ID = 1L;
 
-        CurationItem item = createCurationItem(main, req);
+        CurationItem item = createCurationItem(createCurationRequest);
 
-        switch (req.getCurationType()) {
-            case BOOK -> handleBookItems(item, req.getBookIds());
-            case QUOTE -> handleQuoteItems(item, req.getQuoteIds());
-            default -> throw new IllegalArgumentException("알 수 없는 CurationType: " + req.getCurationType());
+        switch (createCurationRequest.getCurationType()) {
+            case BOOK -> handleBookItems(item, createCurationRequest.getBookIds());
+            case QUOTE -> handleQuoteItems(item, createCurationRequest.getQuoteIds());
+            default -> throw new IllegalArgumentException("알 수 없는 CurationType: " + createCurationRequest.getCurationType());
         }
 
         return CreateCurationResponse.builder()
-                .mainCurationId(main.getMainCurationId())
+                .mainCurationId(MAIN_CURATION_ID)
                 .build();
     }
 
-    private MainCuration createMainCuration() {
-        return mainCurationRepository.save(
-                MainCuration.builder().build()
-        );
-    }
-
-    private CurationItem createCurationItem(MainCuration main, CreateCurationRequest req) {
-        CurationItem toSave = CurationItem.builder()
-                .mainCurationId(main.getMainCurationId())
-                .title(req.getName())
-                .description(req.getDescription())
-                .curationType(req.getCurationType())
+    private CurationItem createCurationItem(CreateCurationRequest createCurationRequest) {
+        final long MAIN_CURATION_ID = 1L;
+         CurationItem curationItem = CurationItem.builder()
+                .mainCurationId(MAIN_CURATION_ID)
+                .title(createCurationRequest.getName())
+                .description(createCurationRequest.getDescription())
+                .curationType(createCurationRequest.getCurationType())
                 .build();
-        return curationItemRepository.save(toSave);
+        return curationItemRepository.save(curationItem);
     }
 
     private void handleBookItems(CurationItem item, List<Long> bookIds) {
         validateIds(bookIds, "bookIds");
         long itemId = item.getCurationItemId();
         for (Long bookId : bookIds) {
-            CurationItemBook bib = CurationItemBook.builder()
+            CurationItemBook curationItemBook = CurationItemBook.builder()
                     .curationItemId(itemId)
                     .bookId(bookId)
                     .build();
-            curationItemBookRepository.save(bib);
+            curationItemBookRepository.save(curationItemBook);
         }
     }
 
@@ -102,11 +96,11 @@ public class AdminService {
         validateIds(quoteIds, "quoteIds");
         long itemId = item.getCurationItemId();
         for (Long quoteId : quoteIds) {
-            CurationItemQuote qiq = CurationItemQuote.builder()
+            CurationItemQuote curationItemQuote = CurationItemQuote.builder()
                     .curationItemId(itemId)
                     .quoteId(quoteId)
                     .build();
-            curationItemQuoteRepository.save(qiq);
+            curationItemQuoteRepository.save(curationItemQuote);
         }
     }
 
