@@ -3,7 +3,6 @@ package com.ssafy.glim
 import com.ssafy.glim.core.domain.model.user.Gender
 import com.ssafy.glim.core.domain.model.user.User
 import com.ssafy.glim.core.domain.model.user.UserStatus
-import com.ssafy.glim.core.domain.usecase.auth.LogOutUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
 import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
 import com.ssafy.glim.core.navigation.Navigator
