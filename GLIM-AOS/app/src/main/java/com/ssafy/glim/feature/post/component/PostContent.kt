@@ -2,6 +2,8 @@ package com.ssafy.glim.feature.post.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,24 +14,31 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.feature.search.SearchRoute
 import com.ssafy.glim.feature.post.PostState
 import com.ssafy.glim.feature.post.component.editabletext.EditableTextField
+import com.ssafy.glim.feature.search.SearchRoute
 import com.ssafy.glim.feature.shorts.CaptureActions
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,23 +69,23 @@ fun PostContent(
 
     Box(
         modifier =
-        modifier
-            .fillMaxSize()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-            ) {
-                onBackgroundClick()
-                focusManager.clearFocus()
-            }
-            .background(
-                brush =
-                Brush.linearGradient(
-                    colors = listOf(Color(0x881C1B1F), Color(0xFF1C1B1F)),
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, Float.POSITIVE_INFINITY),
+            modifier
+                .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                ) {
+                    onBackgroundClick()
+                    focusManager.clearFocus()
+                }
+                .background(
+                    brush =
+                        Brush.linearGradient(
+                            colors = listOf(Color(0x881C1B1F), Color(0xFF1C1B1F)),
+                            start = Offset(0f, 0f),
+                            end = Offset(0f, Float.POSITIVE_INFINITY),
+                        ),
                 ),
-            ),
     ) {
         if (state.showExitDialog) {
             ExitConfirmDialog(onCancelExit, onConfirmExit)
@@ -89,7 +98,6 @@ fun PostContent(
                 .fillMaxSize()
                 .drawWithCache {
                     onDrawWithContent {
-                        // AsyncImage만 GraphicsLayer에 기록
                         imageGraphicsLayer.record {
                             this@onDrawWithContent.drawContent()
                         }
@@ -97,11 +105,38 @@ fun PostContent(
                     }
                 }
         ) {
+            var scale by remember { mutableFloatStateOf(1f) }
+            var offset by remember { mutableStateOf(Offset.Zero) }
+            var size by remember { mutableStateOf(Size.Zero) }
+
+            val transformableState = rememberTransformableState { zoomChange, offsetChange, _ ->
+                val newScale = (scale * zoomChange).coerceIn(1f, 5f)
+                val speedAdjustedOffset = offsetChange * newScale
+
+                val maxX = (size.width * (newScale - 1)) / 2
+                val maxY = (size.height * (newScale - 1)) / 2
+
+                scale = newScale
+                offset = Offset(
+                    x = (offset.x + speedAdjustedOffset.x).coerceIn(-maxX, maxX),
+                    y = (offset.y + speedAdjustedOffset.y).coerceIn(-maxY, maxY)
+                )
+            }
+
             AsyncImage(
                 model = state.backgroundImageUri,
                 contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .onSizeChanged { size = Size(it.width.toFloat(), it.height.toFloat()) }
+                    .graphicsLayer(
+                        scaleX = scale,
+                        scaleY = scale,
+                        translationX = offset.x,
+                        translationY = offset.y
+                    )
+                    .transformable(state = transformableState),
+                contentScale = ContentScale.Fit,
             )
 
             EditableTextField(
@@ -141,7 +176,6 @@ fun PostContent(
                 updateBottomSheetState(true)
             },
         )
-
 
 
         val bottomSheetState = rememberModalBottomSheetState(
