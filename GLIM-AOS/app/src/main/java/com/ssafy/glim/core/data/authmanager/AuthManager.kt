@@ -1,7 +1,6 @@
 package com.ssafy.glim.core.data.authmanager
 
 import android.util.Log
-import com.ssafy.glim.core.data.authmanager.LogoutReason
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -106,16 +105,7 @@ class AuthManager @Inject constructor(
         val canLogin = hasAccessToken && hasRefreshToken && hasUserId
         if (!canLogin) {
             Log.d("AuthManager", "Missing auth data, clearing all")
-            // 데이터가 불완전하면 로그아웃 처리 (하지만 이벤트는 발생시키지 않음)
-            cachedAccessToken = null
-            cachedRefreshToken = null
-            cachedUserId = null
-
-            CoroutineScope(Dispatchers.IO).launch {
-                authDataStore.deleteAccessToken()
-                authDataStore.deleteRefreshToken()
-                authDataStore.deleteUserId()
-            }
+            logout(LogoutReason.UnknownError)
         }
         return canLogin
     }

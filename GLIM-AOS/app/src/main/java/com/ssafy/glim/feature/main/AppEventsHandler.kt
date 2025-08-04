@@ -15,7 +15,6 @@ import androidx.navigation.NavHostController
 import com.ssafy.glim.R
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.navigation.Route
-import com.ssafy.glim.core.data.authmanager.LogoutReason
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -30,14 +29,7 @@ fun AppEventsHandler(
 
     LaunchedEffect(Unit) {
         authManager.logoutEvent.collectLatest { reason ->
-            dialogMessage = when (reason) {
-                LogoutReason.MaxRetryExceeded -> context.getString(R.string.logout_network_error)
-                LogoutReason.TokenNotFound -> context.getString(R.string.logout_auth_info_missing)
-                LogoutReason.RefreshTokenExpired -> context.getString(R.string.logout_session_expired)
-                LogoutReason.UnknownError -> context.getString(R.string.logout_unknown_error)
-                LogoutReason.UserLogout -> context.getString(R.string.logout_user_logout)
-                LogoutReason.UserWithDrawl -> context.getString(R.string.logout_user_withdrawl)
-            }
+            dialogMessage = context.getString(reason.messageRes)
             showLogoutDialog = true
         }
     }

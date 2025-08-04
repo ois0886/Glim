@@ -1,22 +1,13 @@
 package com.ssafy.glim.core.data.authmanager
 
-// 로그아웃 이유를 나타내는 enum
-enum class LogoutReason {
-    // 최대 재시도 횟수 초과
-    MaxRetryExceeded,
+import androidx.annotation.StringRes
+import com.ssafy.glim.R
 
-    // 토큰 정보 없음
-    TokenNotFound,
-
-    // Refresh token 만료
-    RefreshTokenExpired,
-
-    // 알 수 없는 오류
-    UnknownError,
-
-    // 사용자 수동 로그아웃
-    UserLogout,
-
-    // 사용자 탈퇴
-    UserWithDrawl
+sealed class LogoutReason(@StringRes val messageRes: Int) {
+    object MaxRetryExceeded : LogoutReason(R.string.logout_network_error)
+    object TokenNotFound : LogoutReason(R.string.logout_auth_info_missing)
+    object RefreshTokenExpired : LogoutReason(R.string.logout_session_expired)
+    object UnknownError : LogoutReason(R.string.logout_unknown_error)
+    object UserLogout : LogoutReason(R.string.logout_user_logout)
+    object  UserWithDrawl : LogoutReason(R.string.logout_user_withdrawl)
 }
