@@ -4,13 +4,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import com.ssafy.glim.ui.theme.Typography
 
 @Composable
 fun SectionTitle(text: String) {
     Text(
         text = text,
-        fontSize = 16.sp,
+        style = Typography.titleSmall,
         fontWeight = FontWeight.Medium,
         color = MaterialTheme.colorScheme.onSurface
     )

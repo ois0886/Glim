@@ -14,10 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.ssafy.glim.ui.theme.Typography
 
 @Composable
 fun SettingsTimeItem(
@@ -35,7 +34,7 @@ fun SettingsTimeItem(
     ) {
         Text(
             text = label,
-            fontSize = 14.sp,
+            style = Typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
@@ -44,14 +43,12 @@ fun SettingsTimeItem(
         ) {
             Text(
                 text = timeRange,
-                fontSize = 14.sp,
-                color = Color(0xFF7C4DFF),
+                style = Typography.bodySmall,
                 fontWeight = FontWeight.Medium
             )
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
-                tint = Color(0xFF7C4DFF),
                 modifier = Modifier.size(16.dp)
             )
         }
