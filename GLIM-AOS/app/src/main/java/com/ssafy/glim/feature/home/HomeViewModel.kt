@@ -10,8 +10,6 @@ import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -23,9 +21,6 @@ class HomeViewModel @Inject constructor(
     private val navigator: Navigator,
 ) : ViewModel(), ContainerHost<HomeUiState, HomeSideEffect> {
     override val container = container<HomeUiState, HomeSideEffect>(initialState = HomeUiState())
-
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow get() = _errorFlow.asSharedFlow()
 
     fun navigateToQuote(quoteId: Long) =
         viewModelScope.launch {
@@ -50,6 +45,7 @@ class HomeViewModel @Inject constructor(
                             title = curation.title,
                             quotes = curation.contents.quote
                         )
+
                         CurationType.BOOK -> HomeSectionUiModel.BookSection(
                             id = curation.id?.toString().orEmpty(),
                             title = curation.title,
@@ -86,6 +82,7 @@ class HomeViewModel @Inject constructor(
                             title = curation.title,
                             quotes = curation.contents.quote
                         )
+
                         CurationType.BOOK -> HomeSectionUiModel.BookSection(
                             id = curation.id?.toString().orEmpty(),
                             title = curation.title,
