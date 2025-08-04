@@ -306,3 +306,15 @@ include::{snippets}/admin_api_docs_test/get_main_curation/http-request.adoc[]
 include::{snippets}/admin_api_docs_test/get_main_curation/http-response.adoc[]
 
 include::{snippets}/admin_api_docs_test/get_main_curation/response-fields.adoc[]
+
+=== Admin 큐레이션 생성
+
+==== 요청
+
+include::{snippets}/admin_api_docs_test/post_main_curation/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_api_docs_test/post_main_curation/http-response.adoc[]
+
+include::{snippets}/admin_api_docs_test/post_main_curation/response-fields.adoc[]
