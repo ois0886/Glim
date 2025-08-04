@@ -1,6 +1,7 @@
 package com.ssafy.glim.feature.setting
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,13 +18,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.ui.GlimTopBar
 import com.ssafy.glim.core.ui.TitleAlignment
-import com.ssafy.glim.feature.setting.component.LockScreenSection
-import com.ssafy.glim.feature.setting.component.NotificationSection
+import com.ssafy.glim.feature.setting.component.LockSettingSection
+import com.ssafy.glim.feature.setting.component.NotificationSettingSection
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -85,21 +85,20 @@ internal fun SettingScreen(
                 title = stringResource(R.string.setting_title),
                 showBack = true,
                 onBack = onBackClick,
-                alignment = TitleAlignment.Center,
-                titleColor = Color.Black,
-                titleSize = 20.sp,
+                alignment = TitleAlignment.Center
             )
         }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color.White)
                 .padding(paddingValues),
             verticalArrangement = Arrangement.spacedBy(24.dp),
             contentPadding = PaddingValues(16.dp)
         ) {
             item {
-                NotificationSection(
+                NotificationSettingSection(
                     settings = state.notificationSettings,
                     onAllNotificationsToggle = onAllNotificationsToggle,
                     onDoNotDisturbModeToggle = onDoNotDisturbModeToggle,
@@ -110,7 +109,7 @@ internal fun SettingScreen(
             }
 
             item {
-                LockScreenSection(
+                LockSettingSection(
                     settings = state.lockScreenSettings,
                     onLockScreenGlimToggle = onLockScreenGlimToggle
                 )

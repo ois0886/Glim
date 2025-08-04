@@ -93,9 +93,7 @@ internal fun LoginScreen(
         GlimTopBar(
             title = stringResource(id = R.string.login_title),
             showBack = false,
-            alignment = TitleAlignment.Center,
-            titleColor = Color.Black,
-            titleSize = 20.sp,
+            alignment = TitleAlignment.Center
         )
         Column(
             modifier =

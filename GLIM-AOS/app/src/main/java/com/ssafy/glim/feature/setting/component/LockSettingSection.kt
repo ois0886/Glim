@@ -9,7 +9,7 @@ import com.ssafy.glim.R
 import com.ssafy.glim.feature.setting.LockScreenSettings
 
 @Composable
-fun LockScreenSection(
+fun LockSettingSection(
     settings: LockScreenSettings,
     onLockScreenGlimToggle: (Boolean) -> Unit
 ) {

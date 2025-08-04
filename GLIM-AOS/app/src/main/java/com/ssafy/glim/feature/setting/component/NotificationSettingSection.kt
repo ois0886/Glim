@@ -12,7 +12,7 @@ import com.ssafy.glim.R
 import com.ssafy.glim.feature.setting.NotificationSettings
 
 @Composable
-fun NotificationSection(
+fun NotificationSettingSection(
     settings: NotificationSettings,
     onAllNotificationsToggle: (Boolean) -> Unit,
     onDoNotDisturbModeToggle: (Boolean) -> Unit,

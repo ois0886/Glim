@@ -20,6 +20,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.ssafy.glim.ui.theme.Typography
 
 /**
  * GlimTopBar offers a sleek, customizable top app bar.
@@ -41,8 +42,6 @@ fun GlimTopBar(
     showBack: Boolean = false,
     onBack: () -> Unit = {},
     alignment: TitleAlignment = TitleAlignment.Center,
-    titleColor: Color = MaterialTheme.colorScheme.onPrimary,
-    titleSize: TextUnit = 20.sp,
 ) {
     when (alignment) {
         TitleAlignment.Center -> {
@@ -50,12 +49,7 @@ fun GlimTopBar(
                 title = {
                     Text(
                         text = title,
-                        style =
-                        TextStyle(
-                            color = titleColor,
-                            fontSize = titleSize,
-                            fontWeight = FontWeight.SemiBold,
-                        ),
+                        style = Typography.titleMedium
                     )
                 },
                 navigationIcon = {
@@ -63,8 +57,7 @@ fun GlimTopBar(
                         IconButton(onClick = onBack) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null,
-                                tint = titleColor,
+                                contentDescription = null
                             )
                         }
                     }
@@ -85,12 +78,7 @@ fun GlimTopBar(
                     ) {
                         Text(
                             text = title,
-                            style =
-                            TextStyle(
-                                color = titleColor,
-                                fontSize = titleSize,
-                                fontWeight = FontWeight.Medium,
-                            ),
+                            style = Typography.titleMedium
                         )
                     }
                 },
@@ -99,8 +87,7 @@ fun GlimTopBar(
                         IconButton(onClick = onBack) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null,
-                                tint = titleColor,
+                                contentDescription = null
                             )
                         }
                     }

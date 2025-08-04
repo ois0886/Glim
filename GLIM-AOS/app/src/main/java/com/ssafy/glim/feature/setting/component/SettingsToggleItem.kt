@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.ssafy.glim.ui.theme.Typography
 
 @Composable
 fun SettingsToggleItem(
@@ -36,13 +36,13 @@ fun SettingsToggleItem(
         ) {
             Text(
                 text = title,
-                fontSize = 16.sp,
+                style = Typography.bodyMedium,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = description,
-                fontSize = 12.sp,
+                style = Typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 2.dp)
             )
@@ -52,13 +52,7 @@ fun SettingsToggleItem(
 
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
-                checkedTrackColor = Color(0xFF7C4DFF),
-                uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = Color.Gray
-            )
+            onCheckedChange = onCheckedChange
         )
     }
 }

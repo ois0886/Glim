@@ -93,9 +93,7 @@ private fun SignUpScreen(
             title = stringResource(R.string.login_signup),
             showBack = state.currentStep != SignUpStep.Email,
             onBack = onBackStep,
-            alignment = TitleAlignment.Center,
-            titleColor = Color.Black,
-            titleSize = 20.sp,
+            alignment = TitleAlignment.Center
         )
 
         ProgressIndicatorBar(progress = state.currentStep.progress)

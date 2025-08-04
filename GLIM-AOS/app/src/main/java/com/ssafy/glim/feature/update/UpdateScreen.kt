@@ -132,8 +132,6 @@ internal fun UpdateScreen(
             },
             showBack = true,
             alignment = TitleAlignment.Center,
-            titleColor = Color.Black,
-            titleSize = 20.sp,
             onBack = onBackClick,
         )
 
