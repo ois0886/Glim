@@ -3,10 +3,13 @@ package com.lovedbug.geulgwi.core.domain.like;
 import com.lovedbug.geulgwi.core.common.exception.GeulgwiException;
 import com.lovedbug.geulgwi.core.domain.like.entity.MemberLikeQuote;
 import com.lovedbug.geulgwi.core.domain.like.repository.MemberLikeQuoteRepository;
-import com.lovedbug.geulgwi.core.domain.quote.QuoteRepository;
+import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
+import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteResponse;
+import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +47,20 @@ public class MemberLikeQuoteService {
     public long countLikes(Long quoteId){
 
         return memberLikeQuoteRepository.countByQuote_QuoteId(quoteId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<QuoteResponse> getLikedQuotesByMember(Long memberId) {
+
+        List<MemberLikeQuote> likeQuotes = memberLikeQuoteRepository.findAllByMemberId(memberId);
+
+        return likeQuotes.stream()
+            .map(likeQuote -> {
+                Quote quote = likeQuote.getQuote();
+                long likeCount = memberLikeQuoteRepository.countByQuote_QuoteId(quote.getQuoteId());
+
+                return QuoteResponse.toResponseDto(quote, true, likeCount);
+            })
+            .toList();
     }
 }
