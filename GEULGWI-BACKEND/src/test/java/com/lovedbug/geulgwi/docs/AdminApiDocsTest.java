@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
+import com.lovedbug.geulgwi.core.domain.admin.dto.request.CreateCurationRequest;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
@@ -26,6 +27,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
+
+import java.util.Collections;
+import java.util.List;
+
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
@@ -108,24 +113,24 @@ class AdminApiDocsTest extends RestDocsTestSupport {
     void post_main_curation() {
         setUpCurationData();
         Long bookId = bookRepository.findAll().getFirst().getBookId();
-        String requestBody = """
-            {
-              "name": "테스트 큐레이션",
-              "description": "테스트 설명",
-              "curationType": "BOOK",
-              "ids": [%d]
-            }
-            """.formatted(bookId);
+        CreateCurationRequest requestDto = CreateCurationRequest.builder()
+                .name("테스트 큐레이션")
+                .description("테스트 설명")
+                .curationType(CurationType.BOOK)
+                .bookIds(List.of(bookId))
+                .quoteIds(Collections.emptyList())  // BOOK 타입이니까 quoteIds는 비워둡니다
+                .build();
 
         given(this.spec)
                 .contentType("application/json")
-                .body(requestBody)
+                .body(requestDto)
                 .filter(document("{class_name}/{method_name}",
                         requestFields(
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("큐레이션 제목"),
                                 fieldWithPath("description").type(JsonFieldType.STRING).description("큐레이션 설명").optional(),
                                 fieldWithPath("curationType").type(JsonFieldType.STRING).description("큐레이션 타입 (BOOK 또는 QUOTE)"),
-                                fieldWithPath("ids[]").type(JsonFieldType.ARRAY).description("큐레이션할 책 또는 글귀 ID")
+                                fieldWithPath("bookIds[]").type(JsonFieldType.ARRAY).description("큐레이션할 책 IDs"),
+                                fieldWithPath("quoteIds[]").type(JsonFieldType.ARRAY).description("큐레이션할 글귀 IDs")
                         ),
                         responseFields(
                                 fieldWithPath("mainCurationId").type(JsonFieldType.NUMBER).description("메인 큐레이션 ID")

@@ -33,7 +33,7 @@ public class AdminController {
     @PostMapping("/curations")
     public ResponseEntity<CreateCurationResponse> createCuration(
             @RequestBody CreateCurationRequest createCurationRequest) {
-        CreateCurationResponse resp = adminService.createCuration(createCurationRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(resp);
+        CreateCurationResponse createCurationResponse = adminService.createCuration(createCurationRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createCurationResponse);
     }
 }

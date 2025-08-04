@@ -4,7 +4,6 @@ package com.lovedbug.geulgwi.core.domain.admin;
 import com.lovedbug.geulgwi.core.domain.admin.dto.request.CreateCurationRequest;
 import com.lovedbug.geulgwi.core.domain.admin.dto.response.CreateCurationResponse;
 import com.lovedbug.geulgwi.core.domain.admin.exception.CurationListEmptyException;
-import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItem;
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItemBook;
@@ -15,8 +14,10 @@ import com.lovedbug.geulgwi.core.domain.curation.repository.CurationItemBookRepo
 import com.lovedbug.geulgwi.core.domain.curation.repository.CurationItemQuoteRepository;
 import com.lovedbug.geulgwi.core.domain.curation.repository.CurationItemRepository;
 import com.lovedbug.geulgwi.core.domain.curation.repository.MainCurationRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -33,59 +34,86 @@ public class AdminService {
         final long MAIN_CURATION_ID = 1L;
 
         return Stream.of(
-                getBookCurationsById(MAIN_CURATION_ID),
-                getQuoteCurationsById(MAIN_CURATION_ID))
-            .flatMap(List::stream)
-            .toList();
+                        getBookCurationsById(MAIN_CURATION_ID),
+                        getQuoteCurationsById(MAIN_CURATION_ID))
+                .flatMap(List::stream)
+                .toList();
     }
 
     public List<CurationItemResponse> getBookCurationsById(long curationId) {
         return CurationMapper.toCurationItemDtoListFromBooks(
-            mainCurationRepository.findCurationBooksByCurationId(curationId)
+                mainCurationRepository.findCurationBooksByCurationId(curationId)
         );
     }
 
     public List<CurationItemResponse> getQuoteCurationsById(long curationId) {
         return CurationMapper.toCurationItemDtoListFromQuotes(
-            mainCurationRepository.findCurationQuotesByCurationId(curationId)
+                mainCurationRepository.findCurationQuotesByCurationId(curationId)
         );
     }
 
-    public CreateCurationResponse createCuration(CreateCurationRequest createCurationRequest) {
-        MainCuration mainCuration = mainCurationRepository.save(
-                MainCuration.builder().build()
-        );
-        CurationItem item = CurationItem.builder()
-                .mainCurationId(mainCuration.getMainCurationId())
-                .title(createCurationRequest.getName())
-                .description(createCurationRequest.getDescription())
-                .curationType(createCurationRequest.getCurationType())
-                .build();
-        curationItemRepository.save(item);
-        if(createCurationRequest.getIds() != null){
-            createCurationRequest.getIds().forEach(id -> {
-                 if(createCurationRequest.getCurationType() == CurationType.BOOK){
-                     CurationItemBook curationItemBook = CurationItemBook.builder()
-                             .curationItemId(item.getCurationItemId())
-                             .bookId(id)
-                             .build();
-                     curationItemBookRepository.save(curationItemBook);
-                 }
-                 else{
-                     CurationItemQuote curationItemQuote = CurationItemQuote.builder()
-                             .curationItemId(item.getCurationItemId())
-                             .quoteId(id)
-                             .build();
-                     curationItemQuoteRepository.save(curationItemQuote);
-                 }
-            });
-        }
-        else{
-            throw new CurationListEmptyException("curation id list가 empty입니다.");
+    @Transactional
+    public CreateCurationResponse createCuration(CreateCurationRequest req) {
+
+        MainCuration main = createMainCuration();
+
+        CurationItem item = createCurationItem(main, req);
+
+        switch (req.getCurationType()) {
+            case BOOK -> handleBookItems(item, req.getBookIds());
+            case QUOTE -> handleQuoteItems(item, req.getQuoteIds());
+            default -> throw new IllegalArgumentException("알 수 없는 CurationType: " + req.getCurationType());
         }
 
         return CreateCurationResponse.builder()
-                .mainCurationId(mainCuration.getMainCurationId())
+                .mainCurationId(main.getMainCurationId())
                 .build();
     }
+
+    private MainCuration createMainCuration() {
+        return mainCurationRepository.save(
+                MainCuration.builder().build()
+        );
+    }
+
+    private CurationItem createCurationItem(MainCuration main, CreateCurationRequest req) {
+        CurationItem toSave = CurationItem.builder()
+                .mainCurationId(main.getMainCurationId())
+                .title(req.getName())
+                .description(req.getDescription())
+                .curationType(req.getCurationType())
+                .build();
+        return curationItemRepository.save(toSave);
+    }
+
+    private void handleBookItems(CurationItem item, List<Long> bookIds) {
+        validateIds(bookIds, "bookIds");
+        long itemId = item.getCurationItemId();
+        for (Long bookId : bookIds) {
+            CurationItemBook bib = CurationItemBook.builder()
+                    .curationItemId(itemId)
+                    .bookId(bookId)
+                    .build();
+            curationItemBookRepository.save(bib);
+        }
+    }
+
+    private void handleQuoteItems(CurationItem item, List<Long> quoteIds) {
+        validateIds(quoteIds, "quoteIds");
+        long itemId = item.getCurationItemId();
+        for (Long quoteId : quoteIds) {
+            CurationItemQuote qiq = CurationItemQuote.builder()
+                    .curationItemId(itemId)
+                    .quoteId(quoteId)
+                    .build();
+            curationItemQuoteRepository.save(qiq);
+        }
+    }
+
+    private void validateIds(List<Long> ids, String fieldName) {
+        if (ids == null || ids.isEmpty()) {
+            throw new CurationListEmptyException(fieldName + "가 비어 있습니다.");
+        }
+    }
+
 }
