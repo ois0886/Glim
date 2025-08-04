@@ -3,6 +3,8 @@ package com.ssafy.glim.core.data.authmanager
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,6 +20,10 @@ class AuthManager @Inject constructor(
 
     @Volatile
     private var cachedUserId: String? = null
+
+    // 로그아웃 이벤트 플로우
+    private val _logoutEvent = MutableSharedFlow<LogoutReason>(extraBufferCapacity = 1)
+    val logoutEvent: SharedFlow<LogoutReason> = _logoutEvent
 
     init {
         applicationScope.launch {
@@ -70,15 +76,22 @@ class AuthManager @Inject constructor(
         }
     }
 
-    fun deleteAll() {
+    fun logout(reason: LogoutReason, eventEmit: Boolean = true) {
+        Log.d("AuthManager", "logout - reason: $reason")
+
+        // 메모리 캐시 즉시 삭제
         cachedAccessToken = null
         cachedRefreshToken = null
         cachedUserId = null
 
         CoroutineScope(Dispatchers.IO).launch {
+            // DataStore에서 삭제
             authDataStore.deleteAccessToken()
             authDataStore.deleteRefreshToken()
             authDataStore.deleteUserId()
+
+            // 로그아웃 이벤트 발생
+            if (eventEmit) _logoutEvent.emit(reason)
         }
     }
 
@@ -92,7 +105,7 @@ class AuthManager @Inject constructor(
         val canLogin = hasAccessToken && hasRefreshToken && hasUserId
         if (!canLogin) {
             Log.d("AuthManager", "Missing auth data, clearing all")
-            deleteAll()
+            logout(reason = LogoutReason.UnknownError, eventEmit = false)
         }
         return canLogin
     }

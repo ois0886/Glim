@@ -7,6 +7,7 @@ import com.ssafy.glim.core.data.dto.request.UpdateUserRequest
 import com.ssafy.glim.core.data.mapper.toDomain
 import com.ssafy.glim.core.domain.model.user.User
 import com.ssafy.glim.core.domain.repository.UserRepository
+import com.ssafy.glim.core.data.authmanager.LogoutReason
 import jakarta.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -42,7 +43,7 @@ class UserRepositoryImpl @Inject constructor(
             "사용자 ID를 찾을 수 없습니다."
         }
         runCatching { dataSource.deleteUser(id.toLong()).toDomain() }
-            .onSuccess { authManager.deleteAll() }
+            .onSuccess { authManager.logout(LogoutReason.UserWithDrawl) }
             .onFailure { Log.d("UserRepositoryImpl", "deleteUser failed: ${it.message}") }
     }
 }

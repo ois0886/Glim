@@ -2,12 +2,13 @@ package com.ssafy.glim.feature.profile
 
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.domain.usecase.auth.LogOutUseCase
+import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
 import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.navigation.UpdateInfoRoute
+import com.ssafy.glim.core.data.authmanager.LogoutReason
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.Container
@@ -18,8 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val logOutUseCase: LogOutUseCase,
     private val getUserByIdUseCase: GetUserByIdUseCase,
+    private val authManager: AuthManager,
     private val deleteUserUseCase: DeleteUserUseCase
 ) : ViewModel(), ContainerHost<ProfileUiState, ProfileSideEffect> {
 
@@ -80,26 +81,8 @@ class ProfileViewModel @Inject constructor(
 
     fun onLogoutConfirm() = intent {
         reduce { state.copy(logoutDialogState = LogoutDialogState.Processing) }
-        runCatching { logOutUseCase() }
-            .onSuccess {
-                reduce {
-                    state.copy(
-                        logoutDialogState = LogoutDialogState.Hidden,
-                        isLoading = false
-                    )
-                }
-                postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_success))
-                navigator.navigateAndClearBackStack(Route.Login)
-            }
-            .onFailure {
-                reduce {
-                    state.copy(
-                        logoutDialogState = LogoutDialogState.Hidden,
-                        isLoading = false
-                    )
-                }
-                postSideEffect(ProfileSideEffect.ShowError(R.string.logout_failed))
-            }
+        authManager.logout(LogoutReason.UserLogout)
+        postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_success))
     }
 
     fun onLogoutCancel() = intent {
