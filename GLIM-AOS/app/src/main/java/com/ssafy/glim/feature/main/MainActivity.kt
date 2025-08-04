@@ -11,7 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
                 val navController = rememberNavController()
-                var startDestination: Route? by rememberSaveable { mutableStateOf(null) }
+                var startDestination: Route? by remember { mutableStateOf(null) }
 
                 // 초기 목적지 결정
                 LaunchedEffect(Unit) {
