@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
+import com.lovedbug.geulgwi.core.domain.admin.dto.request.CreateCurationRequest;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
@@ -26,10 +27,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
+
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.Collections;
+import java.util.List;
+
 import static io.restassured.RestAssured.given;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
 @ActiveProfiles("test")
@@ -105,6 +110,41 @@ class AdminApiDocsTest extends RestDocsTestSupport {
             .statusCode(200)
             .extract().body().asString();
     }
+
+    @DisplayName("관리자 페이지에서 메인 큐레이션을 생성한다")
+    @Test
+    void post_main_curation() {
+        setUpCurationData();
+        Long bookId = bookRepository.findAll().getFirst().getBookId();
+        CreateCurationRequest requestDto = CreateCurationRequest.builder()
+                .name("테스트 큐레이션")
+                .description("테스트 설명")
+                .curationType(CurationType.BOOK)
+                .bookIds(List.of(bookId))
+                .quoteIds(Collections.emptyList())  // BOOK 타입이니까 quoteIds는 비워둡니다
+                .build();
+
+        given(this.spec)
+                .contentType("application/json")
+                .body(requestDto)
+                .filter(document("{class_name}/{method_name}",
+                        requestFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("큐레이션 제목"),
+                                fieldWithPath("description").type(JsonFieldType.STRING).description("큐레이션 설명").optional(),
+                                fieldWithPath("curationType").type(JsonFieldType.STRING).description("큐레이션 타입 (BOOK 또는 QUOTE)"),
+                                fieldWithPath("bookIds[]").type(JsonFieldType.ARRAY).description("큐레이션할 책 IDs"),
+                                fieldWithPath("quoteIds[]").type(JsonFieldType.ARRAY).description("큐레이션할 글귀 IDs")
+                        ),
+                        responseFields(
+                                fieldWithPath("mainCurationId").type(JsonFieldType.NUMBER).description("메인 큐레이션 ID")
+                        )
+                ))
+                .when()
+                .post("/api/v1/admin/curations")
+                .then().log().all()
+                .statusCode(201);
+    }
+
 
     void setUpCurationData() {
         MainCuration mainCuration = new MainCuration();
