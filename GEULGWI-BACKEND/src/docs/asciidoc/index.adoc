@@ -318,3 +318,30 @@ include::{snippets}/admin_api_docs_test/post_main_curation/http-request.adoc[]
 include::{snippets}/admin_api_docs_test/post_main_curation/http-response.adoc[]
 
 include::{snippets}/admin_api_docs_test/post_main_curation/response-fields.adoc[]
+
+=== Admin 큐레이션 수정
+
+==== 요청
+
+include::{snippets}/admin_api_docs_test/put_update_curation_item/http-request.adoc[]
+
+include::{snippets}/admin_api_docs_test/put_update_curation_item/path-parameters.adoc[]
+
+include::{snippets}/admin_api_docs_test/put_update_curation_item/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_api_docs_test/put_update_curation_item/http-response.adoc[]
+
+=== Admin 큐레이션 삭제
+
+==== 요청
+
+include::{snippets}/admin_api_docs_test/delete_curation_item/http-request.adoc[]
+
+include::{snippets}/admin_api_docs_test/delete_curation_item/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_api_docs_test/delete_curation_item/http-response.adoc[]
+
