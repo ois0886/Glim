@@ -301,6 +301,6 @@ export function UserDemographics() {
           </CardContent>
         </Card>
       </div>
-    </div>
-  )
+    </div> 
+  ) 
 }

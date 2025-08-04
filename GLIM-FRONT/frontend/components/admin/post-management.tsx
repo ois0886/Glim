@@ -82,8 +82,8 @@ export function PostManagement() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>게시물 관리</CardTitle>
-          <CardDescription>플랫폼의 모든 게시물(글귀)을 관리합니다.</CardDescription>
+          <CardTitle>글귀 관리</CardTitle>
+          <CardDescription>플랫폼의 모든 글귀(게시물)을 관리합니다.</CardDescription>
           <div className="flex gap-4 pt-4">
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />

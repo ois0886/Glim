@@ -154,7 +154,7 @@ export function UserManagement() {
 
   // 사용자 상태 변경 버튼 클릭 시 호출되는 함수
   const handleStatusChangeClick = async (userId: number) => {
-    if (window.confirm("이 사용자의 상태를 변경하시겠습니까?")) { // 사용자에게 확인 메시지 표시
+    if (window.confirm("이 사용자를 삭제하시겠습니까?")) { // 사용자에게 확인 메시지 표시
         try {
             console.log("Attempting to change status for user ID:", userId);
             // 백엔드 API로 PATCH 요청을 보내 사용자 상태를 변경합니다.
