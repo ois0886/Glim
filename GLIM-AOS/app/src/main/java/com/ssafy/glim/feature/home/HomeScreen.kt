@@ -111,6 +111,7 @@ private fun HomeScreen(
                         color = Color(0xFFF7F7F7)
                     )
                 }
+
                 is HomeSectionUiModel.BookSection -> {
                     SectionTitle(section.title)
                     BookCarousel(
@@ -210,7 +211,8 @@ fun QuoteCarousel(
                 ) {
                     GlimSubcomposeAsyncImage(
                         context = context,
-                        imageUrl = "${BuildConfig.BASE_URL}/images/${quote.quoteImageName}"
+                        imageUrl = "${BuildConfig.BASE_URL}/images/${quote.quoteImageName}",
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))

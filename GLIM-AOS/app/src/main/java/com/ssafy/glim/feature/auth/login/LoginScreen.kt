@@ -22,14 +22,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.ui.GlimTopBar
@@ -39,7 +37,6 @@ import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
 import com.ssafy.glim.feature.auth.login.component.SocialButton
 import com.ssafy.glim.feature.auth.login.component.SocialProvider
-import com.ssafy.glim.feature.main.excludeSystemBars
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
@@ -94,9 +91,7 @@ internal fun LoginScreen(
         GlimTopBar(
             title = stringResource(id = R.string.login_title),
             showBack = false,
-            alignment = TitleAlignment.Center,
-            titleColor = Color.Black,
-            titleSize = 20.sp,
+            alignment = TitleAlignment.Center
         )
         Column(
             modifier =

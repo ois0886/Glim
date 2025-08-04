@@ -7,7 +7,6 @@ import com.ssafy.glim.core.domain.usecase.book.UpdateBookViewCountUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetQuoteByIsbnUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
-import com.ssafy.glim.feature.main.MainTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost

@@ -200,7 +200,7 @@ class ProfileViewModelTest {
     @Test
     fun `잠금_설정_토스트_메시지_테스트`() = runTest {
         viewModel.test(this) {
-            containerHost.navigateToLockSettings()
+            containerHost.navigateToSettings()
 
             expectSideEffect(
                 ProfileSideEffect.ShowToast(R.string.lock_settings_message)

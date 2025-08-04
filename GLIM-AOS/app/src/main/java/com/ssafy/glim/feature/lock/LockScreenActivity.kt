@@ -204,7 +204,8 @@ fun LockScreenContent(
         if (currentQuote != null) {
             GlimSubcomposeAsyncImage(
                 context = context,
-                imageUrl = "${BuildConfig.BASE_URL}/images/${currentQuote.quoteImageName}"
+                imageUrl = "${BuildConfig.BASE_URL}/images/${currentQuote.quoteImageName}",
+                modifier = Modifier.fillMaxSize()
             )
         } else {
             GlimErrorLoader(Modifier)

@@ -142,8 +142,6 @@ fun PostContent(
             },
         )
 
-
-
         val bottomSheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = false
         )
