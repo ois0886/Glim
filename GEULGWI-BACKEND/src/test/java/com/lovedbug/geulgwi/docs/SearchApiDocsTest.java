@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.test.context.ActiveProfiles;
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
+@ActiveProfiles("test")
 class SearchApiDocsTest extends RestDocsTestSupport {
 
     @Autowired

@@ -16,7 +16,7 @@ import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
-import com.lovedbug.geulgwi.core.domain.quote.QuoteRepository;
+import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -26,11 +26,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ActiveProfiles;
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
+@ActiveProfiles("test")
 class AdminApiDocsTest extends RestDocsTestSupport {
     @Autowired
     private MainCurationRepository mainCurationRepository;
