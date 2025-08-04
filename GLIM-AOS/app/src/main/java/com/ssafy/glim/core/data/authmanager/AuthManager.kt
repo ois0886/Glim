@@ -76,7 +76,7 @@ class AuthManager @Inject constructor(
         }
     }
 
-    fun logout(reason: LogoutReason) {
+    fun logout(reason: LogoutReason, eventEmit: Boolean = true) {
         Log.d("AuthManager", "logout - reason: $reason")
 
         // 메모리 캐시 즉시 삭제
@@ -91,7 +91,7 @@ class AuthManager @Inject constructor(
             authDataStore.deleteUserId()
 
             // 로그아웃 이벤트 발생
-            _logoutEvent.emit(reason)
+            if (eventEmit) _logoutEvent.emit(reason)
         }
     }
 
@@ -105,7 +105,7 @@ class AuthManager @Inject constructor(
         val canLogin = hasAccessToken && hasRefreshToken && hasUserId
         if (!canLogin) {
             Log.d("AuthManager", "Missing auth data, clearing all")
-            logout(LogoutReason.UnknownError)
+            logout(reason = LogoutReason.UnknownError, eventEmit = false)
         }
         return canLogin
     }
