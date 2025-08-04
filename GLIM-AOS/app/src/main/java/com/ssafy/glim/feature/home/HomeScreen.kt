@@ -19,9 +19,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,6 +59,7 @@ import com.ssafy.glim.ui.theme.GlimColor.LightGray700
 import com.ssafy.glim.ui.theme.GlimColor.LightGray900
 import org.orbitmvi.orbit.compose.collectSideEffect
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeRoute(
     padding: PaddingValues,
@@ -73,26 +76,29 @@ internal fun HomeRoute(
         }
     }
 
-    HomeScreen(
-        padding = padding,
-        homeUiState = homeUiState,
-        onQuoteClick = viewModel::navigateToQuote,
-        onBookClick = viewModel::navigateToBookDetail,
-    )
+    PullToRefreshBox(
+        isRefreshing = homeUiState.isRefreshing,
+        onRefresh = { viewModel.refreshHome() },
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+    ) {
+        HomeScreen(
+            homeUiState = homeUiState,
+            onQuoteClick = viewModel::navigateToQuote,
+            onBookClick = viewModel::navigateToBookDetail,
+        )
+    }
 }
 
 @Composable
 private fun HomeScreen(
-    padding: PaddingValues,
     homeUiState: HomeUiState,
     onQuoteClick: (Long) -> Unit,
     onBookClick: (Long) -> Unit,
 ) {
     LazyColumn(
-        modifier =
-        Modifier
-            .fillMaxSize()
-            .padding(padding),
+        modifier = Modifier.fillMaxSize(),
     ) {
         item {
             QuoteHomeTitle()
@@ -132,15 +138,13 @@ private fun HomeScreen(
 @Composable
 fun QuoteHomeTitle() {
     Column(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 16.dp),
     ) {
         Text(
             text = stringResource(R.string.today_glim),
-            style =
-            MaterialTheme.typography.headlineMedium.copy(
+            style = MaterialTheme.typography.headlineMedium.copy(
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
             ),
@@ -148,8 +152,7 @@ fun QuoteHomeTitle() {
         Spacer(Modifier.height(16.dp))
         Text(
             text = stringResource(R.string.glim_home_description),
-            style =
-            MaterialTheme.typography.bodyMedium.copy(
+            style = MaterialTheme.typography.bodyMedium.copy(
                 fontSize = 16.sp,
             ),
             color = LightGray600,
@@ -161,8 +164,7 @@ fun QuoteHomeTitle() {
 fun SectionTitle(text: String) {
     Text(
         text = text,
-        style =
-        MaterialTheme.typography.titleMedium.copy(
+        style = MaterialTheme.typography.titleMedium.copy(
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
         ),
@@ -181,6 +183,7 @@ fun QuoteCarousel(
 ) {
     val context = LocalContext.current
     val imageLoader = context.imageLoader
+
     LaunchedEffect(quotes) {
         quotes.forEach { quote ->
             val request = ImageRequest.Builder(context)
@@ -191,6 +194,7 @@ fun QuoteCarousel(
             imageLoader.enqueue(request)
         }
     }
+
     LazyRow(
         modifier = modifier,
         contentPadding = contentPadding,
@@ -198,8 +202,7 @@ fun QuoteCarousel(
     ) {
         items(quotes) { quote ->
             Column(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .width(itemSize.width)
                     .clickable { onItemClick(quote.quoteId) },
                 horizontalAlignment = Alignment.Start,
@@ -273,8 +276,7 @@ fun BookCarousel(
     ) {
         items(books) { book ->
             Column(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .width(itemWidth)
                     .clickable { onItemClick(book.bookId) },
                 horizontalAlignment = Alignment.Start
@@ -306,8 +308,7 @@ fun BookCarousel(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = book.title,
-                    style =
-                    MaterialTheme.typography.bodySmall.copy(
+                    style = MaterialTheme.typography.bodySmall.copy(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                     ),

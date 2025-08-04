@@ -38,6 +38,39 @@ class HomeViewModel @Inject constructor(
             navigator.navigate(Route.BookDetail(bookId = bookId))
         }
 
+    fun refreshHome() = intent {
+        reduce { state.copy(isRefreshing = true) }
+
+        runCatching { getMainCurationsUseCase() }
+            .onSuccess { curations ->
+                val sections = curations.map { curation ->
+                    when (curation.type) {
+                        CurationType.QUOTE -> HomeSectionUiModel.QuoteSection(
+                            id = curation.id?.toString().orEmpty(),
+                            title = curation.title,
+                            quotes = curation.contents.quote
+                        )
+                        CurationType.BOOK -> HomeSectionUiModel.BookSection(
+                            id = curation.id?.toString().orEmpty(),
+                            title = curation.title,
+                            books = curation.contents.book
+                        )
+                    }
+                }
+
+                reduce {
+                    state.copy(
+                        isRefreshing = false,
+                        sections = sections
+                    )
+                }
+            }
+            .onFailure { throwable ->
+                reduce { state.copy(isRefreshing = false) }
+                postSideEffect(HomeSideEffect.ShowError("새로고침에 실패했습니다: ${throwable.message}"))
+            }
+    }
+
     init {
         loadCurationData()
     }
