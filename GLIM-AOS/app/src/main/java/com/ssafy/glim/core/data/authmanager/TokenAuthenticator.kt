@@ -3,7 +3,6 @@ package com.ssafy.glim.core.data.authmanager
 import android.util.Log
 import com.ssafy.glim.core.data.dto.token.AuthToken
 import com.ssafy.glim.core.data.service.AuthService
-import com.ssafy.glim.core.data.authmanager.LogoutReason
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
