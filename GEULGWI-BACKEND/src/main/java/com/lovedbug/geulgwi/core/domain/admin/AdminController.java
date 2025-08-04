@@ -1,12 +1,17 @@
 package com.lovedbug.geulgwi.core.domain.admin;
 
 
+import com.lovedbug.geulgwi.core.domain.admin.dto.request.CreateCurationRequest;
+import com.lovedbug.geulgwi.core.domain.admin.dto.response.CreateCurationResponse;
+import com.lovedbug.geulgwi.core.domain.auth.dto.request.EmailVerificationRequest;
+import com.lovedbug.geulgwi.core.domain.auth.dto.response.EmailVerificationResponse;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
+import com.lovedbug.geulgwi.core.domain.curation.entity.MainCuration;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /*
@@ -23,5 +28,12 @@ public class AdminController {
     public ResponseEntity<List<CurationItemResponse>> getMainCuration() {
 
         return ResponseEntity.ok(adminService.getMainCurationByAdmin());
+    }
+
+    @PostMapping("/curations")
+    public ResponseEntity<CreateCurationResponse> createCuration(
+            @RequestBody CreateCurationRequest createCurationRequest) {
+        CreateCurationResponse resp = adminService.createCuration(createCurationRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 }
