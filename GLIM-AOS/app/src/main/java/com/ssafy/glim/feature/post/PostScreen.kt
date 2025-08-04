@@ -46,7 +46,7 @@ internal fun PostRoute(
         rememberLauncherForActivityResult(
             ActivityResultContracts.GetContent(),
         ) { uri ->
-            if(uri != null) viewModel.backgroundImageSelected(uri)
+            if (uri != null) viewModel.backgroundImageSelected(uri)
         }
 
     viewModel.collectSideEffect { sideEffect ->

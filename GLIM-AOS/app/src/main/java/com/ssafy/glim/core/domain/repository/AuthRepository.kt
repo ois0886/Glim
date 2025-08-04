@@ -18,5 +18,4 @@ interface AuthRepository {
     )
 
     suspend fun verifyEmail(email: String): VerifyEmail
-
 }

@@ -37,7 +37,7 @@ constructor(
     fun toggleLike() =
         intent {
             val currentQuote = state.currentQuote
-            if(currentQuote == null) {
+            if (currentQuote == null) {
                 postSideEffect(ShortsSideEffect.ShowToast("오류 발생"))
                 return@intent
             }
@@ -68,8 +68,6 @@ constructor(
             }
 
             reduce { state.copy(quotes = updatedQuotes) }
-
-
         }
 
     fun onPageChanged(page: Int) =
@@ -87,7 +85,7 @@ constructor(
                     refresh()
                 }
                 val currentQuote = state.currentQuote
-                if(currentQuote == null) {
+                if (currentQuote == null) {
                     postSideEffect(ShortsSideEffect.ShowToast("오류 발생"))
                     return@intent
                 }

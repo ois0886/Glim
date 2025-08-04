@@ -39,7 +39,6 @@ import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
 import com.ssafy.glim.feature.auth.login.component.SocialButton
 import com.ssafy.glim.feature.auth.login.component.SocialProvider
-import com.ssafy.glim.feature.main.excludeSystemBars
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable

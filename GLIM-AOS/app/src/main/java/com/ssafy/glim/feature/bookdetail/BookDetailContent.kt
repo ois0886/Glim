@@ -204,13 +204,19 @@ fun QuoteCard(
                 ) {
                     Icon(
                         painter = painterResource(
-                            if (quote.isLiked) R.drawable.ic_like_200_fill
-                            else R.drawable.ic_like_200
+                            if (quote.isLiked) {
+                                R.drawable.ic_like_200_fill
+                            } else {
+                                R.drawable.ic_like_200
+                            }
                         ),
                         contentDescription = null,
                         tint =
-                            if (quote.isLiked) Color.Red
-                            else Color.Black,
+                        if (quote.isLiked) {
+                            Color.Red
+                        } else {
+                            Color.Black
+                        },
                     )
                     Text(
                         text = quote.likes.toString(),

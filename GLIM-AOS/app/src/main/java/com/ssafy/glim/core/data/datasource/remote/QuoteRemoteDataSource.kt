@@ -1,10 +1,8 @@
 package com.ssafy.glim.core.data.datasource.remote
 
-import com.ssafy.glim.core.data.dto.response.QuoteResponse
 import com.ssafy.glim.core.data.service.QuoteService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.http.Query
 import javax.inject.Inject
 
 class QuoteRemoteDataSource @Inject constructor(

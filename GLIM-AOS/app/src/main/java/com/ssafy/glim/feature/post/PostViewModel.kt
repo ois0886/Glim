@@ -95,10 +95,10 @@ class PostViewModel @Inject constructor(
         reduce {
             state.copy(
                 textPosition =
-                    currentPosition.copy(
-                        offsetX = currentPosition.offsetX + deltaX,
-                        offsetY = currentPosition.offsetY + deltaY,
-                    ),
+                currentPosition.copy(
+                    offsetX = currentPosition.offsetX + deltaX,
+                    offsetY = currentPosition.offsetY + deltaY,
+                ),
             )
         }
     }
@@ -196,7 +196,6 @@ class PostViewModel @Inject constructor(
                         Log.d("PostViewModel", "글림 업로드 실패: ${it.message}")
                         postSideEffect(PostSideEffect.ShowToast("글림 업로드에 실패했습니다."))
                     }
-
             } catch (e: Exception) {
                 postSideEffect(PostSideEffect.ShowToast("업로드 중 오류가 발생했습니다: ${e.message}"))
             }

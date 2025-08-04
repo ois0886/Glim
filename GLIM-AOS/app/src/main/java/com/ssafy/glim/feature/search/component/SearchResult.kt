@@ -74,9 +74,9 @@ fun SearchResultSection(
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .background(Color.White),
+        modifier
+            .fillMaxSize()
+            .background(Color.White),
     ) {
         TabRow(
             selectedTabIndex = selectedTab.ordinal,
@@ -339,9 +339,9 @@ private fun BookCard(
 ) {
     Card(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
@@ -397,9 +397,9 @@ private fun QuoteCard(
 ) {
     Card(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
@@ -456,14 +456,20 @@ private fun QuoteCard(
                 ) {
                     Icon(
                         painter = painterResource(
-                            if (quote.isLiked) R.drawable.ic_like_200_fill
-                            else R.drawable.ic_like_200
+                            if (quote.isLiked) {
+                                R.drawable.ic_like_200_fill
+                            } else {
+                                R.drawable.ic_like_200
+                            }
                         ),
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
                         tint =
-                            if (quote.isLiked) Color.Red
-                            else Color.Black,
+                        if (quote.isLiked) {
+                            Color.Red
+                        } else {
+                            Color.Black
+                        },
                     )
                     Text(
                         text = quote.likes.toString(),

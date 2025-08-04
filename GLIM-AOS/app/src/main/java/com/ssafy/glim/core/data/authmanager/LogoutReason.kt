@@ -9,5 +9,5 @@ sealed class LogoutReason(@StringRes val messageRes: Int) {
     object RefreshTokenExpired : LogoutReason(R.string.logout_session_expired)
     object UnknownError : LogoutReason(R.string.logout_unknown_error)
     object UserLogout : LogoutReason(R.string.logout_user_logout)
-    object  UserWithDrawl : LogoutReason(R.string.logout_user_withdrawl)
+    object UserWithDrawl : LogoutReason(R.string.logout_user_withdrawl)
 }

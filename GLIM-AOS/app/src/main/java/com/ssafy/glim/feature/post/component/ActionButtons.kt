@@ -75,7 +75,6 @@ fun ActionButtons(
             }
         }
 
-
         Spacer(modifier = Modifier.weight(1f))
 
         ActionButton(
