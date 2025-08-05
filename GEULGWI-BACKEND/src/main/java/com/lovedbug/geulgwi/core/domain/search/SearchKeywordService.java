@@ -22,4 +22,8 @@ public class SearchKeywordService {
 
         return new ArrayList<>(topKeywords);
     }
+
+    public void increaseKeywordScore(String keyword) {
+        redisTemplate.boundZSetOps(POPULAR_KEYWORDS_KEY).incrementScore(keyword, 1);
+    }
 }
