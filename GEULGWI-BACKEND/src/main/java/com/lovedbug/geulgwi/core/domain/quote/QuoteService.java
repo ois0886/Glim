@@ -1,7 +1,9 @@
 package com.lovedbug.geulgwi.core.domain.quote;
 
+import com.lovedbug.geulgwi.core.domain.quote.entity.MemberQuote;
+import com.lovedbug.geulgwi.core.domain.quote.repository.MemberQuoteRepository;
+import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import com.lovedbug.geulgwi.core.common.exception.GeulgwiException;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
@@ -37,6 +40,7 @@ public class QuoteService {
     private final MemberLikeQuoteService memberLikeQuoteService;
     private final SearchKeywordService searchKeywordService;
 
+    private final MemberQuoteRepository memberQuoteRepository;
     private final QuoteRepository quoteRepository;
     private final BookRepository bookRepository;
 
@@ -101,7 +105,14 @@ public class QuoteService {
 
         ImageMetaData imageMetaData = imageHandler.saveImage(quoteImage);
 
-        quoteRepository.save(QuoteCreateRequest.toEntity(quoteData, book, imageMetaData));
+        Quote savedQuote = quoteRepository.save(QuoteCreateRequest.toEntity(quoteData, book, imageMetaData));
+
+        MemberQuote memberQuote = MemberQuote.builder()
+            .memberId(quoteData.getMemberId())
+            .quote(savedQuote)
+            .build();
+
+        memberQuoteRepository.save(memberQuote);
     }
 
     public QuoteSearchResponse searchQuotesByContent(Long memberId, String content, Pageable pageable) {
@@ -119,6 +130,22 @@ public class QuoteService {
 
         return quotes.stream()
             .map(QuoteMapper::toQuoteWithBookResponse)
+            .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<QuoteResponse> getUploadedQuotesByMemberId (Long memberId) {
+
+        List<MemberQuote> memberQuotes = memberQuoteRepository.findAllByMemberId(memberId);
+
+        return memberQuotes.stream()
+            .map(memberQuote -> {
+                Quote quote = memberQuote.getQuote();
+                boolean isLiked = (memberId != null) && memberLikeQuoteService.isLikedBy(memberId, quote.getQuoteId());
+                long likeCount = memberLikeQuoteService.countLikes(quote.getQuoteId());
+
+                return QuoteResponse.toResponseDto(quote, isLiked, likeCount, memberQuote.getCreatedAt());
+            })
             .toList();
     }
 

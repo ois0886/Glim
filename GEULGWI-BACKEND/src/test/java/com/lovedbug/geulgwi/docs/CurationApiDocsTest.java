@@ -17,8 +17,8 @@ import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
-import com.lovedbug.geulgwi.core.domain.quote.*;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
+import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -30,7 +30,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 class CurationApiDocsTest extends RestDocsTestSupport {
 
     @Autowired

@@ -25,7 +25,9 @@ import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 public class BookApiDocsTest extends RestDocsTestSupport {
 
     @Autowired

@@ -4,9 +4,6 @@ import com.lovedbug.geulgwi.core.domain.book.dto.BookInfoResponse;
 import com.lovedbug.geulgwi.core.domain.book.dto.PopularBookResponse;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.book.mapper.BookMapper;
-import com.lovedbug.geulgwi.core.domain.quote.QuoteService;
-import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteWithBookResponse;
-import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import com.lovedbug.geulgwi.core.domain.search.SearchKeywordService;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookResponse;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,18 +13,13 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.AladdinClient;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinListQueryType;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinSearchQueryType;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookListConditionDto;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookSearchConditionDto;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 @RequiredArgsConstructor

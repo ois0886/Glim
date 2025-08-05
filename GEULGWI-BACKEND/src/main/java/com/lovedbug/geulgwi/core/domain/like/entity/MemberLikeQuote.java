@@ -26,6 +26,6 @@ public class MemberLikeQuote extends BaseTimeEntity {
     private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "quoteId", nullable = false)
+    @JoinColumn(name = "quote_id", nullable = false)
     private Quote quote;
 }
