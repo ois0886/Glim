@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/searches")
+@RequestMapping("/api/v1/search-keywords")
 @RequiredArgsConstructor
-public class SearchController {
+public class SearchKeywordController {
 
-    private final SearchService searchService;
+    private final SearchKeywordService searchKeywordService;
 
     @GetMapping("/popular")
-    public ResponseEntity<List<SearchHistoryResponseDto>> getSearchHistory() {
+    public ResponseEntity<List<String>> getSearchHistory() {
 
         return ResponseEntity
             .ok()
-            .body(searchService.getSearchPopularHistory());
+            .body(searchKeywordService.getPopularSearchKeywords());
     }
 }

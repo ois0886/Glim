@@ -169,13 +169,13 @@ include::{snippets}/quote_api_docs_test/get_uploaded_quotes/response-fields.adoc
 
 === 인기 검색어 조회
 
-include::{snippets}/search_api_docs_test/get_search_popular_history/http-request.adoc[]
+include::{snippets}/search_keyword_api_docs_test/get_search_popular_history/http-request.adoc[]
 
 ==== 응답
 
-include::{snippets}/search_api_docs_test/get_search_popular_history/http-response.adoc[]
+include::{snippets}/search_keyword_api_docs_test/get_search_popular_history/http-response.adoc[]
 
-include::{snippets}/search_api_docs_test/get_search_popular_history/response-fields.adoc[]
+include::{snippets}/search_keyword_api_docs_test/get_search_popular_history/response-fields.adoc[]
 
 == 회원 API
 
@@ -287,7 +287,7 @@ include::{snippets}/auth_api_docs_test/refresh_token_test/response-fields.adoc[]
 
 include::{snippets}/like_api_docs_test/like_to_quote/http-request.adoc[]
 
-include::{snippets}/like_api_docs_test/like_to_quote/request-fields.adoc[]
+include::{snippets}/like_api_docs_test/like_to_quote/path-parameters.adoc[]
 
 ==== 응답
 
@@ -299,7 +299,7 @@ include::{snippets}/like_api_docs_test/like_to_quote/http-response.adoc[]
 
 include::{snippets}/like_api_docs_test/unlike_to_quote/http-request.adoc[]
 
-include::{snippets}/like_api_docs_test/unlike_to_quote/request-fields.adoc[]
+include::{snippets}/like_api_docs_test/unlike_to_quote/path-parameters.adoc[]
 
 ==== 응답
 

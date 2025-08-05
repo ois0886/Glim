@@ -121,3 +121,6 @@ postgres-data/
 
 ### postgres-data 백업
 upload-images/
+
+### redis 백업
+redis-data/

@@ -3,7 +3,10 @@ spring:
     name: geulgwi-backend
   datasource:
     driver-class-name: org.postgresql.Driver
-
+  data:
+    redis:
+      host: localhost
+      port: 6379
   jpa:
     hibernate:
       ddl-auto: none

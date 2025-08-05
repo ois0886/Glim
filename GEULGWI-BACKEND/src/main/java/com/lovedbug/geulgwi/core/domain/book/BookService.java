@@ -4,6 +4,7 @@ import com.lovedbug.geulgwi.core.domain.book.dto.BookInfoResponse;
 import com.lovedbug.geulgwi.core.domain.book.dto.PopularBookResponse;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.book.mapper.BookMapper;
+import com.lovedbug.geulgwi.core.domain.search.SearchKeywordService;
 import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookResponse;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,9 @@ import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookSearch
 public class BookService {
 
     private final AladdinClient bookProviderClient;
+
+    private final SearchKeywordService searchKeywordService;
+
     private final BookRepository bookRepository;
 
     public List<AladdinBookResponse> getBooksByKeyword(AladdinSearchQueryType queryType, String keyword, int page) {
@@ -34,7 +38,7 @@ public class BookService {
             .start(page)
             .build();
 
-        BookScheduler.keywords.add(keyword);
+        searchKeywordService.increaseKeywordScore(keyword);
 
         return bookProviderClient.searchBooksByCondition(searchCondition).getItems();
     }
