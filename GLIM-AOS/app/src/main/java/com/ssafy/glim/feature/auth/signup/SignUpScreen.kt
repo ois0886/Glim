@@ -129,6 +129,7 @@ private fun SignUpScreen(
 
                 SignUpStep.Profile ->
                     UserProfileInputContent(
+                        isUpdate = false,
                         name = state.name,
                         onNameChange = onNameChanged,
                         nameError = state.nameError?.let { stringResource(it) },

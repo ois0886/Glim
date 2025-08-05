@@ -161,6 +161,18 @@ fun String.formatBirthDate(): List<Int> {
 }
 
 /**
+ * YYYYMMDD 형식을 YYYY-MM-DD 형식으로 변환
+ */
+fun String.formatBirthDateToNumber(): String {
+    return try {
+        val dateOnly = this.substringBefore("T")
+        dateOnly.replace("-", "")
+    } catch (e: Exception) {
+        ""
+    }
+}
+
+/**
  * "남성", "여성"을 "MALE", "FEMALE"로 변환
  */
 fun String.formatGender(): String {

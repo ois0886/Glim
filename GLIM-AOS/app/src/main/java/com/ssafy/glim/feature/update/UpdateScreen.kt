@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.update
 
+import PersonalInfoContent
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -31,7 +32,6 @@ import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.main.excludeSystemBars
 import com.ssafy.glim.feature.update.component.PasswordChangeContent
-import com.ssafy.glim.feature.update.component.PersonalInfoContent
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
