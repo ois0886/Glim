@@ -44,12 +44,10 @@ fun rememberCameraPermissionState(
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    return remember {
-        CameraPermissionState(
-            hasPermission = hasPermission,
-            requestPermission = { permissionLauncher.launch(Manifest.permission.CAMERA) }
-        )
-    }
+    return CameraPermissionState(
+        hasPermission = hasPermission,
+        requestPermission = { permissionLauncher.launch(Manifest.permission.CAMERA) }
+    )
 }
 
 data class CameraPermissionState(
@@ -59,38 +57,40 @@ data class CameraPermissionState(
 
 @Composable
 fun rememberCameraLauncher(
-    onImageCaptured: (Uri) -> Unit,
+    onImageCaptured: (Uri, CameraType) -> Unit,
     onCaptureFailed: () -> Unit = {}
 ): CameraLauncher {
     val context = LocalContext.current
     var currentImageUri by remember { mutableStateOf<Uri?>(null) }
+    var currentCameraType by remember { mutableStateOf<CameraType?>(null) }
 
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
-        if (success) {
-            currentImageUri?.let { uri ->
-                onImageCaptured(uri)
-            }
+        val uri = currentImageUri
+        val type = currentCameraType
+
+        if (success && uri != null && type != null) {
+            onImageCaptured(uri, type)
         } else {
             onCaptureFailed()
         }
         currentImageUri = null
+        currentCameraType = null
     }
 
-    return remember {
-        CameraLauncher(
-            launch = {
-                val uri = createImageUri(context)
-                currentImageUri = uri
-                cameraLauncher.launch(uri)
-            }
-        )
-    }
+    return CameraLauncher(
+        launch = { type ->
+            val uri = createImageUri(context)
+            currentImageUri = uri
+            currentCameraType = type
+            cameraLauncher.launch(uri)
+        }
+    )
 }
 
 data class CameraLauncher(
-    val launch: () -> Unit
+    val launch: (CameraType) -> Unit
 )
 
 // 임시 이미지 파일 생성 함수
@@ -107,13 +107,13 @@ private fun createImageUri(context: Context): Uri {
     )
 }
 
-// 통합 카메라 헬퍼 - 권한 + 카메라 실행을 한번에
 @Composable
 fun rememberCameraWithPermission(
-    onImageCaptured: (Uri) -> Unit,
+    onImageCaptured: (Uri, CameraType) -> Unit,
     onPermissionDenied: () -> Unit = {},
     onCaptureFailed: () -> Unit = {}
 ): CameraWithPermissionState {
+    var pendingCameraType by remember { mutableStateOf<CameraType?>(null) }
 
     val cameraLauncher = rememberCameraLauncher(
         onImageCaptured = onImageCaptured,
@@ -122,26 +122,36 @@ fun rememberCameraWithPermission(
 
     val permissionState = rememberCameraPermissionState(
         onPermissionGranted = {
-            cameraLauncher.launch()
+            pendingCameraType?.let { type ->
+                cameraLauncher.launch(type)
+                pendingCameraType = null
+            }
         },
-        onPermissionDenied = onPermissionDenied
+        onPermissionDenied = {
+            pendingCameraType = null
+            onPermissionDenied()
+        }
     )
 
-    return remember {
-        CameraWithPermissionState(
-            hasPermission = permissionState.hasPermission,
-            launchCamera = {
-                if (permissionState.hasPermission) {
-                    cameraLauncher.launch()
-                } else {
-                    permissionState.requestPermission()
-                }
+    return CameraWithPermissionState(
+        hasPermission = permissionState.hasPermission,
+        launchCamera = { type ->
+            if (permissionState.hasPermission) {
+                cameraLauncher.launch(type)
+            } else {
+                pendingCameraType = type
+                permissionState.requestPermission()
             }
-        )
-    }
+        }
+    )
 }
 
 data class CameraWithPermissionState(
     val hasPermission: Boolean,
-    val launchCamera: () -> Unit
+    val launchCamera: (CameraType) -> Unit
 )
+
+enum class CameraType {
+    BACKGROUND_IMAGE,
+    TEXT_RECOGNITION_IMAGE
+}

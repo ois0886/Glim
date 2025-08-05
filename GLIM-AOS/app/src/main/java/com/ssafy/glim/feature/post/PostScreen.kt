@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.post
 
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -18,10 +17,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.CircularProgressIndicator
+import com.ssafy.glim.R
+import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.common.utils.rememberCameraWithPermission
 import com.ssafy.glim.core.ui.DarkThemeScreen
-import com.ssafy.glim.feature.post.component.imageoverlay.TextExtractionImageOverlay
 import com.ssafy.glim.feature.post.component.PostContent
+import com.ssafy.glim.feature.post.component.imageoverlay.TextExtractionImageOverlay
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -50,28 +51,29 @@ internal fun PostRoute(
             if (uri != null) viewModel.backgroundImageSelected(uri)
         }
 
-    // launch camera
     val cameraState = rememberCameraWithPermission(
-        onImageCaptured = { uri ->
-            Log.d("PostScreen", "텍스트 추출용 이미지 캡처됨")
-            viewModel.textImageCaptured(uri)
+        onImageCaptured = { uri, type ->
+            when (type) {
+                CameraType.BACKGROUND_IMAGE -> viewModel.backgroundImageSelected(uri)
+                CameraType.TEXT_RECOGNITION_IMAGE -> viewModel.textImageCaptured(uri)
+            }
         },
         onPermissionDenied = {
-            Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.camera_permission_deny_message), Toast.LENGTH_SHORT).show()
         },
-        onCaptureFailed = {
-            Toast.makeText(context, "사진 촬영이 취소되었습니다.", Toast.LENGTH_SHORT).show()
-        }
+        onCaptureFailed = {}
     )
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             PostSideEffect.NavigateBack -> popBackStack()
+
             PostSideEffect.OpenTextImagePicker -> textImageLauncher.launch("image/*")
+
             PostSideEffect.OpenBackgroundImagePicker -> backgroundImageLauncher.launch("image/*")
-            PostSideEffect.OpenTextExtractionCamera -> {
-                // launch camera
-                cameraState.launchCamera()
+
+            is PostSideEffect.OpenCamera -> {
+                cameraState.launchCamera(sideEffect.type)
             }
 
             is PostSideEffect.ShowToast -> {
@@ -109,7 +111,7 @@ internal fun PostRoute(
                     onDecreaseFontSize = viewModel::decreaseFontSize,
                     onToggleBold = viewModel::toggleBold,
                     onToggleItalic = viewModel::toggleItalic,
-                    onTextExtractionWithCameraClick = viewModel::textExtractionWithCameraClick,
+                    startCameraAction = viewModel::startCameraAction,
                     onTextExtractionClick = viewModel::textExtractionClick,
                     onBackgroundImageClick = viewModel::backgroundImageClick,
                     onCompleteClick = viewModel::completeClick,

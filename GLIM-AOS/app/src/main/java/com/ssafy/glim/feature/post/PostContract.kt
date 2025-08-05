@@ -6,12 +6,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
 
 sealed interface PostSideEffect {
     data object NavigateBack : PostSideEffect
 
-    data object OpenTextExtractionCamera: PostSideEffect
+    data class OpenCamera(val type: CameraType): PostSideEffect
 
     data object OpenTextImagePicker : PostSideEffect
 

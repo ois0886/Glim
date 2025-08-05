@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
 import com.ssafy.glim.core.navigation.Navigator
@@ -141,8 +142,8 @@ class PostViewModel @Inject constructor(
             reduce { state.copy(backgroundImageUri = uri) }
         }
 
-    fun textExtractionWithCameraClick() = intent {
-        postSideEffect(PostSideEffect.OpenTextExtractionCamera)
+    fun startCameraAction(type: CameraType) = intent {
+        postSideEffect(PostSideEffect.OpenCamera(type))
     }
 
     fun textExtractionClick() =

@@ -184,8 +184,8 @@ private fun BrushSizeSlider(
             thumbColor = BottomControlConstants.SLIDER_THUMB,
             activeTrackColor = BottomControlConstants.SLIDER_ACTIVE_TRACK,
             inactiveTrackColor = BottomControlConstants.SLIDER_INACTIVE_TRACK,
-            activeTickColor = Color.Transparent,    // 틱 마크 제거
-            inactiveTickColor = Color.Transparent   // 틱 마크 제거
+            activeTickColor = Color.Transparent,
+            inactiveTickColor = Color.Transparent
         )
     )
 }

@@ -50,7 +50,7 @@ fun ImageOverlayHeader(
             )
         ) {
             Text(
-                text = "영역을 선택해 주세요.",
+                text = stringResource(R.string.select_area),
                 color = Color.White,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
