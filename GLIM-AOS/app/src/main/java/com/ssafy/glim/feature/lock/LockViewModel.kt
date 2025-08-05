@@ -13,9 +13,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class LockViewModel
-@Inject
-constructor(
+class LockViewModel @Inject constructor(
     private val getQuotesUseCase: GetQuotesUseCase,
 ) : ViewModel(), ContainerHost<LockUiState, LockSideEffect> {
     override val container =
@@ -48,6 +46,7 @@ constructor(
             reduce { state.copy(currentIndex = nextIdx) }
         }
     }
+
     fun prevQuote() = intent {
         var prevIdx = state.currentIndex - 1
         if (prevIdx < 0) {
@@ -55,6 +54,7 @@ constructor(
         }
         reduce { state.copy(currentIndex = prevIdx) }
     }
+
     fun unlockMain() = intent {
         reduce { state.copy(isComplete = true) }
         postSideEffect(LockSideEffect.Unlock)

@@ -227,4 +227,23 @@
     <string name="lockscreen_glim_title">잠금화면에서 Glim 바로보기</string>
     <string name="lockscreen_glim_description">잠금화면에서 스와이프하여 글귀 쇼츠를 바로 볼 수 있습니다. 앱을 열지 않고도 영감을 받아보세요</string>
     <string name="settings_saved">설정이 저장되었습니다</string>
+
+    <!-- Glim 잔디밭 관련 -->
+    <string name="glim_record_title">나의 글림 업로드 기록</string>
+    <string name="glim_record_empty_title">아직 업로드한 글림이 없습니다</string>
+    <string name="glim_record_max_streak">최대 연속 업로드: %d일</string>
+    <string name="glim_record_current_streak">현재 연속 업로드: %d일</string>
+
+    <string name="error_load_quotes_failed">글림 목록을 불러오는데 실패했습니다</string>
+    <string name="error_load_quotes_for_grass">잔디밭을 표시할 수 없습니다</string>
+    <string name="retry">다시 시도</string>
+
+    <!-- 요일 라벨 -->
+    <string name="week_mon">월</string>
+    <string name="week_tue">화</string>
+    <string name="week_wed">수</string>
+    <string name="week_thu">목</string>
+    <string name="week_fri">금</string>
+    <string name="week_sat">토</string>
+    <string name="week_sun">일</string>
 </resources>

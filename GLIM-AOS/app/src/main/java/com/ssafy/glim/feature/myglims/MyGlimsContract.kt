@@ -17,6 +17,7 @@ data class GlimItem(
     val author: String,
     val likeCount: Int,
     val isLiked: Boolean = false,
+    val createdAt: String,
 )
 
 enum class MyGlimsType(val displayName: String) {

@@ -13,13 +13,11 @@ fun NavController.navigateToProfile(navOptions: NavOptions) {
 }
 
 fun NavGraphBuilder.profileNavGraph(
-    padding: PaddingValues,
-    popBackStack: () -> Unit,
+    padding: PaddingValues
 ) {
     composable<BottomTabRoute.Profile> {
         ProfileRoute(
-            padding = padding,
-            popBackStack = popBackStack,
+            padding = padding
         )
     }
 }

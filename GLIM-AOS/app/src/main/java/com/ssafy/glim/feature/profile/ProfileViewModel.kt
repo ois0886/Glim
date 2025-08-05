@@ -4,37 +4,41 @@ import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.data.authmanager.LogoutReason
+import com.ssafy.glim.core.domain.usecase.quote.GetMyUploadQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
 import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
+import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.navigation.UpdateInfoRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val getUserByIdUseCase: GetUserByIdUseCase,
     private val authManager: AuthManager,
-    private val deleteUserUseCase: DeleteUserUseCase
+    private val getUserByIdUseCase: GetUserByIdUseCase,
+    private val deleteUserUseCase: DeleteUserUseCase,
+    private val getMyUploadQuoteUseCase: GetMyUploadQuoteUseCase
 ) : ViewModel(), ContainerHost<ProfileUiState, ProfileSideEffect> {
 
     override val container: Container<ProfileUiState, ProfileSideEffect> =
         container(initialState = ProfileUiState())
 
-    fun navigateToGlimLikedList() = intent {
-        // TODO: 글림리스트 구현
-        postSideEffect(ProfileSideEffect.ShowError(R.string.not_ready_function))
+    fun navigateToGlimsLiked() = intent {
+        navigator.navigate(MyGlimsRoute.Liked)
     }
 
-    fun navigateToGlimUploadList() = intent {
-        // TODO: 글림리스트 구현
-        postSideEffect(ProfileSideEffect.ShowError(R.string.not_ready_function))
+    fun navigateToGlimsUpload() = intent {
+        navigator.navigate(MyGlimsRoute.Upload)
     }
 
     fun navigateToEditProfile() = intent {
@@ -59,16 +63,88 @@ class ProfileViewModel @Inject constructor(
         navigator.navigate(Route.Setting)
     }
 
+
+    @OptIn(OrbitExperimental::class)
     fun loadProfileData() = intent {
         reduce { state.copy(isLoading = true) }
+
+        coroutineScope {
+            launch {
+                loadUserProfile()
+            }
+
+            launch {
+                loadUploadQuotes()
+            }
+        }
+    }
+
+    private fun loadUserProfile() = intent {
+        reduce { state.copy(isProfileLoading = true) }
+
         runCatching { getUserByIdUseCase() }
             .onSuccess { user ->
-                reduce { state.copy(isLoading = false, userName = user.nickname) }
+                reduce {
+                    state.copy(
+                        isProfileLoading = false,
+                        userName = user.nickname,
+                        profileImageUrl = null,
+                        profileError = false
+                    )
+                }
+                updateOverallLoadingState()
             }
-            .onFailure {
-                reduce { state.copy(isLoading = false) }
+            .onFailure { throwable ->
+                reduce { state.copy(isProfileLoading = false, profileError = true) }
                 postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
+                updateOverallLoadingState()
             }
+    }
+
+    private fun loadUploadQuotes() = intent {
+        reduce { state.copy(isQuotesLoading = true) }
+
+        runCatching { getMyUploadQuoteUseCase() }
+            .onSuccess { uploadQuotes ->
+
+                val firstUploadDate = uploadQuotes.minByOrNull { it.createdAt }?.createdAt
+                    ?: ""
+
+                reduce {
+                    state.copy(
+                        isQuotesLoading = false,
+                        publishedGlimCount = uploadQuotes.size,
+                        likedGlimCount = 0,
+                        uploadQuotes = uploadQuotes,
+                        firstUploadDate = firstUploadDate.substringBefore('T'),
+                        quotesError = false
+                    )
+                }
+                updateOverallLoadingState()
+            }
+            .onFailure { throwable ->
+                reduce { state.copy(isQuotesLoading = false, quotesError = true) }
+                postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_quotes_failed))
+                updateOverallLoadingState()
+            }
+    }
+
+
+    private fun updateOverallLoadingState() = intent {
+        val isAnyLoading = state.isProfileLoading || state.isQuotesLoading
+        reduce { state.copy(isLoading = isAnyLoading) }
+    }
+
+    fun refreshUploadQuotes() = intent {
+        coroutineScope {
+            launch { loadUploadQuotes() }
+        }
+    }
+
+    fun refreshProfile() = intent {
+        coroutineScope {
+            launch { loadUserProfile() }
+        }
     }
 
     fun onLogOutClick() = intent {
@@ -78,7 +154,7 @@ class ProfileViewModel @Inject constructor(
     fun onLogoutConfirm() = intent {
         reduce { state.copy(logoutDialogState = LogoutDialogState.Processing) }
         authManager.logout(LogoutReason.UserLogout)
-        postSideEffect(ProfileSideEffect.ShowToast(R.string.logout_success))
+        postSideEffect(ProfileSideEffect.ShowError(R.string.logout_success))
     }
 
     fun onLogoutCancel() = intent {
@@ -100,6 +176,13 @@ class ProfileViewModel @Inject constructor(
                 countdownSeconds = 10
             )
         }
+        coroutineScope {
+            launch { startCountdown() }
+        }
+    }
+
+    @OptIn(OrbitExperimental::class)
+    private suspend fun startCountdown() = subIntent {
         for (i in 10 downTo 0) {
             delay(1_000)
             reduce { state.copy(countdownSeconds = i) }
@@ -122,37 +205,44 @@ class ProfileViewModel @Inject constructor(
 
     fun onFinalConfirm() = intent {
         if (state.userInputText == "탈퇴하겠습니다" && state.countdownSeconds == 0) {
-            reduce {
-                state.copy(
-                    withdrawalDialogState = WithdrawalDialogState.Processing,
-                    isWithdrawalLoading = true
-                )
+            coroutineScope {
+                launch { processWithdrawal() }
             }
-            runCatching { deleteUserUseCase() }
-                .onSuccess {
-                    reduce {
-                        state.copy(
-                            withdrawalDialogState = WithdrawalDialogState.Hidden,
-                            isWithdrawalLoading = false,
-                            userInputText = "",
-                            countdownSeconds = 0
-                        )
-                    }
-                    postSideEffect(ProfileSideEffect.ShowToast(R.string.withdrawal_success))
-                    navigator.navigateAndClearBackStack(Route.Login)
-                }
-                .onFailure {
-                    reduce {
-                        state.copy(
-                            withdrawalDialogState = WithdrawalDialogState.Hidden,
-                            isWithdrawalLoading = false,
-                            userInputText = "",
-                            countdownSeconds = 0
-                        )
-                    }
-                    postSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_failed))
-                }
         }
+    }
+
+    private fun processWithdrawal() = intent {
+        reduce {
+            state.copy(
+                withdrawalDialogState = WithdrawalDialogState.Processing,
+                isWithdrawalLoading = true
+            )
+        }
+
+        runCatching { deleteUserUseCase() }
+            .onSuccess {
+                reduce {
+                    state.copy(
+                        withdrawalDialogState = WithdrawalDialogState.Hidden,
+                        isWithdrawalLoading = false,
+                        userInputText = "",
+                        countdownSeconds = 0
+                    )
+                }
+                postSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_success))
+                navigator.navigateAndClearBackStack(Route.Login)
+            }
+            .onFailure {
+                reduce {
+                    state.copy(
+                        withdrawalDialogState = WithdrawalDialogState.Hidden,
+                        isWithdrawalLoading = false,
+                        userInputText = "",
+                        countdownSeconds = 0
+                    )
+                }
+                postSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_failed))
+            }
     }
 
     fun onFinalCancel() = intent {
