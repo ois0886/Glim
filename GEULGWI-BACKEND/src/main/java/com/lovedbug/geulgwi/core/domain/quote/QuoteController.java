@@ -32,6 +32,14 @@ public class QuoteController {
         return ResponseEntity.ok(quoteService.getQuotesByRandom(pageable, memberId));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<List<QuoteResponse>> getUploadedQuotes (@CurrentUser AuthenticatedUser user) {
+
+        List<QuoteResponse> uploadedQuotes = quoteService.getUploadedQuotesByMemberId(user.getMemberId());
+
+        return ResponseEntity.ok(uploadedQuotes);
+    }
+
     @GetMapping("/book/{isbn}")
     public ResponseEntity<List<QuoteResponse>> getQuotesByIsbn(@CurrentUser AuthenticatedUser user,
                                                                @PathVariable String isbn) {

@@ -21,7 +21,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 public class BookApiDocsTest extends RestDocsTestSupport {
 
     @Autowired

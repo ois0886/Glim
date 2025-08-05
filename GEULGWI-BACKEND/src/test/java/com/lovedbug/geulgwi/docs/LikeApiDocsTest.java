@@ -7,7 +7,7 @@ import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
-import com.lovedbug.geulgwi.core.domain.quote.QuoteRepository;
+import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import com.lovedbug.geulgwi.core.security.JwtUtil;
 import jakarta.persistence.EntityManager;
@@ -19,14 +19,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
+@ActiveProfiles("test")
 public class LikeApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
@@ -114,6 +118,41 @@ public class LikeApiDocsTest extends RestDocsTestSupport {
             .then()
             .log().all()
             .statusCode(200);
+    }
+
+    @DisplayName("사용자가 좋아요한 글귀를 조회한다.")
+    @Test
+    void get_liked_quotes(){
+
+        given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/v1/likes/quotes/{quoteId}", quote.getQuoteId())
+            .then()
+            .statusCode(200);
+
+        given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
+            .filter(document("{class_name}/{method_name}",
+                requestHeaders(
+                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
+                ),
+                responseFields(
+                    fieldWithPath("[].quoteId").description("글귀 ID"),
+                    fieldWithPath("[].content").description("글귀 내용"),
+                    fieldWithPath("[].views").description("글귀 조회수"),
+                    fieldWithPath("[].page").description("글귀가 등장하는 페이지"),
+                    fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
+                    fieldWithPath("[].liked").description("사용자 좋아요 여부")
+                )
+            ))
+            .when()
+            .get("/api/v1/likes/quotes/me")
+            .then()
+            .log().all()
+            .statusCode(200);
+
     }
 
     private Member createTestMember() {

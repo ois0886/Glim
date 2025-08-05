@@ -6,11 +6,15 @@ import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
 import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.core.domain.quote.entity.MemberQuote;
+import com.lovedbug.geulgwi.core.domain.quote.repository.MemberQuoteRepository;
 import com.lovedbug.geulgwi.core.security.JwtUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -33,7 +37,7 @@ import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
-import com.lovedbug.geulgwi.core.domain.quote.QuoteRepository;
+import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 
 @ActiveProfiles("test")
 class QuoteApiDocsTest extends RestDocsTestSupport {
@@ -55,6 +59,9 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private MemberQuoteRepository memberQuoteRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -97,7 +104,6 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("[].page").description("도서 내 페이지 번호"),
                     fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
                     fieldWithPath("[].liked").description("사용자 좋아요 여부")
-
                 )
             ))
             .when()
@@ -270,6 +276,62 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
             .when()
             .get("/api/v1/quotes/{id}", quote.getQuoteId())
             .then()
+            .statusCode(200);
+    }
+
+    @DisplayName("사용자 본인이 업로드한 글귀를 조회한다.")
+    @Test
+    void get_uploaded_quotes(){
+
+        Member member = memberRepository.save(createMember());
+        Book book = bookRepository.save(createBook());
+
+        Quote quote1 = quoteRepository.save(Quote.builder()
+            .content("테스트 quote1 입니다. 아주 감명 깊어요.")
+            .page(100)
+            .book(book)
+            .memberId(member.getMemberId())
+            .build());
+
+        Quote quote2 = quoteRepository.save(Quote.builder()
+            .content("테스트 quote2 입니다. 아주 감명 깊어요.")
+            .page(250)
+            .book(book)
+            .memberId(member.getMemberId())
+            .build());
+
+        MemberQuote memberQuote = memberQuoteRepository.save(MemberQuote.builder()
+                .memberId(member.getMemberId())
+                .quote(quote1)
+                .build());
+
+        memberQuote = memberQuoteRepository.save(MemberQuote.builder()
+            .memberId(member.getMemberId())
+            .quote(quote2)
+            .build());
+
+        String accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getMemberId());
+
+        given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
+            .filter(document("{class_name}/{method_name}",
+                requestHeaders(
+                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
+                ),
+                responseFields(
+                    fieldWithPath("[].quoteId").description("글귀 ID"),
+                    fieldWithPath("[].content").description("글귀 내용"),
+                    fieldWithPath("[].views").description("글귀 조회수"),
+                    fieldWithPath("[].page").description("글귀가 등장하는 페이지"),
+                    fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
+                    fieldWithPath("[].createdAt").description("글귀 생성 시기"),
+                    fieldWithPath("[].liked").description("사용자 좋아요 여부")
+                )
+            ))
+            .when()
+            .get("/api/v1/quotes/me")
+            .then()
+            .log().all()
             .statusCode(200);
     }
 
