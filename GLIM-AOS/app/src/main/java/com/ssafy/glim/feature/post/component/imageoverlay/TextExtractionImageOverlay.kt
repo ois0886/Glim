@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -74,7 +75,7 @@ fun TextExtractionImageOverlay(
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val allPoints = strokes.flatten() + currentStroke
+    var allPoints by remember { mutableStateOf(listOf<Offset>()) }
 
     Column(
         modifier = modifier
@@ -105,10 +106,13 @@ fun TextExtractionImageOverlay(
             blackAlpha = blackAlpha,
             brushRadius = brushRadius,
             onStrokeStart = { offset -> currentStroke = listOf(offset) },
-            onStrokeContinue = { change -> currentStroke = currentStroke + change.position },
+            onStrokeContinue = { change ->
+                allPoints += change.position
+                currentStroke += change.position
+            },
             onStrokeEnd = {
                 if (currentStroke.isNotEmpty()) {
-                    strokes = strokes + listOf(currentStroke)
+                    strokes += listOf(currentStroke)
                     currentStroke = emptyList()
                 }
             },
@@ -156,7 +160,7 @@ private fun ImageEditingArea(
     blackAlpha: Float,
     brushRadius: Float,
     onStrokeStart: (Offset) -> Unit,
-    onStrokeContinue: (androidx.compose.ui.input.pointer.PointerInputChange) -> Unit,
+    onStrokeContinue: (PointerInputChange) -> Unit,
     onStrokeEnd: () -> Unit,
     onCaptureReady: (suspend () -> Bitmap?) -> Unit,
     modifier: Modifier = Modifier
@@ -221,7 +225,7 @@ private fun DrawingCanvas(
     blackAlpha: Float,
     brushRadiusPx: Float,
     onStrokeStart: (Offset) -> Unit,
-    onStrokeContinue: (androidx.compose.ui.input.pointer.PointerInputChange) -> Unit,
+    onStrokeContinue: (PointerInputChange) -> Unit,
     onStrokeEnd: () -> Unit,
     modifier: Modifier = Modifier
 ) {
