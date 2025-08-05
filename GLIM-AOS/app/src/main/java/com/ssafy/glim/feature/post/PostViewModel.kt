@@ -68,38 +68,37 @@ class PostViewModel @Inject constructor(
             reduce { state.copy(isFocused = false) }
         }
 
-    fun updateBottomSheetState(
-        isOpen: Boolean,
-    ) =
-        intent {
-            reduce { state.copy(showBottomSheet = isOpen) }
-        }
+    fun updateBottomSheetState(isOpen: Boolean) = intent {
+        reduce { state.copy(showBottomSheet = isOpen) }
+    }
 
     // 드래그 시작
-    fun onDragStart() =
-        intent {
+    fun onDragStart() = intent {
+        if (state.recognizedText.text.isNotEmpty()) {
             reduce { state.copy(isDragging = true) }
         }
+    }
 
     // 드래그 종료
-    fun onDragEnd() =
-        intent {
-            reduce { state.copy(isDragging = false) }
-        }
+    fun onDragEnd() = intent {
+        reduce { state.copy(isDragging = false) }
+    }
 
     // 텍스트 위치 업데이트
     fun updateTextPosition(
         deltaX: Float,
         deltaY: Float,
     ) = intent {
+        if(state.recognizedText.text.isEmpty()) return@intent
+
         val currentPosition = state.textPosition
         reduce {
             state.copy(
                 textPosition =
-                currentPosition.copy(
-                    offsetX = currentPosition.offsetX + deltaX,
-                    offsetY = currentPosition.offsetY + deltaY,
-                ),
+                    currentPosition.copy(
+                        offsetX = currentPosition.offsetX + deltaX,
+                        offsetY = currentPosition.offsetY + deltaY,
+                    ),
             )
         }
     }
