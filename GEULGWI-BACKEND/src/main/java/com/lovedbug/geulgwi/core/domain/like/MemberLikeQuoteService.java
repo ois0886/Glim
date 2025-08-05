@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,10 +56,22 @@ public class MemberLikeQuoteService {
 
         List<MemberLikeQuote> likeQuotes = memberLikeQuoteRepository.findAllByMemberId(memberId);
 
+        List<Long> quoteIds = likeQuotes.stream()
+            .map(likeQuote -> likeQuote.getQuote().getQuoteId())
+            .toList();
+
+        List<Object[]> likeCountList = memberLikeQuoteRepository.countByQuoteIds(quoteIds);
+
+        Map<Long, Long> likeCountMap = likeCountList.stream()
+            .collect(Collectors.toMap(
+                row -> (Long) row[0],
+                row -> (Long) row[1]
+            ));
+
         return likeQuotes.stream()
             .map(likeQuote -> {
                 Quote quote = likeQuote.getQuote();
-                long likeCount = memberLikeQuoteRepository.countByQuote_QuoteId(quote.getQuoteId());
+                long likeCount = likeCountMap.getOrDefault(quote.getQuoteId(), 0L);
 
                 return QuoteResponse.toResponseDto(quote, true, likeCount);
             })
