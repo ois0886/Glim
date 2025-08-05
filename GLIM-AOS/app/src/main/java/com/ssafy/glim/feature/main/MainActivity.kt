@@ -107,7 +107,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 // 글로벌 이벤트 핸들러
                 AppEventsHandler(
                     authManager = authManager,
