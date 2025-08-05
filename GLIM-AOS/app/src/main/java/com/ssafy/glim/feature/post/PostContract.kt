@@ -12,7 +12,7 @@ import com.ssafy.glim.core.domain.model.Book
 sealed interface PostSideEffect {
     data object NavigateBack : PostSideEffect
 
-    data class OpenCamera(val type: CameraType): PostSideEffect
+    data class OpenCamera(val type: CameraType) : PostSideEffect
 
     data object OpenTextImagePicker : PostSideEffect
 

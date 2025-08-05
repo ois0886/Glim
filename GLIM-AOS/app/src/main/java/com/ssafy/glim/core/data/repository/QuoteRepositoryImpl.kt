@@ -10,7 +10,6 @@ import com.ssafy.glim.core.data.extensions.toImagePart
 import com.ssafy.glim.core.data.extensions.toJsonRequestBody
 import com.ssafy.glim.core.data.mapper.toDomain
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.model.QuoteSearchResult
 import com.ssafy.glim.core.domain.repository.QuoteRepository
 import okhttp3.MultipartBody
@@ -38,12 +37,15 @@ class QuoteRepositoryImpl @Inject constructor(
         quoteRemoteDataSource.createQuote(jsonRequestBody, image)
     }
 
-    override suspend fun searchQuotes(query: String, page: Int, size: Int): QuoteSearchResult {
+    override suspend fun searchQuotes(
+        query: String,
+        page: Int,
+        size: Int
+    ): QuoteSearchResult {
         val data = quoteRemoteDataSource.searchQuotes(query, page, size).toDomain()
         Log.d("SearchViewModel lik2", "${data.quoteSummaries.map{it.isLiked}}")
         return data
     }
-
 
     override suspend fun getQuotes(
         page: Int,

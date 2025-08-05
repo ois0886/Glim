@@ -9,7 +9,10 @@ object ImageTransformUtils {
      */
     fun calculateInitialScale(containerSize: Size, imageSize: Size): Float {
         if (containerSize.width == 0f || containerSize.height == 0f ||
-            imageSize.width == 0f || imageSize.height == 0f) return 1f
+            imageSize.width == 0f || imageSize.height == 0f
+        ) {
+            return 1f
+        }
 
         val containerRatio = containerSize.width / containerSize.height
         val imageRatio = imageSize.width / imageSize.height

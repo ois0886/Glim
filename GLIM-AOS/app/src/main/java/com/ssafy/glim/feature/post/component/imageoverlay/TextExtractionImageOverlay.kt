@@ -125,7 +125,12 @@ fun TextExtractionImageOverlay(
                     currentStroke = newCurrentStroke
                 }
             },
-            onReset = { handleReset { strokes = emptyList(); currentStroke = emptyList() } }
+            onReset = {
+                handleReset {
+                    strokes = emptyList()
+                    currentStroke = emptyList()
+                }
+            }
         )
     }
 }
@@ -278,10 +283,11 @@ private fun handleConfirmClick(
 
     onProcessingChange(true)
     onAlphaChange(
-        if (allPoints.isNotEmpty())
+        if (allPoints.isNotEmpty()) {
             TextExtractionConstants.PROCESSING_BLACK_ALPHA
-        else
+        } else {
             TextExtractionConstants.TRANSPARENT_ALPHA
+        }
     )
 
     scope.launch {
@@ -312,4 +318,3 @@ private fun handleUndo(
 private fun handleReset(onReset: () -> Unit) {
     onReset()
 }
-
