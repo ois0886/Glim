@@ -3,14 +3,6 @@
  * @description '글:림' 관리자 대시보드에서 저장된 큐레이션 목록을 표시하고 관리하는 컴포넌트.
  *              큐레이션 목록을 드래그 앤 드롭으로 정렬하고, 편집하거나 삭제할 수 있습니다.
  *              `app/page.tsx`에서 '큐레이션 목록' 섹션에 동적으로 로드되어 사용됩니다.
- *
- * @param {() => void} onNewCuration - 새 큐레이션 생성 버튼 클릭 시 호출될 콜백 함수.
- * @param {(id: string) => void} onEditCuration - 큐레이션 편집 버튼 클릭 시 호출될 콜백 함수.
- *
- * @backend_note
- * - 현재 큐레이션 목록 데이터는 로컬 스토리지에서 로드 및 관리됩니다.
- * - **향후 백엔드 연동 시, 데이터 로드 (`loadCurations`) 및 삭제 (`handleDeleteCuration`) 로직을
- *   백엔드 API 호출로 변경해야 합니다.**
  */
 "use client";
 
@@ -21,7 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { BookText, Quote, Image as ImageIcon, GripVertical, Edit, Trash2, PlusCircle } from "lucide-react";
+import { BookText, Quote, GripVertical, Edit, Trash2, PlusCircle } from "lucide-react";
 
 import {
   DndContext,
@@ -41,29 +33,17 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-// New interfaces for previews (copied from curation-editor.tsx)
-interface QuotePreview {
-  id: string;
-  contentSnippet: string;
-  author: string;
-  source?: string;
-}
+// ✅ [수정됨] API 파일에서 올바른 함수들을 import 합니다.
+import { getCurations, deleteCuration as apiDeleteCuration, ApiCuration } from "@/lib/api/curations";
 
-interface BookPreview {
-  id: string;
-  title: string;
-  author: string;
-  coverImage?: string;
-}
-
+// 프론트엔드에서 사용할 큐레이션 데이터 타입
 interface CurationMetadata {
-  id: string;
+  id: string; // API의 curationItemId를 문자열로 변환하여 사용
   title: string;
   description: string;
-  quotePreviews: QuotePreview[];
-  bookPreviews: BookPreview[];
   quoteCount: number;
   bookCount: number;
+  contents: ApiCuration['contents']; 
 }
 
 interface SortableCurationItemProps {
@@ -81,71 +61,72 @@ function SortableCurationItem({ curation, onEdit, onDelete }: SortableCurationIt
   };
 
   return (
-    <Card ref={setNodeRef} style={style} className="flex flex-col p-3 shadow-sm">
-      <div className="flex items-center justify-between">
-        <div {...listeners} {...attributes} className="cursor-grab mr-2">
+    <Card ref={setNodeRef} style={style} className="flex flex-col bg-white dark:bg-gray-800 shadow-sm">
+      <div className="flex items-start p-4">
+        <div {...listeners} {...attributes} className="cursor-grab p-2 -ml-2 mt-1">
           <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
-        <div className="flex-1">
-          <p className="font-medium line-clamp-1">{curation.title}</p>
-          <p className="text-sm text-muted-foreground line-clamp-2">{curation.description}</p>
+        <div className="flex-1 ml-2">
+          <p className="font-bold text-lg leading-tight">{curation.title}</p>
+          <p className="text-sm text-muted-foreground mt-1">{curation.description}</p>
         </div>
-        <div className="flex space-x-1 ml-2">
+        <div className="flex space-x-1">
           <Button variant="ghost" size="icon" onClick={() => onEdit(curation.id)}>
             <Edit className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="icon" onClick={() => onDelete(curation.id)}>
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-4 w-4 text-red-500" />
           </Button>
         </div>
       </div>
 
-      <Separator className="my-2" />
-
-      {/* Quote Previews */}
-      <div className="space-y-1">
-        <p className="text-sm font-semibold">인용구 ({curation.quoteCount}개)</p>
-        {curation.quoteCount === 0 ? (
-          <p className="text-xs text-muted-foreground">추가된 인용구 없음</p>
-        ) : (
-          <ul className="list-disc list-inside text-xs text-muted-foreground">
-            {curation.quotePreviews.map((quote) => (
-              <li key={quote.id} className="line-clamp-1">
-                <Quote className="inline-block h-3 w-3 mr-1 text-muted-foreground" />
-                &quot;{quote.contentSnippet}&quot; — {quote.author}
-                {quote.source && `, ${quote.source}`}
-              </li>
-            ))}
-            {curation.quoteCount > 3 && (
-              <li className="text-right">+{curation.quoteCount - 3}개 더보기</li>
-            )}
-          </ul>
-        )}
-      </div>
-
-      {/* Book Previews */}
-      <div className="space-y-1 mt-2">
-        <p className="text-sm font-semibold">도서 ({curation.bookCount}개)</p>
-        {curation.bookCount === 0 ? (
-          <p className="text-xs text-muted-foreground">추가된 도서 없음</p>
-        ) : (
-          <ul className="list-disc list-inside text-xs text-muted-foreground">
-            {curation.bookPreviews.map((book) => (
-              <li key={book.id} className="flex items-center line-clamp-1">
-                {book.coverImage ? (
-                  <img src={book.coverImage} alt="표지" className="h-5 w-5 object-cover mr-1 rounded" />
-                ) : (
-                  <ImageIcon className="h-5 w-5 mr-1 text-muted-foreground" />
-                )}
-                <BookText className="inline-block h-3 w-3 mr-1 text-muted-foreground" />
-                {book.title} — {book.author}
-              </li>
-            ))}
-            {curation.bookCount > 3 && (
-              <li className="text-right">+{curation.bookCount - 3}개 더보기</li>
-            )}
-          </ul>
-        )}
+      { (curation.bookCount > 0 || curation.quoteCount > 0) && Array.isArray(curation.contents) && (
+        <div className="px-5 pt-3 pb-4 border-t">
+          <div className="space-y-3">
+            {curation.contents.map((item) => {
+              if (item.bookId && item.quoteId === null) {
+                return (
+                  <div key={`book-${item.bookId}`} className="flex items-center space-x-3">
+                    <img
+                      src={item.bookCoverUrl || '/placeholder.png'}
+                      alt={item.bookTitle}
+                      className="h-16 w-12 rounded-sm object-cover shadow-md"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold leading-tight">{item.bookTitle}</p>
+                      <p className="text-xs text-gray-500">{item.author}</p>
+                    </div>
+                  </div>
+                );
+              }
+              if (item.quoteId) {
+                 return (
+                  <div key={`quote-${item.quoteId}`} className="flex items-center space-x-3">
+                     <div className="w-12 h-16 flex items-center justify-center bg-gray-100 rounded-sm">
+                        <Quote className="h-6 w-6 text-gray-400" />
+                     </div>
+                     <div>
+                       <p className="text-sm font-semibold leading-tight italic">"{item.bookTitle}"에서 발췌</p>
+                       <p className="text-xs text-gray-500">{item.author}</p>
+                     </div>
+                   </div>
+                 );
+              }
+              return null;
+            })}
+          </div>
+        </div>
+      )}
+      
+      <div className="border-t px-4 py-3 flex items-center justify-start gap-6 text-sm text-muted-foreground">
+        <div className="flex items-center gap-1.5">
+          <Quote className="h-4 w-4" />
+          <span>인용구 {curation.quoteCount}개</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <BookText className="h-4 w-4" />
+          <span>도서 {curation.bookCount}개</span>
+        </div>
       </div>
     </Card>
   );
@@ -164,35 +145,70 @@ export function CurationList({ onNewCuration, onEditCuration }: CurationListProp
     loadCurations();
   }, []);
 
-  const loadCurations = () => {
-    const savedMetadata = localStorage.getItem("curations_metadata");
-    if (savedMetadata) {
-      const parsedMetadata: CurationMetadata[] = JSON.parse(savedMetadata);
-      // Ensure quotePreviews and bookPreviews are always arrays
-      const sanitizedMetadata = parsedMetadata.map(curation => ({
-        ...curation,
-        quotePreviews: curation.quotePreviews || [],
-        bookPreviews: curation.bookPreviews || [],
-        quoteCount: curation.quoteCount || 0,
-        bookCount: curation.bookCount || 0,
-      }));
-      setCurations(sanitizedMetadata);
+  const loadCurations = async () => {
+    try {
+      const apiData = await getCurations();
+      const formattedData: CurationMetadata[] = apiData.map((curation) => {
+        let bookCount = 0;
+        let quoteCount = 0;
+
+        if (Array.isArray(curation.contents)) {
+          curation.contents.forEach(item => {
+            if (item.quoteId !== null) {
+              quoteCount++;
+            } else if (item.bookId !== null) {
+              bookCount++;
+            }
+          });
+        }
+
+        return {
+          id: String(curation.curationItemId),
+          title: curation.title,
+          description: curation.description,
+          bookCount,
+          quoteCount,
+          contents: curation.contents || [],
+        };
+      });
+      setCurations(formattedData);
+    } catch (error) {
+      console.error("Failed to fetch curations:", error);
+      toast({
+        title: "오류",
+        description: "큐레이션 목록을 불러오는 데 실패했습니다.",
+        variant: "destructive",
+      });
     }
   };
 
-  const handleDeleteCuration = (id: string) => {
-    // Remove from individual curation data
-    localStorage.removeItem(`curation_${id}`);
+  // ✅ [수정됨] 삭제 핸들러가 올바른 API 함수를 호출하도록 변경
+  const handleDeleteCuration = async (id: string) => {
+    try {
+      const numericId = parseInt(id, 10);
+      if (isNaN(numericId)) {
+        toast({ title: "오류", description: "유효하지 않은 ID입니다.", variant: "destructive" });
+        return;
+      }
 
-    // Remove from metadata list
-    const updatedCurations = curations.filter(curation => curation.id !== id);
-    setCurations(updatedCurations);
-    localStorage.setItem("curations_metadata", JSON.stringify(updatedCurations));
+      await apiDeleteCuration(numericId); // 올바른 API 함수 호출
 
-    toast({
-      title: "큐레이션 삭제 완료",
-      description: "선택한 큐레이션이 삭제되었습니다.",
-    });
+      setCurations((prev) => prev.filter(curation => curation.id !== id));
+      
+      toast({
+        title: "✅ 큐레이션 삭제 완료",
+        description: "큐레이션이 성공적으로 삭제되었습니다.",
+      });
+
+    } catch (error) {
+      console.error("Failed to delete curation:", error);
+      const errorMsg = error.response?.data?.message || "삭제 중 서버 오류가 발생했습니다.";
+      toast({
+        title: "❌ 삭제 실패",
+        description: errorMsg,
+        variant: "destructive",
+      });
+    }
   };
 
   const sensors = useSensors(
@@ -205,11 +221,16 @@ export function CurationList({ onNewCuration, onEditCuration }: CurationListProp
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over?.id) {
+    if (over && active.id !== over.id) {
       setCurations((prevCurations) => {
         const oldIndex = prevCurations.findIndex((curation) => curation.id === active.id);
-        const newIndex = prevCurations.findIndex((curation) => curation.id === over?.id);
-        return arrayMove(prevCurations, oldIndex, newIndex);
+        const newIndex = prevCurations.findIndex((curation) => curation.id === over.id);
+        const newOrder = arrayMove(prevCurations, oldIndex, newIndex);
+        
+        console.log("New order:", newOrder.map(c => c.id));
+        // TODO: 백엔드 순서 변경 API 연동 필요
+
+        return newOrder;
       });
     }
   };
@@ -218,7 +239,6 @@ export function CurationList({ onNewCuration, onEditCuration }: CurationListProp
     <div className="space-y-6 p-4">
       <h2 className="text-2xl font-bold tracking-tight">큐레이션 목록</h2>
       <p className="text-muted-foreground">저장된 큐레이션을 확인하고 관리합니다.</p>
-
       <Separator />
 
       <Card>

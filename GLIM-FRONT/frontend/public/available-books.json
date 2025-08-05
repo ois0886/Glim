@@ -1,37 +1,44 @@
 [
   {
-    "id": "book_1",
+    "id": "101",
     "type": "book",
     "title": "데미안",
     "author": "헤르만 헤세",
-    "coverImage": "/placeholder-book-cover.png"
+    "coverImage": "https://image.aladin.co.kr/product/1/71/coversum/8937400172_2.jpg"
   },
   {
-    "id": "book_2",
+    "id": "102",
     "type": "book",
-    "title": "어린 왕자",
-    "author": "앙투안 드 생텍쥐페리",
-    "coverImage": "/placeholder-book-cover.png"
+    "title": "채식주의자",
+    "author": "한강",
+    "coverImage": "https://image.aladin.co.kr/product/8624/6/coversum/k982530026_2.jpg"
   },
   {
-    "id": "book_3",
+    "id": "103",
+    "type": "book",
+    "title": "아몬드",
+    "author": "손원평",
+    "coverImage": "https://image.aladin.co.kr/product/9788/3/coversum/k392530541_1.jpg"
+  },
+  {
+    "id": "104",
     "type": "book",
     "title": "1984",
     "author": "조지 오웰",
-    "coverImage": "/placeholder-book-cover.png"
+    "coverImage": "https://image.aladin.co.kr/product/27453/7/coversum/8937473516_1.jpg"
   },
   {
-    "id": "book_4",
+    "id": "105",
     "type": "book",
-    "title": "위대한 개츠비",
-    "author": "F. 스콧 피츠제럴드",
-    "coverImage": "/placeholder-book-cover.png"
+    "title": "코스모스",
+    "author": "칼 세이건",
+    "coverImage": "https://image.aladin.co.kr/product/38/22/coversum/8983719241_3.jpg"
   },
   {
-    "id": "book_5",
+    "id": "106",
     "type": "book",
-    "title": "호밀밭의 파수꾼",
-    "author": "J.D. 샐린저",
-    "coverImage": "/placeholder-book-cover.png"
+    "title": "어린 왕자",
+    "author": "앙투안 드 생텍쥐페리",
+    "coverImage": "https://image.aladin.co.kr/product/6082/13/coversum/8932917248_2.jpg"
   }
 ]

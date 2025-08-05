@@ -62,10 +62,10 @@ const menuItems = [
 
 interface AppSidebarProps {
   activeSection: string
-  setActiveSection: (section: string) => void
+  navigateTo: (section: string) => void
 }
 
-export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps) {
+export function AppSidebar({ activeSection, navigateTo }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="border-b p-4">
@@ -81,7 +81,7 @@ export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps)
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton isActive={activeSection === item.id} onClick={() => setActiveSection(item.id)}>
+                  <SidebarMenuButton isActive={activeSection === item.id} onClick={() => navigateTo(item.id)}>
                     <item.icon />
                     <span>{item.title}</span>
                   </SidebarMenuButton>
