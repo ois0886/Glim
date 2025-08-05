@@ -138,7 +138,7 @@ public class QuoteService {
                 boolean isLiked = (memberId != null) && memberLikeQuoteService.isLikedBy(memberId, quote.getQuoteId());
                 long likeCount = memberLikeQuoteService.countLikes(quote.getQuoteId());
 
-                return QuoteResponse.toResponseDto(quote, isLiked, likeCount);
+                return QuoteResponse.toResponseDto(quote, isLiked, likeCount, memberQuote.getCreatedAt());
             })
             .toList();
     }

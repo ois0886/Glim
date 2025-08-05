@@ -104,7 +104,6 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("[].page").description("도서 내 페이지 번호"),
                     fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
                     fieldWithPath("[].liked").description("사용자 좋아요 여부")
-
                 )
             ))
             .when()
@@ -325,6 +324,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("[].views").description("글귀 조회수"),
                     fieldWithPath("[].page").description("글귀가 등장하는 페이지"),
                     fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
+                    fieldWithPath("[].createdAt").description("글귀 생성 시기"),
                     fieldWithPath("[].liked").description("사용자 좋아요 여부")
                 )
             ))
