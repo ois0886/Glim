@@ -3,6 +3,7 @@ package com.lovedbug.geulgwi.core.domain.admin.search;
 
 import com.lovedbug.geulgwi.core.domain.admin.curation.AdminCurationService;
 import com.lovedbug.geulgwi.core.domain.admin.dto.response.SearchBookResponse;
+import com.lovedbug.geulgwi.core.domain.admin.dto.response.SearchQuoteResponse;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,17 @@ public class AdminSearchController {
 
         return ResponseEntity.ok().body(
             adminSearchService.searchBooks(keyword,pageable)
+        );
+    }
+
+    @GetMapping("/quote")
+    public ResponseEntity<List<SearchQuoteResponse>> searchQuotes(
+        @RequestParam("keyword") String keyword,
+        @PageableDefault(size = 10, sort = "views", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+
+        return ResponseEntity.ok().body(
+            adminSearchService.searchQuotes(keyword,pageable)
         );
     }
 }
