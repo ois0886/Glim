@@ -136,6 +136,7 @@
     <string name="views">조회수</string>
     <string name="saved">저장했습니다!</string>
     <string name="i_love_it">좋아요!</string>
+    <string name="like_error_message">좋아요에서 에러 발생</string>
     <string name="like_added_message">좋아요를 눌렀습니다.</string>
     <string name="like_removed_message">좋아요를 취소했습니다.</string>
     <string name="time_format_date">(%1$s)</string>

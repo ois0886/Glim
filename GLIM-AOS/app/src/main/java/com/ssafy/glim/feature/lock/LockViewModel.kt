@@ -1,10 +1,13 @@
 package com.ssafy.glim.feature.lock
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
+import com.ssafy.glim.core.domain.usecase.quote.LikeQuoteUseCase
+import com.ssafy.glim.core.domain.usecase.quote.UnLikeQuoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -18,6 +21,8 @@ class LockViewModel
 @Inject
 constructor(
     private val getQuotesUseCase: GetQuotesUseCase,
+    private val likeQuoteUseCase: LikeQuoteUseCase,
+    private val unLikeQuoteUseCase: UnLikeQuoteUseCase
 ) : ViewModel(), ContainerHost<LockUiState, LockSideEffect> {
     override val container =
         container<LockUiState, LockSideEffect>(
@@ -69,9 +74,40 @@ constructor(
             }
         }
 
-    fun favoriteGlim() =
+    fun toggleLike() =
         intent {
-            postSideEffect(LockSideEffect.ShowToast(R.string.i_love_it))
+            val currentQuote = state.currentQuote
+            if (currentQuote == null) {
+                postSideEffect(LockSideEffect.ShowToast(R.string.like_error_message))
+                return@intent
+            }
+            val updatedQuotes =
+                state.quotes.map { quote ->
+                    if (quote.quoteId == currentQuote.quoteId) {
+                        val newIsLike = !quote.isLike
+                        quote.copy(
+                            isLike = newIsLike,
+                            likes = if (newIsLike) quote.likes + 1 else quote.likes - 1,
+                        )
+                    } else {
+                        quote
+                    }
+                }
+
+            viewModelScope.launch {
+                runCatching {
+                    if (currentQuote.isLike) {
+                        unLikeQuoteUseCase(currentQuote.quoteId)
+                    } else {
+                        likeQuoteUseCase(currentQuote.quoteId)
+                    }
+                }.onFailure {
+                    Log.d("ShortsViewModel", "${it.message}")
+                    postSideEffect(LockSideEffect.ShowToast(R.string.like_error_message))
+                }
+            }
+
+            reduce { state.copy(quotes = updatedQuotes) }
         }
 
     fun viewBook() =

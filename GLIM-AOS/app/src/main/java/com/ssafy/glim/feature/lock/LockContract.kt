@@ -12,7 +12,15 @@ data class LockUiState(
     val page: Int = 0,
     val size: Int = 20,
     val isComplete: Boolean = false,
-)
+){
+    val currentQuote: Quote?
+        get() =
+            if (currentIndex >= 0 && currentIndex < quotes.size) {
+                quotes[currentIndex]
+            } else {
+                null
+            }
+}
 
 sealed interface LockSideEffect {
     data object Unlock : LockSideEffect
