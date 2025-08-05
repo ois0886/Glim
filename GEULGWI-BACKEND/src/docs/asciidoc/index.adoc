@@ -293,55 +293,84 @@ include::{snippets}/like_api_docs_test/unlike_to_quote/request-fields.adoc[]
 
 include::{snippets}/like_api_docs_test/unlike_to_quote/http-response.adoc[]
 
-== Admin API
+== Admin Curation API
 
 === Admin 메인 큐레이션 조회
 
 ==== 요청
 
-include::{snippets}/admin_api_docs_test/get_main_curation/http-request.adoc[]
+include::{snippets}/admin_curation_api_docs_test/get_main_curation/http-request.adoc[]
 
 ==== 응답
 
-include::{snippets}/admin_api_docs_test/get_main_curation/http-response.adoc[]
+include::{snippets}/admin_curation_api_docs_test/get_main_curation/http-response.adoc[]
 
-include::{snippets}/admin_api_docs_test/get_main_curation/response-fields.adoc[]
+include::{snippets}/admin_curation_api_docs_test/get_main_curation/response-fields.adoc[]
 
 === Admin 큐레이션 생성
 
 ==== 요청
 
-include::{snippets}/admin_api_docs_test/post_main_curation/http-request.adoc[]
+include::{snippets}/admin_curation_api_docs_test/post_main_curation/http-request.adoc[]
 
 ==== 응답
 
-include::{snippets}/admin_api_docs_test/post_main_curation/http-response.adoc[]
+include::{snippets}/admin_curation_api_docs_test/post_main_curation/http-response.adoc[]
 
-include::{snippets}/admin_api_docs_test/post_main_curation/response-fields.adoc[]
+include::{snippets}/admin_curation_api_docs_test/post_main_curation/response-fields.adoc[]
 
 === Admin 큐레이션 수정
 
 ==== 요청
 
-include::{snippets}/admin_api_docs_test/put_update_curation_item/http-request.adoc[]
+include::{snippets}/admin_curation_api_docs_test/put_update_curation_item/http-request.adoc[]
 
-include::{snippets}/admin_api_docs_test/put_update_curation_item/path-parameters.adoc[]
+include::{snippets}/admin_curation_api_docs_test/put_update_curation_item/path-parameters.adoc[]
 
-include::{snippets}/admin_api_docs_test/put_update_curation_item/request-fields.adoc[]
+include::{snippets}/admin_curation_api_docs_test/put_update_curation_item/request-fields.adoc[]
 
 ==== 응답
 
-include::{snippets}/admin_api_docs_test/put_update_curation_item/http-response.adoc[]
+include::{snippets}/admin_curation_api_docs_test/put_update_curation_item/http-response.adoc[]
 
 === Admin 큐레이션 삭제
 
 ==== 요청
 
-include::{snippets}/admin_api_docs_test/delete_curation_item/http-request.adoc[]
+include::{snippets}/admin_curation_api_docs_test/delete_curation_item/http-request.adoc[]
 
-include::{snippets}/admin_api_docs_test/delete_curation_item/path-parameters.adoc[]
+include::{snippets}/admin_curation_api_docs_test/delete_curation_item/path-parameters.adoc[]
 
 ==== 응답
 
-include::{snippets}/admin_api_docs_test/delete_curation_item/http-response.adoc[]
+include::{snippets}/admin_curation_api_docs_test/delete_curation_item/http-response.adoc[]
 
+== Admin Search API
+
+=== Admin 도서 검색
+
+==== 요청
+
+include::{snippets}/admin_search_api_docs_test/search_books/http-request.adoc[]
+
+include::{snippets}/admin_search_api_docs_test/search_books/query-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_search_api_docs_test/search_books/http-response.adoc[]
+
+include::{snippets}/admin_search_api_docs_test/search_books/response-fields.adoc[]
+
+=== Admin 글귀 검색
+
+==== 요청
+
+include::{snippets}/admin_search_api_docs_test/search_quotes/http-request.adoc[]
+
+include::{snippets}/admin_search_api_docs_test/search_quotes/query-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_search_api_docs_test/search_quotes/http-response.adoc[]
+
+include::{snippets}/admin_search_api_docs_test/search_quotes/response-fields.adoc[]

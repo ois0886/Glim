@@ -38,7 +38,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
-class AdminApiDocsTest extends RestDocsTestSupport {
+class AdminCurationApiDocsTest extends RestDocsTestSupport {
     @Autowired
     private MainCurationRepository mainCurationRepository;
 
