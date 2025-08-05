@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 캐시 디렉토리 (가장 안전) -->
+    <cache-path
+        name="cache"
+        path="masked_images" />
+
+    <!-- 기본 캐시 -->
+    <cache-path
+        name="cache_root"
+        path="." />
+
+    <!-- 외부 파일 디렉토리 -->
+    <external-files-path
+        name="external_files"
+        path="." />
+
+    <!-- 기존 설정 유지 -->
+    <external-files-path
+        name="my_images"
+        path="Pictures" />
+</paths>
