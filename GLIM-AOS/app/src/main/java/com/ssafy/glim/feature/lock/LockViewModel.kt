@@ -2,6 +2,7 @@ package com.ssafy.glim.feature.lock
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,7 +63,10 @@ constructor(
 
     fun saveGlim() =
         intent {
-            postSideEffect(LockSideEffect.ShowToast(R.string.saved))
+            state.quotes.getOrNull(state.currentIndex)?.let { quote ->
+                val url = "${BuildConfig.BASE_URL}/images/${quote.quoteImageName}"
+                postSideEffect(LockSideEffect.SaveImage(url))
+            }
         }
 
     fun favoriteGlim() =

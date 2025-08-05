@@ -30,7 +30,7 @@ import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.feature.search.SearchRoute
 import com.ssafy.glim.feature.post.PostState
 import com.ssafy.glim.feature.post.component.editabletext.EditableTextField
-import com.ssafy.glim.feature.shorts.CaptureActions
+import com.ssafy.glim.core.util.CaptureActions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

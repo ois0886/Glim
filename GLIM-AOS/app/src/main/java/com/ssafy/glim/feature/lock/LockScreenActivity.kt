@@ -23,7 +23,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
@@ -49,8 +53,11 @@ import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.ui.GlimErrorLoader
 import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
+import com.ssafy.glim.core.util.saveImageToGallery
 import com.ssafy.glim.feature.lock.component.SwipeButton
 import com.ssafy.glim.feature.main.MainActivity
+import com.ssafy.glim.ui.theme.GlimColor.LightRed
+import com.ssafy.glim.ui.theme.GlimColor.MainColor
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -93,7 +100,7 @@ class LockScreenActivity : ComponentActivity() {
                 val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
                 viewModel.collectSideEffect { effect ->
-                    when (effect) {
+                        when (effect) {
                         is LockSideEffect.Unlock -> {
                             if (launchMainAfterUnlock) {
                                 startActivity(
@@ -103,11 +110,11 @@ class LockScreenActivity : ComponentActivity() {
                                     }
                                 )
                                 finish()
-                            }
-                            else{
+                            } else {
                                 finishAffinity()
                             }
                         }
+
                         is LockSideEffect.ShowToast -> Toast.makeText(
                             this,
                             this.getString(effect.messageRes),
@@ -123,6 +130,7 @@ class LockScreenActivity : ComponentActivity() {
                             )
                             (this as? Activity)?.finish()
                         }
+
                         is LockSideEffect.NavigateQuotes -> {
                             this.startActivity(
                                 Intent(this, MainActivity::class.java).apply {
@@ -132,6 +140,8 @@ class LockScreenActivity : ComponentActivity() {
                             )
                             (this as? Activity)?.finish()
                         }
+
+                        is LockSideEffect.SaveImage -> saveImageToGallery(this, effect.imageUrl)
                     }
                 }
 
@@ -150,6 +160,7 @@ class LockScreenActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 fun LockScreenContent(
@@ -183,25 +194,25 @@ fun LockScreenContent(
 
     Box(
         modifier =
-        Modifier
-            .fillMaxSize()
-            .navigationBarsPadding()
-            .background(Color.Black)
-            .pointerInput(Unit) {
-                var totalDragY = 0f
-                detectVerticalDragGestures(
-                    onVerticalDrag = { _, dragAmount ->
-                        totalDragY += dragAmount
-                    },
-                    onDragEnd = {
-                        when {
-                            totalDragY < -100f -> nextQuote()
-                            totalDragY > 100f -> prevQuote()
-                        }
-                        totalDragY = 0f
-                    },
-                )
-            },
+            Modifier
+                .fillMaxSize()
+                .navigationBarsPadding()
+                .background(Color.Black)
+                .pointerInput(Unit) {
+                    var totalDragY = 0f
+                    detectVerticalDragGestures(
+                        onVerticalDrag = { _, dragAmount ->
+                            totalDragY += dragAmount
+                        },
+                        onDragEnd = {
+                            when {
+                                totalDragY < -100f -> nextQuote()
+                                totalDragY > 100f -> prevQuote()
+                            }
+                            totalDragY = 0f
+                        },
+                    )
+                },
     ) {
         val currentQuote = state.quotes.getOrNull(state.currentIndex)
         if (currentQuote != null) {
@@ -213,13 +224,12 @@ fun LockScreenContent(
         } else {
             GlimErrorLoader(Modifier)
         }
-/*
         Row(
             modifier =
-            Modifier
-                .fillMaxWidth()
-                .systemBarsPadding()
-                .padding(top = 4.dp, start = 16.dp, end = 16.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .systemBarsPadding()
+                    .padding(top = 4.dp, start = 16.dp, end = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             IconButton(onClick = saveGlim) {
@@ -231,20 +241,18 @@ fun LockScreenContent(
             }
             IconButton(onClick = favoriteGlim) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_favorite),
+                    painter = if (state.quotes.isEmpty() ||state.quotes[state.currentIndex].isLike) painterResource(R.drawable.ic_favorite_fill) else painterResource(R.drawable.ic_favorite),
                     contentDescription = stringResource(R.string.like),
                     tint = LightRed,
                 )
             }
         }
 
- */
-
         Column(
             modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(top = 72.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 72.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -307,11 +315,11 @@ fun LockScreenContent(
 */
         SwipeButton(
             modifier =
-            Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .navigationBarsPadding()
-                .padding(horizontal = 36.dp, vertical = 110.dp),
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(horizontal = 36.dp, vertical = 110.dp),
             text = stringResource(R.string.lock_screen_slide_description),
             isComplete = state.isComplete,
             onSwipe = unlockMain,

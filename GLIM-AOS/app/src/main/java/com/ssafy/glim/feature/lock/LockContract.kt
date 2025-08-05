@@ -21,7 +21,10 @@ sealed interface LockSideEffect {
         @StringRes val messageRes: Int,
     ) : LockSideEffect
 
+    data class SaveImage(val imageUrl: String) : LockSideEffect
+
     data class NavigateQuotes(val quoteId: Long) : LockSideEffect
 
     data class NavigateBook(val bookId: Long) : LockSideEffect
+
 }
