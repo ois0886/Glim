@@ -69,7 +69,6 @@ class ProfileViewModel @Inject constructor(
         reduce { state.copy(isRefreshing = true) }
 
         coroutineScope {
-            // 세 개의 API를 병렬로 실행
             val userDeferred = async {
                 runCatching { getUserByIdUseCase() }
             }
