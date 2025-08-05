@@ -113,7 +113,7 @@ private fun MonthRow(monthLabels: List<String>, scrollState: ScrollState) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 44.dp, bottom = 6.dp)
+            .padding(start = 30.dp, bottom = 6.dp)
             .horizontalScroll(scrollState),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -137,8 +137,7 @@ private fun WeekLabelColumn(weekLabels: List<String>) {
     ) {
         weekLabels.forEach { label ->
             Box(
-                Modifier.size(width = 32.dp, height = 18.dp),
-                contentAlignment = Alignment.CenterEnd
+                Modifier.size(width = 18.dp, height = 18.dp),
             ) {
                 Text(label, style = MaterialTheme.typography.labelMedium, color = Color.Gray)
             }
@@ -229,8 +228,6 @@ private fun weekLabelStrings(): List<String> = listOf(
     stringResource(R.string.week_sat),
     stringResource(R.string.week_sun)
 )
-
-// --- Helper Functions ---
 
 /**
  * UploadQuote 리스트를 날짜별로 그룹화하여 Map<String, Int> 반환

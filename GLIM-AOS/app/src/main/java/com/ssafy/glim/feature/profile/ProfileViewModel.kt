@@ -130,6 +130,7 @@ class ProfileViewModel @Inject constructor(
                     reduce { state.copy(error = true) }
                     postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_quotes_failed))
                 }
+            
             reduce { state.copy(isRefreshing = false) }
         }
     }

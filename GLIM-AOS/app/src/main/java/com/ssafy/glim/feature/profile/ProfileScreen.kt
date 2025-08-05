@@ -74,7 +74,7 @@ internal fun ProfileRoute(
         onPersonalInfoClick = viewModel::navigateToPersonalInfo,
         onPasswordChangeClick = viewModel::navigateToPasswordChange,
         onEditProfileDialogCancel = viewModel::onEditProfileDialogCancel,
-        onRefresh = viewModel::loadProfileData,
+        loadProfileData = viewModel::loadProfileData,
         modifier = Modifier.padding(padding)
     )
 }
@@ -99,14 +99,14 @@ private fun ProfileScreen(
     onPersonalInfoClick: () -> Unit,
     onPasswordChangeClick: () -> Unit,
     onEditProfileDialogCancel: () -> Unit,
-    onRefresh: () -> Unit,
+    loadProfileData: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
     PullToRefreshBox(
         isRefreshing = state.isRefreshing,
-        onRefresh = onRefresh,
+        onRefresh = loadProfileData,
         state = pullToRefreshState,
         modifier = modifier
     ) {
@@ -211,7 +211,7 @@ private fun PreviewProfileScreen() {
             onPersonalInfoClick = {},
             onPasswordChangeClick = {},
             onEditProfileDialogCancel = {},
-            onRefresh = {}
+            loadProfileData = {}
         )
     }
 }
@@ -245,7 +245,7 @@ private fun PreviewProfileScreenWithError() {
             onPersonalInfoClick = {},
             onPasswordChangeClick = {},
             onEditProfileDialogCancel = {},
-            onRefresh = {}
+            loadProfileData = {}
         )
     }
 }
