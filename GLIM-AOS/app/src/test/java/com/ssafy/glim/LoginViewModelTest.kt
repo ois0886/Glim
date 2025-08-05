@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
-import com.ssafy.glim.core.domain.usecase.auth.LoggedInUseCase
 import com.ssafy.glim.core.domain.usecase.auth.LoginUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.feature.auth.login.LoginSideEffect

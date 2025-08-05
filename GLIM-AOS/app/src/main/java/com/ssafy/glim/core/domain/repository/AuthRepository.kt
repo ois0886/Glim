@@ -18,8 +18,4 @@ interface AuthRepository {
     )
 
     suspend fun verifyEmail(email: String): VerifyEmail
-
-    suspend fun logOut()
-
-    suspend fun loggedIn()
 }

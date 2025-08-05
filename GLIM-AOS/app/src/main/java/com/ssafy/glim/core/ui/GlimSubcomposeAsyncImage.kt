@@ -1,7 +1,6 @@
 package com.ssafy.glim.core.ui
 
 import android.content.Context
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,7 +15,7 @@ import coil.request.ImageRequest
 fun GlimSubcomposeAsyncImage(
     context: Context,
     imageUrl: String,
-    modifier: Modifier = Modifier.fillMaxSize()
+    modifier: Modifier = Modifier
 ) {
     SubcomposeAsyncImage(
         model = ImageRequest.Builder(context)

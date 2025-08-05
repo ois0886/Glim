@@ -11,9 +11,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
+import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.LaunchedNavigator
 import com.ssafy.glim.core.navigation.Route
@@ -43,6 +46,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var lockServiceManager: LockServiceManager
 
+    @Inject
+    lateinit var authManager: AuthManager
+
     private var isLoading by mutableStateOf(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,29 +66,52 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition { isLoading }
 
         setContent {
-            val navigator: MainNavController = rememberMainNavController()
-            LaunchedNavigator(navigator.navController)
-            val initialRoute = intent.getStringExtra("nav_route")
             MyApplicationTheme {
-                if (!isLoading) {
-                    MainScreen(
-                        navigator = navigator,
+                val navController = rememberNavController()
+                var startDestination: Route? by remember { mutableStateOf(null) }
+
+                // 초기 목적지 결정
+                LaunchedEffect(Unit) {
+                    startDestination = if (authManager.canAutoLogin()) {
+                        BottomTabRoute.Home
+                    } else {
+                        Route.Login
+                    }
+                }
+
+                startDestination?.let { destination ->
+                    val navigator: MainNavController = rememberMainNavController(
+                        navController = navController,
+                        startDestination = destination
                     )
-                    LaunchedEffect(initialRoute) {
-                        if (initialRoute == "book") {
-                            val isbn = intent.getStringExtra("isbn") ?: ""
-                            navigator.navController.navigate(Route.BookDetail(isbn)) {
-                                popUpTo(navigator.startDestination) {
-                                    inclusive = true
+                    LaunchedNavigator(navigator.navController)
+                    val initialRoute = intent.getStringExtra("nav_route")
+
+                    if (!isLoading) {
+                        MainScreen(navigator = navigator)
+
+                        // 딥링크 처리
+                        LaunchedEffect(initialRoute) {
+                            if (initialRoute == "book") {
+                                val isbn = intent.getStringExtra("isbn") ?: ""
+                                navigator.navController.navigate(Route.BookDetail(isbn)) {
+                                    popUpTo(navigator.startDestination) {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop = true
                                 }
-                                launchSingleTop = true
+                            } else if (initialRoute == "glim") {
+                                val quoteId = intent.getLongExtra("quote_id", -1L)
+                                navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
                             }
-                        } else if (initialRoute == "glim") {
-                            val quoteId = intent.getLongExtra("quote_id", -1L)
-                            navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
                         }
                     }
                 }
+                // 글로벌 이벤트 핸들러
+                AppEventsHandler(
+                    authManager = authManager,
+                    navController = navController
+                )
             }
         }
     }

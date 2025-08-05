@@ -12,20 +12,20 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.home.navigation.navigateToHome
-import com.ssafy.glim.feature.search.navigation.navigateToSearch
 import com.ssafy.glim.feature.post.navigation.navigateToPost
 import com.ssafy.glim.feature.profile.navigation.navigateToProfile
+import com.ssafy.glim.feature.search.navigation.navigateToSearch
 import com.ssafy.glim.feature.shorts.navigation.navigateToShorts
 
 internal class MainNavController(
     val navController: NavHostController,
+    val startDestination: Route = Route.Login
 ) {
     private val currentDestination: NavDestination?
         @Composable get() =
             navController
                 .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Login
     val currentTab: MainTab?
         @Composable get() =
             MainTab.Companion.find { tab ->
@@ -71,7 +71,10 @@ internal class MainNavController(
 }
 
 @Composable
-internal fun rememberMainNavController(navController: NavHostController = rememberNavController()): MainNavController =
-    remember(navController) {
-        MainNavController(navController)
+internal fun rememberMainNavController(
+    navController: NavHostController = rememberNavController(),
+    startDestination: Route = Route.Login
+): MainNavController =
+    remember(navController, startDestination) {
+        MainNavController(navController, startDestination)
     }

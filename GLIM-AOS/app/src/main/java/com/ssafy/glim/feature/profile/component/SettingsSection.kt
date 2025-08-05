@@ -24,8 +24,7 @@ import com.ssafy.glim.R
 @Composable
 internal fun SettingsSection(
     navigateToEditProfile: () -> Unit,
-    navigateToLockSettings: () -> Unit,
-    navigateToNotificationSettings: () -> Unit,
+    navigateToSettings: () -> Unit,
     onLogOutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -37,16 +36,10 @@ internal fun SettingsSection(
             title = stringResource(R.string.settings_personal_info_password),
             onClick = navigateToEditProfile,
         )
-//        TODO: 잠금화면, 알림설정 화면 추가
-//        SettingItem(
-//            title = stringResource(R.string.settings_account),
-//            onClick = navigateToAccountSettings,
-//        )
-//
-//        SettingItem(
-//            title = stringResource(R.string.settings_notification),
-//            onClick = navigateToNotificationSettings,
-//        )
+        SettingItem(
+            title = stringResource(R.string.setting_title),
+            onClick = navigateToSettings,
+        )
 
         SettingItem(
             title = stringResource(R.string.settings_logout),
@@ -90,8 +83,7 @@ private fun PreviewSettingsSection() {
     MaterialTheme {
         SettingsSection(
             navigateToEditProfile = {},
-            navigateToLockSettings = {},
-            navigateToNotificationSettings = {},
+            navigateToSettings = {},
             onLogOutClick = {},
         )
     }

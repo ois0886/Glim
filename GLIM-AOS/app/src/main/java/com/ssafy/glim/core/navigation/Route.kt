@@ -14,6 +14,9 @@ sealed interface Route {
 
     @Serializable
     data class Celebration(val nickname: String) : Route
+
+    @Serializable
+    data object Setting : Route
 }
 
 sealed interface MyGlimsRoute : Route {

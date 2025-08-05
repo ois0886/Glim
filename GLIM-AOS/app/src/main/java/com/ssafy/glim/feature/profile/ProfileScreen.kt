@@ -67,15 +67,13 @@ internal fun ProfileRoute(
         navigateToEditProfile = viewModel::navigateToEditProfile,
         navigateToGlimUploadList = viewModel::navigateToGlimUploadList,
         navigateToGlimLikedList = viewModel::navigateToGlimLikedList,
-        navigateToLockSettings = viewModel::navigateToLockSettings,
-        navigateToNotificationSettings = viewModel::navigateToNotificationSettings,
+        navigateToSettings = viewModel::navigateToSettings,
         onWithdrawalClick = viewModel::onWithdrawalClick,
         onWarningConfirm = viewModel::onWarningConfirm,
         onWarningCancel = viewModel::onWarningCancel,
         onUserInputChanged = viewModel::onUserInputChanged,
         onFinalConfirm = viewModel::onFinalConfirm,
         onFinalCancel = viewModel::onFinalCancel,
-        // 새로운 다이얼로그 관련 콜백 추가
         onPersonalInfoClick = viewModel::navigateToPersonalInfo,
         onPasswordChangeClick = viewModel::navigateToPasswordChange,
         onEditProfileDialogCancel = viewModel::onEditProfileDialogCancel,
@@ -92,8 +90,7 @@ private fun ProfileScreen(
     navigateToEditProfile: () -> Unit,
     navigateToGlimUploadList: () -> Unit,
     navigateToGlimLikedList: () -> Unit,
-    navigateToLockSettings: () -> Unit,
-    navigateToNotificationSettings: () -> Unit,
+    navigateToSettings: () -> Unit,
     onWithdrawalClick: () -> Unit,
     onWarningConfirm: () -> Unit,
     onWarningCancel: () -> Unit,
@@ -133,8 +130,7 @@ private fun ProfileScreen(
         item {
             SettingsSection(
                 navigateToEditProfile = navigateToEditProfile,
-                navigateToLockSettings = navigateToLockSettings,
-                navigateToNotificationSettings = navigateToNotificationSettings,
+                navigateToSettings = navigateToSettings,
                 onLogOutClick = onLogOutClick
             )
         }
@@ -199,8 +195,7 @@ private fun PreviewProfileScreen() {
             navigateToEditProfile = {},
             navigateToGlimUploadList = {},
             navigateToGlimLikedList = {},
-            navigateToLockSettings = {},
-            navigateToNotificationSettings = {},
+            navigateToSettings = {},
             onLogOutClick = {},
             onWithdrawalClick = {},
             onWarningConfirm = {},
