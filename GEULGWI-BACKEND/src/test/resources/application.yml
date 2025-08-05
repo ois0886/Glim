@@ -7,7 +7,7 @@ spring:
   data:
     redis:
       host: localhost
-      port: 6379
+      port: 6389
   jpa:
     hibernate:
       ddl-auto: create-drop
