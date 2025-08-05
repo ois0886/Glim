@@ -30,4 +30,10 @@ public class CurationItem extends BaseTimeEntity {
     private Long mainCurationId;
 
     private Integer sequence;
+
+    public void updateCurationItem(String title, String description, CurationType curationType) {
+        this.title = title;
+        this.description = description;
+        this.curationType = curationType;
+    }
 }
