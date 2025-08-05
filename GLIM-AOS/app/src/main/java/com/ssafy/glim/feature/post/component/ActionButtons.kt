@@ -1,19 +1,25 @@
 package com.ssafy.glim.feature.post.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,12 +29,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
-import com.ssafy.glim.core.util.CaptureActions
-import com.ssafy.glim.core.util.rememberCaptureActions
+import com.ssafy.glim.core.common.utils.CameraType
+import com.ssafy.glim.feature.shorts.CaptureActions
+import com.ssafy.glim.feature.shorts.rememberCaptureActions
 import kotlinx.coroutines.launch
 
 @Composable
 fun ActionButtons(
+    startCameraAction: (CameraType) -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageButtonClick: () -> Unit,
     onCreateTextClick: (Boolean) -> Unit,
@@ -48,7 +56,7 @@ fun ActionButtons(
         modifier =
         modifier
             .fillMaxHeight()
-            .padding(vertical = 16.dp, horizontal = 8.dp)
+            .padding(4.dp)
             .systemBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End,
@@ -77,6 +85,10 @@ fun ActionButtons(
 
         Spacer(modifier = Modifier.weight(1f))
 
+        IconButtonWithPopupMenu(
+            startCameraAction = startCameraAction
+        )
+
         ActionButton(
             onClick = onTextExtractionClick,
             iconRes = R.drawable.ic_recognize,
@@ -95,12 +107,12 @@ fun ActionButtons(
             contentDescription = "새 텍스트",
         )
 
-        Spacer(modifier = Modifier.height(56.dp))
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
-private fun ActionButton(
+fun ActionButton(
     onClick: () -> Unit,
     iconRes: Int,
     contentDescription: String,
@@ -114,5 +126,46 @@ private fun ActionButton(
             painter = painterResource(iconRes),
             contentDescription = contentDescription,
         )
+    }
+}
+
+@Composable
+fun IconButtonWithPopupMenu(
+    startCameraAction: (CameraType) -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        ActionButton(
+            onClick = { expanded = !expanded },
+            iconRes = R.drawable.ic_photo,
+            contentDescription = stringResource(R.string.recognize_text),
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.shot_background_image)) },
+                leadingIcon = {
+                    Icon(painter = painterResource(R.drawable.ic_image), contentDescription = null)
+                },
+                onClick = {
+                    startCameraAction(CameraType.BACKGROUND_IMAGE)
+                    expanded = false
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.shot_text_image)) },
+                leadingIcon = {
+                    Icon(painter = painterResource(R.drawable.ic_title), contentDescription = null)
+                },
+                onClick = {
+                    startCameraAction(CameraType.TEXT_RECOGNITION_IMAGE)
+                    expanded = false
+                }
+            )
+        }
     }
 }

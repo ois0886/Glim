@@ -104,7 +104,6 @@ internal fun ShortsRoute(
     val state by viewModel.collectAsState()
 
     val pagerState = rememberPagerState(pageCount = { state.quotes.size })
-    val graphicsLayer = rememberGraphicsLayer()
 
     LaunchedEffect(pagerState) {
         Log.d("ShortsRoute", "PagerState initialized with ${state.quotes.size} quotes")
@@ -120,14 +119,6 @@ internal fun ShortsRoute(
             Modifier
                 .fillMaxSize()
                 .padding(padding.excludeSystemBars())
-                .drawWithCache {
-                    onDrawWithContent {
-                        graphicsLayer.record {
-                            this@onDrawWithContent.drawContent()
-                        }
-                        drawLayer(graphicsLayer)
-                    }
-                },
         ) { page ->
             val quote = state.quotes[page]
 

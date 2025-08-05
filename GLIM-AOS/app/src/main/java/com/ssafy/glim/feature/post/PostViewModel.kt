@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
 import com.ssafy.glim.core.navigation.Navigator
@@ -103,11 +104,16 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun textImageCaptured(uri: Uri?) = intent {
+        reduce { state.copy(capturedTextExtractionImageUri = uri) }
+    }
+
     fun textImageSelected(uri: Uri?) =
         intent {
             uri?.let {
                 reduce {
                     state.copy(
+                        capturedTextExtractionImageUri = null,
                         selectedImageUri = uri,
                         error = null,
                     )
@@ -135,6 +141,10 @@ class PostViewModel @Inject constructor(
         intent {
             reduce { state.copy(backgroundImageUri = uri) }
         }
+
+    fun startCameraAction(type: CameraType) = intent {
+        postSideEffect(PostSideEffect.OpenCamera(type))
+    }
 
     fun textExtractionClick() =
         intent {
@@ -250,4 +260,8 @@ class PostViewModel @Inject constructor(
                 )
             }
         }
+
+    fun clearTextExtractionImage() = intent {
+        reduce { state.copy(capturedTextExtractionImageUri = null) }
+    }
 }
