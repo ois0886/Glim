@@ -2,6 +2,7 @@ package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
 
+import com.lovedbug.geulgwi.config.TestRedisConfig;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -16,11 +17,14 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 
 public class BookApiDocsTest extends RestDocsTestSupport {
 
@@ -32,6 +36,11 @@ public class BookApiDocsTest extends RestDocsTestSupport {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @DynamicPropertySource
+    static void setRedisProps(DynamicPropertyRegistry registry) {
+        TestRedisConfig.overrideRedisProps(registry);
+    }
 
     @BeforeEach
     void clearDatabase() {

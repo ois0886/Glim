@@ -1,6 +1,7 @@
 package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
+import com.lovedbug.geulgwi.config.TestRedisConfig;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
@@ -20,10 +21,12 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lovedbug.geulgwi.external.image.ImageMetaData;
@@ -35,7 +38,7 @@ import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.quote.QuoteRepository;
 
-@ActiveProfiles("test")
+
 class QuoteApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
@@ -61,6 +64,11 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @DynamicPropertySource
+    static void setRedisProps(DynamicPropertyRegistry registry) {
+        TestRedisConfig.overrideRedisProps(registry);
+    }
 
     @BeforeEach
     void clearDatabase() {

@@ -6,11 +6,16 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.Import;
-import com.lovedbug.geulgwi.config.EmbeddedRedisConfig;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import com.lovedbug.geulgwi.config.TestRedisConfig;
 
-@Import(EmbeddedRedisConfig.class)
 class SearchKeywordApiDocsTest extends RestDocsTestSupport {
+
+    @DynamicPropertySource
+    static void setRedisProps(DynamicPropertyRegistry registry) {
+        TestRedisConfig.overrideRedisProps(registry);
+    }
 
     @DisplayName("인기_검색어를_조회한다")
     @Test
