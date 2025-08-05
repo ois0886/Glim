@@ -13,9 +13,9 @@ import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.navigation.UpdateInfoRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.annotation.OrbitExperimental
@@ -65,96 +65,74 @@ class ProfileViewModel @Inject constructor(
         navigator.navigate(Route.Setting)
     }
 
-    @OptIn(OrbitExperimental::class)
     fun loadProfileData() = intent {
-        reduce { state.copy(isLoading = true) }
+        reduce { state.copy(isRefreshing = true) }
 
         coroutineScope {
-            launch {
-                loadUserProfile()
+            // 세 개의 API를 병렬로 실행
+            val userDeferred = async {
+                runCatching { getUserByIdUseCase() }
             }
-            launch {
-                loadUploadQuotes()
+
+            val uploadQuotesDeferred = async {
+                runCatching { getMyUploadQuoteUseCase() }
             }
-            launch {
-                loadLikedQuotes()
+
+            val likedQuotesDeferred = async {
+                runCatching { getMyLikedQuoteUseCase() }
             }
+
+            val userResult = userDeferred.await()
+            val uploadQuotesResult = uploadQuotesDeferred.await()
+            val likedQuotesResult = likedQuotesDeferred.await()
+
+            userResult
+                .onSuccess { user ->
+                    reduce {
+                        state.copy(
+                            userName = user.nickname,
+                            profileImageUrl = null,
+                            error = false
+                        )
+                    }
+                }
+                .onFailure {
+                    reduce { state.copy(error = true) }
+                    postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
+                }
+
+            uploadQuotesResult
+                .onSuccess { uploadQuotes ->
+                    val firstUploadDate = uploadQuotes.minByOrNull { it.createdAt }?.createdAt ?: ""
+                    reduce {
+                        state.copy(
+                            publishedGlimCount = uploadQuotes.size,
+                            uploadQuotes = uploadQuotes,
+                            firstUploadDate = firstUploadDate.substringBefore('T'),
+                            error = false
+                        )
+                    }
+                }
+                .onFailure {
+                    reduce { state.copy(error = true) }
+                    postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_quotes_failed))
+                }
+
+            likedQuotesResult
+                .onSuccess { likedQuotes ->
+                    reduce {
+                        state.copy(
+                            likedGlimCount = likedQuotes.size,
+                            error = false
+                        )
+                    }
+                }
+                .onFailure {
+                    reduce { state.copy(error = true) }
+                    postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_quotes_failed))
+                }
+            reduce { state.copy(isRefreshing = false) }
         }
-    }
-
-    private fun loadUserProfile() = intent {
-        reduce { state.copy(isProfileLoading = true) }
-
-        runCatching { getUserByIdUseCase() }
-            .onSuccess { user ->
-                reduce {
-                    state.copy(
-                        isProfileLoading = false,
-                        userName = user.nickname,
-                        profileImageUrl = null,
-                        profileError = false
-                    )
-                }
-                updateOverallLoadingState()
-            }
-            .onFailure { throwable ->
-                reduce { state.copy(isProfileLoading = false, profileError = true) }
-                postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
-                updateOverallLoadingState()
-            }
-    }
-
-    private fun loadLikedQuotes() = intent {
-        reduce { state.copy(isLikedQuotesLoading = true) }
-
-        runCatching { getMyLikedQuoteUseCase() }
-            .onSuccess { likedQuotes ->
-                reduce {
-                    state.copy(
-                        isLikedQuotesLoading = false,
-                        likedGlimCount = likedQuotes.size,
-                        likedQuotesError = false
-                    )
-                }
-                updateOverallLoadingState()
-            }
-            .onFailure { throwable ->
-                reduce { state.copy(isLikedQuotesLoading = false, likedQuotesError = true) }
-                postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_quotes_failed))
-                updateOverallLoadingState()
-            }
-    }
-
-    private fun loadUploadQuotes() = intent {
-        reduce { state.copy(isQuotesLoading = true) }
-
-        runCatching { getMyUploadQuoteUseCase() }
-            .onSuccess { uploadQuotes ->
-
-                val firstUploadDate = uploadQuotes.minByOrNull { it.createdAt }?.createdAt
-                    ?: ""
-
-                reduce {
-                    state.copy(
-                        isQuotesLoading = false,
-                        publishedGlimCount = uploadQuotes.size,
-                        uploadQuotes = uploadQuotes,
-                        firstUploadDate = firstUploadDate.substringBefore('T'),
-                        quotesError = false
-                    )
-                }
-                updateOverallLoadingState()
-            }
-            .onFailure { throwable ->
-                reduce { state.copy(isQuotesLoading = false, quotesError = true) }
-                postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_quotes_failed))
-                updateOverallLoadingState()
-            }
-    }
-
-    private fun updateOverallLoadingState() = intent {
-        val isAnyLoading = state.isProfileLoading || state.isQuotesLoading || state.isLikedQuotesLoading
-        reduce { state.copy(isLoading = isAnyLoading) }
     }
 
     fun onLogOutClick() = intent {
@@ -186,13 +164,11 @@ class ProfileViewModel @Inject constructor(
                 countdownSeconds = 10
             )
         }
-        coroutineScope {
-            launch { startCountdown() }
-        }
+        startCountdown()
     }
 
     @OptIn(OrbitExperimental::class)
-    private suspend fun startCountdown() = subIntent {
+    private fun startCountdown() = intent {
         for (i in 10 downTo 0) {
             delay(1_000)
             reduce { state.copy(countdownSeconds = i) }
@@ -215,9 +191,7 @@ class ProfileViewModel @Inject constructor(
 
     fun onFinalConfirm() = intent {
         if (state.userInputText == "탈퇴하겠습니다" && state.countdownSeconds == 0) {
-            coroutineScope {
-                launch { processWithdrawal() }
-            }
+            processWithdrawal()
         }
     }
 

@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
@@ -42,15 +43,11 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun GlimGrassGrid(
+    modifier: Modifier = Modifier,
     uploadQuotes: List<UploadQuote>,
     firstUploadDateStr: String,
-    modifier: Modifier = Modifier
+    error: Boolean = false
 ) {
-    // 업로드 글림이 없으면 빈 잔디밭 표시
-    if (uploadQuotes.isEmpty() || firstUploadDateStr.isEmpty()) {
-        EmptyGrassGrid(modifier)
-        return
-    }
 
     // 1. parse first upload date & today
     val firstUploadDate = parseFirstUploadDate(firstUploadDateStr)
@@ -96,23 +93,18 @@ fun GlimGrassGrid(
                 .padding(top = 14.dp),
             contentAlignment = Alignment.Center
         ) {
-            GlimStreakSummary(maxStreak, currentStreak)
+            if(error){
+                Text(
+                    text = stringResource(R.string.error_load_profile_failed),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Red,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            } else{
+                GlimStreakSummary(maxStreak, currentStreak)
+            }
         }
-    }
-}
-
-@Composable
-private fun EmptyGrassGrid(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(R.string.glim_record_empty_title),
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray,
-            modifier = Modifier.padding(vertical = 32.dp)
-        )
     }
 }
 
@@ -260,7 +252,7 @@ fun groupUploadQuotesByDate(uploadQuotes: List<UploadQuote>): Map<String, Int> {
 fun parseFirstUploadDate(firstUploadDateStr: String): LocalDate {
     return try {
         LocalDate.parse(firstUploadDateStr.substringBefore('T'))
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         LocalDate.now(ZoneId.of("Asia/Seoul"))
     }
 }
@@ -319,7 +311,6 @@ fun calculateGlimStreak(
     return maxStreak to currentStreak
 }
 
-// --- Previews ---
 @Preview(showBackground = true, name = "EmptyUpload")
 @Composable
 fun PreviewEmptyUpload() {
@@ -347,8 +338,6 @@ private fun PreviewGlimGrassWithUpload(days: Int) {
     val today = LocalDate.now(ZoneId.of("Asia/Seoul"))
     val start = today.minusDays((days - 1).toLong())
     val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-    // Mock UploadQuote 데이터 생성
     val mockUploadQuotes = (0 until days).flatMap { i ->
         val date = start.plusDays(i.toLong())
         val uploadCount = when {
@@ -363,7 +352,12 @@ private fun PreviewGlimGrassWithUpload(days: Int) {
                 views = (0..500).random().toLong(),
                 page = (1..300).random(),
                 likeCount = (0..100).random().toLong(),
-                createdAt = "${date.format(fmt)}T${String.format("%02d", (9..23).random())}:${String.format("%02d", (0..59).random())}:00.000000",
+                createdAt = "${date.format(fmt)}T${
+                    String.format(
+                        "%02d",
+                        (9..23).random()
+                    )
+                }:${String.format("%02d", (0..59).random())}:00.000000",
                 liked = (0..4).random() == 0 // 20% 확률로 좋아요
             )
         }
