@@ -97,7 +97,6 @@ class ProfileViewModel @Inject constructor(
                 }
                 .onFailure {
                     reduce { state.copy(error = true) }
-                    postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
                 }
 
             uploadQuotesResult
@@ -114,7 +113,6 @@ class ProfileViewModel @Inject constructor(
                 }
                 .onFailure {
                     reduce { state.copy(error = true) }
-                    postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_quotes_failed))
                 }
 
             likedQuotesResult
@@ -128,9 +126,8 @@ class ProfileViewModel @Inject constructor(
                 }
                 .onFailure {
                     reduce { state.copy(error = true) }
-                    postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_quotes_failed))
                 }
-            
+
             reduce { state.copy(isRefreshing = false) }
         }
     }
