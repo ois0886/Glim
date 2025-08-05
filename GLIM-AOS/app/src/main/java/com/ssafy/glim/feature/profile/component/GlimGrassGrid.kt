@@ -30,7 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
-import com.ssafy.glim.core.domain.model.UploadQuote
+import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.ui.theme.GlimColor.GrassEmpty
 import com.ssafy.glim.ui.theme.GlimColor.GrassLevel1
 import com.ssafy.glim.ui.theme.GlimColor.GrassLevel2
@@ -44,11 +44,10 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun GlimGrassGrid(
     modifier: Modifier = Modifier,
-    uploadQuotes: List<UploadQuote>,
+    uploadQuotes: List<QuoteSummary>,
     firstUploadDateStr: String,
     error: Boolean = false
 ) {
-
     // 1. parse first upload date & today
     val firstUploadDate = parseFirstUploadDate(firstUploadDateStr)
     val today = todayKst()
@@ -93,7 +92,7 @@ fun GlimGrassGrid(
                 .padding(top = 14.dp),
             contentAlignment = Alignment.Center
         ) {
-            if(error){
+            if (error) {
                 Text(
                     text = stringResource(R.string.error_load_profile_failed),
                     style = MaterialTheme.typography.bodyMedium,
@@ -101,7 +100,7 @@ fun GlimGrassGrid(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-            } else{
+            } else {
                 GlimStreakSummary(maxStreak, currentStreak)
             }
         }
@@ -233,7 +232,7 @@ private fun weekLabelStrings(): List<String> = listOf(
  * UploadQuote 리스트를 날짜별로 그룹화하여 Map<String, Int> 반환
  * key: "yyyy-MM-dd", value: 해당 날짜의 업로드 개수
  */
-fun groupUploadQuotesByDate(uploadQuotes: List<UploadQuote>): Map<String, Int> {
+fun groupUploadQuotesByDate(uploadQuotes: List<QuoteSummary>): Map<String, Int> {
     return uploadQuotes
         .mapNotNull { quote ->
             // createdAt에서 날짜 부분만 추출 ("2025-08-05T10:53:05.371886" 형식)
@@ -343,19 +342,19 @@ private fun PreviewGlimGrassWithUpload(days: Int) {
         }
 
         (0 until uploadCount).map { j ->
-            UploadQuote(
+            QuoteSummary(
                 quoteId = (i * 10 + j).toLong(),
                 content = "오늘의 영감을 주는 글귀 $j",
                 views = (0..500).random().toLong(),
-                page = (1..300).random(),
-                likeCount = (0..100).random().toLong(),
+                page = (1..300).random().toString(),
+                likes = (0..100).random().toLong(),
                 createdAt = "${date.format(fmt)}T${
                     String.format(
                         "%02d",
                         (9..23).random()
                     )
                 }:${String.format("%02d", (0..59).random())}:00.000000",
-                liked = (0..4).random() == 0 // 20% 확률로 좋아요
+                isLiked = (0..4).random() == 0
             )
         }
     }

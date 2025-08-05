@@ -1,14 +1,14 @@
 package com.ssafy.glim.feature.profile
 
 import androidx.annotation.StringRes
-import com.ssafy.glim.core.domain.model.UploadQuote
+import com.ssafy.glim.core.domain.model.QuoteSummary
 
 data class ProfileUiState(
     val profileImageUrl: String? = null,
     val userName: String = "",
     val publishedGlimCount: Int = 0,
     val likedGlimCount: Int = 0,
-    val uploadQuotes: List<UploadQuote> = emptyList(),
+    val uploadQuotes: List<QuoteSummary> = emptyList(),
     val firstUploadDate: String = "",
     val error: Boolean = false,
     val isRefreshing: Boolean = false,
