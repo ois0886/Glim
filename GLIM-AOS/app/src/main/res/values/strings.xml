@@ -236,7 +236,7 @@
 
     <string name="error_load_quotes_failed">글림 목록을 불러오는데 실패했습니다</string>
     <string name="error_load_quotes_for_grass">잔디밭을 표시할 수 없습니다</string>
-    <string name="retry">다시 시도</string>
+    <string name="pull_to_refresh_hint">아래로 당겨서 새로고침</string>
 
     <!-- 요일 라벨 -->
     <string name="week_mon">월</string>

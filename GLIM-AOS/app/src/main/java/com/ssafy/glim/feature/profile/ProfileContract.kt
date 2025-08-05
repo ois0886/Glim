@@ -7,22 +7,20 @@ data class ProfileUiState(
     // 기본 프로필 정보
     val profileImageUrl: String? = null,
     val userName: String = "",
-
     // 업로드 글림 관련 정보
     val publishedGlimCount: Int = 0,
     val likedGlimCount: Int = 0,
     val uploadQuotes: List<UploadQuote> = emptyList(),
     val firstUploadDate: String = "",
-
     // 로딩 상태 - 세분화
     val isLoading: Boolean = false,
     val isProfileLoading: Boolean = false,
     val isQuotesLoading: Boolean = false,
-
+    val isLikedQuotesLoading: Boolean = false,
     // 에러 상태
     val profileError: Boolean = false,
     val quotesError: Boolean = false,
-
+    val likedQuotesError: Boolean = false,
     // 기타 UI 상태
     val logoutDialogState: LogoutDialogState = LogoutDialogState.Hidden,
     val withdrawalDialogState: WithdrawalDialogState = WithdrawalDialogState.Hidden,

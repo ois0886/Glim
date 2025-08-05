@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.data.authmanager.LogoutReason
+import com.ssafy.glim.core.domain.usecase.quote.GetMyLikedQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetMyUploadQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
 import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
@@ -27,7 +28,8 @@ class ProfileViewModel @Inject constructor(
     private val authManager: AuthManager,
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
-    private val getMyUploadQuoteUseCase: GetMyUploadQuoteUseCase
+    private val getMyUploadQuoteUseCase: GetMyUploadQuoteUseCase,
+    private val getMyLikedQuoteUseCase: GetMyLikedQuoteUseCase
 ) : ViewModel(), ContainerHost<ProfileUiState, ProfileSideEffect> {
 
     override val container: Container<ProfileUiState, ProfileSideEffect> =
@@ -63,7 +65,6 @@ class ProfileViewModel @Inject constructor(
         navigator.navigate(Route.Setting)
     }
 
-
     @OptIn(OrbitExperimental::class)
     fun loadProfileData() = intent {
         reduce { state.copy(isLoading = true) }
@@ -72,9 +73,11 @@ class ProfileViewModel @Inject constructor(
             launch {
                 loadUserProfile()
             }
-
             launch {
                 loadUploadQuotes()
+            }
+            launch {
+                loadLikedQuotes()
             }
         }
     }
@@ -101,6 +104,27 @@ class ProfileViewModel @Inject constructor(
             }
     }
 
+    private fun loadLikedQuotes() = intent {
+        reduce { state.copy(isLikedQuotesLoading = true) }
+
+        runCatching { getMyLikedQuoteUseCase() }
+            .onSuccess { likedQuotes ->
+                reduce {
+                    state.copy(
+                        isLikedQuotesLoading = false,
+                        likedGlimCount = likedQuotes.size,
+                        likedQuotesError = false
+                    )
+                }
+                updateOverallLoadingState()
+            }
+            .onFailure { throwable ->
+                reduce { state.copy(isLikedQuotesLoading = false, likedQuotesError = true) }
+                postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_quotes_failed))
+                updateOverallLoadingState()
+            }
+    }
+
     private fun loadUploadQuotes() = intent {
         reduce { state.copy(isQuotesLoading = true) }
 
@@ -114,7 +138,6 @@ class ProfileViewModel @Inject constructor(
                     state.copy(
                         isQuotesLoading = false,
                         publishedGlimCount = uploadQuotes.size,
-                        likedGlimCount = 0,
                         uploadQuotes = uploadQuotes,
                         firstUploadDate = firstUploadDate.substringBefore('T'),
                         quotesError = false
@@ -129,22 +152,9 @@ class ProfileViewModel @Inject constructor(
             }
     }
 
-
     private fun updateOverallLoadingState() = intent {
-        val isAnyLoading = state.isProfileLoading || state.isQuotesLoading
+        val isAnyLoading = state.isProfileLoading || state.isQuotesLoading || state.isLikedQuotesLoading
         reduce { state.copy(isLoading = isAnyLoading) }
-    }
-
-    fun refreshUploadQuotes() = intent {
-        coroutineScope {
-            launch { loadUploadQuotes() }
-        }
-    }
-
-    fun refreshProfile() = intent {
-        coroutineScope {
-            launch { loadUserProfile() }
-        }
     }
 
     fun onLogOutClick() = intent {

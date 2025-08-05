@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.domain.model.UploadQuote
 import com.ssafy.glim.feature.profile.component.EditProfileDialogContainer
 import com.ssafy.glim.feature.profile.component.GlimGrassGrid
 import com.ssafy.glim.feature.profile.component.LogoutDialogContainer
@@ -40,9 +41,6 @@ import com.ssafy.glim.feature.profile.component.WithdrawalButton
 import com.ssafy.glim.feature.profile.component.WithdrawalDialogContainer
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 @Composable
 internal fun ProfileRoute(
@@ -84,12 +82,12 @@ internal fun ProfileRoute(
         onPersonalInfoClick = viewModel::navigateToPersonalInfo,
         onPasswordChangeClick = viewModel::navigateToPasswordChange,
         onEditProfileDialogCancel = viewModel::onEditProfileDialogCancel,
-        onRefreshProfile = viewModel::refreshProfile,
-        onRefreshQuotes = viewModel::refreshUploadQuotes,
+        onRefresh = viewModel::loadProfileData,
         modifier = Modifier.padding(padding)
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProfileScreen(
     state: ProfileUiState,
@@ -109,57 +107,56 @@ private fun ProfileScreen(
     onPersonalInfoClick: () -> Unit,
     onPasswordChangeClick: () -> Unit,
     onEditProfileDialogCancel: () -> Unit,
-    onRefreshProfile: () -> Unit,
-    onRefreshQuotes: () -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
+    val pullToRefreshState = rememberPullToRefreshState()
+
+    PullToRefreshBox(
+        isRefreshing = state.isLoading,
+        onRefresh = onRefresh,
+        state = pullToRefreshState,
         modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(top = 24.dp),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        // 프로필 헤더 - 프로필 로딩 상태에 따라 처리
-        item {
-            ProfileHeaderWithLoading(
-                state = state,
-                onRefresh = onRefreshProfile
-            )
-        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(top = 24.dp),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            item {
+                ProfileHeaderSection(state = state)
+            }
 
-        // 내 글림 섹션 - 글림 로딩 상태에 따라 처리
-        item {
-            MyGlimsSectionWithLoading(
-                state = state,
-                navigateToGlimUploadList = navigateToGlimUploadList,
-                navigateToGlimLikedList = navigateToGlimLikedList,
-                onRefresh = onRefreshQuotes
-            )
-        }
+            item {
+                MyGlimsSectionWithLoading(
+                    state = state,
+                    navigateToGlimUploadList = navigateToGlimUploadList,
+                    navigateToGlimLikedList = navigateToGlimLikedList
+                )
+            }
 
-        // 잔디밭 - 글림 데이터 로딩 상태에 따라 처리
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-            GlimGrassWithLoading(
-                state = state
-            )
-        }
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+                GlimGrassWithLoading(state = state)
+            }
 
-        // 설정 섹션
-        item {
-            SettingsSection(
-                navigateToEditProfile = navigateToEditProfile,
-                navigateToSettings = navigateToSettings,
-                onLogOutClick = onLogOutClick
-            )
-        }
+            item {
+                SettingsSection(
+                    navigateToEditProfile = navigateToEditProfile,
+                    navigateToSettings = navigateToSettings,
+                    onLogOutClick = onLogOutClick
+                )
+            }
 
-        item { WithdrawalButton(onWithdrawalClick) }
+            item {
+                WithdrawalButton(onWithdrawalClick)
+            }
+        }
     }
 
-    // 다이얼로그들
     LogoutDialogContainer(
         state = state,
         onLogoutConfirm = onLogoutConfirm,
@@ -184,45 +181,28 @@ private fun ProfileScreen(
 }
 
 @Composable
-private fun ProfileHeaderWithLoading(
-    state: ProfileUiState,
-    onRefresh: () -> Unit
+private fun ProfileHeaderSection(
+    state: ProfileUiState
 ) {
-    when {
-        state.isProfileLoading -> {
-            // 프로필 로딩 중
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+    Column {
+        if (state.isProfileLoading) {
+            ProfileHeader(profileImageUrl = null, userName = "")
+        } else {
+            ProfileHeader(
+                profileImageUrl = state.profileImageUrl,
+                userName = state.userName
+            )
         }
 
-        state.profileError -> {
-            // 프로필 로드 에러
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.error_load_profile_failed),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Red,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedButton(onClick = onRefresh) {
-                    Text(stringResource(R.string.retry))
-                }
-            }
-        }
-
-        else -> {
-            // 프로필 정상 표시
-            ProfileHeader(state.profileImageUrl, state.userName)
+        if (state.profileError) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.error_load_profile_failed),
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Red,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
@@ -231,12 +211,10 @@ private fun ProfileHeaderWithLoading(
 private fun MyGlimsSectionWithLoading(
     state: ProfileUiState,
     navigateToGlimUploadList: () -> Unit,
-    navigateToGlimLikedList: () -> Unit,
-    onRefresh: () -> Unit
+    navigateToGlimLikedList: () -> Unit
 ) {
     when {
-        state.isQuotesLoading -> {
-            // 글림 데이터 로딩 중
+        state.isQuotesLoading || state.isLikedQuotesLoading -> {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -247,8 +225,7 @@ private fun MyGlimsSectionWithLoading(
             }
         }
 
-        state.quotesError -> {
-            // 글림 데이터 로드 에러
+        state.quotesError || state.likedQuotesError -> {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -259,15 +236,10 @@ private fun MyGlimsSectionWithLoading(
                     color = Color.Red,
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedButton(onClick = onRefresh) {
-                    Text(stringResource(R.string.retry))
-                }
             }
         }
 
         else -> {
-            // 글림 섹션 정상 표시
             MyGlimsSection(
                 navigateToGlimUploadList,
                 navigateToGlimLikedList,
@@ -284,7 +256,6 @@ private fun GlimGrassWithLoading(
 ) {
     when {
         state.isQuotesLoading -> {
-            // 잔디밭 로딩 중
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -296,24 +267,33 @@ private fun GlimGrassWithLoading(
         }
 
         state.quotesError -> {
-            // 잔디밭 에러 (별도 새로고침 버튼 제공하지 않음 - 위에서 이미 제공)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = stringResource(R.string.error_load_quotes_for_grass),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray,
-                    textAlign = TextAlign.Center
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.error_load_quotes_for_grass),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Red,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.pull_to_refresh_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
 
         else -> {
-            // 잔디밭 정상 표시
             GlimGrassGrid(
                 uploadQuotes = state.uploadQuotes,
                 firstUploadDateStr = state.firstUploadDate
@@ -349,8 +329,7 @@ private fun PreviewProfileScreenLoading() {
             onPersonalInfoClick = {},
             onPasswordChangeClick = {},
             onEditProfileDialogCancel = {},
-            onRefreshProfile = {},
-            onRefreshQuotes = {}
+            onRefresh = {}
         )
     }
 }
@@ -359,6 +338,7 @@ private fun PreviewProfileScreenLoading() {
 @Composable
 private fun PreviewProfileScreenError() {
     val mockState = ProfileUiState(
+        userName = "박성준",
         profileError = true,
         quotesError = true
     )
@@ -382,63 +362,7 @@ private fun PreviewProfileScreenError() {
             onPersonalInfoClick = {},
             onPasswordChangeClick = {},
             onEditProfileDialogCancel = {},
-            onRefreshProfile = {},
-            onRefreshQuotes = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun PreviewProfileScreenSuccess() {
-    val today = LocalDate.now(ZoneId.of("Asia/Seoul"))
-    val firstUploadDate = today.minusDays(89)
-    val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-    val mockUploadQuotes = (0..30).map { i ->
-        UploadQuote(
-            quoteId = i.toLong(),
-            content = "영감을 주는 글귀 $i",
-            views = (0..500).random().toLong(),
-            page = (1..300).random(),
-            likeCount = (0..100).random().toLong(),
-            createdAt = "${firstUploadDate.plusDays(i.toLong()).format(fmt)}T10:00:00.000000",
-            liked = (0..4).random() == 0
-        )
-    }
-
-    val mockState = ProfileUiState(
-        userName = "박성준",
-        publishedGlimCount = mockUploadQuotes.size,
-        likedGlimCount = mockUploadQuotes.count { it.liked },
-        uploadQuotes = mockUploadQuotes,
-        firstUploadDate = firstUploadDate.format(fmt),
-        isLoading = false,
-        profileError = false,
-        quotesError = false
-    )
-
-    MaterialTheme {
-        ProfileScreen(
-            state = mockState,
-            navigateToEditProfile = {},
-            navigateToGlimUploadList = {},
-            navigateToGlimLikedList = {},
-            navigateToSettings = {},
-            onLogOutClick = {},
-            onWithdrawalClick = {},
-            onWarningConfirm = {},
-            onWarningCancel = {},
-            onUserInputChanged = {},
-            onFinalConfirm = {},
-            onFinalCancel = {},
-            onLogoutCancel = {},
-            onLogoutConfirm = {},
-            onPersonalInfoClick = {},
-            onPasswordChangeClick = {},
-            onEditProfileDialogCancel = {},
-            onRefreshProfile = {},
-            onRefreshQuotes = {}
+            onRefresh = {}
         )
     }
 }
