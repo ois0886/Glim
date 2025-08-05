@@ -1,9 +1,8 @@
 package com.ssafy.glim.feature.post.component
 
-import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -22,7 +21,7 @@ import com.ssafy.glim.feature.search.SearchRoute
 import com.ssafy.glim.feature.shorts.CaptureActions
 
 @Composable
-fun BoxScope.PostUI(
+fun PostUI(
     state: PostState,
     startCameraAction: (CameraType) -> Unit,
     onTextExtractionClick: () -> Unit,
@@ -36,33 +35,35 @@ fun BoxScope.PostUI(
     imageGraphicsLayer: GraphicsLayer,
     modifier: Modifier = Modifier
 ) {
-    // ActionButtons - 오른쪽 하단
-    ActionButtons(
-        startCameraAction = startCameraAction,
-        onTextExtractionClick = onTextExtractionClick,
-        onBackgroundImageButtonClick = onBackgroundImageClick,
-        onCreateTextClick = onTextFocusChanged,
-        onCompleteClick = onCompleteClick,
-        clearFocus = { focusManager.clearFocus() },
-        onBackPress = onBackPress,
-        graphicsLayer = imageGraphicsLayer,
-        modifier = modifier.align(Alignment.BottomEnd)
-    )
-
-    // BookInfoSection - 왼쪽 하단
-    BookInfoSection(
-        modifier = modifier.align(Alignment.BottomStart),
-        book = state.book,
-        onBookInfoClick = {
-            updateBottomSheetState(true)
-        }
-    )
-
-    if (state.showBottomSheet) {
-        BookSearchBottomSheet(
-            onDismiss = { updateBottomSheetState(false) },
-            onBookSelected = selectedBook
+    Box(modifier = modifier) {
+        // ActionButtons - 오른쪽 하단
+        ActionButtons(
+            startCameraAction = startCameraAction,
+            onTextExtractionClick = onTextExtractionClick,
+            onBackgroundImageButtonClick = onBackgroundImageClick,
+            onCreateTextClick = onTextFocusChanged,
+            onCompleteClick = onCompleteClick,
+            clearFocus = { focusManager.clearFocus() },
+            onBackPress = onBackPress,
+            graphicsLayer = imageGraphicsLayer,
+            modifier = Modifier.align(Alignment.BottomEnd)
         )
+
+        // BookInfoSection - 왼쪽 하단
+        BookInfoSection(
+            modifier = Modifier.align(Alignment.BottomStart),
+            book = state.book,
+            onBookInfoClick = {
+                updateBottomSheetState(true)
+            }
+        )
+
+        if (state.showBottomSheet) {
+            BookSearchBottomSheet(
+                onDismiss = { updateBottomSheetState(false) },
+                onBookSelected = selectedBook
+            )
+        }
     }
 }
 
@@ -77,7 +78,6 @@ private fun BookSearchBottomSheet(
     )
 
     ModalBottomSheet(
-        modifier = Modifier.navigationBarsPadding(),
         onDismissRequest = onDismiss,
         containerColor = Color.White,
         contentColor = Color.Black,

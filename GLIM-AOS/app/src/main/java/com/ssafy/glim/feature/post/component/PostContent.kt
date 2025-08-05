@@ -106,7 +106,7 @@ fun PostContent(
             selectedBook = selectedBook,
             focusManager = focusManager,
             imageGraphicsLayer = imageGraphicsLayer,
-            modifier = Modifier.navigationBarsPadding()
+            modifier = Modifier.fillMaxSize().navigationBarsPadding()
         )
     }
 }
