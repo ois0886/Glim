@@ -126,10 +126,11 @@ private fun ProfileScreen(
 
             item {
                 MyGlimsSection(
-                    navigateToGlimUploadList,
-                    navigateToGlimLikedList,
-                    state.publishedGlimCount,
-                    state.likedGlimCount
+                    navigateToGlimUploadList = navigateToGlimUploadList,
+                    navigateToGlimLikedList = navigateToGlimLikedList,
+                    publishedGlimCount = state.publishedGlimCount,
+                    likedGlimCount = state.likedGlimCount,
+                    error = state.error
                 )
             }
 
