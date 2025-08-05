@@ -1,13 +1,10 @@
-package com.lovedbug.geulgwi.core.domain.admin;
+package com.lovedbug.geulgwi.core.domain.admin.curation;
 
 
 import com.lovedbug.geulgwi.core.domain.admin.dto.request.CreateCurationRequest;
 import com.lovedbug.geulgwi.core.domain.admin.dto.request.UpdateCurationRequest;
 import com.lovedbug.geulgwi.core.domain.admin.dto.response.CreateCurationResponse;
-import com.lovedbug.geulgwi.core.domain.auth.dto.request.EmailVerificationRequest;
-import com.lovedbug.geulgwi.core.domain.auth.dto.response.EmailVerificationResponse;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
-import com.lovedbug.geulgwi.core.domain.curation.entity.MainCuration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,38 +17,38 @@ import java.util.List;
  * */
 
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/admin/curations")
 @RequiredArgsConstructor
-public class AdminController {
-    private final AdminService adminService;
+public class AdminCurationController {
+    private final AdminCurationService adminCurationService;
 
-    @GetMapping("/curations/main")
+    @GetMapping("/main")
     public ResponseEntity<List<CurationItemResponse>> getMainCuration() {
 
-        return ResponseEntity.ok(adminService.getMainCurationByAdmin());
+        return ResponseEntity.ok(adminCurationService.getMainCurationByAdmin());
     }
 
-    @PostMapping("/curations")
+    @PostMapping("")
     public ResponseEntity<CreateCurationResponse> createCuration(
             @RequestBody CreateCurationRequest createCurationRequest) {
-        CreateCurationResponse createCurationResponse = adminService.createCuration(createCurationRequest);
+        CreateCurationResponse createCurationResponse = adminCurationService.createCuration(createCurationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(createCurationResponse);
     }
 
-    @PutMapping("/curations/items/{itemId}")
+    @PutMapping("/items/{itemId}")
     public ResponseEntity<Void> updateCurationItem(
             @PathVariable Long itemId,
             @RequestBody UpdateCurationRequest updateCurationRequest
     ) {
-        adminService.updateCurationItem(itemId, updateCurationRequest);
+        adminCurationService.updateCurationItem(itemId, updateCurationRequest);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/curations/items/{itemId}")
+    @DeleteMapping("/items/{itemId}")
     public ResponseEntity<Void> deleteCurationItem(
             @PathVariable Long itemId
     ) {
-        adminService.deleteCurationItem(itemId);
+        adminCurationService.deleteCurationItem(itemId);
         return ResponseEntity.noContent().build();
     }
 }

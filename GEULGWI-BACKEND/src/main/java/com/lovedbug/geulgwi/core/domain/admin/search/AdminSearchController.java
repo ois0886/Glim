@@ -1,0 +1,35 @@
+package com.lovedbug.geulgwi.core.domain.admin.search;
+
+
+import com.lovedbug.geulgwi.core.domain.admin.curation.AdminCurationService;
+import com.lovedbug.geulgwi.core.domain.admin.dto.response.SearchBookResponse;
+import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/admin/search")
+@RequiredArgsConstructor
+public class AdminSearchController {
+
+    private final AdminSearchService adminSearchService;
+
+    @GetMapping("/book")
+    public ResponseEntity<List<SearchBookResponse>> searchBooks(
+        @RequestParam("keyword") String keyword,
+        @PageableDefault(size = 10, sort = "views", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+
+        return ResponseEntity.ok().body(
+            adminSearchService.searchBooks(keyword,pageable)
+        );
+    }
+}
