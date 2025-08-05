@@ -6,6 +6,7 @@ import com.lovedbug.geulgwi.core.domain.admin.dto.request.UpdateCurationRequest;
 import com.lovedbug.geulgwi.core.domain.admin.dto.response.CreateCurationResponse;
 import com.lovedbug.geulgwi.core.domain.admin.exception.CurationListEmptyException;
 import com.lovedbug.geulgwi.core.domain.admin.exception.CurationNotFoundException;
+import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItem;
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItemBook;
@@ -62,8 +63,6 @@ public class AdminService {
         switch (createCurationRequest.getCurationType()) {
             case BOOK -> handleBookItems(item, createCurationRequest.getBookIds());
             case QUOTE -> handleQuoteItems(item, createCurationRequest.getQuoteIds());
-            default ->
-                    throw new IllegalArgumentException("알 수 없는 CurationType: " + createCurationRequest.getCurationType());
         }
 
         return CreateCurationResponse.builder()
@@ -74,36 +73,20 @@ public class AdminService {
     @Transactional
     public void updateCurationItem(Long itemId, UpdateCurationRequest updateCurationRequest) {
         CurationItem curationItem = curationItemRepository.findById(itemId)
-                .orElseThrow(() -> new CurationNotFoundException("아이템이 없습니다: " + itemId));
-
-        curationItem.setTitle(updateCurationRequest.getName());
-        curationItem.setDescription(updateCurationRequest.getDescription());
-        curationItem.setCurationType(updateCurationRequest.getCurationType());
+                .orElseThrow(() -> new CurationNotFoundException("아이템이 없습니다 itemId : " + itemId));
+        curationItem.updateCurationItem(
+            updateCurationRequest.getName(),
+            updateCurationRequest.getDescription(),
+            updateCurationRequest.getCurationType()
+        );
         curationItemRepository.save(curationItem);
 
         curationItemBookRepository.deleteByCurationItemId(itemId);
         curationItemQuoteRepository.deleteByCurationItemId(itemId);
 
         switch (updateCurationRequest.getCurationType()) {
-            case BOOK -> {
-                validateIds(updateCurationRequest.getBookIds(), "bookIds");
-                updateCurationRequest.getBookIds().forEach(bookId ->
-                        curationItemBookRepository.save(CurationItemBook.builder()
-                                .bookId(bookId)
-                                .curationItemId(itemId)
-                                .build())
-                );
-            }
-            case QUOTE -> {
-                validateIds(updateCurationRequest.getQuoteIds(), "quoteIds");
-                updateCurationRequest.getQuoteIds().forEach(quoteId ->
-                        curationItemQuoteRepository.save(CurationItemQuote.builder()
-                                .curationItemId(itemId)
-                                .quoteId(quoteId)
-                                .build())
-                );
-            }
-            default -> throw new IllegalArgumentException("알 수 없는 타입: " + updateCurationRequest.getCurationType());
+            case BOOK -> handleBookItems(curationItem, updateCurationRequest.getBookIds());
+            case QUOTE -> handleQuoteItems(curationItem, updateCurationRequest.getQuoteIds());
         }
     }
 
@@ -130,7 +113,7 @@ public class AdminService {
 
     private void handleBookItems(CurationItem item, List<Long> bookIds) {
 
-        validateIds(bookIds, "bookIds");
+        validateIds(bookIds, item.getCurationType());
         long itemId = item.getCurationItemId();
         for (Long bookId : bookIds) {
             CurationItemBook curationItemBook = CurationItemBook.builder()
@@ -143,7 +126,7 @@ public class AdminService {
 
     private void handleQuoteItems(CurationItem item, List<Long> quoteIds) {
 
-        validateIds(quoteIds, "quoteIds");
+        validateIds(quoteIds, item.getCurationType());
         long itemId = item.getCurationItemId();
         for (Long quoteId : quoteIds) {
             CurationItemQuote curationItemQuote = CurationItemQuote.builder()
@@ -154,10 +137,10 @@ public class AdminService {
         }
     }
 
-    private void validateIds(List<Long> ids, String fieldName) {
+    private void validateIds(List<Long> ids, CurationType curationType) {
 
         if (ids == null || ids.isEmpty()) {
-            throw new CurationListEmptyException(fieldName + "가 비어 있습니다.");
+            throw new CurationListEmptyException(curationType + "가 비어 있습니다.");
         }
     }
 
