@@ -16,14 +16,9 @@ import jakarta.inject.Inject
 @AndroidEntryPoint
 class LockService : Service() {
     @Inject
-    lateinit var lockServiceManager: LockServiceManager
-
-    @Inject
     lateinit var screenReceiver: ScreenReceiver
 
-    override fun onBind(p0: Intent?): IBinder? {
-        return null
-    }
+    private var isReceiverRegistered = false
 
     override fun onStartCommand(
         intent: Intent?,
@@ -33,26 +28,38 @@ class LockService : Service() {
         createNotificationChannel()
         startForeground(SERVICE_ID, createNotificationBuilder())
         startLockReceiver()
-        return super.onStartCommand(intent, flags, startId)
+
+        return START_NOT_STICKY
     }
 
     override fun onDestroy() {
         stopLockReceiver()
-        lockServiceManager.stop()
         super.onDestroy()
     }
 
+    override fun onBind(p0: Intent?): IBinder? {
+        return null
+    }
+
     private fun startLockReceiver() {
-        val intentFilter =
-            IntentFilter().apply {
+        if (!isReceiverRegistered) {
+            val intentFilter = IntentFilter().apply {
                 addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_SCREEN_OFF)
             }
-        registerReceiver(screenReceiver, intentFilter)
+            registerReceiver(screenReceiver, intentFilter)
+            isReceiverRegistered = true
+        }
     }
 
     private fun stopLockReceiver() {
-        unregisterReceiver(screenReceiver)
+        if (isReceiverRegistered) {
+            try {
+                unregisterReceiver(screenReceiver)
+                isReceiverRegistered = false
+            } catch (_: IllegalArgumentException) {
+            }
+        }
     }
 
     private fun createNotificationChannel() {

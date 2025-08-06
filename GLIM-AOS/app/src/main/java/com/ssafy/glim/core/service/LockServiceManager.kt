@@ -3,6 +3,7 @@ package com.ssafy.glim.core.service
 import android.content.Context
 import com.ssafy.glim.core.domain.usecase.setting.GetLockSettingsUseCase
 import com.ssafy.glim.core.service.core.BaseForegroundServiceManager
+import com.ssafy.glim.core.util.isServiceRunning
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,12 +18,11 @@ import javax.inject.Singleton
 class LockServiceManager @Inject constructor(
     @ApplicationContext private val applicationContext: Context,
     private val getLockSettingsUseCase: GetLockSettingsUseCase
-) : BaseForegroundServiceManager<LockService>(
+) : BaseForegroundServiceManager(
     context = applicationContext,
     targetClass = LockService::class.java,
 ) {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private var isServiceStarted = false
 
     init {
         serviceScope.launch {
@@ -31,35 +31,23 @@ class LockServiceManager @Inject constructor(
                 .distinctUntilChanged()
                 .collect { enabled ->
                     if (enabled) {
-                        startServiceIfNeeded()
+                        startService()
                     } else {
-                        stopServiceIfRunning()
+                        stopService()
                     }
                 }
         }
     }
 
-    private fun startServiceIfNeeded() {
-        if (!isServiceStarted) {
+    private fun startService() {
+        if (!applicationContext.isServiceRunning(LockService::class.java)) {
             start()
-            isServiceStarted = true
         }
     }
 
-    private fun stopServiceIfRunning() {
-        if (isServiceStarted) {
+    private fun stopService() {
+        if (applicationContext.isServiceRunning(LockService::class.java)) {
             stop()
-            isServiceStarted = false
         }
-    }
-
-    override fun start() {
-        super.start()
-        isServiceStarted = true
-    }
-
-    override fun stop() {
-        super.stop()
-        isServiceStarted = false
     }
 }
