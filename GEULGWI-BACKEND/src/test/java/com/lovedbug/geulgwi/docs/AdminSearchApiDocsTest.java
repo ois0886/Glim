@@ -176,4 +176,35 @@ public class AdminSearchApiDocsTest extends RestDocsTestSupport{
             .then().log().all()
             .statusCode(200);
     }
+
+    @DisplayName("관리자 페이지에서 멤버를 키워드로 검색한다")
+    @Test
+    void search_members() {
+        given(this.spec)
+            .param("keyword", "use")
+            .param("page", 0)
+            .param("size", 10)
+            .param("sort", "createdAt,desc")
+            .filter(document("{class_name}/{method_name}",
+                queryParameters(
+                    parameterWithName("keyword").description("검색어"),
+                    parameterWithName("page").description("페이지 번호 (0부터 시작, 기본값 0)"),
+                    parameterWithName("size").description("페이지 크기 (기본값 10)"),
+                    parameterWithName("sort").description("정렬 기준, ex) createdAt,asc")
+                ),
+                responseFields(
+                    fieldWithPath("[]").description("회원 목록"),
+                    fieldWithPath("[].memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
+                    fieldWithPath("[].email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("[].nickname").type(JsonFieldType.STRING).description("닉네임"),
+                    fieldWithPath("[].gender").type(JsonFieldType.STRING).description("성별"),
+                    fieldWithPath("[].status").type(JsonFieldType.STRING).description("회원 상태"),
+                    fieldWithPath("[].birthDate").description("회원 생일")
+                )
+            ))
+            .when()
+            .get("/api/v1/admin/search-keywords/members")
+            .then().log().all()
+            .statusCode(200);
+    }
 }
