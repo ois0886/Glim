@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.member.Member;
@@ -20,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -50,6 +52,9 @@ public class LikeApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @PersistenceContext
     private EntityManager entityManager;

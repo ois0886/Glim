@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.core.domain.search.SearchKeywordService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,12 +13,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import com.lovedbug.geulgwi.config.TestRedisConfig;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ActiveProfiles("test")
 class SearchKeywordApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
     private SearchKeywordService searchKeywordService;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @DynamicPropertySource
     static void setRedisProps(DynamicPropertyRegistry registry) {

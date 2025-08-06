@@ -1,6 +1,7 @@
 package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.config.TestRedisConfig;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
@@ -69,6 +70,9 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @PersistenceContext
     private EntityManager entityManager;
