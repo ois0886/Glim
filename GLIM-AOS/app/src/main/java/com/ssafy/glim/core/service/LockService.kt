@@ -19,6 +19,8 @@ class LockService : Service() {
     @Inject
     lateinit var lockServiceManager: LockServiceManager
 
+    private lateinit var screenReceiver: ScreenReceiver
+
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
@@ -29,6 +31,7 @@ class LockService : Service() {
         startId: Int,
     ): Int {
         createNotificationChannel()
+        screenReceiver = ScreenReceiver()
         startForeground(SERVICE_ID, createNotificationBuilder())
         startLockReceiver()
         return super.onStartCommand(intent, flags, startId)
@@ -46,11 +49,11 @@ class LockService : Service() {
                 addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_SCREEN_OFF)
             }
-        registerReceiver(ScreenReceiver, intentFilter)
+        registerReceiver(screenReceiver, intentFilter)
     }
 
     private fun stopLockReceiver() {
-        unregisterReceiver(ScreenReceiver)
+        unregisterReceiver(screenReceiver)
     }
 
     private fun createNotificationChannel() {
@@ -64,9 +67,7 @@ class LockService : Service() {
 
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.createNotificationChannel(notificationChannel as NotificationChannel)
-        }
+        notificationManager.createNotificationChannel(notificationChannel as NotificationChannel)
     }
 
     private fun getStringWithContext(stringRes: Int): String {

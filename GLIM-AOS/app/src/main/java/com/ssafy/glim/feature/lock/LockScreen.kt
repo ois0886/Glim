@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -35,6 +36,7 @@ import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.ui.GlimErrorLoader
 import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
+import com.ssafy.glim.feature.lock.component.BottomSwipeButton
 import com.ssafy.glim.feature.lock.component.SwipeButton
 import com.ssafy.glim.ui.theme.GlimColor.LightRed
 import com.ssafy.glim.ui.theme.GlimColor.MainColor
@@ -49,7 +51,7 @@ fun LockScreenContent(
     unlockMain: () -> Unit,
     saveGlim: () -> Unit,
     toggleLike: () -> Unit,
-    viewBook: () -> Unit,
+    openCamera: () -> Unit,
     viewQuote: () -> Unit,
 ) {
     LaunchedEffect(Unit) { tick() }
@@ -154,43 +156,29 @@ fun LockScreenContent(
                 )
             }
         }
-        /*
+
         Row(
             modifier =
             Modifier
+                .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 24.dp)
-                .fillMaxWidth(),
+                .padding(bottom = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            SwipeButton(
+            BottomSwipeButton(
+                modifier = Modifier.size(92.dp).padding(8.dp) ,
                 isIcon = true,
-                modifier =
-                Modifier
-                    .weight(1F)
-                    .fillMaxWidth(),
-                text = stringResource(R.string.read_book),
-                isComplete = state.isComplete,
-                onSwipe = viewBook,
-                backgroundColor = Gray.copy(alpha = 0.4f),
-                swipeDirection = SwipeDirection.RightToLeft,
-                paintRes = R.drawable.ic_search,
+                paintRes = R.drawable.ic_camera,
+                onSwipe = openCamera
             )
-            Spacer(modifier = Modifier.weight(3F))
-            SwipeButton(
+            BottomSwipeButton(
+                modifier = Modifier.size(92.dp).padding(8.dp) ,
                 isIcon = true,
-                modifier =
-                Modifier
-                    .weight(1F)
-                    .fillMaxWidth(),
-                text = stringResource(R.string.read_glim),
-                isComplete = state.isComplete,
-                onSwipe = viewQuote,
-                backgroundColor = Gray.copy(alpha = 0.4f),
-                paintRes = R.drawable.ic_shorts
+                paintRes = R.drawable.ic_glim,
+                onSwipe = viewQuote
             )
         }
-*/
+
         SwipeButton(
             modifier =
                 Modifier

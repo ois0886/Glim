@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -82,16 +83,6 @@ class LockScreenActivity : ComponentActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        is LockSideEffect.NavigateBook -> {
-                            this.startActivity(
-                                Intent(this, MainActivity::class.java).apply {
-                                    putExtra("nav_route", "book")
-                                    putExtra("isbn", effect.bookId)
-                                }
-                            )
-                            (this as? Activity)?.finish()
-                        }
-
                         is LockSideEffect.NavigateQuotes -> {
                             this.startActivity(
                                 Intent(this, MainActivity::class.java).apply {
@@ -103,7 +94,13 @@ class LockScreenActivity : ComponentActivity() {
                         }
 
                         is LockSideEffect.SaveImage -> saveImageToGallery(this, effect.imageUrl)
-                    }
+
+                            LockSideEffect.NavigateCamera -> {
+                                val intent = Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)
+                                startActivity(intent)
+                                finish()
+                            }
+                        }
                 }
 
                 LockScreenContent(
@@ -114,7 +111,7 @@ class LockScreenActivity : ComponentActivity() {
                     unlockMain = viewModel::unlockMain,
                     saveGlim = viewModel::saveGlim,
                     toggleLike = viewModel::toggleLike,
-                    viewBook = viewModel::viewBook,
+                    openCamera = viewModel::openCamera,
                     viewQuote = viewModel::viewQuote,
                 )
             }

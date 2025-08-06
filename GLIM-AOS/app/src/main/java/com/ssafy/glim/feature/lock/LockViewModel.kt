@@ -110,11 +110,9 @@ constructor(
             reduce { state.copy(quotes = updatedQuotes) }
         }
 
-    fun viewBook() =
-        intent {
-            val currentQuote = state.quotes[state.currentIndex]
-            postSideEffect(LockSideEffect.NavigateBook(currentQuote.bookId))
-        }
+    fun openCamera() = intent {
+        postSideEffect(LockSideEffect.NavigateCamera)
+    }
 
     fun viewQuote() =
         intent {
