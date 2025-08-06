@@ -59,7 +59,7 @@ fun TextColorControls(
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_palette),
-            contentDescription = "컬러 팔레트",
+            contentDescription = stringResource(R.string.color_palette),
         )
     }
 }

@@ -23,9 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.ssafy.glim.R
 import com.ssafy.glim.feature.post.TextStyleState
 import com.ssafy.glim.ui.theme.FONT
 
@@ -49,7 +51,9 @@ fun TextConfigContent(
     var showControllerType by remember { mutableStateOf(TextControllerType.NOTHING) }
 
     Column(
-        modifier = modifier.imePadding().padding(horizontal = 32.dp),
+        modifier = modifier
+            .imePadding()
+            .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (showControllerType == TextControllerType.COLOR) {
@@ -109,7 +113,7 @@ private fun FontFamilyController(
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    text = "가나다라",
+                    text = stringResource(R.string.post_font_example_text),
                     style = MaterialTheme.typography.bodySmall.copy(fontFamily = it.fontFamily),
                     modifier = Modifier.padding(8.dp),
                     textAlign = TextAlign.Center

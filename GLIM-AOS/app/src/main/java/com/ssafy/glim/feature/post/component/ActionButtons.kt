@@ -118,7 +118,7 @@ fun ActionButtons(
                 ActionButton(
                     onClick = { onCreateTextClick(true) },
                     iconRes = R.drawable.ic_title,
-                    contentDescription = "새 텍스트",
+                    contentDescription = stringResource(R.string.new_text),
                 )
             }
         }
