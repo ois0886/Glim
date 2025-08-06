@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -140,6 +141,8 @@ private fun PostCaptureContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .systemBarsPadding()
+            .navigationBarsPadding()
             .drawWithCache {
                 onDrawWithContent {
                     imageGraphicsLayer.record {
