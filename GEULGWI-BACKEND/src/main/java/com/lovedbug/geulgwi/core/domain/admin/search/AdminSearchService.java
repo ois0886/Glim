@@ -6,7 +6,7 @@ import com.lovedbug.geulgwi.core.domain.admin.mapper.SearchBookMapper;
 import com.lovedbug.geulgwi.core.domain.admin.mapper.SearchQuoteMapper;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
-import com.lovedbug.geulgwi.core.domain.quote.QuoteRepository;
+import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
