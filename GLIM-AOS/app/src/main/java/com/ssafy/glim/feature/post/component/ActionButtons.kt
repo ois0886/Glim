@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuItemColors
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -27,6 +30,7 @@ import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
@@ -86,28 +90,39 @@ fun ActionButtons(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButtonWithPopupMenu(
-            startCameraAction = startCameraAction
-        )
+        Surface(
+            modifier = modifier.padding(horizontal = 8.dp, vertical = 16.dp),
+            color = Color.DarkGray.copy(alpha = 0.6f),
+            shape = RoundedCornerShape(12.dp),
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                IconButtonWithPopupMenu(
+                    startCameraAction = startCameraAction
+                )
 
-        ActionButton(
-            onClick = onTextExtractionClick,
-            iconRes = R.drawable.ic_recognize,
-            contentDescription = stringResource(R.string.recognize_text),
-        )
+                ActionButton(
+                    onClick = onTextExtractionClick,
+                    iconRes = R.drawable.ic_recognize,
+                    contentDescription = stringResource(R.string.recognize_text),
+                )
 
-        ActionButton(
-            onClick = onBackgroundImageButtonClick,
-            iconRes = R.drawable.ic_image,
-            contentDescription = stringResource(R.string.background_image),
-        )
+                ActionButton(
+                    onClick = onBackgroundImageButtonClick,
+                    iconRes = R.drawable.ic_image,
+                    contentDescription = stringResource(R.string.background_image),
+                )
 
-        ActionButton(
-            onClick = { onCreateTextClick(true) },
-            iconRes = R.drawable.ic_title,
-            contentDescription = "새 텍스트",
-        )
-
+                ActionButton(
+                    onClick = { onCreateTextClick(true) },
+                    iconRes = R.drawable.ic_title,
+                    contentDescription = stringResource(R.string.new_text),
+                )
+            }
+        }
         Spacer(modifier = Modifier.weight(1f))
     }
 }
@@ -145,7 +160,9 @@ fun IconButtonWithPopupMenu(
 
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            offset = DpOffset(x = (-56).dp, y = (-72).dp),
+            containerColor = Color.DarkGray.copy(alpha = 0.9f)
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.shot_background_image)) },
@@ -155,7 +172,15 @@ fun IconButtonWithPopupMenu(
                 onClick = {
                     startCameraAction(CameraType.BACKGROUND_IMAGE)
                     expanded = false
-                }
+                },
+                colors = MenuItemColors(
+                    textColor = Color.White,
+                    leadingIconColor = Color.White,
+                    trailingIconColor = Color.White,
+                    disabledTextColor = Color.Gray,
+                    disabledLeadingIconColor = Color.Gray,
+                    disabledTrailingIconColor = Color.Gray,
+                )
             )
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.shot_text_image)) },
@@ -165,7 +190,15 @@ fun IconButtonWithPopupMenu(
                 onClick = {
                     startCameraAction(CameraType.TEXT_RECOGNITION_IMAGE)
                     expanded = false
-                }
+                },
+                colors = MenuItemColors(
+                    textColor = Color.White,
+                    leadingIconColor = Color.White,
+                    trailingIconColor = Color.White,
+                    disabledTextColor = Color.Gray,
+                    disabledLeadingIconColor = Color.Gray,
+                    disabledTrailingIconColor = Color.Gray,
+                )
             )
         }
     }

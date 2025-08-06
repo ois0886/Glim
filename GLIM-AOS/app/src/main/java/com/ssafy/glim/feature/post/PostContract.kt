@@ -1,6 +1,8 @@
 package com.ssafy.glim.feature.post
 
 import android.net.Uri
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -8,6 +10,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.ui.theme.glimDefaultFont
 
 sealed interface PostSideEffect {
     data object NavigateBack : PostSideEffect
@@ -29,6 +32,7 @@ data class PostState(
     val showExitDialog: Boolean = false,
     val textStyle: TextStyleState = TextStyleState(),
     val textPosition: TextPosition = TextPosition(),
+    val originalTextPosition: TextPosition = TextPosition(),
     val isFocused: Boolean = false,
     val isDragging: Boolean = false,
     val book: Book? = null,
@@ -39,6 +43,8 @@ data class PostState(
 
 data class TextStyleState(
     val fontSize: Float = 16f,
+    val textColor: Color = Color.White,
+    val fontFamily: FontFamily = glimDefaultFont,
     val isBold: Boolean = false,
     val isItalic: Boolean = false,
 ) {
