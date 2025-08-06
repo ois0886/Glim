@@ -50,6 +50,7 @@ import com.ssafy.glim.core.ui.DarkThemeScreen
 import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
 import com.ssafy.glim.core.util.rememberCaptureAction
 import com.ssafy.glim.feature.main.excludeSystemBars
+import com.ssafy.glim.feature.post.component.DarkGrayRoundedSurface
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -172,13 +173,12 @@ fun QuoteItem(
         Column(
             modifier =
             Modifier
-                .fillMaxSize()
-                .padding(vertical = 16.dp, horizontal = 8.dp),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.End
         ) {
             IconButton(
-                modifier = Modifier.systemBarsPadding(),
+                modifier = Modifier.systemBarsPadding().padding(vertical = 16.dp, horizontal = 8.dp),
                 onClick = { captureAction() }
             ) {
                 Icon(
@@ -190,6 +190,7 @@ fun QuoteItem(
             Spacer(modifier = Modifier.weight(3f))
 
             Column(
+                modifier = Modifier.padding(horizontal = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 IconButton(onClick = onLikeClick) {
@@ -213,7 +214,10 @@ fun QuoteItem(
                 )
             }
 
-            IconButton(onClick = onShareClick) {
+            IconButton(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                onClick = onShareClick
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_share),
                     contentDescription = stringResource(R.string.share),
@@ -246,11 +250,7 @@ fun QuoteBookContent(
     page: Int,
     onBookInfoClick: (Long?) -> Unit = {},
 ) {
-    Surface(
-        modifier = modifier,
-        color = Color.DarkGray.copy(alpha = 0.8f),
-        shape = RoundedCornerShape(8.dp),
-    ) {
+    DarkGrayRoundedSurface(modifier = modifier) {
         Row(
             modifier =
             Modifier

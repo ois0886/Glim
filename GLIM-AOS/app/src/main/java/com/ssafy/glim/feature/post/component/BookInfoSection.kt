@@ -32,7 +32,7 @@ fun BookInfoSection(
 ) {
     if (book != null) {
         QuoteBookContent(
-            modifier = modifier.padding(16.dp),
+            modifier = modifier.padding(4.dp),
             bookId = book.bookId,
             author = book.author,
             bookName = book.title,
@@ -41,11 +41,7 @@ fun BookInfoSection(
             onBookInfoClick = onBookInfoClick
         )
     } else {
-        Surface(
-            modifier = modifier.padding(16.dp),
-            color = Color.DarkGray.copy(alpha = 0.8f),
-            shape = RoundedCornerShape(8.dp),
-        ) {
+        DarkGrayRoundedSurface(modifier = modifier.padding(vertical = 4.dp)) {
             AddBookContent(modifier, onBookInfoClick)
         }
     }

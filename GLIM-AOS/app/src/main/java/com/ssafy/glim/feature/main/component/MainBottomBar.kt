@@ -108,7 +108,8 @@ private fun RowScope.MainBottomBarItem(
             )
             Text(
                 text = tab.label,
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.labelSmall,
+                color = iconTint
             )
         }
     }
