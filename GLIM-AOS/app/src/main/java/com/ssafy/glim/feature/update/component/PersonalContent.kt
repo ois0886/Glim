@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.ssafy.glim.core.common.extensions.formatBirthDateToNumber
 import com.ssafy.glim.feature.auth.signup.component.UserProfileInputContent
 import com.ssafy.glim.feature.update.UpdateInfoUiState
+import com.ssafy.glim.feature.update.component.EmailSection
 import com.ssafy.glim.feature.update.component.ProfileImageSection
 
 @Composable
@@ -22,12 +23,15 @@ fun PersonalInfoContent(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         ProfileImageSection(
             imageUri = state.profileImageUri,
             onImageClicked = onProfileImageClicked,
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        EmailSection(state.email)
 
         UserProfileInputContent(
             isUpdate = true,

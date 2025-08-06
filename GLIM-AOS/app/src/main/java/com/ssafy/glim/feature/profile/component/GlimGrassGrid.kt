@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -84,14 +85,15 @@ fun GlimGrassGrid(
             )
         }
     } else {
-        Column(modifier.fillMaxWidth()) {
+        Column(
+            modifier.fillMaxWidth()
+        ) {
             Text(
                 text = yearLabel,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 10.dp)
+                    .padding(bottom = 8.dp)
             )
             MonthRow(monthLabels, scrollState)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
@@ -134,7 +136,7 @@ private fun MonthRow(monthLabels: List<String>, scrollState: ScrollState) {
                 Modifier.size(18.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(label, style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                Text(label, style = MaterialTheme.typography.labelSmall)
             }
             Spacer(modifier = Modifier.width(if (idx != monthLabels.lastIndex) 6.dp else 14.dp))
         }
@@ -151,7 +153,7 @@ private fun WeekLabelColumn(weekLabels: List<String>) {
             Box(
                 Modifier.size(width = 18.dp, height = 18.dp),
             ) {
-                Text(label, style = MaterialTheme.typography.labelMedium, color = Color.Gray)
+                Text(label, style = MaterialTheme.typography.labelMedium)
             }
         }
     }
@@ -210,6 +212,7 @@ private fun GlimGrassCell(count: Int) {
         border
             .then(Modifier.size(18.dp))
             .background(color, RoundedCornerShape(3.dp))
+            .shadow(1.dp)
     )
 }
 

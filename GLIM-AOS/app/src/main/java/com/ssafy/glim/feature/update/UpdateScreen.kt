@@ -137,9 +137,10 @@ internal fun UpdateScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
             when (state.updateType) {
                 UpdateType.PERSONAL -> {
                     PersonalInfoContent(
@@ -159,8 +160,10 @@ internal fun UpdateScreen(
                 }
             }
 
+            // 버튼을 아래로 밀기 위한 Spacer
             Spacer(modifier = Modifier.weight(1f))
 
+            // 저장 버튼
             GlimButton(
                 text = when {
                     state.isLoading && state.updateType == UpdateType.PERSONAL ->

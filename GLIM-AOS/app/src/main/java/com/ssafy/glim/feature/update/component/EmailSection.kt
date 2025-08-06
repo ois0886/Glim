@@ -20,18 +20,14 @@ fun EmailSection(email: String) {
             text = stringResource(R.string.profile_label_email),
             modifier = Modifier.fillMaxWidth(),
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
+        Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = email,
             onValueChange = { },
-            readOnly = true,
             singleLine = true,
+            enabled = false,
             modifier = Modifier.fillMaxWidth(),
             textStyle = MaterialTheme.typography.bodyLarge,
         )
-
-        Spacer(modifier = Modifier.height(8.dp))
     }
 }

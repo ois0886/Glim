@@ -27,8 +27,7 @@ data class UpdateInfoUiState(
             UpdateType.PERSONAL -> {
                 newNameError == null &&
                     newName.text.isNotBlank() &&
-                    newName.text != name
-                isImageSelected
+                    newName.text != name || isImageSelected
             }
 
             UpdateType.PASSWORD -> {

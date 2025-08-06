@@ -124,9 +124,9 @@ fun UserProfileInputContent(
                     { }
                 } else {
                     { onGenderSelect("남자") }
-                }, // 수정 모드에서는 변경 불가
-                enabled = !isUpdate, // 수정 모드에서는 비활성화
-                modifier = Modifier.weight(1f) // Row 안에서 weight 적용
+                },
+                enabled = !isUpdate,
+                modifier = Modifier.weight(1f)
             )
             GenderSelectableButton(
                 text = stringResource(id = R.string.profile_gender_female),
@@ -135,9 +135,9 @@ fun UserProfileInputContent(
                     { }
                 } else {
                     { onGenderSelect("여자") }
-                }, // 수정 모드에서는 변경 불가
-                enabled = !isUpdate, // 수정 모드에서는 비활성화
-                modifier = Modifier.weight(1f) // Row 안에서 weight 적용
+                },
+                enabled = !isUpdate,
+                modifier = Modifier.weight(1f)
             )
         }
 
