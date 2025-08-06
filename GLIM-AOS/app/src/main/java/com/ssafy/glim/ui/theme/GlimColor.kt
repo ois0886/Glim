@@ -34,4 +34,17 @@ object GlimColor {
     val NaverColor = Color(0xFF03C75A)
 
     val LightBrown = Color(0xFFDAC183)
+
+    val GrassEmpty = Color(0xFFEBEDF0)
+    val GrassLevel1 = Color(0xFFC6E48B)
+    val GrassLevel2 = Color(0xFF7BC96F)
+    val GrassLevel3 = Color(0xFF239A3B)
+    val GrassLevel4 = Color(0xFF196127)
+
+    // 텍스트 색상
+    val GrassTextPrimary = GrassLevel3
+    val GrassTextSecondary = GrassLevel4
+
+    // 테두리 색상
+    val GrassBorder = Color(0xFFE1E4E8)
 }

@@ -42,4 +42,8 @@ interface QuoteRepository {
     suspend fun likeQuote(quoteId: Long)
 
     suspend fun unLikeQuote(quoteId: Long)
+
+    suspend fun getMyUploadQuotes(): List<QuoteSummary>
+
+    suspend fun getMyLikedQuotes(): List<QuoteSummary>
 }

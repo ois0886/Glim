@@ -61,7 +61,7 @@ class LockScreenActivity : ComponentActivity() {
                 val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
                 viewModel.collectSideEffect { effect ->
-                        when (effect) {
+                    when (effect) {
                         is LockSideEffect.Unlock -> {
                             if (launchMainAfterUnlock) {
                                 startActivity(
@@ -121,4 +121,3 @@ class LockScreenActivity : ComponentActivity() {
         }
     }
 }
-

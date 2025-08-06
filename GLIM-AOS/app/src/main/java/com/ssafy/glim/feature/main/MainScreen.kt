@@ -80,8 +80,7 @@ internal fun MainScreen(navigator: MainNavController = rememberMainNavController
             )
 
             profileNavGraph(
-                padding = innerPadding,
-                popBackStack = navigator::popBackStack,
+                padding = innerPadding
             )
 
             shortsNavGraph(

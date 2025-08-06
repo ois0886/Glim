@@ -51,4 +51,8 @@ class QuoteRemoteDataSource @Inject constructor(
     suspend fun getQuoteById(
         quoteId: Long
     ) = quoteService.getQuoteById(quoteId)
+
+    suspend fun getMyUploadQuotes() = quoteService.getMyUploadQuotes()
+
+    suspend fun getMyLikedQuotes() = quoteService.getMyLikedQuotes()
 }

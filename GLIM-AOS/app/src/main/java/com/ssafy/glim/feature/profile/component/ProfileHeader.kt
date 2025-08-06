@@ -24,10 +24,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.ssafy.glim.R
@@ -37,11 +36,15 @@ internal fun ProfileHeader(
     profileImageUrl: String?,
     userName: String,
     modifier: Modifier = Modifier,
+    error: Boolean = false
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Spacer(Modifier.height(16.dp))
+
         SubcomposeAsyncImage(
             model =
             ImageRequest.Builder(LocalContext.current)
@@ -100,12 +103,21 @@ internal fun ProfileHeader(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = userName,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-            )
+            if (error) {
+                Text(
+                    text = stringResource(R.string.error_load_profile_failed),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Red,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            } else {
+                Text(
+                    text = userName,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Black,
+                )
+            }
         }
     }
 }
@@ -117,6 +129,18 @@ private fun PreviewProfileHeader() {
         ProfileHeader(
             profileImageUrl = null,
             userName = "박성준",
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewProfileHeaderWithError() {
+    MaterialTheme {
+        ProfileHeader(
+            profileImageUrl = null,
+            userName = "박성준",
+            error = true
         )
     }
 }

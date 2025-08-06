@@ -1,4 +1,3 @@
-// WithdrawalDialogs.kt
 package com.ssafy.glim.feature.profile.component
 
 import androidx.compose.foundation.layout.Arrangement

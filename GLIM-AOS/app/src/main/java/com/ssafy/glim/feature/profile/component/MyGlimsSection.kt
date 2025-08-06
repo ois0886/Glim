@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
 
 @Composable
@@ -24,6 +23,7 @@ internal fun MyGlimsSection(
     publishedGlimCount: Int,
     likedGlimCount: Int,
     modifier: Modifier = Modifier,
+    error: Boolean = false
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -33,12 +33,14 @@ internal fun MyGlimsSection(
             count = publishedGlimCount,
             label = stringResource(R.string.profile_recent_articles),
             onClick = navigateToGlimUploadList,
+            error = error,
         )
 
         MyGlimsItem(
             count = likedGlimCount,
             label = stringResource(R.string.profile_liked_articles),
             onClick = navigateToGlimLikedList,
+            error = error,
         )
     }
 }
@@ -48,6 +50,7 @@ private fun MyGlimsItem(
     count: Int,
     label: String,
     onClick: () -> Unit,
+    error: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -55,15 +58,15 @@ private fun MyGlimsItem(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = count.toString(),
-            fontSize = 24.sp,
+            text = if (!error) count.toString() else stringResource(R.string.error_number),
+            style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
         )
 
         Text(
             text = label,
-            fontSize = 14.sp,
+            style = MaterialTheme.typography.bodySmall,
             color = Color.Gray,
         )
     }
@@ -78,6 +81,7 @@ private fun PreviewMyGlimsSection() {
             navigateToGlimLikedList = {},
             publishedGlimCount = 24,
             likedGlimCount = 8,
+            error = false
         )
     }
 }
