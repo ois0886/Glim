@@ -9,7 +9,7 @@ abstract class BaseForegroundServiceManager<T : Service>(
     val context: Context,
     val targetClass: Class<T>,
 ) {
-    fun start() =
+    open fun start() =
         synchronized(this) {
             val intent = Intent(context, targetClass)
 
@@ -18,7 +18,7 @@ abstract class BaseForegroundServiceManager<T : Service>(
             }
         }
 
-    fun stop() =
+    open fun stop() =
         synchronized(this) {
             val intent = Intent(context, targetClass)
 

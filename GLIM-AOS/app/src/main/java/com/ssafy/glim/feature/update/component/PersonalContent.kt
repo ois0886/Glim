@@ -23,7 +23,6 @@ fun PersonalInfoContent(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         ProfileImageSection(
             imageUri = state.profileImageUri,
             onImageClicked = onProfileImageClicked,

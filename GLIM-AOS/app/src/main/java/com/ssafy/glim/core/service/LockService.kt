@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.IBinder
 import com.ssafy.glim.R
 import com.ssafy.glim.core.receiver.ScreenReceiver
@@ -64,9 +63,7 @@ class LockService : Service() {
 
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.createNotificationChannel(notificationChannel as NotificationChannel)
-        }
+        notificationManager.createNotificationChannel(notificationChannel as NotificationChannel)
     }
 
     private fun getStringWithContext(stringRes: Int): String {

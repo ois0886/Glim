@@ -6,11 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
-import com.ssafy.glim.feature.setting.LockScreenSettings
+import com.ssafy.glim.core.domain.model.LockSettings
 
 @Composable
 fun LockSettingSection(
-    settings: LockScreenSettings,
+    settings: LockSettings,
     onLockScreenGlimToggle: (Boolean) -> Unit
 ) {
     Column(
@@ -21,7 +21,7 @@ fun LockSettingSection(
         SettingsToggleItem(
             title = stringResource(R.string.lockscreen_glim_title),
             description = stringResource(R.string.lockscreen_glim_description),
-            checked = settings.glimEnabled,
+            checked = settings.isEnabled,
             onCheckedChange = onLockScreenGlimToggle
         )
     }
