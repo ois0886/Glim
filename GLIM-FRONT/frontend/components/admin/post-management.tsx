@@ -73,10 +73,11 @@ export function PostManagement() {
     }
   };
 
-  const filteredQuotes = quotes.filter(quote =>
-    quote.bookTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    quote.author.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredQuotes = quotes.filter(quote => {
+    const titleMatch = quote.bookTitle && quote.bookTitle.toLowerCase().includes(searchTerm.toLowerCase());
+    const authorMatch = quote.author && quote.author.toLowerCase().includes(searchTerm.toLowerCase());
+    return titleMatch || authorMatch;
+  });
 
   return (
     <div className="space-y-6">

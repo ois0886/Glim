@@ -13,14 +13,13 @@ import { Quote } from '@/types';
  */
 export const getQuotes = async (page: number, size: number, sort: string): Promise<Quote[]> => {
   try {
-    const response = await axiosInstance.get('/api/v1/admin/quotes', {
+    const response = await axiosInstance.get('/api/v1/quotes', {
       params: { page, size, sort }
     });
-    // API 응답이 페이지 정보와 함께 오는 경우 response.data.contents 등으로 변경해야 할 수 있습니다.
     return response.data;
   } catch (error) {
     console.error('글귀 목록 조회 API 호출 실패:', error);
-    throw error; // 에러를 상위로 전파하여 컴포넌트에서 처리할 수 있도록 함
+    throw error;
   }
 };
 
