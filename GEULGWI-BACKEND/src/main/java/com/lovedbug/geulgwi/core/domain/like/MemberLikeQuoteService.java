@@ -1,8 +1,11 @@
 package com.lovedbug.geulgwi.core.domain.like;
 
 import com.lovedbug.geulgwi.core.common.exception.GeulgwiException;
+import com.lovedbug.geulgwi.external.fcm.service.FcmPushService;
 import com.lovedbug.geulgwi.core.domain.like.entity.MemberLikeQuote;
 import com.lovedbug.geulgwi.core.domain.like.repository.MemberLikeQuoteRepository;
+import com.lovedbug.geulgwi.core.domain.member.Member;
+import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteResponse;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
@@ -19,17 +22,28 @@ public class MemberLikeQuoteService {
 
     private final MemberLikeQuoteRepository memberLikeQuoteRepository;
     private final QuoteRepository quoteRepository;
+    private final MemberRepository memberRepository;
+    private final FcmPushService fcmPushService;
 
     @Transactional
     public void likeQuote(Long memberId, Long quoteId) {
 
         if (!memberLikeQuoteRepository.existsByMemberIdAndQuote_QuoteId(memberId, quoteId)) {
+            Quote quote = quoteRepository.findById(quoteId)
+                .orElseThrow(() -> new GeulgwiException("없는 글귀에 대한 좋아요 입니다, quoteId = " + quoteId));
+
             MemberLikeQuote likeQuote = MemberLikeQuote.builder()
                 .memberId(memberId)
-                .quote(quoteRepository.findById(quoteId)
-                        .orElseThrow(() -> new GeulgwiException("없는 글귀에 대한 좋아요 입니다, quoteId = " + quoteId)))
+                .quote(quote)
                 .build();
             memberLikeQuoteRepository.save(likeQuote);
+
+            if (!quote.getMemberId().equals(memberId)) {
+                Member member = memberRepository.findById(quote.getMemberId())
+                    .orElseThrow(() -> new GeulgwiException("글귀 작성자를 찾을 수 없습니다.  memberId = " + quote.getMemberId()));
+
+                fcmPushService.sendLikeNotification(member, quote);
+            }
         }
     }
 
