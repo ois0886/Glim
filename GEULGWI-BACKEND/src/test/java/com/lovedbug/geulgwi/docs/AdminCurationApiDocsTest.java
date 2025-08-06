@@ -41,7 +41,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
 @ActiveProfiles("test")
-class AdminApiDocsTest extends RestDocsTestSupport {
+class AdminCurationApiDocsTest extends RestDocsTestSupport {
     @Autowired
     private MainCurationRepository mainCurationRepository;
 

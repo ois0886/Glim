@@ -28,4 +28,6 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
 
     @EntityGraph(attributePaths = {"book", "likes"})
     Optional<Quote> findByQuoteIdAndVisibility(Long quoteId, String visibility);
+
+    Page<Quote> findByContentContainingIgnoreCase(String content, Pageable pageable);
 }
