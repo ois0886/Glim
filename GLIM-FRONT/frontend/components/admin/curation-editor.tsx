@@ -13,9 +13,8 @@ import { v4 as uuidv4 } from 'uuid';
 import dynamic from 'next/dynamic';
 
 // --- API 호출 함수 임포트 ---
-import { getCurationById, createCuration, updateCuration, deleteCurationItem } from "@/lib/api/curations";
-// ✅ [필수] 도서/글귀 검색을 위한 API 호출 함수를 임포트해야 합니다. (경로는 실제 파일 위치에 맞게 수정)
-import { searchBooks, searchQuotes } from "@/lib/api/search"; // (가정된 API 파일 경로)
+import { getCurationById, createCuration, updateCuration, CurationMutationPayload } from "@/lib/api/curations";
+import { adminSearchBooks, adminSearchQuotes } from "@/lib/api/search";
 
 // --- UI 컴포넌트 임포트 ---
 import { Button } from "@/components/ui/button";
@@ -48,7 +47,6 @@ interface Quote {
   id: string; // quoteId를 문자열로 저장
   type: "quote";
   content: string;
-  author: string;
   source?: string;
 }
 
@@ -71,7 +69,6 @@ interface CurationEditorProps {
 export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: CurationEditorProps) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [currentCurationId, setCurrentCurationId] = useState<string>(curationId || uuidv4());
   
   const form = useForm<CurationFormValues>({
     resolver: zodResolver(curationFormSchema),
@@ -83,14 +80,10 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<'quote' | 'book' | null>(null);
 
-  // ✅ [수정됨] 데이터 로드 로직
   useEffect(() => {
     const fetchCurationData = async (id: string) => {
-      console.log("Attempting to fetch curation with ID:", id);
       try {
         const data = await getCurationById(id);
-        console.log("Fetched curation data for editing:", data);
-
         const itemsSource = data.contents || [];
         const formattedItems: CurationItem[] = itemsSource.map((item) => {
           if (item.bookId) {
@@ -102,14 +95,11 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
               coverImage: item.bookCoverUrl,
             };
           }
-          // API 응답에 quote 정보가 부족하므로, 임시 데이터를 채웁니다.
-          // 실제로는 getQuoteById와 같은 API가 필요할 수 있습니다.
           if (item.quoteId) {
             return {
               id: String(item.quoteId),
               type: 'quote',
-              content: `글귀 ID: ${item.quoteId}`, // API 응답에 content가 없음
-              author: item.author,
+              content: item.content || `글귀 ID: ${item.quoteId}`,
               source: item.bookTitle,
             };
           }
@@ -131,91 +121,60 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
 
     if (curationId) {
       fetchCurationData(curationId);
-    } 
-    // 생성 모드일 경우 (curationId가 없음)
-    else {
-      console.log("CurationEditor: Entering CREATE mode. Resetting form and items.");
+    } else {
       form.reset({ title: "", description: "" });
       setCurationItems([]);
-      setCurrentCurationId(uuidv4()); // 새 큐레이션 생성을 위해 새로운 UUID 할당
     }
   }, [curationId, form, toast]);
 
-  const handleRemoveItem = async (id: string) => {
-    try {
-      // API 호출 전에 id를 숫자로 변환
-      const itemId = parseInt(id, 10);
-      if (isNaN(itemId)) {
-        throw new Error("Invalid item ID for deletion.");
-      }
-      await deleteCurationItem(itemId);
-      setCurationItems((prev) => prev.filter((item) => item.id !== id));
-      toast({ title: "항목 삭제 완료", description: "선택한 항목이 성공적으로 삭제되었습니다." });
-    } catch (error) {
-      console.error("Failed to remove item:", error);
-      toast({
-        title: "삭제 실패",
-        description: "항목을 삭제하는 중 오류가 발생했습니다.",
-        variant: "destructive",
-      });
-    }
+  const handleRemoveItem = (idToRemove: string) => {
+    setCurationItems((prev) => prev.filter((item) => item.id !== idToRemove));
+    toast({ title: "항목 제거됨", description: "리스트에서 항목이 제거되었습니다. 저장 시 반영됩니다." });
   };
 
   const handleAddItemFromSearch = (item: CurationItem) => {
     if (!curationItems.some(curationItem => curationItem.id === item.id)) {
       setCurationItems((prev) => [...prev, item]);
-      toast({ title: "항목 추가", description: `${item.type === "quote" ? "인용구" : "도서"}가 추가되었습니다.` });
+      toast({ title: "항목 추가", description: `${item.type === "quote" ? "글귀" : "도서"}가 추가되었습니다.` });
     } else {
       toast({ title: "알림", description: "이미 추가된 항목입니다.", variant: "destructive" });
     }
   };
 
-  // ✅ [수정됨] 검색 기능 API 연동
   const handleSearch = async () => {
-    console.log("handleSearch called.");
     if (!selectedCategory) {
       toast({ title: "카테고리를 먼저 선택해주세요.", variant: "destructive" });
-      console.log("No category selected.");
       return;
     }
     if (!searchQuery.trim()) {
       toast({ title: "검색어를 입력해주세요.", variant: "destructive" });
-      console.log("Search query is empty.");
       return;
     }
-
-    console.log("Searching for:", searchQuery, "in category:", selectedCategory);
 
     try {
       let results: CurationItem[] = [];
       if (selectedCategory === 'book') {
-        console.log("Calling searchBooks with query:", searchQuery);
-        const bookResults = await searchBooks(searchQuery); // 도서 검색 API 호출
-        console.log("searchBooks raw results:", bookResults);
-        results = bookResults.map(book => ({
-          id: book.isbn13, // bookId 대신 isbn13을 id로 사용
+        const bookResults = await adminSearchBooks(searchQuery);
+        results = (bookResults || []).map(book => ({
+          id: String(book.bookId),
           type: 'book',
           title: book.title,
           author: book.author,
           coverImage: book.coverUrl,
-        })).filter(item => item.id !== 'undefined' && item.id !== 'null');
+        }));
       } else {
-        console.log("Calling searchQuotes with query:", searchQuery);
-        const quoteResults = await searchQuotes(searchQuery); // 글귀 검색 API 호출
-        console.log("searchQuotes raw results:", quoteResults);
-        results = quoteResults.map(quote => ({
+        const quoteResults = await adminSearchQuotes(searchQuery);
+        results = (quoteResults || []).map(quote => ({
           id: String(quote.quoteId),
           type: 'quote',
           content: quote.content,
-          author: quote.author,
           source: quote.bookTitle,
-        })).filter(item => item.id !== 'undefined' && item.id !== 'null');
+        }));
       }
-      console.log("Formatted search results before setting state:", results);
+
       setSearchResults(results);
       if (results.length === 0) {
         toast({ title: "검색 결과 없음" });
-        console.log("No search results found.");
       }
     } catch (error) {
       console.error("Search failed:", error);
@@ -223,21 +182,19 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
     }
   };
   
-  // ✅ [수정됨] 폼 제출 함수 API 연동
   async function onSubmit(values: CurationFormValues) {
     setIsSubmitting(true);
     
     const bookIds: number[] = curationItems
       .filter(item => item.type === 'book')
-      .map(item => 1); // ✅ 임시: 실제 bookId 대신 더미 ID 1 사용
+      .map(item => parseInt(item.id, 10))
+      .filter(id => !isNaN(id));
 
     const quoteIds: number[] = curationItems
       .filter(item => item.type === 'quote')
       .map(item => parseInt(item.id, 10))
       .filter(id => !isNaN(id));
 
-    // API 명세서에 curationType이 필수이므로, 둘 다 비어있을 경우를 대비.
-    // 도서가 하나라도 있으면 BOOK 타입, 아니면 QUOTE 타입으로 결정
     const curationType = bookIds.length > 0 ? 'BOOK' : (quoteIds.length > 0 ? 'QUOTE' : 'BOOK');
 
     const payload: CurationMutationPayload = {
@@ -247,8 +204,6 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
       bookIds,
       quoteIds,
     };
-    console.log(JSON.stringify(payload, null, 2));
-    console.log("전송할 Payload:", payload);
 
     try {
       if (curationId) {
@@ -280,7 +235,6 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            {/* form 태그는 여기서는 제거하고, 제출은 버튼에서 직접 처리 */}
             <div className="space-y-8">
               <FormField
                 control={form.control}
@@ -318,7 +272,7 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
       <Card>
         <CardHeader>
           <CardTitle>큐레이션 항목</CardTitle>
-          <CardDescription>포함할 인용구와 도서를 관리하고 순서를 변경합니다.</CardDescription>
+          <CardDescription>포함할 글귀와 도서를 관리하고 순서를 변경합니다.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -332,14 +286,14 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
                     items={curationItems}
                     setItems={setCurationItems}
                     onRemoveItem={handleRemoveItem}
-                    onUpdateItem={() => {}} // 직접 수정 기능이 없으면 빈 함수 전달
+                    onUpdateItem={() => {}}
                   />
                 )}
               </ScrollArea>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">인용구/도서 검색 및 추가</h3>
+              <h3 className="text-lg font-semibold">글귀/도서 검색 및 추가</h3>
               <RadioGroup
                 value={selectedCategory || ""}
                 onValueChange={(value: "quote" | "book") => setSelectedCategory(value)}
@@ -351,7 +305,7 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="quote" id="quote" />
-                  <Label htmlFor="quote">인용구</Label>
+                  <Label htmlFor="quote">글귀</Label>
                 </div>
               </RadioGroup>
 
@@ -375,8 +329,8 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
                         <div className="flex-1">
                           {item.type === 'quote' ? (
                             <>
-                              <p className="font-medium line-clamp-1">{item.content}</p>
-                              <p className="text-sm text-muted-foreground">{item.author}</p>
+                              <p className="font-medium line-clamp-2 italic">"{item.content}"</p>
+                              <p className="text-sm text-muted-foreground mt-1">출처: {item.source}</p>
                             </>
                           ) : (
                             <>
@@ -408,7 +362,7 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
 
       <div className="flex justify-end space-x-2">
         <Button type="button" variant="outline" onClick={onGoBack}>뒤로가기</Button>
-        <Button type="button" onClick={form.handleSubmit(onSubmit)} disabled={isSubmitting}>
+        <Button type="button" onClick={form.handleSubmit(onSubmit)} disabled={isSubmitting || curationItems.length === 0}>
           {isSubmitting ? "저장 중..." : "큐레이션 저장"}
         </Button>
       </div>

@@ -66,9 +66,11 @@ function SortableCurationItem({ curation, onEdit, onDelete }: SortableCurationIt
         <div {...listeners} {...attributes} className="cursor-grab p-2 -ml-2 mt-1">
           <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
-        <div className="flex-1 ml-2">
-          <p className="font-bold text-lg leading-tight">{curation.title}</p>
-          <p className="text-sm text-muted-foreground mt-1">{curation.description}</p>
+        {/* [수정됨] min-w-0 클래스를 추가하여 Flexbox 찌그러짐 현상 방지 */}
+        <div className="flex-1 ml-2 min-w-0">
+            {/* [개선] 긴 제목이 레이아웃을 깨지 않도록 truncate 클래스 추가 */}
+            <p className="font-bold text-lg leading-tight truncate">{curation.title}</p>
+            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{curation.description}</p>
         </div>
         <div className="flex space-x-1">
           <Button variant="ghost" size="icon" onClick={() => onEdit(curation.id)}>

@@ -37,12 +37,27 @@ export const getCurations = async (): Promise<ApiCuration[]> => {
   return response.data;
 };
 
-// 특정 큐레이션 상세 조회
+// [수정됨] 특정 큐레이션 상세 조회
 export const getCurationById = async (id: string): Promise<ApiCuration> => {
-  // Admin용 상세 조회 엔드포인트는 /items/{id} 일 가능성이 높습니다.
-  const response = await axiosInstance.get(`/api/v1/admin/curations/items/${id}`); 
-  return response.data;
+  console.log(`Attempting to find curation with ID: ${id}`);
+  
+  // 1. API 명세서에 명시된 '전체 목록 조회' API를 호출합니다.
+  const allCurations = await getCurations();
+
+  // 2. 클라이언트에서 ID가 일치하는 큐레이션을 찾습니다.
+  // API 응답의 curationItemId는 number 타입이므로, 파라미터로 받은 id(string)를 숫자로 변환하여 비교합니다.
+  const numericId = parseInt(id, 10);
+  const curation = allCurations.find(c => c.curationItemId === numericId);
+
+  // 3. 만약 해당하는 큐레이션이 없다면 에러를 발생시킵니다.
+  if (!curation) {
+    throw new Error(`Curation with ID ${id} not found.`);
+  }
+
+  console.log("Found curation:", curation);
+  return curation;
 };
+
 
 // 큐레이션 생성
 export const createCuration = async (payload: CurationMutationPayload): Promise<any> => {
@@ -54,6 +69,7 @@ export const createCuration = async (payload: CurationMutationPayload): Promise<
 export const updateCuration = async (itemId: string, payload: CurationMutationPayload): Promise<void> => {
   await axiosInstance.put(`/api/v1/admin/curations/items/${itemId}`, payload);
 };
+
 // 큐레이션 삭제
 export const deleteCuration = async (itemId: number): Promise<void> => {
   await axiosInstance.delete(`/api/v1/admin/curations/items/${itemId}`);
