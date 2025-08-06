@@ -162,6 +162,8 @@ class CurationApiDocsTest extends RestDocsTestSupport {
             .imageName("image.jpg")
             .memberId(member.getMemberId())
             .book(book)
+            .author("작가")
+            .bookTitle("책 제목")
             .build();
 
         quoteRepository.save(quote);
