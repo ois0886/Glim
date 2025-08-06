@@ -212,7 +212,6 @@ private fun GlimGrassCell(count: Int) {
         border
             .then(Modifier.size(18.dp))
             .background(color, RoundedCornerShape(3.dp))
-            .shadow(1.dp)
     )
 }
 
