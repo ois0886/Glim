@@ -53,7 +53,7 @@ fun MyGlimsItem(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // 글귀 내용 또는 빈 상태 메시지
+            // 글림 내용 또는 빈 상태 메시지
             if (quote.content.isNotEmpty()) {
                 Text(
                     text = quote.content,

@@ -72,14 +72,18 @@ fun GlimGrassGrid(
     val scrollState = rememberScrollState()
     LaunchedEffect(grid) { scrollState.scrollTo(scrollState.maxValue) }
 
-    if (uploadQuotes.isEmpty() && !error) {
-        Column(modifier.fillMaxWidth()) {
+    if (uploadQuotes.isEmpty()) {
+        Column(
+            modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
                 text = stringResource(R.string.glim_record_empty_title),
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Gray,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth()
                     .padding(10.dp)
             )
         }
@@ -104,15 +108,7 @@ fun GlimGrassGrid(
                     .padding(top = 14.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (error) {
-                    Text(
-                        text = stringResource(R.string.error_load_profile_failed),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Red,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                } else {
+                if (!error) {
                     GlimStreakSummary(maxStreak, currentStreak)
                 }
             }
@@ -357,7 +353,7 @@ private fun PreviewGlimGrassWithUpload(days: Int) {
         (0 until uploadCount).map { j ->
             QuoteSummary(
                 quoteId = (i * 10 + j).toLong(),
-                content = "오늘의 영감을 주는 글귀 $j",
+                content = "오늘의 영감을 주는 글림 $j",
                 views = (0..500).random().toLong(),
                 page = (1..300).random().toString(),
                 likes = (0..100).random().toLong(),
