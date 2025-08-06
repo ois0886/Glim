@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,18 +20,14 @@ fun EmailSection(email: String) {
             text = stringResource(R.string.profile_label_email),
             modifier = Modifier.fillMaxWidth(),
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
+        TextField(
             value = email,
             onValueChange = { },
-            readOnly = true,
             singleLine = true,
+            enabled = false,
             modifier = Modifier.fillMaxWidth(),
             textStyle = MaterialTheme.typography.bodyLarge,
         )
-
-        Spacer(modifier = Modifier.height(8.dp))
     }
 }

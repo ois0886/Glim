@@ -19,14 +19,15 @@ data class UpdateInfoUiState(
     @StringRes val newPasswordError: Int? = null,
     @StringRes val confirmPasswordError: Int? = null,
     val isLoading: Boolean = false,
-    val updateType: UpdateType = UpdateType.PERSONAL
+    val updateType: UpdateType = UpdateType.PERSONAL,
+    val isImageSelected: Boolean = false,
 ) {
     val isSaveEnabled: Boolean
         get() = when (updateType) {
             UpdateType.PERSONAL -> {
                 newNameError == null &&
                     newName.text.isNotBlank() &&
-                    newName.text != name
+                    newName.text != name || isImageSelected
             }
 
             UpdateType.PASSWORD -> {

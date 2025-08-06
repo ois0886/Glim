@@ -46,6 +46,7 @@
     <!-- 프로필 관련 -->
     <string name="profile_title">반가워요!</string>
     <string name="profile_subtitle">회원님을 더 알고 싶어요.</string>
+
     <string name="profile_label_name">이름</string>
     <string name="profile_hint_name">2~16글자를 입력해주세요.</string>
     <string name="profile_note_name">사람들에게 보여지는 이름으로,\n불쾌감을 줄 수 있는 이름은 경고없이 변경돼요.</string>

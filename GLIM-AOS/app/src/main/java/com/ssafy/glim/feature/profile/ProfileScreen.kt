@@ -3,13 +3,17 @@ package com.ssafy.glim.feature.profile
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -137,12 +141,19 @@ private fun ProfileScreen(
 
             item {
                 Spacer(modifier = Modifier.height(12.dp))
-                Column {
-                    GlimGrassGrid(
-                        uploadQuotes = state.uploadQuotes,
-                        firstUploadDateStr = state.firstUploadDate,
-                        error = state.error
-                    )
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+                    Box(modifier = Modifier.padding(8.dp)) {
+                        GlimGrassGrid(
+                            uploadQuotes = state.uploadQuotes,
+                            firstUploadDateStr = state.firstUploadDate,
+                            error = state.error
+                        )
+                    }
                 }
             }
 
