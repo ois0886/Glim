@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.IBinder
 import com.ssafy.glim.R
 import com.ssafy.glim.core.receiver.ScreenReceiver
@@ -19,7 +18,8 @@ class LockService : Service() {
     @Inject
     lateinit var lockServiceManager: LockServiceManager
 
-    private lateinit var screenReceiver: ScreenReceiver
+    @Inject
+    lateinit var screenReceiver: ScreenReceiver
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -31,7 +31,6 @@ class LockService : Service() {
         startId: Int,
     ): Int {
         createNotificationChannel()
-        screenReceiver = ScreenReceiver()
         startForeground(SERVICE_ID, createNotificationBuilder())
         startLockReceiver()
         return super.onStartCommand(intent, flags, startId)
