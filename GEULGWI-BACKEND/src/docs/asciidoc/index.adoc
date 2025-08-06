@@ -153,17 +153,29 @@ include::{snippets}/quote_api_docs_test/search_quotes_by_content/query-parameter
 
 include::{snippets}/quote_api_docs_test/search_quotes_by_content/http-response.adoc[]
 
+=== 업로드한 글귀 조회
+
+==== 요청
+
+include::{snippets}/quote_api_docs_test/get_uploaded_quotes/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/quote_api_docs_test/get_uploaded_quotes/response-body.adoc[]
+
+include::{snippets}/quote_api_docs_test/get_uploaded_quotes/response-fields.adoc[]
+
 == 검색 API
 
 === 인기 검색어 조회
 
-include::{snippets}/search_api_docs_test/get_search_popular_history/http-request.adoc[]
+include::{snippets}/search_keyword_api_docs_test/get_search_popular_history/http-request.adoc[]
 
 ==== 응답
 
-include::{snippets}/search_api_docs_test/get_search_popular_history/http-response.adoc[]
+include::{snippets}/search_keyword_api_docs_test/get_search_popular_history/http-response.adoc[]
 
-include::{snippets}/search_api_docs_test/get_search_popular_history/response-fields.adoc[]
+include::{snippets}/search_keyword_api_docs_test/get_search_popular_history/response-fields.adoc[]
 
 == 회원 API
 
@@ -275,7 +287,7 @@ include::{snippets}/auth_api_docs_test/refresh_token_test/response-fields.adoc[]
 
 include::{snippets}/like_api_docs_test/like_to_quote/http-request.adoc[]
 
-include::{snippets}/like_api_docs_test/like_to_quote/request-fields.adoc[]
+include::{snippets}/like_api_docs_test/like_to_quote/path-parameters.adoc[]
 
 ==== 응답
 
@@ -287,12 +299,25 @@ include::{snippets}/like_api_docs_test/like_to_quote/http-response.adoc[]
 
 include::{snippets}/like_api_docs_test/unlike_to_quote/http-request.adoc[]
 
-include::{snippets}/like_api_docs_test/unlike_to_quote/request-fields.adoc[]
+include::{snippets}/like_api_docs_test/unlike_to_quote/path-parameters.adoc[]
 
 ==== 응답
 
 include::{snippets}/like_api_docs_test/unlike_to_quote/http-response.adoc[]
 
+=== 좋아요 한 글귀 조회
+
+==== 요청
+
+include::{snippets}/like_api_docs_test/get_liked_quotes/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/like_api_docs_test/get_liked_quotes/http-response.adoc[]
+
+include::{snippets}/like_api_docs_test/get_liked_quotes/response-fields.adoc[]
+
+== Admin API
 == Admin Curation API
 
 === Admin 메인 큐레이션 조회

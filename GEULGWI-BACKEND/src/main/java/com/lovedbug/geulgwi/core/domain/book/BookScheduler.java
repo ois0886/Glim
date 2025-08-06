@@ -1,18 +1,16 @@
 package com.lovedbug.geulgwi.core.domain.book;
 
-import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinListQueryType;
-import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinSearchQueryType;
-import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinSearchQueryType;
+import com.lovedbug.geulgwi.external.book_provider.aladdin.dto.AladdinBookResponse;
 
-@Slf4j
+@Profile("dev")
 @Component
 @RequiredArgsConstructor
 public class BookScheduler {
@@ -36,11 +34,9 @@ public class BookScheduler {
 
     @Scheduled(cron = "0 0/30 * * * *")
     public void syncBestSellerBooks() {
-        log.info("현재 키워드 목록 {}", keywords);
 
         if (!keywords.isEmpty()) {
             String keyword = keywords.iterator().next();
-            log.info("book 마이그레이션 스케줄링 시작, keyword = " + keyword);
 
             for (int i = 0; i <= 50; i++) {
                 List<AladdinBookResponse> books = bookService.getBooksByKeyword(AladdinSearchQueryType.KEYWORD, keyword, i);

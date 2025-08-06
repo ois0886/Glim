@@ -1,4 +1,4 @@
-package com.lovedbug.geulgwi.core.domain.quote;
+package com.lovedbug.geulgwi.core.domain.quote.repository;
 
 import java.util.List;
 import java.util.Optional;
