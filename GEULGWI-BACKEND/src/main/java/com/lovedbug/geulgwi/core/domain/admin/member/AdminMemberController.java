@@ -24,7 +24,7 @@ public class AdminMemberController {
     }
 
     @GetMapping("/active/{memberId}")
-    public ResponseEntity<MemberResponse> getActiveMemberByEmail(@PathVariable Long memberId){
+    public ResponseEntity<MemberResponse> getActiveMemberByMemberId(@PathVariable Long memberId){
 
         return ResponseEntity.ok(adminMemberService.getActiveMemberByMemberId(memberId));
     }

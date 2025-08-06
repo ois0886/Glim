@@ -399,3 +399,85 @@ include::{snippets}/admin_search_api_docs_test/search_quotes/query-parameters.ad
 include::{snippets}/admin_search_api_docs_test/search_quotes/http-response.adoc[]
 
 include::{snippets}/admin_search_api_docs_test/search_quotes/response-fields.adoc[]
+
+=== Admin 멤버 검색
+
+==== 요청
+
+include::{snippets}/admin_search_api_docs_test/search_members/http-request.adoc[]
+
+include::{snippets}/admin_search_api_docs_test/search_members/query-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_search_api_docs_test/search_members/http-response.adoc[]
+
+include::{snippets}/admin_search_api_docs_test/search_members/response-fields.adoc[]
+
+== Admin Member API
+
+=== Admin 모든 멤버 조회
+
+==== 요청
+
+include::{snippets}/admin_member_api_docs_test/get_all_members/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_member_api_docs_test/get_all_members/http-response.adoc[]
+
+include::{snippets}/admin_member_api_docs_test/get_all_members/response-fields.adoc[]
+
+=== Admin ID로 ACTIVE 멤버 조회
+
+==== 요청
+
+include::{snippets}/admin_member_api_docs_test/get_active_member_by_id/http-request.adoc[]
+
+include::{snippets}/admin_member_api_docs_test/get_active_member_by_id/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_member_api_docs_test/get_active_member_by_id/http-response.adoc[]
+
+include::{snippets}/admin_member_api_docs_test/get_active_member_by_id/response-fields.adoc[]
+
+=== Admin 모든 ACTIVE 멤버 조회
+
+==== 요청
+
+include::{snippets}/admin_member_api_docs_test/get_all_active_members/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_member_api_docs_test/get_all_active_members/http-response.adoc[]
+
+include::{snippets}/admin_member_api_docs_test/get_all_active_members/response-fields.adoc[]
+
+=== Admin 사용자 정보 수정
+
+==== 요청
+
+include::{snippets}/admin_member_api_docs_test/update_member/http-request.adoc[]
+
+include::{snippets}/admin_member_api_docs_test/update_member/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_member_api_docs_test/update_member/http-response.adoc[]
+
+include::{snippets}/admin_member_api_docs_test/update_member/response-fields.adoc[]
+
+=== Admin 사용자 삭제 (논리삭제)
+
+==== 요청
+
+include::{snippets}/admin_member_api_docs_test/soft_delete_member/http-request.adoc[]
+
+include::{snippets}/admin_member_api_docs_test/soft_delete_member/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_member_api_docs_test/soft_delete_member/http-response.adoc[]
+
+include::{snippets}/admin_member_api_docs_test/soft_delete_member/response-fields.adoc[]
