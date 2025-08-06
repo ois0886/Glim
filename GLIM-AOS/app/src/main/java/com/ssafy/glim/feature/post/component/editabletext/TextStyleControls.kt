@@ -42,3 +42,37 @@ fun TextStyleControls(
         )
     }
 }
+
+
+@Composable
+fun FontFamilyControls(
+    openFontController: () -> Unit,
+) {
+    IconButton(
+        onClick = openFontController,
+        modifier = Modifier.size(32.dp),
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_match_case),
+            contentDescription = stringResource(R.string.bold),
+            modifier = Modifier.size(16.dp),
+        )
+    }
+}
+
+
+@Composable
+fun TextColorControls(
+    openColorPalette: () -> Unit,
+) {
+    IconButton(
+        onClick = openColorPalette,
+        modifier = Modifier.size(32.dp),
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_palette),
+            contentDescription = "컬러 팔레트",
+            modifier = Modifier.size(16.dp),
+        )
+    }
+}

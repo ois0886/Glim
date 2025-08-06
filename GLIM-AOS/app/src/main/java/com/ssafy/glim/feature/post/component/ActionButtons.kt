@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.post.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,10 +9,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -54,10 +57,10 @@ fun ActionButtons(
 
     Column(
         modifier =
-        modifier
-            .fillMaxHeight()
-            .padding(4.dp)
-            .systemBarsPadding(),
+            modifier
+                .fillMaxHeight()
+                .padding(4.dp)
+                .systemBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End,
     ) {
@@ -85,28 +88,39 @@ fun ActionButtons(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButtonWithPopupMenu(
-            startCameraAction = startCameraAction
-        )
+        Surface(
+            modifier = modifier.padding(horizontal = 8.dp, vertical = 16.dp),
+            color = Color.DarkGray.copy(alpha = 0.6f),
+            shape = RoundedCornerShape(12.dp),
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                IconButtonWithPopupMenu(
+                    startCameraAction = startCameraAction
+                )
 
-        ActionButton(
-            onClick = onTextExtractionClick,
-            iconRes = R.drawable.ic_recognize,
-            contentDescription = stringResource(R.string.recognize_text),
-        )
+                ActionButton(
+                    onClick = onTextExtractionClick,
+                    iconRes = R.drawable.ic_recognize,
+                    contentDescription = stringResource(R.string.recognize_text),
+                )
 
-        ActionButton(
-            onClick = onBackgroundImageButtonClick,
-            iconRes = R.drawable.ic_image,
-            contentDescription = stringResource(R.string.background_image),
-        )
+                ActionButton(
+                    onClick = onBackgroundImageButtonClick,
+                    iconRes = R.drawable.ic_image,
+                    contentDescription = stringResource(R.string.background_image),
+                )
 
-        ActionButton(
-            onClick = { onCreateTextClick(true) },
-            iconRes = R.drawable.ic_title,
-            contentDescription = "새 텍스트",
-        )
-
+                ActionButton(
+                    onClick = { onCreateTextClick(true) },
+                    iconRes = R.drawable.ic_title,
+                    contentDescription = "새 텍스트",
+                )
+            }
+        }
         Spacer(modifier = Modifier.weight(1f))
     }
 }

@@ -1,24 +1,32 @@
 package com.ssafy.glim.feature.post.component.editabletext
 
-import androidx.compose.foundation.border
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.feature.post.TextStyleState
+import com.ssafy.glim.ui.theme.glimDefaultFont
 import kotlin.math.roundToInt
 
 @Composable
@@ -29,77 +37,68 @@ fun EditableTextField(
     isDragging: Boolean,
     offsetX: Float,
     offsetY: Float,
+    updateTextFocusChanged: (Boolean) -> Unit,
     onTextChange: (TextFieldValue) -> Unit,
-    onFocusChanged: (Boolean) -> Unit,
     onDragStart: () -> Unit,
     onDragEnd: () -> Unit,
     onDrag: (Float, Float) -> Unit,
-    onIncreaseFontSize: () -> Unit,
-    onDecreaseFontSize: () -> Unit,
-    onToggleBold: () -> Unit,
-    onToggleItalic: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier =
-        modifier
-            .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDragStart = {
-                        onDragStart()
-                    },
-                    onDragEnd = {
-                        onDragEnd()
-                    },
-                ) { _, dragAmount ->
-                    onDrag(dragAmount.x, dragAmount.y)
-                }
-            },
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        if (isFocused && !isDragging) {
-            TextConfigContent(
-                textStyle = textStyle,
-                onIncreaseFontSize = onIncreaseFontSize,
-                onDecreaseFontSize = onDecreaseFontSize,
-                onToggleBold = onToggleBold,
-                onToggleItalic = onToggleItalic,
-            )
-        }
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
 
-        TextField(
+    BackHandler(isFocused) {
+        focusRequester.freeFocus()
+        updateTextFocusChanged(false)
+        focusManager.clearFocus()
+    }
+
+    LaunchedEffect(isFocused) {
+        if(isFocused) {
+            focusRequester.requestFocus()
+        }
+    }
+    // 텍스트 핸들(커서) 색상, 선택 텍스트 배경색 지정
+    val customSelectionColors = TextSelectionColors(
+        handleColor = Color.White,
+        backgroundColor = Color.White.copy(alpha = 0.3f)
+    )
+
+    CompositionLocalProvider(LocalTextSelectionColors provides customSelectionColors) {
+        BasicTextField(
             value = text,
             onValueChange = onTextChange,
             textStyle =
-            MaterialTheme.typography.bodyMedium.copy(
-                textAlign = TextAlign.Center,
-                lineHeight = 40.sp,
-                fontSize = textStyle.fontSizeUnit,
-                fontWeight = textStyle.fontWeight,
-                fontStyle = textStyle.fontStyle,
-            ),
-            colors =
-            TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-            ),
-            readOnly = isDragging,
-            modifier =
-            Modifier
-                .onFocusChanged { focusState ->
-                    onFocusChanged(focusState.isFocused)
-                }.border(
-                    width = 1.dp,
-                    color =
-                    when {
-                        isDragging -> Color.Yellow
-                        isFocused -> Color.White
-                        else -> Color.Transparent
-                    },
+                MaterialTheme.typography.bodyMedium.copy(
+                    textAlign = TextAlign.Center,
+                    lineHeight = 40.sp,
+                    fontSize = textStyle.fontSizeUnit,
+                    fontWeight = textStyle.fontWeight,
+                    fontStyle = textStyle.fontStyle,
+                    fontFamily = textStyle.fontFamily,
+                    color = textStyle.textColor
                 ),
+            readOnly = isDragging,
+            cursorBrush = SolidColor(Color.White),
+            modifier = modifier
+                .focusRequester(focusRequester)
+                .onFocusChanged { focusState ->
+                    updateTextFocusChanged(focusState.isFocused)
+                }
+                .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+                .pointerInput(Unit) {
+                    detectDragGestures(
+                        onDragStart = {
+                            onDragStart()
+                        },
+                        onDragEnd = {
+                            onDragEnd()
+                        },
+                    ) { _, dragAmount ->
+                        onDrag(dragAmount.x, dragAmount.y)
+                    }
+                },
         )
     }
+
 }

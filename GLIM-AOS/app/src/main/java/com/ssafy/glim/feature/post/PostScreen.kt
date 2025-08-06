@@ -102,7 +102,7 @@ internal fun PostRoute(
                 PostContent(
                     state = state,
                     onTextChanged = viewModel::textChanged,
-                    onTextFocusChanged = viewModel::onTextFocusChanged,
+                    updateTextFocusChanged = viewModel::updateTextFocusChanged,
                     onBackgroundClick = viewModel::onBackgroundClick,
                     onDragStart = viewModel::onDragStart,
                     onDragEnd = viewModel::onDragEnd,
@@ -119,6 +119,8 @@ internal fun PostRoute(
                     onCancelExit = viewModel::cancelExit,
                     onBackPress = viewModel::backPressed,
                     updateBottomSheetState = viewModel::updateBottomSheetState,
+                    updateFontFamily = viewModel::updateFontFamily,
+                    updateTextColor = viewModel::updateTextColor,
                     selectedBook = viewModel::selectedBook
                 )
             }

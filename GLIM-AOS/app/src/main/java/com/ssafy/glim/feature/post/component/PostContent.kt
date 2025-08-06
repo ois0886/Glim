@@ -18,13 +18,15 @@ import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.feature.post.PostState
-import com.ssafy.glim.feature.post.component.transformable.TransformableImage
 import com.ssafy.glim.feature.post.component.editabletext.EditableTextField
+import com.ssafy.glim.feature.post.component.editabletext.TextConfigContent
 import com.ssafy.glim.feature.post.component.transformable.ImageTransformStateHolder
+import com.ssafy.glim.feature.post.component.transformable.TransformableImage
 import com.ssafy.glim.feature.post.component.transformable.rememberImageTransformState
 import com.ssafy.glim.feature.shorts.CaptureActions
 
@@ -32,7 +34,7 @@ import com.ssafy.glim.feature.shorts.CaptureActions
 fun PostContent(
     state: PostState,
     onTextChanged: (TextFieldValue) -> Unit,
-    onTextFocusChanged: (Boolean) -> Unit,
+    updateTextFocusChanged: (Boolean) -> Unit,
     onBackgroundClick: () -> Unit,
     onDragStart: () -> Unit,
     onDragEnd: () -> Unit,
@@ -48,6 +50,8 @@ fun PostContent(
     onConfirmExit: () -> Unit,
     onCancelExit: () -> Unit,
     updateBottomSheetState: (Boolean) -> Unit,
+    updateFontFamily: (FontFamily) -> Unit,
+    updateTextColor: (Color) -> Unit,
     selectedBook: (Book) -> Unit,
     onBackPress: () -> Unit,
     modifier: Modifier = Modifier,
@@ -84,30 +88,41 @@ fun PostContent(
             transformState = transformState,
             imageGraphicsLayer = imageGraphicsLayer,
             onTextChanged = onTextChanged,
-            onTextFocusChanged = onTextFocusChanged,
+            updateTextFocusChanged = updateTextFocusChanged,
             onDragStart = onDragStart,
             onDragEnd = onDragEnd,
             onDrag = onDrag,
-            onIncreaseFontSize = onIncreaseFontSize,
-            onDecreaseFontSize = onDecreaseFontSize,
-            onToggleBold = onToggleBold,
-            onToggleItalic = onToggleItalic
         )
 
-        PostUI(
-            state = state,
-            startCameraAction = startCameraAction,
-            onTextExtractionClick = onTextExtractionClick,
-            onBackgroundImageClick = onBackgroundImageClick,
-            onTextFocusChanged = onTextFocusChanged,
-            onCompleteClick = onCompleteClick,
-            onBackPress = onBackPress,
-            updateBottomSheetState = updateBottomSheetState,
-            selectedBook = selectedBook,
-            focusManager = focusManager,
-            imageGraphicsLayer = imageGraphicsLayer,
-            modifier = Modifier.fillMaxSize().navigationBarsPadding()
-        )
+        if (state.isFocused && !state.isDragging) {
+            TextConfigContent(
+                textStyle = state.textStyle,
+                onIncreaseFontSize = onIncreaseFontSize,
+                onDecreaseFontSize = onDecreaseFontSize,
+                onToggleBold = onToggleBold,
+                onToggleItalic = onToggleItalic,
+                updateFontFamily = updateFontFamily,
+                updateTextColor = updateTextColor,
+                modifier = Modifier.navigationBarsPadding().align(Alignment.BottomCenter)
+            )
+        } else {
+            PostUI(
+                state = state,
+                startCameraAction = startCameraAction,
+                onTextExtractionClick = onTextExtractionClick,
+                onBackgroundImageClick = onBackgroundImageClick,
+                updateTextFocusChanged = updateTextFocusChanged,
+                onCompleteClick = onCompleteClick,
+                onBackPress = onBackPress,
+                updateBottomSheetState = updateBottomSheetState,
+                selectedBook = selectedBook,
+                focusManager = focusManager,
+                imageGraphicsLayer = imageGraphicsLayer,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .navigationBarsPadding()
+            )
+        }
     }
 }
 
@@ -117,14 +132,10 @@ private fun PostCaptureContent(
     transformState: ImageTransformStateHolder,
     imageGraphicsLayer: GraphicsLayer,
     onTextChanged: (TextFieldValue) -> Unit,
-    onTextFocusChanged: (Boolean) -> Unit,
+    updateTextFocusChanged: (Boolean) -> Unit,
     onDragStart: () -> Unit,
     onDragEnd: () -> Unit,
     onDrag: (Float, Float) -> Unit,
-    onIncreaseFontSize: () -> Unit,
-    onDecreaseFontSize: () -> Unit,
-    onToggleBold: () -> Unit,
-    onToggleItalic: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -150,15 +161,11 @@ private fun PostCaptureContent(
             isDragging = state.isDragging,
             offsetX = state.textPosition.offsetX,
             offsetY = state.textPosition.offsetY,
+            updateTextFocusChanged = updateTextFocusChanged,
             onTextChange = onTextChanged,
-            onFocusChanged = onTextFocusChanged,
             onDragStart = onDragStart,
             onDragEnd = onDragEnd,
             onDrag = onDrag,
-            onIncreaseFontSize = onIncreaseFontSize,
-            onDecreaseFontSize = onDecreaseFontSize,
-            onToggleBold = onToggleBold,
-            onToggleItalic = onToggleItalic,
             modifier = Modifier.align(Alignment.Center)
         )
     }
