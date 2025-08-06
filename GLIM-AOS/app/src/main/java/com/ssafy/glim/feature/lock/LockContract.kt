@@ -12,7 +12,7 @@ data class LockUiState(
     val page: Int = 0,
     val size: Int = 20,
     val isComplete: Boolean = false,
-){
+) {
     val currentQuote: Quote?
         get() =
             if (currentIndex >= 0 && currentIndex < quotes.size) {
@@ -34,5 +34,4 @@ sealed interface LockSideEffect {
     data class NavigateQuotes(val quoteId: Long) : LockSideEffect
 
     data class NavigateBook(val bookId: Long) : LockSideEffect
-
 }

@@ -14,6 +14,6 @@ sealed interface MyGlimsSideEffect {
 }
 
 enum class MyGlimsType(val displayName: String) {
-    LIKED("좋아요 한 글귀"),
-    UPLOADED("업로드 한 글귀"),
+    LIKED("좋아요 한 글림"),
+    UPLOADED("업로드 한 글림"),
 }

@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.myglims
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +7,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -31,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.core.ui.GlimTopBar
+import com.ssafy.glim.feature.main.excludeSystemBars
 import com.ssafy.glim.feature.myglims.component.MyGlimsItem
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -58,6 +61,7 @@ internal fun MyGlimsRoute(
 
     MyGlimsScreen(
         uiState = uiState,
+        padding = padding,
         listType = listType,
         onBackClick = popBackStack,
         onTabChange = { newType -> viewModel.loadMyGlims(newType) }
@@ -68,6 +72,7 @@ internal fun MyGlimsRoute(
 @Composable
 private fun MyGlimsScreen(
     uiState: MyGlimsUiState,
+    padding: PaddingValues,
     listType: MyGlimsType,
     onBackClick: () -> Unit,
     onTabChange: (MyGlimsType) -> Unit
@@ -75,7 +80,9 @@ private fun MyGlimsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .padding(padding.excludeSystemBars())
+            .imePadding()
+            .navigationBarsPadding()
     ) {
         GlimTopBar(
             title = listType.displayName,
@@ -155,7 +162,7 @@ private val sampleQuotes = listOf(
 )
 
 // Preview Composables
-@Preview(showBackground = true, name = "글귀 목록 (정상 상태)")
+@Preview(showBackground = true, name = "글림 목록 (정상 상태)")
 @Composable
 private fun MyGlimsScreenPreview() {
     MaterialTheme {
@@ -164,6 +171,7 @@ private fun MyGlimsScreenPreview() {
                 isLoading = false,
                 myGlims = sampleQuotes
             ),
+            padding = PaddingValues(0.dp),
             listType = MyGlimsType.LIKED,
             onBackClick = {},
             onTabChange = {}
@@ -180,6 +188,7 @@ private fun MyGlimsScreenLoadingPreview() {
                 isLoading = true,
                 myGlims = emptyList()
             ),
+            padding = PaddingValues(0.dp),
             listType = MyGlimsType.LIKED,
             onBackClick = {},
             onTabChange = {}
@@ -196,6 +205,7 @@ private fun MyGlimsScreenEmptyLikedPreview() {
                 isLoading = false,
                 myGlims = emptyList()
             ),
+            padding = PaddingValues(0.dp),
             listType = MyGlimsType.LIKED,
             onBackClick = {},
             onTabChange = {}
@@ -203,7 +213,7 @@ private fun MyGlimsScreenEmptyLikedPreview() {
     }
 }
 
-@Preview(showBackground = true, name = "빈 상태 (내 글귀)")
+@Preview(showBackground = true, name = "빈 상태 (내 글림)")
 @Composable
 private fun MyGlimsScreenEmptyUploadedPreview() {
     MaterialTheme {
@@ -212,6 +222,7 @@ private fun MyGlimsScreenEmptyUploadedPreview() {
                 isLoading = false,
                 myGlims = emptyList()
             ),
+            padding = PaddingValues(0.dp),
             listType = MyGlimsType.UPLOADED,
             onBackClick = {},
             onTabChange = {}
@@ -219,7 +230,7 @@ private fun MyGlimsScreenEmptyUploadedPreview() {
     }
 }
 
-@Preview(showBackground = true, name = "글귀 아이템 (정상)")
+@Preview(showBackground = true, name = "글림 아이템 (정상)")
 @Composable
 private fun MyGlimsItemPreview() {
     MaterialTheme {
@@ -230,7 +241,7 @@ private fun MyGlimsItemPreview() {
     }
 }
 
-@Preview(showBackground = true, name = "글귀 아이템 (빈 내용)")
+@Preview(showBackground = true, name = "글림 아이템 (빈 내용)")
 @Composable
 private fun MyGlimsItemEmptyContentPreview() {
     MaterialTheme {
@@ -241,7 +252,7 @@ private fun MyGlimsItemEmptyContentPreview() {
     }
 }
 
-@Preview(showBackground = true, name = "글귀 아이템 (빈 책 제목)")
+@Preview(showBackground = true, name = "글림 아이템 (빈 책 제목)")
 @Composable
 private fun MyGlimsItemEmptyTitlePreview() {
     MaterialTheme {

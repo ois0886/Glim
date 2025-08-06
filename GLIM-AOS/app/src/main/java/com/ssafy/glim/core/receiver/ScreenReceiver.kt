@@ -7,7 +7,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.ssafy.glim.feature.lock.LockScreenActivity
 
-
 object ScreenReceiver : BroadcastReceiver() {
     override fun onReceive(
         context: Context,
