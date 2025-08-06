@@ -16,9 +16,9 @@ import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.util.CaptureActions
 import com.ssafy.glim.feature.post.PostState
 import com.ssafy.glim.feature.search.SearchRoute
-import com.ssafy.glim.feature.shorts.CaptureActions
 
 @Composable
 fun PostUI(
