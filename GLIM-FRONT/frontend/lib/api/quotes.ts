@@ -5,7 +5,7 @@ import { Quote } from '@/types';
 
 /**
  * 글귀(게시물) 목록을 조회하는 API
- * (GET /api/v1/quotes)
+ * (GET /)
  * @param page 페이지 번호 (0부터 시작)
  * @param size 페이지 크기
  * @param sort 정렬 기준 (예: 'views,desc')
@@ -13,7 +13,7 @@ import { Quote } from '@/types';
  */
 export const getQuotes = async (page: number, size: number, sort: string): Promise<Quote[]> => {
   try {
-    const response = await axiosInstance.get('/api/v1/quotes', {
+    const response = await axiosInstance.get('/api/v1/admin/quotes', {
       params: { page, size, sort }
     });
     // API 응답이 페이지 정보와 함께 오는 경우 response.data.contents 등으로 변경해야 할 수 있습니다.

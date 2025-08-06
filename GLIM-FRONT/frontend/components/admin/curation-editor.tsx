@@ -146,10 +146,6 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
       toast({ title: "카테고리를 먼저 선택해주세요.", variant: "destructive" });
       return;
     }
-    if (!searchQuery.trim()) {
-      toast({ title: "검색어를 입력해주세요.", variant: "destructive" });
-      return;
-    }
 
     try {
       let results: CurationItem[] = [];

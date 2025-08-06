@@ -31,6 +31,7 @@ interface User {
   birthDate: string; // 생년월일 (문자열 형식)
   status: "ACTIVE" | "INACTIVE"; // 사용자 상태 (활성 또는 비활성)
   gender: "MALE" | "FEMALE"; // 성별 (남성 또는 여성)
+  password?: string; // 비밀번호 (선택적 필드)
 }
 
 /**
@@ -80,6 +81,8 @@ export function UserManagement() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   // 현재 편집 중인 사용자 정보를 저장하는 상태
   const [editedUser, setEditedUser] = useState<User | null>(null)
+  // 편집 시작 시점의 원본 사용자 정보를 저장하는 상태
+  const [originalUser, setOriginalUser] = useState<User | null>(null);
 
   // 컴포넌트가 처음 화면에 나타날 때 (마운트될 때) 사용자 데이터를 가져옵니다.
   useEffect(() => {
@@ -121,34 +124,52 @@ export function UserManagement() {
 
   // 사용자 편집 버튼 클릭 시 호출되는 함수
   const handleEditClick = (user: User) => {
-    setEditedUser({ ...user }) // 편집할 사용자 정보를 상태에 복사하여 설정
-    setIsEditDialogOpen(true) // 편집 다이얼로그 열기
+    setOriginalUser({ ...user }); // 원본 사용자 정보 저장
+    setEditedUser({ ...user }); // 편집할 사용자 정보를 상태에 복사하여 설정
+    setIsEditDialogOpen(true); // 편집 다이얼로그 열기
   }
 
   // 사용자 정보 저장 버튼 클릭 시 호출되는 함수
   const handleSaveEdit = async () => {
-    if (editedUser) { // 편집 중인 사용자 정보가 있을 경우
-        try {
-            console.log("Sending user data:", editedUser);
-            const birthDateArray = editedUser.birthDate.split('-').map(Number);
-            birthDateArray.push(0, 0); // 시, 분 추가
+    if (editedUser && originalUser) {
+      try {
+        let updatedUser = { ...editedUser };
 
-            // 백엔드 API로 PUT 요청을 보내 사용자 정보를 업데이트합니다.
-            const response = await axiosInstance.put(`/api/v1/admin/members/${editedUser.memberId}`, {
-                nickname: editedUser.nickname,
-                birthDate: birthDateArray, // 숫자 배열 형식으로 전송
-                gender: editedUser.gender,
-            });
+        // 사용자 정보 변경이 있었는지 확인 (닉네임, 비밀번호)
+        const infoChanged = editedUser.nickname !== originalUser.nickname ||
+                            (editedUser.password && editedUser.password.length > 0);
 
-            const updatedUser = response.data; // 업데이트된 사용자 정보 응답 받기
-            console.log("User updated successfully:", updatedUser);
-            // 사용자 목록에서 업데이트된 사용자 정보를 반영합니다.
-            setUsers(users.map((user) => (user.memberId === updatedUser.memberId ? updatedUser : user)));
-            setIsEditDialogOpen(false); // 다이얼로그 닫기
-            setEditedUser(null); // 편집 중인 사용자 정보 초기화
-        } catch (error) {
-            console.error("Failed to save user:", error);
+        if (infoChanged) {
+          const payload = {
+            password: editedUser.password || null,
+            nickname: editedUser.nickname,
+            birthDate: editedUser.birthDate ||null, // API 명세에 따라 항상 null로 설정
+            gender: editedUser.gender ||null,    // API 명세에 따라 항상 null로 설정
+          };
+
+          console.log("Updating user info with payload:", payload);
+          const infoUpdateResponse = await axiosInstance.put(`/api/v1/admin/members/${editedUser.memberId}`, payload);
+          updatedUser = { ...updatedUser, ...infoUpdateResponse.data };
+          console.log("User info updated successfully:", infoUpdateResponse.data);
         }
+
+        // 상태가 변경되었는지 확인하고 API 호출
+        if (editedUser.status !== originalUser.status) {
+          console.log("Updating status for user ID:", editedUser.memberId);
+          const statusUpdateResponse = await axiosInstance.patch(`/api/v1/members/${editedUser.memberId}/status`);
+          updatedUser = { ...updatedUser, ...statusUpdateResponse.data };
+          console.log("User status updated successfully:", statusUpdateResponse.data);
+        }
+
+        // 로컬 상태 업데이트
+        setUsers(users.map((user) => (user.memberId === updatedUser.memberId ? updatedUser : user)));
+        setIsEditDialogOpen(false);
+        setEditedUser(null);
+        setOriginalUser(null);
+
+      } catch (error) {
+        console.error("Failed to save user:", error);
+      }
     }
   }
 
@@ -271,10 +292,10 @@ export function UserManagement() {
                 </Select>
               </div>
               <div>
-                <p className="text-sm font-medium">성별</p>
+                <p className="text-sm font-medium">성별 (수정 불가)</p>
                 <Select
                   value={editedUser.gender}
-                  onValueChange={(value) => setEditedUser({ ...editedUser, gender: value as "MALE" | "FEMALE" })}
+                  disabled
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="성별 선택" />
@@ -286,11 +307,11 @@ export function UserManagement() {
                 </Select>
               </div>
               <div>
-                <p className="text-sm font-medium">생일</p>
+                <p className="text-sm font-medium">생일 (수정 불가)</p>
                 <Input
                   type="date"
-                  value={editedUser.birthDate}
-                  onChange={(e) => setEditedUser({ ...editedUser, birthDate: e.target.value })}
+                  value={editedUser.birthDate ? editedUser.birthDate.substring(0, 10) : ''}
+                  disabled
                 />
               </div>
               <div className="flex justify-end gap-2">
