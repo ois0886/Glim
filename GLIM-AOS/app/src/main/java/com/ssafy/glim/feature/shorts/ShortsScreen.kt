@@ -48,6 +48,7 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.DarkThemeScreen
 import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
+import com.ssafy.glim.core.util.rememberCaptureAction
 import com.ssafy.glim.feature.main.excludeSystemBars
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
 import org.orbitmvi.orbit.compose.collectAsState

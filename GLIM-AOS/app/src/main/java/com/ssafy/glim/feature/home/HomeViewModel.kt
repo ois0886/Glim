@@ -10,8 +10,6 @@ import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -24,9 +22,6 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel(), ContainerHost<HomeUiState, HomeSideEffect> {
     override val container = container<HomeUiState, HomeSideEffect>(initialState = HomeUiState())
 
-    private val _errorFlow = MutableSharedFlow<Throwable>()
-    val errorFlow get() = _errorFlow.asSharedFlow()
-
     fun navigateToQuote(quoteId: Long) =
         viewModelScope.launch {
             navigator.navigate(BottomTabRoute.Shorts(quoteId))
@@ -37,6 +32,40 @@ class HomeViewModel @Inject constructor(
             Log.d("HomeViewModel", "Navigating to BookDetail with bookId: $bookId")
             navigator.navigate(Route.BookDetail(bookId = bookId))
         }
+
+    fun refreshHome() = intent {
+        reduce { state.copy(isRefreshing = true) }
+
+        runCatching { getMainCurationsUseCase() }
+            .onSuccess { curations ->
+                val sections = curations.map { curation ->
+                    when (curation.type) {
+                        CurationType.QUOTE -> HomeSectionUiModel.QuoteSection(
+                            id = curation.id?.toString().orEmpty(),
+                            title = curation.title,
+                            quotes = curation.contents.quote
+                        )
+
+                        CurationType.BOOK -> HomeSectionUiModel.BookSection(
+                            id = curation.id?.toString().orEmpty(),
+                            title = curation.title,
+                            books = curation.contents.book
+                        )
+                    }
+                }
+
+                reduce {
+                    state.copy(
+                        isRefreshing = false,
+                        sections = sections
+                    )
+                }
+            }
+            .onFailure { throwable ->
+                reduce { state.copy(isRefreshing = false) }
+                postSideEffect(HomeSideEffect.ShowError("새로고침에 실패했습니다: ${throwable.message}"))
+            }
+    }
 
     init {
         loadCurationData()
@@ -53,6 +82,7 @@ class HomeViewModel @Inject constructor(
                             title = curation.title,
                             quotes = curation.contents.quote
                         )
+
                         CurationType.BOOK -> HomeSectionUiModel.BookSection(
                             id = curation.id?.toString().orEmpty(),
                             title = curation.title,

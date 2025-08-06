@@ -4,6 +4,7 @@ import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 
 data class HomeUiState(
     val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false,
     val sections: List<HomeSectionUiModel> = emptyList(),
 )
 

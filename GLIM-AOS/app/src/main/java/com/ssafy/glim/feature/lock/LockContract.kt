@@ -12,7 +12,15 @@ data class LockUiState(
     val page: Int = 0,
     val size: Int = 20,
     val isComplete: Boolean = false,
-)
+) {
+    val currentQuote: Quote?
+        get() =
+            if (currentIndex >= 0 && currentIndex < quotes.size) {
+                quotes[currentIndex]
+            } else {
+                null
+            }
+}
 
 sealed interface LockSideEffect {
     data object Unlock : LockSideEffect
@@ -21,7 +29,10 @@ sealed interface LockSideEffect {
         @StringRes val messageRes: Int,
     ) : LockSideEffect
 
+    data class SaveImage(val imageUrl: String) : LockSideEffect
+
     data class NavigateQuotes(val quoteId: Long) : LockSideEffect
 
-    data class NavigateBook(val bookId: Long) : LockSideEffect
+    data object NavigateCamera : LockSideEffect
+
 }

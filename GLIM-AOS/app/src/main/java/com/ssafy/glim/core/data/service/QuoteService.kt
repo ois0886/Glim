@@ -1,8 +1,10 @@
 package com.ssafy.glim.core.data.service
 
+import com.ssafy.glim.core.data.dto.response.LikedQuoteResponse
 import com.ssafy.glim.core.data.dto.response.QuoteResponse
 import com.ssafy.glim.core.data.dto.response.QuoteSearchResultResponse
 import com.ssafy.glim.core.data.dto.response.QuoteSummaryResponse
+import com.ssafy.glim.core.data.dto.response.UploadQuoteResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.DELETE
@@ -61,4 +63,10 @@ interface QuoteService {
     suspend fun getQuoteById(
         @Path("quoteId") quoteId: Long
     ): QuoteResponse
+
+    @GET("/api/v1/quotes/me")
+    suspend fun getMyUploadQuotes(): List<UploadQuoteResponse>
+
+    @GET("/api/v1/likes/quotes/me")
+    suspend fun getMyLikedQuotes(): List<LikedQuoteResponse>
 }

@@ -62,7 +62,7 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     fun onImageSelected(uri: Uri) = intent {
-        reduce { state.copy(profileImageUri = uri.toString()) }
+        reduce { state.copy(profileImageUri = uri.toString(), isImageSelected = true) }
     }
 
     fun onNameChanged(name: TextFieldValue) = intent {
@@ -81,8 +81,7 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     fun onProfileImageClicked() = intent {
-        // TODO: 이미지 변경
-        postSideEffect(UpdateInfoSideEffect.ShowError(R.string.not_ready_function))
+        postSideEffect(UpdateInfoSideEffect.ShowImagePicker)
     }
 
     fun onCurrentPasswordChanged(password: TextFieldValue) = intent {

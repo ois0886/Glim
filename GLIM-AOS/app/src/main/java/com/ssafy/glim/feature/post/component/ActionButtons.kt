@@ -34,8 +34,9 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
-import com.ssafy.glim.feature.shorts.CaptureActions
-import com.ssafy.glim.feature.shorts.rememberCaptureActions
+import com.ssafy.glim.core.util.CaptureActions
+import com.ssafy.glim.core.util.rememberCaptureActions
+
 import kotlinx.coroutines.launch
 
 @Composable

@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.update
 
+import PersonalInfoContent
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -31,7 +32,6 @@ import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.main.excludeSystemBars
 import com.ssafy.glim.feature.update.component.PasswordChangeContent
-import com.ssafy.glim.feature.update.component.PersonalInfoContent
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
@@ -137,9 +137,10 @@ internal fun UpdateScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
             when (state.updateType) {
                 UpdateType.PERSONAL -> {
                     PersonalInfoContent(
@@ -159,8 +160,10 @@ internal fun UpdateScreen(
                 }
             }
 
+            // 버튼을 아래로 밀기 위한 Spacer
             Spacer(modifier = Modifier.weight(1f))
 
+            // 저장 버튼
             GlimButton(
                 text = when {
                     state.isLoading && state.updateType == UpdateType.PERSONAL ->
