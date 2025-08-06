@@ -14,6 +14,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
@@ -158,7 +160,9 @@ fun IconButtonWithPopupMenu(
 
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            offset = DpOffset(x = (-56).dp, y = (-72).dp),
+            containerColor = Color.DarkGray.copy(alpha = 0.9f)
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.shot_background_image)) },
@@ -168,7 +172,15 @@ fun IconButtonWithPopupMenu(
                 onClick = {
                     startCameraAction(CameraType.BACKGROUND_IMAGE)
                     expanded = false
-                }
+                },
+                colors = MenuItemColors(
+                    textColor = Color.White,
+                    leadingIconColor = Color.White,
+                    trailingIconColor = Color.White,
+                    disabledTextColor = Color.Gray,
+                    disabledLeadingIconColor = Color.Gray,
+                    disabledTrailingIconColor = Color.Gray,
+                )
             )
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.shot_text_image)) },
@@ -178,7 +190,16 @@ fun IconButtonWithPopupMenu(
                 onClick = {
                     startCameraAction(CameraType.TEXT_RECOGNITION_IMAGE)
                     expanded = false
-                }
+                },
+                colors = MenuItemColors(
+                    textColor = Color.White,
+                    leadingIconColor = Color.White,
+                    trailingIconColor = Color.White,
+                    disabledTextColor = Color.Gray,
+                    disabledLeadingIconColor = Color.Gray,
+                    disabledTrailingIconColor = Color.Gray,
+                )
+
             )
         }
     }
