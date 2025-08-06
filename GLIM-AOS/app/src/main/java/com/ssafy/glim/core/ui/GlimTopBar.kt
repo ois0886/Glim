@@ -44,7 +44,7 @@ fun GlimTopBar(
                 title = {
                     Text(
                         text = title,
-                        style = Typography.titleMedium
+                        style = Typography.titleSmall
                     )
                 },
                 navigationIcon = {

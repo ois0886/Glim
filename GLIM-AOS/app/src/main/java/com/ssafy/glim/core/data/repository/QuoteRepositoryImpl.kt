@@ -43,7 +43,7 @@ class QuoteRepositoryImpl @Inject constructor(
         size: Int
     ): QuoteSearchResult {
         val data = quoteRemoteDataSource.searchQuotes(query, page, size).toDomain()
-        Log.d("SearchViewModel lik2", "${data.quoteSummaries.map{it.isLiked}}")
+        Log.d("SearchViewModel lik2", "${data.quoteSummaries.map { it.isLiked }}")
         return data
     }
 
@@ -80,4 +80,10 @@ class QuoteRepositoryImpl @Inject constructor(
         fileName = "quote.jpg",
         quality = 85
     )
+
+    override suspend fun getMyUploadQuotes() =
+        quoteRemoteDataSource.getMyUploadQuotes().map { it.toDomain() }
+
+    override suspend fun getMyLikedQuotes() =
+        quoteRemoteDataSource.getMyLikedQuotes().map { it.toDomain() }
 }

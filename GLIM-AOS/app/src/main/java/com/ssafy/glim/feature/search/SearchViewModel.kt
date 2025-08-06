@@ -196,7 +196,7 @@ constructor(
             navigator.navigate(Route.BookDetail(isbn = book.isbn))
         }
 
-    // 글귀 아이템 클릭
+    // 글림 아이템 클릭
     fun onQuoteClicked(quote: QuoteSummary) =
         intent {
             navigator.navigate(BottomTabRoute.Shorts(quote.quoteId))

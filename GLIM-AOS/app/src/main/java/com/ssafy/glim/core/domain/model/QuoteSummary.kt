@@ -7,5 +7,6 @@ data class QuoteSummary(
     val views: Long,
     val bookTitle: String = "",
     val likes: Long,
-    val isLiked: Boolean
+    val isLiked: Boolean,
+    val createdAt: String = ""
 )

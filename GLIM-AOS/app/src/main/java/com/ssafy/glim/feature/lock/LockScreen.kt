@@ -74,25 +74,25 @@ fun LockScreenContent(
 
     Box(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
-                .background(Color.Black)
-                .pointerInput(Unit) {
-                    var totalDragY = 0f
-                    detectVerticalDragGestures(
-                        onVerticalDrag = { _, dragAmount ->
-                            totalDragY += dragAmount
-                        },
-                        onDragEnd = {
-                            when {
-                                totalDragY < -100f -> nextQuote()
-                                totalDragY > 100f -> prevQuote()
-                            }
-                            totalDragY = 0f
-                        },
-                    )
-                },
+        Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
+            .background(Color.Black)
+            .pointerInput(Unit) {
+                var totalDragY = 0f
+                detectVerticalDragGestures(
+                    onVerticalDrag = { _, dragAmount ->
+                        totalDragY += dragAmount
+                    },
+                    onDragEnd = {
+                        when {
+                            totalDragY < -100f -> nextQuote()
+                            totalDragY > 100f -> prevQuote()
+                        }
+                        totalDragY = 0f
+                    },
+                )
+            },
     ) {
         val currentQuote = state.quotes.getOrNull(state.currentIndex)
         if (currentQuote != null) {
@@ -106,10 +106,10 @@ fun LockScreenContent(
         }
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .systemBarsPadding()
-                    .padding(top = 4.dp, start = 16.dp, end = 16.dp),
+            Modifier
+                .fillMaxWidth()
+                .systemBarsPadding()
+                .padding(top = 4.dp, start = 16.dp, end = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             IconButton(onClick = saveGlim) {
@@ -130,9 +130,9 @@ fun LockScreenContent(
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 72.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 72.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -181,11 +181,11 @@ fun LockScreenContent(
 
         SwipeButton(
             modifier =
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(horizontal = 36.dp, vertical = 110.dp),
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(horizontal = 36.dp, vertical = 110.dp),
             text = stringResource(R.string.lock_screen_slide_description),
             isComplete = state.isComplete,
             onSwipe = unlockMain,
