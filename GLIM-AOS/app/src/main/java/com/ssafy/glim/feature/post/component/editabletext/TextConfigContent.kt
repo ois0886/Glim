@@ -124,7 +124,7 @@ private fun TextColorController(updateTextColor: (Color) -> Unit) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(colorList) {
+        items(postFontColorList) {
             Surface(
                 modifier = Modifier
                     .clickable { updateTextColor(it) },

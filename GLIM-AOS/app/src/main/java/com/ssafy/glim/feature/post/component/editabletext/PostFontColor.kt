@@ -2,7 +2,7 @@ package com.ssafy.glim.feature.post.component.editabletext
 
 import androidx.compose.ui.graphics.Color
 
-val colorList = listOf(
+val postFontColorList = listOf(
     Color.Black,
     Color.White,
     Color(0xFF333333),
