@@ -47,25 +47,25 @@ internal fun ProfileHeader(
 
         SubcomposeAsyncImage(
             model =
-            ImageRequest.Builder(LocalContext.current)
-                .data(profileImageUrl)
-                .crossfade(true)
-                .build(),
+                ImageRequest.Builder(LocalContext.current)
+                    .data(profileImageUrl)
+                    .crossfade(true)
+                    .build(),
             contentDescription = stringResource(R.string.content_description_profile_image),
             modifier =
-            Modifier
-                .size(80.dp)
-                .clip(CircleShape),
+                Modifier
+                    .size(80.dp)
+                    .clip(CircleShape),
             contentScale = ContentScale.Crop,
             loading = {
                 Box(
                     modifier =
-                    Modifier
-                        .size(80.dp)
-                        .background(
-                            color = Color.Gray.copy(alpha = 0.1f),
-                            shape = CircleShape,
-                        ),
+                        Modifier
+                            .size(80.dp)
+                            .background(
+                                color = Color.Gray.copy(alpha = 0.1f),
+                                shape = CircleShape,
+                            ),
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator(
@@ -78,12 +78,12 @@ internal fun ProfileHeader(
             error = {
                 Box(
                     modifier =
-                    Modifier
-                        .size(80.dp)
-                        .background(
-                            color = Color.Gray.copy(alpha = 0.2f),
-                            shape = CircleShape,
-                        ),
+                        Modifier
+                            .size(80.dp)
+                            .background(
+                                color = Color.Gray.copy(alpha = 0.2f),
+                                shape = CircleShape,
+                            ),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
@@ -106,7 +106,7 @@ internal fun ProfileHeader(
             if (error) {
                 Text(
                     text = stringResource(R.string.error_load_profile_failed),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = Color.Red,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -114,7 +114,7 @@ internal fun ProfileHeader(
             } else {
                 Text(
                     text = userName,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = Color.Black,
                 )
             }

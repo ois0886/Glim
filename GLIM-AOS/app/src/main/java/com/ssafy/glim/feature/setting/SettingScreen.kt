@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -113,6 +114,8 @@ internal fun SettingScreen(
                 onTimeRangeClick = onTimeRangeClick
             )
 
+            Spacer(modifier = Modifier.height(36.dp))
+
             LockSettingSection(
                 settings = state.lockSettings,
                 onLockScreenGlimToggle = onLockScreenGlimToggle
@@ -120,7 +123,6 @@ internal fun SettingScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // 저장 버튼
             GlimButton(
                 text = if (state.isLoading) {
                     stringResource(R.string.loading)

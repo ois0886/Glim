@@ -25,7 +25,6 @@ class LockServiceManager @Inject constructor(
     private var isServiceStarted = false
 
     init {
-        // UseCase를 통해 설정 변경 감지
         serviceScope.launch {
             getLockSettingsUseCase()
                 .map { it.isEnabled }
