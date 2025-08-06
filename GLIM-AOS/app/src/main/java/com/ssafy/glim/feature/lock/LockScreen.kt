@@ -166,13 +166,13 @@ fun LockScreenContent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             BottomSwipeButton(
-                modifier = Modifier.size(92.dp).padding(8.dp) ,
+                modifier = Modifier.size(92.dp).padding(8.dp),
                 isIcon = true,
                 paintRes = R.drawable.ic_camera,
                 onSwipe = openCamera
             )
             BottomSwipeButton(
-                modifier = Modifier.size(92.dp).padding(8.dp) ,
+                modifier = Modifier.size(92.dp).padding(8.dp),
                 isIcon = true,
                 paintRes = R.drawable.ic_glim,
                 onSwipe = viewQuote

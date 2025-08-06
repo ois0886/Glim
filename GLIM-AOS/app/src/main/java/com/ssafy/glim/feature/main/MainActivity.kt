@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
 
                         // 딥링크 처리
                         LaunchedEffect(initialRoute) {
-                           if (destination == BottomTabRoute.Home && initialRoute == "glim") {
+                            if (destination == BottomTabRoute.Home && initialRoute == "glim") {
                                 val quoteId = intent.getLongExtra("quote_id", -1L)
                                 navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
                             }

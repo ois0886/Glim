@@ -34,5 +34,4 @@ sealed interface LockSideEffect {
     data class NavigateQuotes(val quoteId: Long) : LockSideEffect
 
     data object NavigateCamera : LockSideEffect
-
 }

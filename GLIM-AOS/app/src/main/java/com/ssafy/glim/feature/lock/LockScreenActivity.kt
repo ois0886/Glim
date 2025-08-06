@@ -95,12 +95,12 @@ class LockScreenActivity : ComponentActivity() {
 
                         is LockSideEffect.SaveImage -> saveImageToGallery(this, effect.imageUrl)
 
-                            LockSideEffect.NavigateCamera -> {
-                                val intent = Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)
-                                startActivity(intent)
-                                finish()
-                            }
+                        LockSideEffect.NavigateCamera -> {
+                            val intent = Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)
+                            startActivity(intent)
+                            finish()
                         }
+                    }
                 }
 
                 LockScreenContent(

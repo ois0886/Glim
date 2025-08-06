@@ -93,13 +93,13 @@ fun UserProfileInputContent(
                 { }
             } else {
                 onBirthYearChange
-            }, // 수정 모드에서는 변경 불가
+            },
             label = { Text(stringResource(id = R.string.profile_hint_birth)) },
             isError = birthYearError != null,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            enabled = !isUpdate, // 수정 모드에서는 비활성화
+            enabled = !isUpdate,
         )
 
         if (birthYearError != null) {
