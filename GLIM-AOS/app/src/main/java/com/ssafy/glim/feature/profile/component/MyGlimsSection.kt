@@ -13,10 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
+
 @Composable
 internal fun MyGlimsSection(
     navigateToGlimUploadList: () -> Unit,
@@ -59,11 +59,10 @@ private fun MyGlimsItem(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = count.toString(),
+            text = if (error) stringResource(R.string.error_number) else count.toString(),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
-            textDecoration = if (error) TextDecoration.LineThrough else null
         )
 
         Text(

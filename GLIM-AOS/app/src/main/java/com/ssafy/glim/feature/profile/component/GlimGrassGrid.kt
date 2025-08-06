@@ -72,36 +72,49 @@ fun GlimGrassGrid(
     val scrollState = rememberScrollState()
     LaunchedEffect(grid) { scrollState.scrollTo(scrollState.maxValue) }
 
-    Column(modifier.fillMaxWidth()) {
-        Text(
-            text = yearLabel,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = 10.dp)
-        )
-        MonthRow(monthLabels, scrollState)
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
-            WeekLabelColumn(weekLabels)
-            GlimGrassGridContent(grid, scrollState, glimRecord, firstUploadDate, today)
+    if (uploadQuotes.isEmpty() && !error) {
+        Column(modifier.fillMaxWidth()) {
+            Text(
+                text = stringResource(R.string.glim_record_empty_title),
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Gray,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(10.dp)
+            )
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 14.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            if (error) {
-                Text(
-                    text = stringResource(R.string.error_load_profile_failed),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Red,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            } else {
-                GlimStreakSummary(maxStreak, currentStreak)
+    } else {
+        Column(modifier.fillMaxWidth()) {
+            Text(
+                text = yearLabel,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 10.dp)
+            )
+            MonthRow(monthLabels, scrollState)
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+                WeekLabelColumn(weekLabels)
+                GlimGrassGridContent(grid, scrollState, glimRecord, firstUploadDate, today)
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 14.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (error) {
+                    Text(
+                        text = stringResource(R.string.error_load_profile_failed),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Red,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    GlimStreakSummary(maxStreak, currentStreak)
+                }
             }
         }
     }
@@ -359,7 +372,7 @@ private fun PreviewGlimGrassWithUpload(days: Int) {
         }
     }
 
-    Surface(color = Color(0xFFF6F6F6)) {
+    Surface(color = Color.White) {
         Box(Modifier.padding(16.dp)) {
             GlimGrassGrid(
                 uploadQuotes = mockUploadQuotes,

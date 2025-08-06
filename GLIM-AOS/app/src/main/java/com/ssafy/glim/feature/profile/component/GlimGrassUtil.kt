@@ -7,18 +7,8 @@ import java.time.temporal.ChronoUnit
 
 private val KST: ZoneId = ZoneId.of("Asia/Seoul")
 private val DATE_FMT: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-private val ISO_FMT: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-
-private fun String.toLocalDate(): LocalDate? =
-    runCatching { LocalDate.parse(this, ISO_FMT) }
-        .recoverCatching { LocalDate.parse(this, DATE_FMT) }
-        .getOrNull()
 
 fun LocalDate.formatKey(): String = this.format(DATE_FMT)
-
-/** ISO 또는 yyyy-MM-dd 파싱, 실패 시 오늘−6일 반환 */
-fun parseJoinDate(joinDateStr: String): LocalDate =
-    joinDateStr.toLocalDate() ?: LocalDate.now(KST).minusDays(6)
 
 /** KST 기준 오늘 */
 fun todayKst(): LocalDate = LocalDate.now(KST)
@@ -46,9 +36,22 @@ fun buildGlimGrid(days: List<LocalDate>): List<List<LocalDate?>> {
 /** 주차별 첫 비-널 날짜의 monthValue를 레이블로 */
 fun createMonthLabels(grid: List<List<LocalDate?>>): List<String> =
     grid.mapIndexed { i, week ->
-        week.firstOrNull { it != null }?.monthValue
-            ?.takeIf { i == 0 || it != grid[i - 1].firstOrNull()?.monthValue }
-            ?.toString() ?: ""
+        val datesInWeek = week.filterNotNull()
+        val months = datesInWeek.map { it.monthValue }.distinct()
+
+        when {
+            i == 0 && months.isNotEmpty() -> months.first().toString()
+            months.size > 1 -> months.last().toString()
+            months.isNotEmpty() -> {
+                val currentMonth = months.first()
+                val prevMonth = if (i > 0) {
+                    grid[i - 1].filterNotNull().lastOrNull()?.monthValue
+                } else null
+
+                if (currentMonth != prevMonth) currentMonth.toString() else ""
+            }
+            else -> ""
+        }
     }
 
 /** "YYYY" 또는 "YYYY ~ YYYY" */

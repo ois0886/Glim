@@ -20,6 +20,7 @@
     <string name="loading">로딩 중…</string>
     <string name="confirm">확인</string>
     <string name="cancel">취소</string>
+    <string name="error_number">-</string>
     <string name="exit">나가기</string>
     <string name="exit_dialog_title">종료하시겠습니까?</string>
     <string name="exit_dialog_description">화면 이탈 시 생성중인 글귀 이미지는\n저장되지 않습니다.</string>
@@ -237,7 +238,7 @@
 
     <!-- Glim 잔디밭 관련 -->
     <string name="glim_record_title">나의 글림 업로드 기록</string>
-    <string name="glim_record_empty_title">아직 업로드한 글림이 없습니다</string>
+    <string name="glim_record_empty_title">"아직 업로드한 글림이 없습니다! \n글림을 업로드하고 나만의 잔디밭을 만들어요!"</string>
     <string name="glim_record_max_streak">최대 연속 업로드: %d일</string>
     <string name="glim_record_current_streak">현재 연속 업로드: %d일</string>
 

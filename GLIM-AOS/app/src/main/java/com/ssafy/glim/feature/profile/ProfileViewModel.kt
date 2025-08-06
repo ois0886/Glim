@@ -66,69 +66,68 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun loadProfileData() = intent {
-        reduce { state.copy(isRefreshing = true) }
+        reduce { state.copy(isRefreshing = true, error = false) }
 
         coroutineScope {
-            val userDeferred = async {
-                runCatching { getUserByIdUseCase() }
-            }
+            try {
+                val userDeferred = async { runCatching { getUserByIdUseCase() } }
+                val uploadQuotesDeferred = async { runCatching { getMyUploadQuoteUseCase() } }
+                val likedQuotesDeferred = async { runCatching { getMyLikedQuoteUseCase() } }
 
-            val uploadQuotesDeferred = async {
-                runCatching { getMyUploadQuoteUseCase() }
-            }
+                val userResult = userDeferred.await()
+                val uploadQuotesResult = uploadQuotesDeferred.await()
+                val likedQuotesResult = likedQuotesDeferred.await()
 
-            val likedQuotesDeferred = async {
-                runCatching { getMyLikedQuoteUseCase() }
-            }
+                if (userResult.isSuccess && uploadQuotesResult.isSuccess && likedQuotesResult.isSuccess) {
+                    val user = userResult.getOrThrow()
+                    val uploadQuotes = uploadQuotesResult.getOrThrow()
+                    val likedQuotes = likedQuotesResult.getOrThrow()
 
-            val userResult = userDeferred.await()
-            val uploadQuotesResult = uploadQuotesDeferred.await()
-            val likedQuotesResult = likedQuotesDeferred.await()
+                    val firstUploadDate = uploadQuotes.minByOrNull { it.createdAt }?.createdAt
+                        ?.substringBefore('T') ?: ""
 
-            userResult
-                .onSuccess { user ->
                     reduce {
                         state.copy(
                             userName = user.nickname,
                             profileImageUrl = null,
-                            error = false
-                        )
-                    }
-                }
-                .onFailure {
-                    reduce { state.copy(error = true) }
-                }
-
-            uploadQuotesResult
-                .onSuccess { uploadQuotes ->
-                    val firstUploadDate = uploadQuotes.minByOrNull { it.createdAt }?.createdAt ?: ""
-                    reduce {
-                        state.copy(
                             publishedGlimCount = uploadQuotes.size,
                             uploadQuotes = uploadQuotes,
-                            firstUploadDate = firstUploadDate.substringBefore('T'),
+                            firstUploadDate = firstUploadDate,
+                            likedGlimCount = likedQuotes.size,
+                            isRefreshing = false,
                             error = false
                         )
                     }
-                }
-                .onFailure {
-                    reduce { state.copy(error = true) }
-                }
-
-            likedQuotesResult
-                .onSuccess { likedQuotes ->
+                } else {
                     reduce {
                         state.copy(
-                            likedGlimCount = likedQuotes.size,
-                            error = false
+                            profileImageUrl = null,
+                            userName = "",
+                            publishedGlimCount = 0,
+                            likedGlimCount = 0,
+                            uploadQuotes = emptyList(),
+                            firstUploadDate = "",
+                            isRefreshing = false,
+                            error = true
                         )
                     }
                 }
-                .onFailure {
-                    reduce { state.copy(error = true) }
-                }
 
-            reduce { state.copy(isRefreshing = false) }
+            } catch (_: Exception) {
+                reduce {
+                    state.copy(
+                        profileImageUrl = null,
+                        userName = "",
+                        publishedGlimCount = 0,
+                        likedGlimCount = 0,
+                        uploadQuotes = emptyList(),
+                        firstUploadDate = "",
+                        isRefreshing = false,
+                        error = true
+                    )
+                }
+                postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
+            }
         }
     }
 
