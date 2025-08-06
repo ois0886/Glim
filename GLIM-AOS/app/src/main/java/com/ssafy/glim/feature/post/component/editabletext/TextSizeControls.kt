@@ -20,25 +20,21 @@ fun TextSizeControls(
 ) {
     IconButton(
         onClick = onDecreaseFontSize,
-        modifier = Modifier.size(32.dp),
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_minus),
             contentDescription = stringResource(R.string.text_size_down),
             tint = Color.White,
-            modifier = Modifier.size(16.dp)
         )
     }
 
     IconButton(
         onClick = onIncreaseFontSize,
-        modifier = Modifier.size(32.dp),
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_add),
             contentDescription = stringResource(R.string.text_size_down),
             tint = Color.White,
-            modifier = Modifier.size(16.dp),
         )
     }
 }

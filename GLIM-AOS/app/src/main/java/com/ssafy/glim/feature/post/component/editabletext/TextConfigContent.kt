@@ -65,8 +65,7 @@ fun TextConfigContent(
             shape = RoundedCornerShape(8.dp),
         ) {
             Row(
-                modifier = Modifier.padding(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 TextSizeControls(

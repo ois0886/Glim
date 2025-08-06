@@ -20,25 +20,21 @@ fun TextStyleControls(
 ) {
     IconButton(
         onClick = onToggleBold,
-        modifier = Modifier.size(32.dp),
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_bold),
             contentDescription = stringResource(R.string.bold),
             tint = if (isBold) Color.Yellow else Color.White,
-            modifier = Modifier.size(16.dp),
         )
     }
 
     IconButton(
         onClick = onToggleItalic,
-        modifier = Modifier.size(32.dp),
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_italic),
             contentDescription = stringResource(R.string.italic),
             tint = if (isItalic) Color.Yellow else Color.White,
-            modifier = Modifier.size(16.dp),
         )
     }
 }
@@ -50,12 +46,10 @@ fun FontFamilyControls(
 ) {
     IconButton(
         onClick = openFontController,
-        modifier = Modifier.size(32.dp),
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_match_case),
             contentDescription = stringResource(R.string.bold),
-            modifier = Modifier.size(16.dp),
         )
     }
 }
@@ -67,12 +61,10 @@ fun TextColorControls(
 ) {
     IconButton(
         onClick = openColorPalette,
-        modifier = Modifier.size(32.dp),
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_palette),
             contentDescription = "컬러 팔레트",
-            modifier = Modifier.size(16.dp),
         )
     }
 }
