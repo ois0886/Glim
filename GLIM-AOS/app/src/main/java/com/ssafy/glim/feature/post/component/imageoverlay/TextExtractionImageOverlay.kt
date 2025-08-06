@@ -40,7 +40,7 @@ import coil.compose.AsyncImage
 import com.ssafy.glim.core.common.extensions.FILE_EXTENSION
 import com.ssafy.glim.core.common.extensions.FILE_PREFIX
 import com.ssafy.glim.core.common.extensions.toUri
-import com.ssafy.glim.feature.shorts.rememberCaptureActions
+import com.ssafy.glim.core.util.rememberCaptureActions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

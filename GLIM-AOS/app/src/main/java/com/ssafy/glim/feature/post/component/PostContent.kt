@@ -21,12 +21,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.util.CaptureActions
 import com.ssafy.glim.feature.post.PostState
 import com.ssafy.glim.feature.post.component.transformable.TransformableImage
 import com.ssafy.glim.feature.post.component.editabletext.EditableTextField
 import com.ssafy.glim.feature.post.component.transformable.ImageTransformStateHolder
 import com.ssafy.glim.feature.post.component.transformable.rememberImageTransformState
-import com.ssafy.glim.feature.shorts.CaptureActions
 
 @Composable
 fun PostContent(
