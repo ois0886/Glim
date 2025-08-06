@@ -237,6 +237,9 @@
     <string name="lockscreen_glim_title">잠금화면에서 Glim 바로보기</string>
     <string name="lockscreen_glim_description">잠금화면에서 스와이프하여 글림 쇼츠를 바로 볼 수 있습니다. 앱을 열지 않고도 영감을 받아보세요</string>
     <string name="settings_saved">설정이 저장되었습니다</string>
+    <string name="color_palette">컬러 팔레트</string>
+    <string name="post_font_example_text">가나다라</string>
+    <string name="new_text">새 텍스트</string>
 
     <!-- Glim 잔디밭 관련 -->
     <string name="glim_record_title">나의 글림 업로드 기록</string>

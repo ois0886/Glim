@@ -2,6 +2,8 @@ package com.ssafy.glim.feature.post
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.common.utils.CameraType
@@ -57,41 +59,57 @@ class PostViewModel @Inject constructor(
         }
 
     // 텍스트 포커스 관리
-    fun onTextFocusChanged(focused: Boolean) =
-        intent {
-            reduce { state.copy(isFocused = focused) }
+    fun updateTextFocusChanged(focused: Boolean) = intent {
+        if (focused) {
+            if (state.isDragging) return@intent
+            // 포커스될 때: 현재 위치를 원본으로 저장하고 상단으로 이동
+            reduce {
+                state.copy(
+                    isFocused = focused,
+                    originalTextPosition = state.textPosition,
+                    textPosition = TextPosition(offsetY = -400f)
+                )
+            }
+        } else {
+            // 포커스 해제시: 원본 위치로 복원
+            reduce {
+                state.copy(
+                    isFocused = focused,
+                    textPosition = state.originalTextPosition
+                )
+            }
         }
+    }
 
-    // 배경 클릭 시 포커스 해제
     fun onBackgroundClick() =
         intent {
             reduce { state.copy(isFocused = false) }
         }
 
-    fun updateBottomSheetState(
-        isOpen: Boolean,
-    ) =
-        intent {
-            reduce { state.copy(showBottomSheet = isOpen) }
-        }
+    fun updateBottomSheetState(isOpen: Boolean) = intent {
+        reduce { state.copy(showBottomSheet = isOpen) }
+    }
 
     // 드래그 시작
-    fun onDragStart() =
-        intent {
+    fun onDragStart() = intent {
+        if (state.recognizedText.text.isNotEmpty() && !state.isFocused) {
             reduce { state.copy(isDragging = true) }
         }
+    }
 
     // 드래그 종료
-    fun onDragEnd() =
-        intent {
-            reduce { state.copy(isDragging = false) }
-        }
+    fun onDragEnd() = intent {
+        reduce { state.copy(isDragging = false) }
+    }
 
     // 텍스트 위치 업데이트
     fun updateTextPosition(
         deltaX: Float,
         deltaY: Float,
     ) = intent {
+        if (state.recognizedText.text.isEmpty()) return@intent
+        if (state.isFocused) return@intent
+
         val currentPosition = state.textPosition
         reduce {
             state.copy(
@@ -263,5 +281,15 @@ class PostViewModel @Inject constructor(
 
     fun clearTextExtractionImage() = intent {
         reduce { state.copy(capturedTextExtractionImageUri = null) }
+    }
+
+    fun updateFontFamily(fontFamily: FontFamily) = intent {
+        val currentStyle = state.textStyle
+        reduce { state.copy(textStyle = currentStyle.copy(fontFamily = fontFamily)) }
+    }
+
+    fun updateTextColor(color: Color) = intent {
+        val currentStyle = state.textStyle
+        reduce { state.copy(textStyle = currentStyle.copy(textColor = color)) }
     }
 }

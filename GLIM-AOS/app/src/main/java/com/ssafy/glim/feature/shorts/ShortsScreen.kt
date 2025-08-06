@@ -2,7 +2,6 @@ package com.ssafy.glim.feature.shorts
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,8 +9,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,8 +31,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
@@ -171,34 +169,25 @@ fun QuoteItem(
                 }
         )
 
-        QuoteBookContent(
-            modifier = Modifier.align(Alignment.BottomEnd),
-            bookId = quote.bookId,
-            author = quote.author,
-            bookName = quote.bookTitle,
-            bookCover = quote.bookCoverUrl,
-            page = quote.page,
-        ) {
-            onBookInfoClick(quote.bookId)
-        }
-
         Column(
             modifier =
             Modifier
-                .fillMaxHeight()
-                .padding(vertical = 16.dp, horizontal = 8.dp)
-                .systemBarsPadding()
-                .align(Alignment.BottomEnd),
+                .fillMaxSize()
+                .padding(vertical = 16.dp, horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.End
         ) {
-            IconButton(onClick = { captureAction() }) {
+            IconButton(
+                modifier = Modifier.systemBarsPadding(),
+                onClick = { captureAction() }
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_download),
                     contentDescription = stringResource(R.string.download),
                 )
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(3f))
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -230,6 +219,19 @@ fun QuoteItem(
                     contentDescription = stringResource(R.string.share),
                 )
             }
+
+            Spacer(Modifier.weight(1f))
+
+            QuoteBookContent(
+                modifier = Modifier.fillMaxWidth(),
+                bookId = quote.bookId,
+                author = quote.author,
+                bookName = quote.bookTitle,
+                bookCover = quote.bookCoverUrl,
+                page = quote.page,
+            ) {
+                onBookInfoClick(quote.bookId)
+            }
         }
     }
 }
@@ -245,23 +247,14 @@ fun QuoteBookContent(
     onBookInfoClick: (Long?) -> Unit = {},
 ) {
     Surface(
-        modifier =
-        modifier
-            .background(
-                brush =
-                Brush.linearGradient(
-                    colors = listOf(Color(0x001C1B1F), Color(0xFF1C1B1F)),
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, Float.POSITIVE_INFINITY),
-                ),
-            ),
-        color = Color.Transparent,
+        modifier = modifier,
+        color = Color.DarkGray.copy(alpha = 0.8f),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Row(
             modifier =
             Modifier
                 .padding(16.dp)
-                .padding(end = 80.dp)
                 .clickable { onBookInfoClick(bookId) },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -283,6 +276,7 @@ fun QuoteBookContent(
                 Text(
                     text = author,
                     style = MaterialTheme.typography.labelMedium,
+                    maxLines = 1,
                     color = LightGray300,
                 )
                 Spacer(Modifier.height(4.dp))

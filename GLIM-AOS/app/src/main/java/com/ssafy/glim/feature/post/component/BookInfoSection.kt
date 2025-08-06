@@ -5,13 +5,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +32,7 @@ fun BookInfoSection(
 ) {
     if (book != null) {
         QuoteBookContent(
-            modifier = modifier,
+            modifier = modifier.padding(16.dp),
             bookId = book.bookId,
             author = book.author,
             bookName = book.title,
@@ -38,7 +41,13 @@ fun BookInfoSection(
             onBookInfoClick = onBookInfoClick
         )
     } else {
-        AddBookContent(modifier, onBookInfoClick)
+        Surface(
+            modifier = modifier.padding(16.dp),
+            color = Color.DarkGray.copy(alpha = 0.8f),
+            shape = RoundedCornerShape(8.dp),
+        ) {
+            AddBookContent(modifier, onBookInfoClick)
+        }
     }
 }
 
@@ -47,8 +56,7 @@ private fun AddBookContent(modifier: Modifier, onBookClick: (Long?) -> Unit) {
     Row(
         modifier =
         modifier
-            .padding(16.dp)
-            .padding(end = 80.dp)
+            .padding(8.dp).padding(end = 16.dp)
             .clickable { onBookClick(null) },
         verticalAlignment = Alignment.CenterVertically,
     ) {

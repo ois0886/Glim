@@ -14,6 +14,28 @@ val glimDefaultFont =
         Font(R.font.gowun_batang_bold, FontWeight.Bold),
     )
 
+val dohyeonFont =
+    FontFamily(
+        Font(R.font.dohyeon_regular, FontWeight.Normal),
+    )
+
+val yeonsungFont =
+    FontFamily(
+        Font(R.font.yeonsung_regular, FontWeight.Normal),
+    )
+
+val nanumBrushScriptFont =
+    FontFamily(
+        Font(R.font.nanum_brush_script_regular, FontWeight.Normal)
+    )
+
+enum class FONT(val fontName: String, val fontFamily: FontFamily) {
+    GOWUN_BATANG("default", glimDefaultFont),
+    DOHYEON("dohyeon", dohyeonFont),
+    YEONSUNG("yeonsung", yeonsungFont),
+    NANUM_BRUSH_SCRIPT("nanum_brush_script", nanumBrushScriptFont)
+}
+
 // Set of Material typography styles to start with
 val Typography =
     Typography(
