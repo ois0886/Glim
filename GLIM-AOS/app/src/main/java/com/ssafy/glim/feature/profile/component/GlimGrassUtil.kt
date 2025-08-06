@@ -46,7 +46,9 @@ fun createMonthLabels(grid: List<List<LocalDate?>>): List<String> =
                 val currentMonth = months.first()
                 val prevMonth = if (i > 0) {
                     grid[i - 1].filterNotNull().lastOrNull()?.monthValue
-                } else null
+                } else {
+                    null
+                }
 
                 if (currentMonth != prevMonth) currentMonth.toString() else ""
             }

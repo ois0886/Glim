@@ -136,7 +136,7 @@ private val sampleQuotes = listOf(
     ),
     QuoteSummary(
         quoteId = 3,
-        content = "", // 빈 글귀 테스트
+        content = "",
         bookTitle = "빈 글귀가 있는 책",
         page = "78",
         views = 12,
@@ -146,8 +146,8 @@ private val sampleQuotes = listOf(
     QuoteSummary(
         quoteId = 4,
         content = "지혜는 경험의 딸이다.",
-        bookTitle = "", // 빈 책 제목 테스트
-        page = "0", // 페이지 정보 없음
+        bookTitle = "",
+        page = "0",
         views = 890,
         likes = 67,
         isLiked = false

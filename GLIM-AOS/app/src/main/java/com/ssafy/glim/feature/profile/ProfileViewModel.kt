@@ -112,7 +112,6 @@ class ProfileViewModel @Inject constructor(
                         )
                     }
                 }
-
             } catch (_: Exception) {
                 reduce {
                     state.copy(
