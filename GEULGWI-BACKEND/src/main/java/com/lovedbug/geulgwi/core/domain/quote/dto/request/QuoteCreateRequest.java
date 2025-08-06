@@ -33,6 +33,7 @@ public class QuoteCreateRequest {
             .bookTitle(book.getTitle())
             .page(quoteData.getPage())
             .book(book)
+            .author(book.getAuthor())
             .imagePath(imageMetaData.imagePath())
             .imageName(imageMetaData.imageName())
             .build();

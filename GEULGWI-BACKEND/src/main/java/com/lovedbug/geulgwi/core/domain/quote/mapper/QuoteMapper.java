@@ -40,11 +40,11 @@ public class QuoteMapper {
             .quoteId(quote.getQuoteId())
             .quoteImageName(quote.getImageName())
             .page(quote.getPage())
-            .bookId(quote.getBook().getBookId())
-            .bookTitle(quote.getBook().getTitle())
-            .author(quote.getBook().getAuthor())
-            .publisher(quote.getBook().getPublisher())
-            .bookCoverUrl(quote.getBook().getCoverUrl())
+            .bookId(0L)
+            .bookTitle(quote.getBookTitle())
+            .author(quote.getAuthor())
+            .publisher("")
+            .bookCoverUrl("")
             .build();
     }
 
