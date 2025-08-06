@@ -7,7 +7,7 @@ import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
-import com.lovedbug.geulgwi.core.domain.quote.QuoteRepository;
+import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.util.List;
 import static io.restassured.RestAssured.given;
@@ -25,6 +26,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
+@ActiveProfiles("test")
 public class AdminSearchApiDocsTest extends RestDocsTestSupport{
 
     @Autowired
@@ -140,7 +142,7 @@ public class AdminSearchApiDocsTest extends RestDocsTestSupport{
                 )
             ))
             .when()
-            .get("/api/v1/admin/search/book")
+            .get("/api/v1/admin/search-keywords/books")
             .then().log().all()
             .statusCode(200);
     }
@@ -170,7 +172,7 @@ public class AdminSearchApiDocsTest extends RestDocsTestSupport{
                 )
             ))
             .when()
-            .get("/api/v1/admin/search/quote")
+            .get("/api/v1/admin/search-keywords/quotes")
             .then().log().all()
             .statusCode(200);
     }

@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/admin/search")
+@RequestMapping("/api/v1/admin/search-keywords")
 @RequiredArgsConstructor
 public class AdminSearchController {
 
     private final AdminSearchService adminSearchService;
 
-    @GetMapping("/book")
+    @GetMapping("/books")
     public ResponseEntity<List<SearchBookResponse>> searchBooks(
         @RequestParam("keyword") String keyword,
         @PageableDefault(size = 10, sort = "views", direction = Sort.Direction.DESC) Pageable pageable
@@ -34,7 +34,7 @@ public class AdminSearchController {
         );
     }
 
-    @GetMapping("/quote")
+    @GetMapping("/quotes")
     public ResponseEntity<List<SearchQuoteResponse>> searchQuotes(
         @RequestParam("keyword") String keyword,
         @PageableDefault(size = 10, sort = "views", direction = Sort.Direction.DESC) Pageable pageable
