@@ -65,8 +65,8 @@ class ImageTransformStateHolder(
             containerSize(),
             imageSize()
         )
-        setInitialScale(newInitialScale)
-        setScale(newInitialScale)
+//        setInitialScale(newInitialScale)
+//        setScale(newInitialScale)
         setOffset(Offset.Zero)
     }
 }

@@ -71,11 +71,7 @@ fun PostContent(
                 focusManager.clearFocus()
             }
             .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(Color(0x881C1B1F), Color(0xFF1C1B1F)),
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, Float.POSITIVE_INFINITY)
-                )
+                Color.Black
             )
     ) {
         if (state.showExitDialog) {
