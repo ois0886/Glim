@@ -39,9 +39,12 @@ internal fun ProfileHeader(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Spacer(Modifier.height(16.dp))
+
         SubcomposeAsyncImage(
             model =
             ImageRequest.Builder(LocalContext.current)

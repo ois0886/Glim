@@ -1,7 +1,9 @@
 package com.ssafy.glim.feature.myglims
 
+import com.ssafy.glim.core.domain.model.QuoteSummary
+
 data class MyGlimsUiState(
-    val myGlims: List<GlimItem> = emptyList(),
+    val myGlims: List<QuoteSummary> = emptyList(),
     val currentListType: MyGlimsType = MyGlimsType.LIKED,
     val errorMessage: String? = null,
     val isLoading: Boolean = false,
@@ -10,15 +12,6 @@ data class MyGlimsUiState(
 sealed interface MyGlimsSideEffect {
     data class ShowToast(val message: String) : MyGlimsSideEffect
 }
-
-data class GlimItem(
-    val id: Long,
-    val content: String,
-    val author: String,
-    val likeCount: Int,
-    val isLiked: Boolean = false,
-    val createdAt: String,
-)
 
 enum class MyGlimsType(val displayName: String) {
     LIKED("좋아요 한 글귀"),

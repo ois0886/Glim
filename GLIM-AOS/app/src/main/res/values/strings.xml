@@ -20,6 +20,7 @@
     <string name="loading">로딩 중…</string>
     <string name="confirm">확인</string>
     <string name="cancel">취소</string>
+    <string name="error_number">-</string>
     <string name="exit">나가기</string>
     <string name="exit_dialog_title">종료하시겠습니까?</string>
     <string name="exit_dialog_description">화면 이탈 시 생성중인 글귀 이미지는\n저장되지 않습니다.</string>
@@ -137,6 +138,7 @@
     <string name="views">조회수</string>
     <string name="saved">저장했습니다!</string>
     <string name="i_love_it">좋아요!</string>
+    <string name="like_error_message">좋아요에서 에러 발생</string>
     <string name="like_added_message">좋아요를 눌렀습니다.</string>
     <string name="like_removed_message">좋아요를 취소했습니다.</string>
     <string name="time_format_date">(%1$s)</string>
@@ -238,7 +240,7 @@
 
     <!-- Glim 잔디밭 관련 -->
     <string name="glim_record_title">나의 글림 업로드 기록</string>
-    <string name="glim_record_empty_title">아직 업로드한 글림이 없습니다</string>
+    <string name="glim_record_empty_title">"아직 업로드한 글림이 없습니다! \n글림을 업로드하고 나만의 잔디밭을 만들어요!"</string>
     <string name="glim_record_max_streak">최대 연속 업로드: %d일</string>
     <string name="glim_record_current_streak">현재 연속 업로드: %d일</string>
 
@@ -254,4 +256,22 @@
     <string name="week_fri">금</string>
     <string name="week_sat">토</string>
     <string name="week_sun">일</string>
+
+    <!-- MyGlims 화면 관련 -->
+    <string name="empty_liked_quotes">좋아요한 글귀가 없습니다</string>
+    <string name="empty_my_quotes">작성한 글귀가 없습니다</string>
+    <string name="empty_quotes">글귀가 없습니다</string>
+    <string name="empty_quotes_description">새로운 글귀를 추가해보세요!</string>
+
+    <!-- 글귀 아이템 관련 -->
+    <string name="no_quote_content">글귀 내용이 없습니다</string>
+    <string name="unknown_book_title">제목 없는 책</string>
+    <string name="page_format">%d페이지</string>
+
+    <!-- 아이콘 설명 -->
+    <string name="likes">좋아요</string>
+
+    <!-- 일반적인 텍스트 -->
+    <string name="error_occurred">오류가 발생했습니다</string>
+    <string name="retry">다시 시도</string>
 </resources>

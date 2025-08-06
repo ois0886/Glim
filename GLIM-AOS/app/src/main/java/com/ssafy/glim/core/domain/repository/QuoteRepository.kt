@@ -2,11 +2,9 @@ package com.ssafy.glim.core.domain.repository
 
 import android.graphics.Bitmap
 import com.ssafy.glim.core.domain.model.Book
-import com.ssafy.glim.core.domain.model.LikedQuote
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.domain.model.QuoteSearchResult
 import com.ssafy.glim.core.domain.model.QuoteSummary
-import com.ssafy.glim.core.domain.model.UploadQuote
 
 interface QuoteRepository {
 
@@ -45,7 +43,7 @@ interface QuoteRepository {
 
     suspend fun unLikeQuote(quoteId: Long)
 
-    suspend fun getMyUploadQuotes(): List<UploadQuote>
+    suspend fun getMyUploadQuotes(): List<QuoteSummary>
 
-    suspend fun getMyLikedQuotes(): List<LikedQuote>
+    suspend fun getMyLikedQuotes(): List<QuoteSummary>
 }

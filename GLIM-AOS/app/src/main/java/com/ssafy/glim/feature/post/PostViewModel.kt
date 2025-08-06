@@ -8,7 +8,7 @@ import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
 import com.ssafy.glim.core.navigation.Navigator
-import com.ssafy.glim.feature.shorts.CaptureActions
+import com.ssafy.glim.core.util.CaptureActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.Container

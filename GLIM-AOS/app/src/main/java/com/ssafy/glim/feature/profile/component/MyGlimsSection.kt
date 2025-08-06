@@ -24,6 +24,7 @@ internal fun MyGlimsSection(
     publishedGlimCount: Int,
     likedGlimCount: Int,
     modifier: Modifier = Modifier,
+    error: Boolean = false
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -33,12 +34,14 @@ internal fun MyGlimsSection(
             count = publishedGlimCount,
             label = stringResource(R.string.profile_recent_articles),
             onClick = navigateToGlimUploadList,
+            error = error,
         )
 
         MyGlimsItem(
             count = likedGlimCount,
             label = stringResource(R.string.profile_liked_articles),
             onClick = navigateToGlimLikedList,
+            error = error,
         )
     }
 }
@@ -48,6 +51,7 @@ private fun MyGlimsItem(
     count: Int,
     label: String,
     onClick: () -> Unit,
+    error: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -55,7 +59,7 @@ private fun MyGlimsItem(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = count.toString(),
+            text = if (error) stringResource(R.string.error_number) else count.toString(),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
@@ -78,6 +82,7 @@ private fun PreviewMyGlimsSection() {
             navigateToGlimLikedList = {},
             publishedGlimCount = 24,
             likedGlimCount = 8,
+            error = false
         )
     }
 }

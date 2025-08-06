@@ -1,43 +1,37 @@
 package com.ssafy.glim.feature.myglims
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ssafy.glim.R
+import com.ssafy.glim.core.domain.model.QuoteSummary
+import com.ssafy.glim.core.ui.GlimTopBar
+import com.ssafy.glim.feature.myglims.component.MyGlimsItem
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -66,7 +60,6 @@ internal fun MyGlimsRoute(
         uiState = uiState,
         listType = listType,
         onBackClick = popBackStack,
-        onLikeClick = { glimId -> viewModel.toggleLike(glimId) },
         onTabChange = { newType -> viewModel.loadMyGlims(newType) }
     )
 }
@@ -77,7 +70,6 @@ private fun MyGlimsScreen(
     uiState: MyGlimsUiState,
     listType: MyGlimsType,
     onBackClick: () -> Unit,
-    onLikeClick: (Long) -> Unit,
     onTabChange: (MyGlimsType) -> Unit
 ) {
     Column(
@@ -85,31 +77,12 @@ private fun MyGlimsScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // 상단 앱바
-        TopAppBar(
-            title = {
-                Text(
-                    text = listType.displayName,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "뒤로가기",
-                        tint = Color.Black
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White
-            )
+        GlimTopBar(
+            title = listType.displayName,
+            showBack = true,
+            onBack = onBackClick,
         )
 
-        // 로딩 상태 처리
         if (uiState.isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -117,8 +90,10 @@ private fun MyGlimsScreen(
             ) {
                 CircularProgressIndicator()
             }
+        } else if (uiState.myGlims.isEmpty()) {
+            // 빈 상태 처리
+            EmptyStateContent(listType = listType)
         } else {
-            // 글귀 리스트
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
@@ -126,12 +101,12 @@ private fun MyGlimsScreen(
             ) {
                 items(
                     count = uiState.myGlims.size,
-                    key = { index -> uiState.myGlims[index].id }
+                    key = { index -> uiState.myGlims[index].quoteId }
                 ) { index ->
-                    val glim = uiState.myGlims[index]
+                    val quote = uiState.myGlims[index]
                     MyGlimsItem(
-                        glim = glim,
-                        onLikeClick = { onLikeClick(glim.id) }
+                        quote = quote,
+                        onClick = { /* 상세 화면으로 이동 */ }
                     )
                 }
             }
@@ -139,84 +114,189 @@ private fun MyGlimsScreen(
     }
 }
 
+// Preview용 가짜 데이터
+private val sampleQuotes = listOf(
+    QuoteSummary(
+        quoteId = 1,
+        content = "성공은 최종 목적지가 아니라, 여행 그 자체입니다. 실패 역시 치명적이지 않습니다. 중요한 것은 계속해서 나아갈 용기를 갖는 것입니다.",
+        bookTitle = "성공하는 사람들의 7가지 습관",
+        page = "156",
+        views = 1234,
+        likes = 89,
+        isLiked = true
+    ),
+    QuoteSummary(
+        quoteId = 2,
+        content = "삶이 있는 한 희망은 있다.",
+        bookTitle = "희망의 철학",
+        page = "23",
+        views = 567,
+        likes = 45,
+        isLiked = false
+    ),
+    QuoteSummary(
+        quoteId = 3,
+        content = "",
+        bookTitle = "빈 글귀가 있는 책",
+        page = "78",
+        views = 12,
+        likes = 3,
+        isLiked = true
+    ),
+    QuoteSummary(
+        quoteId = 4,
+        content = "지혜는 경험의 딸이다.",
+        bookTitle = "",
+        page = "0",
+        views = 890,
+        likes = 67,
+        isLiked = false
+    )
+)
+
+// Preview Composables
+@Preview(showBackground = true, name = "글귀 목록 (정상 상태)")
 @Composable
-private fun MyGlimsItem(
-    glim: GlimItem,
-    onLikeClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { /* 상세 화면으로 이동 */ },
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
+private fun MyGlimsScreenPreview() {
+    MaterialTheme {
+        MyGlimsScreen(
+            uiState = MyGlimsUiState(
+                isLoading = false,
+                myGlims = sampleQuotes
+            ),
+            listType = MyGlimsType.LIKED,
+            onBackClick = {},
+            onTabChange = {}
         )
+    }
+}
+
+@Preview(showBackground = true, name = "로딩 상태")
+@Composable
+private fun MyGlimsScreenLoadingPreview() {
+    MaterialTheme {
+        MyGlimsScreen(
+            uiState = MyGlimsUiState(
+                isLoading = true,
+                myGlims = emptyList()
+            ),
+            listType = MyGlimsType.LIKED,
+            onBackClick = {},
+            onTabChange = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "빈 상태 (좋아요)")
+@Composable
+private fun MyGlimsScreenEmptyLikedPreview() {
+    MaterialTheme {
+        MyGlimsScreen(
+            uiState = MyGlimsUiState(
+                isLoading = false,
+                myGlims = emptyList()
+            ),
+            listType = MyGlimsType.LIKED,
+            onBackClick = {},
+            onTabChange = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "빈 상태 (내 글귀)")
+@Composable
+private fun MyGlimsScreenEmptyUploadedPreview() {
+    MaterialTheme {
+        MyGlimsScreen(
+            uiState = MyGlimsUiState(
+                isLoading = false,
+                myGlims = emptyList()
+            ),
+            listType = MyGlimsType.UPLOADED,
+            onBackClick = {},
+            onTabChange = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "글귀 아이템 (정상)")
+@Composable
+private fun MyGlimsItemPreview() {
+    MaterialTheme {
+        MyGlimsItem(
+            quote = sampleQuotes[0],
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "글귀 아이템 (빈 내용)")
+@Composable
+private fun MyGlimsItemEmptyContentPreview() {
+    MaterialTheme {
+        MyGlimsItem(
+            quote = sampleQuotes[2],
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "글귀 아이템 (빈 책 제목)")
+@Composable
+private fun MyGlimsItemEmptyTitlePreview() {
+    MaterialTheme {
+        MyGlimsItem(
+            quote = sampleQuotes[3],
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "빈 상태 컴포넌트")
+@Composable
+private fun EmptyStateContentPreview() {
+    MaterialTheme {
+        EmptyStateContent(listType = MyGlimsType.LIKED)
+    }
+}
+
+@Composable
+private fun EmptyStateContent(listType: MyGlimsType) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = glim.content,
-                fontSize = 16.sp,
-                color = Color.Black,
-                lineHeight = 24.sp,
-                modifier = Modifier.padding(bottom = 16.dp)
+            Icon(
+                imageVector = Icons.Default.Book,
+                contentDescription = null,
+                modifier = Modifier.size(64.dp),
+                tint = Color.Gray
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(
-                                Color.Blue,
-                                RoundedCornerShape(4.dp)
-                            )
-                    )
 
-                    Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
-                        text = glim.author,
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
-                }
+            Text(
+                text = when (listType) {
+                    MyGlimsType.LIKED -> stringResource(R.string.empty_liked_quotes)
+                    MyGlimsType.UPLOADED -> stringResource(R.string.empty_my_quotes)
+                },
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Gray,
+                textAlign = TextAlign.Center
+            )
 
-                // 좋아요 버튼
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(
-                        onClick = onLikeClick,
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            imageVector = if (glim.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = "좋아요",
-                            tint = if (glim.isLiked) Color.Red else Color.Gray,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
+            Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(
-                        text = glim.likeCount.toString(),
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
-                }
-            }
+            Text(
+                text = stringResource(R.string.empty_quotes_description),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
