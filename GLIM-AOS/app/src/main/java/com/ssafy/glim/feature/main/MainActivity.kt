@@ -52,9 +52,7 @@ class MainActivity : ComponentActivity() {
     private var isLoading by mutableStateOf(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        android.util.Log.d("Splash", "스플래쉬 시작")
         val splashScreen = installSplashScreen()
-        android.util.Log.d("Splash", "스플래쉬 설치됨")
         super.onCreate(savedInstanceState)
 
         if (PermissionUtil.alertPermissionCheck(this)) {
@@ -92,15 +90,7 @@ class MainActivity : ComponentActivity() {
 
                         // 딥링크 처리
                         LaunchedEffect(initialRoute) {
-                            if (initialRoute == "book") {
-                                val isbn = intent.getStringExtra("isbn") ?: ""
-                                navigator.navController.navigate(Route.BookDetail(isbn)) {
-                                    popUpTo(navigator.startDestination) {
-                                        inclusive = true
-                                    }
-                                    launchSingleTop = true
-                                }
-                            } else if (initialRoute == "glim") {
+                           if (destination == BottomTabRoute.Home && initialRoute == "glim") {
                                 val quoteId = intent.getLongExtra("quote_id", -1L)
                                 navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
                             }
@@ -120,7 +110,6 @@ class MainActivity : ComponentActivity() {
         Thread {
             try {
                 startLockService()
-                Thread.sleep(1500)
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {

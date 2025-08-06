@@ -6,8 +6,11 @@ import android.content.Intent
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.ssafy.glim.feature.lock.LockScreenActivity
+import jakarta.inject.Inject
 
-object ScreenReceiver : BroadcastReceiver() {
+
+class ScreenReceiver @Inject constructor(
+) : BroadcastReceiver() {
     override fun onReceive(
         context: Context,
         intent: Intent,
