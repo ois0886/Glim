@@ -2,7 +2,6 @@ package com.ssafy.glim.feature.shorts
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,8 +31,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
@@ -46,7 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.wear.compose.material.MaterialTheme.colors
 import coil.compose.AsyncImage
 import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
@@ -118,9 +113,9 @@ internal fun ShortsRoute(
         VerticalPager(
             state = pagerState,
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding.excludeSystemBars())
+            Modifier
+                .fillMaxSize()
+                .padding(padding.excludeSystemBars())
         ) { page ->
             val quote = state.quotes[page]
 
@@ -175,15 +170,16 @@ fun QuoteItem(
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 16.dp, horizontal = 8.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(vertical = 16.dp, horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.End
         ) {
             IconButton(
                 modifier = Modifier.systemBarsPadding(),
-                onClick = { captureAction() }) {
+                onClick = { captureAction() }
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_download),
                     contentDescription = stringResource(R.string.download),
@@ -198,13 +194,13 @@ fun QuoteItem(
                 IconButton(onClick = onLikeClick) {
                     Icon(
                         painter =
-                            painterResource(
-                                if (quote.isLike) {
-                                    R.drawable.ic_favorite_fill
-                                } else {
-                                    R.drawable.ic_favorite
-                                },
-                            ),
+                        painterResource(
+                            if (quote.isLike) {
+                                R.drawable.ic_favorite_fill
+                            } else {
+                                R.drawable.ic_favorite
+                            },
+                        ),
                         contentDescription = stringResource(R.string.like),
                         tint = if (quote.isLike) Color.Red else Color.White,
                     )
@@ -256,9 +252,9 @@ fun QuoteBookContent(
     ) {
         Row(
             modifier =
-                Modifier
-                    .padding(16.dp)
-                    .clickable { onBookInfoClick(bookId) },
+            Modifier
+                .padding(16.dp)
+                .clickable { onBookInfoClick(bookId) },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

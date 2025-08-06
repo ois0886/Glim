@@ -2,7 +2,6 @@ package com.ssafy.glim.feature.post.component.editabletext
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
@@ -20,13 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.feature.post.TextStyleState
-import com.ssafy.glim.ui.theme.glimDefaultFont
 import kotlin.math.roundToInt
 
 @Composable
@@ -54,7 +51,7 @@ fun EditableTextField(
     }
 
     LaunchedEffect(isFocused) {
-        if(isFocused) {
+        if (isFocused) {
             focusRequester.requestFocus()
         }
     }
@@ -69,15 +66,15 @@ fun EditableTextField(
             value = text,
             onValueChange = onTextChange,
             textStyle =
-                MaterialTheme.typography.bodyMedium.copy(
-                    textAlign = TextAlign.Center,
-                    lineHeight = 40.sp,
-                    fontSize = textStyle.fontSizeUnit,
-                    fontWeight = textStyle.fontWeight,
-                    fontStyle = textStyle.fontStyle,
-                    fontFamily = textStyle.fontFamily,
-                    color = textStyle.textColor
-                ),
+            MaterialTheme.typography.bodyMedium.copy(
+                textAlign = TextAlign.Center,
+                lineHeight = 40.sp,
+                fontSize = textStyle.fontSizeUnit,
+                fontWeight = textStyle.fontWeight,
+                fontStyle = textStyle.fontStyle,
+                fontFamily = textStyle.fontFamily,
+                color = textStyle.textColor
+            ),
             readOnly = isDragging,
             cursorBrush = SolidColor(Color.White),
             modifier = modifier
@@ -100,5 +97,4 @@ fun EditableTextField(
                 },
         )
     }
-
 }

@@ -61,7 +61,7 @@ class PostViewModel @Inject constructor(
     // 텍스트 포커스 관리
     fun updateTextFocusChanged(focused: Boolean) = intent {
         if (focused) {
-            if(state.isDragging) return@intent
+            if (state.isDragging) return@intent
             // 포커스될 때: 현재 위치를 원본으로 저장하고 상단으로 이동
             reduce {
                 state.copy(
@@ -107,17 +107,17 @@ class PostViewModel @Inject constructor(
         deltaX: Float,
         deltaY: Float,
     ) = intent {
-        if(state.recognizedText.text.isEmpty()) return@intent
-        if(state.isFocused) return@intent
+        if (state.recognizedText.text.isEmpty()) return@intent
+        if (state.isFocused) return@intent
 
         val currentPosition = state.textPosition
         reduce {
             state.copy(
                 textPosition =
-                    currentPosition.copy(
-                        offsetX = currentPosition.offsetX + deltaX,
-                        offsetY = currentPosition.offsetY + deltaY,
-                    ),
+                currentPosition.copy(
+                    offsetX = currentPosition.offsetX + deltaX,
+                    offsetY = currentPosition.offsetY + deltaY,
+                ),
             )
         }
     }

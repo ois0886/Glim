@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.post.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,10 +58,10 @@ fun ActionButtons(
 
     Column(
         modifier =
-            modifier
-                .fillMaxHeight()
-                .padding(4.dp)
-                .systemBarsPadding(),
+        modifier
+            .fillMaxHeight()
+            .padding(4.dp)
+            .systemBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End,
     ) {
@@ -199,7 +198,6 @@ fun IconButtonWithPopupMenu(
                     disabledLeadingIconColor = Color.Gray,
                     disabledTrailingIconColor = Color.Gray,
                 )
-
             )
         }
     }

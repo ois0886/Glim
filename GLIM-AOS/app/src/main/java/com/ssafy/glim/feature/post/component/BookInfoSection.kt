@@ -56,7 +56,7 @@ private fun AddBookContent(modifier: Modifier, onBookClick: (Long?) -> Unit) {
     Row(
         modifier =
         modifier
-            .padding(8.dp).padding(end=16.dp)
+            .padding(8.dp).padding(end = 16.dp)
             .clickable { onBookClick(null) },
         verticalAlignment = Alignment.CenterVertically,
     ) {
