@@ -11,7 +11,7 @@ import coil.Coil.imageLoader
 import coil.request.ImageRequest
 import com.ssafy.glim.R
 
-suspend fun saveImageToGallery(context : Context, imageUrl: String) {
+suspend fun saveImageToGallery(context: Context, imageUrl: String) {
     val request = ImageRequest.Builder(context)
         .data(imageUrl)
         .allowHardware(false)

@@ -52,7 +52,7 @@ import com.ssafy.glim.feature.search.SearchFilter
 
 enum class SearchTab(val displayName: String) {
     BOOKS("도서"),
-    QUOTES("글귀"),
+    QUOTES("글림"),
 }
 
 @Composable

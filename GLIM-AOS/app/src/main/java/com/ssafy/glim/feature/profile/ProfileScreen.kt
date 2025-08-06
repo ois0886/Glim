@@ -124,7 +124,8 @@ private fun ProfileScreen(
             item {
                 ProfileHeader(
                     profileImageUrl = state.profileImageUrl,
-                    userName = state.userName
+                    userName = state.userName,
+                    error = state.error
                 )
             }
 
