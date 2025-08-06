@@ -67,6 +67,8 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers:1.19.0'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'net.datafaker:datafaker:2.4.4'
 }
 
 jacoco {
