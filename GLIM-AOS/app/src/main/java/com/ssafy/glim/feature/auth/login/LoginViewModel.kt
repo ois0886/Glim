@@ -10,7 +10,6 @@ import com.ssafy.glim.core.domain.usecase.auth.LoginUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
-import com.ssafy.glim.feature.auth.login.component.SocialProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -114,12 +113,6 @@ internal class LoginViewModel @Inject constructor(
             navigator.navigate(Route.SignUp)
         }
 
-    fun navigateToSignUpOnGuest() =
-        intent {
-            // TODO: 비회원으로 입장하기 기능 구현
-            postSideEffect(LoginSideEffect.ShowError(R.string.not_ready_function))
-        }
-
     fun navigateToHome() =
         intent {
             navigator.navigateAndClearBackStack(BottomTabRoute.Home)
@@ -131,21 +124,4 @@ internal class LoginViewModel @Inject constructor(
             postSideEffect(LoginSideEffect.ShowError(R.string.not_ready_function))
         }
 
-    fun navigateToSocialLogin(socialProvider: SocialProvider) =
-        intent {
-            // TODO: 소셜 로그인 구현
-            when (socialProvider) {
-                SocialProvider.GOOGLE -> {
-                    postSideEffect(LoginSideEffect.ShowError(R.string.social_login_message))
-                }
-
-                SocialProvider.KAKAO -> {
-                    postSideEffect(LoginSideEffect.ShowError(R.string.social_login_message))
-                }
-
-                SocialProvider.NAVER -> {
-                    postSideEffect(LoginSideEffect.ShowError(R.string.social_login_message))
-                }
-            }
-        }
 }
