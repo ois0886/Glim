@@ -22,6 +22,6 @@ public class AdminQuoteController {
     @DeleteMapping("/{quoteId}")
     public ResponseEntity<Void> deleteQuote(@PathVariable Long quoteId) {
         adminQuoteService.deleteQuote(quoteId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

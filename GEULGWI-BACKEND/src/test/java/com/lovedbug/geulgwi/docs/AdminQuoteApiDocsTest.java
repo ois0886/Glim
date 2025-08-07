@@ -132,6 +132,6 @@ public class AdminQuoteApiDocsTest extends RestDocsTestSupport {
             .when()
             .delete("/api/v1/admin/quotes/{quoteId}", quoteId)
             .then().log().all()
-            .statusCode(204);
+            .statusCode(200);
     }
 }
