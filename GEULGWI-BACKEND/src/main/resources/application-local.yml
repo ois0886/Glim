@@ -3,6 +3,13 @@ spring:
     url: jdbc:postgresql://localhost:5432/geulgwi
     username: postgres
     password: root
+    hikari:
+      maximum-pool-size: 80
+      minimum-idle: 40
+      connection-timeout: 5000
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      leak-detection-threshold: 3000
 
   flyway:
     baseline-on-migrate: true
