@@ -37,16 +37,13 @@ public interface MainCurationRepository extends JpaRepository<MainCuration, Long
             ci.title AS title,
             ci.description AS description,
             q.quote_id AS quoteId,
-            b.book_id AS bookId,
-            b.title AS bookTitle,
-            b.author AS author,
-            b.publisher AS publisher,
+            q.book_title AS bookTitle,
+            q.author AS author,
             q.image_name AS quoteImageName
         FROM
             curation_item ci
         JOIN curation_item_quote cq ON ci.curation_item_id = cq.curation_item_id
         JOIN quote q ON cq.quote_id = q.quote_id
-        JOIN book b ON q.book_id = b.book_id
         WHERE
             ci.main_curation_id = :curationId
         """, nativeQuery = true)
