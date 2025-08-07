@@ -15,7 +15,7 @@ import java.io.IOException;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("${firebase.service-account.path}")
+    @Value("${firebase.service-account.path:firebase/service-account.json}")
     private String SERVICE_ACCOUNT_PATH;
 
     @Bean
