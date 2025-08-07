@@ -34,7 +34,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 // ✅ [수정됨] API 파일에서 올바른 함수들을 import 합니다.
-import { getCurations, deleteCuration as apiDeleteCuration, ApiCuration } from "@/lib/api/curations";
+import { getCurations, deleteCuration as apiDeleteCuration, updateCurationOrder, ApiCuration } from "@/lib/api/curations";
 
 // 프론트엔드에서 사용할 큐레이션 데이터 타입
 interface CurationMetadata {
@@ -220,20 +220,40 @@ export function CurationList({ onNewCuration, onEditCuration }: CurationListProp
     })
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      setCurations((prevCurations) => {
-        const oldIndex = prevCurations.findIndex((curation) => curation.id === active.id);
-        const newIndex = prevCurations.findIndex((curation) => curation.id === over.id);
-        const newOrder = arrayMove(prevCurations, oldIndex, newIndex);
-        
-        console.log("New order:", newOrder.map(c => c.id));
-        // TODO: 백엔드 순서 변경 API 연동 필요
+      const originalCurations = [...curations];
+      const oldIndex = originalCurations.findIndex((c) => c.id === active.id);
+      const newIndex = originalCurations.findIndex((c) => c.id === over.id);
+      
+      if (oldIndex === -1 || newIndex === -1) return;
 
-        return newOrder;
-      });
+      const newOrder = arrayMove(originalCurations, oldIndex, newIndex);
+
+      // UI를 먼저 업데이트하여 사용자 경험을 개선합니다 (Optimistic Update).
+      setCurations(newOrder);
+
+      const orderedIds = newOrder.map(c => parseInt(c.id, 10));
+
+      try {
+        // 백엔드에 변경된 순서를 전송합니다.
+        await updateCurationOrder(orderedIds);
+        toast({
+          title: "✅ 순서 저장 완료",
+          description: "큐레이션 순서가 성공적으로 저장되었습니다.",
+        });
+      } catch (error) {
+        console.error("Failed to update curation order:", error);
+        toast({
+          title: "❌ 순서 저장 실패",
+          description: "순서 저장 중 오류가 발생했습니다. 원래 순서로 되돌립니다.",
+          variant: "destructive",
+        });
+        // 에러 발생 시, 원래 순서로 되돌립니다.
+        setCurations(originalCurations);
+      }
     }
   };
 

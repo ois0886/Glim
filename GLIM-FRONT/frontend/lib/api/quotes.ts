@@ -24,15 +24,15 @@ export const getQuotes = async (page: number, size: number, sort: string): Promi
 };
 
 /**
- * 특정 글귀(게시물)를 삭제하는 API
- * (DELETE /api/v1/quotes/{quoteId}) - 백엔드에 이 API가 있는지 확인 필요!
+ * [관리자] 특정 글귀(게시물)를 삭제하는 API
+ * (DELETE /api/v1/admin/quotes/{quoteId})
  * @param quoteId 삭제할 글귀의 ID
  */
 export const deleteQuote = async (quoteId: number): Promise<void> => {
     try {
-        await axiosInstance.delete(`/api/v1/quotes/${quoteId}`);
+        await axiosInstance.delete(`/api/v1/admin/quotes/${quoteId}`);
     } catch (error) {
-        console.error(`글귀(ID: ${quoteId}) 삭제 API 호출 실패:`, error);
+        console.error(`[관리자] 글귀(ID: ${quoteId}) 삭제 API 호출 실패:`, error);
         throw error;
     }
 };

@@ -70,6 +70,12 @@ export const updateCuration = async (itemId: string, payload: CurationMutationPa
   await axiosInstance.put(`/api/v1/admin/curations/items/${itemId}`, payload);
 };
 
+// 큐레이션 순서 변경
+export const updateCurationOrder = async (orderedIds: number[]): Promise<void> => {
+  // 메인 큐레이션 목록의 순서를 업데이트합니다.
+  await axiosInstance.put('/api/v1/admin/curations/order', { orderedIds });
+};
+
 // 큐레이션 삭제
 export const deleteCuration = async (itemId: number): Promise<void> => {
   await axiosInstance.delete(`/api/v1/admin/curations/items/${itemId}`);

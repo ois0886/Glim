@@ -1,32 +1,66 @@
-// /lib/axiosInstance.ts
+import React, { useState, useEffect } from 'react';
+import { getCurations, ApiCuration } from './path/to/your/curation'; // 파일 경로에 맞게 수정
 
-import axios from 'axios';
+const CurationComponent = () => {
+  const [curations, setCurations] = useState<ApiCuration[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-const axiosInstance = axios.create({
-  // .env.local 파일에서 백엔드 API 서버의 기본 주소를 읽어옵니다.
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 5000, // 5초 이상 응답이 없으면 요청 실패 처리
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+  useEffect(() => {
+    const fetchAndSortCurations = async () => {
+      try {
+        // 1. API를 통해 서버로부터 큐레이션 목록을 받습니다.
+        const fetchedCurations = await getCurations();
 
-// 요청 인터셉터: 모든 요청이 보내지기 전에 이 코드를 거칩니다.
-axiosInstance.interceptors.request.use(
-  (config) => {
-    // 브라우저의 localStorage에서 'accessToken'을 가져옵니다.
-    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+        // 2. 클라이언트에서 순서를 변경합니다.
+        // 예를 들어, curationItemId를 기준으로 내림차순(최신 항목이 위로)으로 정렬
+        const sortedCurations = [...fetchedCurations].sort((a, b) => b.curationItemId - a.curationItemId);
+        
+        // 정렬된 결과를 state에 저장합니다.
+        setCurations(sortedCurations);
 
-    // 토큰이 존재하면, 모든 요청 헤더에 Authorization을 추가합니다.
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    
-    return config; // 수정된 설정으로 요청을 계속 진행
-  },
-  (error) => {
-    return Promise.reject(error);
+      } catch (error) {
+        console.error("큐레이션을 불러오는 데 실패했습니다:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAndSortCurations();
+  }, []); // 컴포넌트가 처음 마운트될 때 한 번만 실행
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
   }
-);
 
-export default axiosInstance;
+  // 3. 정렬된 순서대로 화면에 렌더링합니다.
+  return (
+    <div>
+      {curations.map(curation => (
+        <div key={curation.curationItemId}>
+          <h2>{curation.title}</h2>
+          <p>{curation.description}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CurationComponent;
+
+
+
+// [수정됨] 특정 큐레이션 상세 조회
+export const getCurationById = async (id: string): Promise<ApiCuration> => {
+  // ... 현재 코드는 전체 목록을 받은 후 클라이언트에서 찾습니다 ...
+  const allCurations = await getCurations();
+  const curation = allCurations.find(c => c.curationItemId === parseInt(id, 10));
+  // ...
+};
+
+
+// [개선안] 특정 큐레이션 상세 조회
+export const getCurationById = async (id: string): Promise<ApiCuration> => {
+  // 서버에서 직접 특정 ID의 큐레이션을 요청합니다.
+  const response = await axiosInstance.get(`/api/v1/admin/curations/items/${id}`);
+  return response.data;
+};
