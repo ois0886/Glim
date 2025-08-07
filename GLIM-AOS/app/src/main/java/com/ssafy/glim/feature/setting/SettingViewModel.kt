@@ -31,7 +31,7 @@ class SettingViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         lockSettings = LockSettings(
-                            isEnabled = settings.isEnabled
+                            isShowGlimEnabled = settings.isShowGlimEnabled
                         )
                     )
                 }
@@ -82,7 +82,7 @@ class SettingViewModel @Inject constructor(
         reduce {
             state.copy(
                 lockSettings = state.lockSettings.copy(
-                    isEnabled = enabled
+                    isShowGlimEnabled = enabled
                 )
             )
         }
