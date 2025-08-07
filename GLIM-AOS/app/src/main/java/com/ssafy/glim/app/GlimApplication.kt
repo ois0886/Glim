@@ -12,5 +12,9 @@ val Context.searchHistoryDataStore: DataStore<Preferences> by preferencesDataSto
     name = "search_history",
 )
 
+val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(
+    name = "settings",
+)
+
 @HiltAndroidApp
 class GlimApplication : Application()

@@ -10,8 +10,8 @@ import com.ssafy.glim.ui.theme.Typography
 fun SectionTitle(text: String) {
     Text(
         text = text,
-        style = Typography.titleSmall,
-        fontWeight = FontWeight.Medium,
+        style = Typography.bodyLarge,
+        fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onSurface
     )
 }

@@ -1,7 +1,6 @@
 package com.ssafy.glim.feature.auth.login
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -35,8 +33,6 @@ import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.EmailInputTextField
 import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
-import com.ssafy.glim.feature.auth.login.component.SocialButton
-import com.ssafy.glim.feature.auth.login.component.SocialProvider
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
@@ -62,9 +58,7 @@ internal fun LoginRoute(
         onPasswordChanged = viewModel::onPasswordChanged,
         onLoginClicked = viewModel::onLoginClicked,
         navigateToSignUp = viewModel::navigateToSignUp,
-        navigateToForgotPassword = viewModel::navigateToForgotPassword,
-        navigateToSocialLogin = viewModel::navigateToSocialLogin,
-        navigateToSignUpOnGuest = viewModel::navigateToSignUpOnGuest,
+        navigateToForgotPassword = viewModel::navigateToForgotPassword
     )
 }
 
@@ -76,9 +70,7 @@ internal fun LoginScreen(
     onPasswordChanged: (TextFieldValue) -> Unit,
     onLoginClicked: () -> Unit,
     navigateToSignUp: () -> Unit,
-    navigateToForgotPassword: () -> Unit,
-    navigateToSocialLogin: (SocialProvider) -> Unit,
-    navigateToSignUpOnGuest: () -> Unit,
+    navigateToForgotPassword: () -> Unit
 ) {
     Column(
         modifier =
@@ -149,35 +141,6 @@ internal fun LoginScreen(
             }
 
             Spacer(Modifier.height(24.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                HorizontalDivider(modifier = Modifier.weight(1f))
-                Text(
-                    stringResource(R.string.login_sns_title),
-                    style = MaterialTheme.typography.bodySmall,
-                )
-                HorizontalDivider(modifier = Modifier.weight(1f))
-            }
-
-            Spacer(Modifier.height(16.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                SocialButton(SocialProvider.GOOGLE) { navigateToSocialLogin(SocialProvider.GOOGLE) }
-                SocialButton(SocialProvider.KAKAO) { navigateToSocialLogin(SocialProvider.KAKAO) }
-                SocialButton(SocialProvider.NAVER) { navigateToSocialLogin(SocialProvider.NAVER) }
-            }
-
-            Spacer(Modifier.height(16.dp))
-
-            TextButton(onClick = navigateToSignUpOnGuest) {
-                Text(stringResource(R.string.login_guest))
-            }
         }
     }
 }
@@ -192,9 +155,7 @@ fun PreviewLoginScreen_Empty() {
         onPasswordChanged = {},
         onLoginClicked = {},
         navigateToSignUp = {},
-        navigateToForgotPassword = {},
-        navigateToSocialLogin = {},
-        navigateToSignUpOnGuest = {},
+        navigateToForgotPassword = {}
     )
 }
 
@@ -214,9 +175,7 @@ fun PreviewLoginScreen_Errors() {
         onPasswordChanged = {},
         onLoginClicked = {},
         navigateToSignUp = {},
-        navigateToForgotPassword = {},
-        navigateToSocialLogin = {},
-        navigateToSignUpOnGuest = {},
+        navigateToForgotPassword = {}
     )
 }
 
@@ -234,9 +193,7 @@ fun PreviewLoginScreen_Valid() {
         onPasswordChanged = {},
         onLoginClicked = {},
         navigateToSignUp = {},
-        navigateToForgotPassword = {},
-        navigateToSocialLogin = {},
-        navigateToSignUpOnGuest = {},
+        navigateToForgotPassword = {}
     )
 }
 
@@ -255,8 +212,6 @@ fun PreviewLoginScreen_Loading() {
         onPasswordChanged = {},
         onLoginClicked = {},
         navigateToSignUp = {},
-        navigateToForgotPassword = {},
-        navigateToSocialLogin = {},
-        navigateToSignUpOnGuest = {},
+        navigateToForgotPassword = {}
     )
 }

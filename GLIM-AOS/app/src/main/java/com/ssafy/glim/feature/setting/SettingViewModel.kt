@@ -2,18 +2,41 @@ package com.ssafy.glim.feature.setting
 
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
+import com.ssafy.glim.core.domain.model.LockSettings
+import com.ssafy.glim.core.domain.usecase.setting.GetLockSettingsUseCase
+import com.ssafy.glim.core.domain.usecase.setting.UpdateLockSettingsUseCase
+import com.ssafy.glim.core.navigation.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.catch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingViewModel @Inject constructor() :
-    ViewModel(),
-    ContainerHost<SettingUiState, SettingSideEffect> {
+class SettingViewModel @Inject constructor(
+    private val getLockSettingsUseCase: GetLockSettingsUseCase,
+    private val updateLockSettingsUseCase: UpdateLockSettingsUseCase,
+    private val navigator: Navigator
+) : ViewModel(), ContainerHost<SettingUiState, SettingSideEffect> {
 
     override val container =
         container<SettingUiState, SettingSideEffect>(initialState = SettingUiState())
+
+    fun loadSettings() = intent {
+        getLockSettingsUseCase()
+            .catch { throwable ->
+                postSideEffect(SettingSideEffect.ShowError(R.string.error_load_settings_failed))
+            }
+            .collect { settings ->
+                reduce {
+                    state.copy(
+                        lockSettings = LockSettings(
+                            isShowGlimEnabled = settings.isShowGlimEnabled
+                        )
+                    )
+                }
+            }
+    }
 
     fun onAllNotificationsToggle(enabled: Boolean) = intent {
         reduce {
@@ -23,7 +46,6 @@ class SettingViewModel @Inject constructor() :
                 )
             )
         }
-        postSideEffect(SettingSideEffect.ShowToast(R.string.settings_saved))
     }
 
     fun onDoNotDisturbModeToggle(enabled: Boolean) = intent {
@@ -34,7 +56,6 @@ class SettingViewModel @Inject constructor() :
                 )
             )
         }
-        postSideEffect(SettingSideEffect.ShowToast(R.string.settings_saved))
     }
 
     fun onDoNotDisturbTimeToggle(enabled: Boolean) = intent {
@@ -45,7 +66,6 @@ class SettingViewModel @Inject constructor() :
                 )
             )
         }
-        postSideEffect(SettingSideEffect.ShowToast(R.string.settings_saved))
     }
 
     fun onWeeklyScheduleToggle(enabled: Boolean) = intent {
@@ -56,22 +76,42 @@ class SettingViewModel @Inject constructor() :
                 )
             )
         }
-        postSideEffect(SettingSideEffect.ShowToast(R.string.settings_saved))
     }
 
     fun onLockScreenGlimToggle(enabled: Boolean) = intent {
         reduce {
             state.copy(
-                lockScreenSettings = state.lockScreenSettings.copy(
-                    glimEnabled = enabled
+                lockSettings = state.lockSettings.copy(
+                    isShowGlimEnabled = enabled
                 )
             )
         }
-        postSideEffect(SettingSideEffect.ShowToast(R.string.settings_saved))
     }
 
     fun onTimeRangeClick() = intent {
-        // TODO: 시간 범위 선택 화면으로 이동
-        postSideEffect(SettingSideEffect.ShowToast(R.string.not_ready_function))
+    }
+
+    fun onSaveClicked() = intent {
+        reduce { state.copy(isLoading = true) }
+        runCatching {
+            updateLockSettingsUseCase(
+                settings = state.lockSettings
+            )
+        }.onSuccess {
+            reduce {
+                state.copy(
+                    isLoading = false
+                )
+            }
+            postSideEffect(SettingSideEffect.ShowError(R.string.settings_saved))
+            navigator.navigateBack()
+        }.onFailure {
+            reduce {
+                state.copy(
+                    isLoading = false
+                )
+            }
+            postSideEffect(SettingSideEffect.ShowError(R.string.settings_failed))
+        }
     }
 }

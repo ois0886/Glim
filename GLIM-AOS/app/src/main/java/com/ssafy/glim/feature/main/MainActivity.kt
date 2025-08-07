@@ -68,7 +68,6 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 var startDestination: Route? by remember { mutableStateOf(null) }
 
-                // 초기 목적지 결정
                 LaunchedEffect(Unit) {
                     startDestination = if (authManager.canAutoLogin()) {
                         BottomTabRoute.Home
@@ -88,16 +87,15 @@ class MainActivity : ComponentActivity() {
                     if (!isLoading) {
                         MainScreen(navigator = navigator)
 
-                        // 딥링크 처리
                         LaunchedEffect(initialRoute) {
-                           if (destination == BottomTabRoute.Home && initialRoute == "glim") {
+                            if (destination == BottomTabRoute.Home && initialRoute == "glim") {
                                 val quoteId = intent.getLongExtra("quote_id", -1L)
                                 navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
                             }
                         }
                     }
                 }
-                // 글로벌 이벤트 핸들러
+
                 AppEventsHandler(
                     authManager = authManager,
                     navController = navController
@@ -107,20 +105,6 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun performInitialization() {
-        Thread {
-            try {
-                startLockService()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                runOnUiThread {
-                    isLoading = false
-                }
-            }
-        }.start()
-    }
-
-    private fun startLockService() {
-        lockServiceManager.start()
+        isLoading = false
     }
 }

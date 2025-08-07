@@ -1,10 +1,11 @@
 package com.ssafy.glim.feature.setting
 
 import androidx.annotation.StringRes
+import com.ssafy.glim.core.domain.model.LockSettings
 
 data class SettingUiState(
     val notificationSettings: NotificationSettings = NotificationSettings(),
-    val lockScreenSettings: LockScreenSettings = LockScreenSettings(),
+    val lockSettings: LockSettings = LockSettings(),
     val isLoading: Boolean = false
 )
 
@@ -18,11 +19,6 @@ data class NotificationSettings(
     val weekendTimeRange: String = "23:00 - 09:00"
 )
 
-data class LockScreenSettings(
-    val glimEnabled: Boolean = true
-)
-
 sealed interface SettingSideEffect {
-    data class ShowToast(@StringRes val messageRes: Int) : SettingSideEffect
     data class ShowError(@StringRes val messageRes: Int) : SettingSideEffect
 }

@@ -106,7 +106,7 @@ internal fun ProfileHeader(
             if (error) {
                 Text(
                     text = stringResource(R.string.error_load_profile_failed),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = Color.Red,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -114,7 +114,7 @@ internal fun ProfileHeader(
             } else {
                 Text(
                     text = userName,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = Color.Black,
                 )
             }

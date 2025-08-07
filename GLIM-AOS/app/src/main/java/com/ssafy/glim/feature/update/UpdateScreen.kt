@@ -140,7 +140,6 @@ internal fun UpdateScreen(
                 .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
             when (state.updateType) {
                 UpdateType.PERSONAL -> {
                     PersonalInfoContent(
