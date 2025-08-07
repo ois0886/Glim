@@ -6,17 +6,12 @@ import android.content.Intent
 import android.util.Log
 import com.ssafy.glim.core.util.isServiceRunning
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 abstract class BaseForegroundServiceManager(
     val context: Context,
     val targetClass: Class<out Service>,
 ) {
-    // 동시 실행 방지를 위한 뮤텍스
-    private val operationMutex = Mutex()
-
-    open suspend fun start() = operationMutex.withLock {
+    open suspend fun start() {
         try {
             Log.d(TAG, "Starting service: ${targetClass.simpleName}")
 
@@ -25,8 +20,7 @@ abstract class BaseForegroundServiceManager(
                 context.startForegroundService(intent)
                 Log.d(TAG, "Service start command sent: ${targetClass.simpleName}")
 
-                // 서비스가 시작될 때까지 잠시 대기
-                delay(300)
+                delay(START_CHECK_DELAY)
 
                 val isRunning = context.isServiceRunning(targetClass)
                 Log.d(TAG, "Service running after start: $isRunning")
@@ -43,7 +37,7 @@ abstract class BaseForegroundServiceManager(
         }
     }
 
-    open suspend fun stop() = operationMutex.withLock {
+    open suspend fun stop() {
         try {
             Log.d(TAG, "Stopping service: ${targetClass.simpleName}")
 
@@ -52,8 +46,7 @@ abstract class BaseForegroundServiceManager(
                 val result = context.stopService(intent)
                 Log.d(TAG, "Service stop command sent: ${targetClass.simpleName}, result: $result")
 
-                // 서비스가 중지될 때까지 잠시 대기
-                delay(300)
+                delay(STOP_CHECK_DELAY)
 
                 val isRunning = context.isServiceRunning(targetClass)
                 Log.d(TAG, "Service running after stop: $isRunning")
@@ -70,7 +63,6 @@ abstract class BaseForegroundServiceManager(
         }
     }
 
-    // 비동기 버전 (기존 코드와의 호환성을 위해)
     open fun startSync() {
         try {
             Log.d(TAG, "Starting service synchronously: ${targetClass.simpleName}")
@@ -107,5 +99,7 @@ abstract class BaseForegroundServiceManager(
 
     private companion object {
         private const val TAG = "BaseForegroundServiceManager"
+        private const val START_CHECK_DELAY = 300L
+        private const val STOP_CHECK_DELAY = 300L
     }
 }

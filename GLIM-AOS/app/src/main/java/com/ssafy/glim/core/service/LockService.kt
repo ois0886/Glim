@@ -25,45 +25,27 @@ class LockService : Service() {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "Service onCreate")
-
-        // onCreate에서 즉시 foreground 시작
-        try {
-            createNotificationChannel()
-            startForeground(SERVICE_ID, createNotificationBuilder())
-            Log.d(TAG, "Started foreground successfully in onCreate")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start foreground in onCreate", e)
-            // 기본 알림으로 재시도
-            try {
-                startForeground(SERVICE_ID, createFallbackNotification())
-            } catch (fallbackError: Exception) {
-                Log.e(TAG, "Failed to start foreground with fallback notification", fallbackError)
-                stopSelf()
-            }
-        }
+        startForegroundSafely()
     }
 
     override fun onStartCommand(
         intent: Intent?,
         flags: Int,
-        startId: Int,
+        startId: Int
     ): Int {
         Log.d(TAG, "onStartCommand called, isServiceReady: $isServiceReady")
 
-        // 이미 준비된 상태면 중복 실행 방지
         if (isServiceReady) {
             Log.d(TAG, "Service already ready, returning")
             return START_NOT_STICKY
         }
 
         try {
-            // 리시버 등록만 여기서 처리 (foreground는 이미 onCreate에서 시작됨)
             startLockReceiver()
             isServiceReady = true
             Log.d(TAG, "Service setup completed successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to setup service", e)
-            // 실패하면 서비스 종료
             stopSelf()
             return START_NOT_STICKY
         }
@@ -78,8 +60,23 @@ class LockService : Service() {
         super.onDestroy()
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    private fun startForegroundSafely() {
+        try {
+            createNotificationChannel()
+            startForeground(SERVICE_ID, createNotificationBuilder())
+            Log.d(TAG, "Started foreground successfully in onCreate")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start foreground in onCreate", e)
+            try {
+                startForeground(SERVICE_ID, createFallbackNotification())
+                Log.d(TAG, "Started foreground with fallback notification")
+            } catch (fallbackError: Exception) {
+                Log.e(TAG, "Failed to start foreground with fallback notification", fallbackError)
+                stopSelf()
+            }
+        }
     }
 
     private fun startLockReceiver() {
@@ -120,14 +117,12 @@ class LockService : Service() {
             val notificationChannel = SimpleNotificationBuilder.createChannel(
                 LOCK_CHANNEL,
                 getStringWithContext(R.string.app_name),
-                // HIGH에서 LOW로 변경
                 NotificationManager.IMPORTANCE_LOW,
                 getStringWithContext(R.string.app_name),
             )
 
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(notificationChannel as NotificationChannel)
-
             Log.d(TAG, "Notification channel created successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to create notification channel", e)
@@ -161,7 +156,24 @@ class LockService : Service() {
 
     private fun createFallbackNotification(): Notification {
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            // 기본 채널 생성
+            createFallbackChannel()
+            Notification.Builder(this, FALLBACK_CHANNEL)
+                .setContentTitle("Glim")
+                .setContentText("백그라운드 실행 중")
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .build()
+        } else {
+            @Suppress("DEPRECATION")
+            Notification.Builder(this)
+                .setContentTitle("Glim")
+                .setContentText("백그라운드 실행 중")
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .build()
+        }
+    }
+
+    private fun createFallbackChannel() {
+        try {
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             val fallbackChannel = NotificationChannel(
                 FALLBACK_CHANNEL,
@@ -175,19 +187,8 @@ class LockService : Service() {
                 setSound(null, null)
             }
             notificationManager.createNotificationChannel(fallbackChannel)
-
-            Notification.Builder(this, FALLBACK_CHANNEL)
-                .setContentTitle("Glim")
-                .setContentText("백그라운드 실행 중")
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .build()
-        } else {
-            @Suppress("DEPRECATION")
-            Notification.Builder(this)
-                .setContentTitle("Glim")
-                .setContentText("백그라운드 실행 중")
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .build()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to create fallback notification channel", e)
         }
     }
 

@@ -123,5 +123,4 @@ internal class LoginViewModel @Inject constructor(
             // TODO: 비밀번호 찾기 기능 구현
             postSideEffect(LoginSideEffect.ShowError(R.string.not_ready_function))
         }
-
 }
