@@ -88,7 +88,7 @@ public class FcmApiDocsTest extends RestDocsTestSupport{
                 ),
                 requestFields(
                     fieldWithPath("deviceToken").description("FCM device 토큰 (필수)"),
-                    fieldWithPath("deviceType").description("device 타입 (ANDROID, IOS)"),
+                    fieldWithPath("deviceType").description("device 타입 (ANDROID)"),
                     fieldWithPath("deviceId").description("고유 device 식별자")
                 )
             ))
@@ -114,7 +114,7 @@ public class FcmApiDocsTest extends RestDocsTestSupport{
                 )
             ))
             .when()
-            .put("/api/v1/fcm/token/{deviceId}/status", "device_unique_id_001")
+            .put("/api/v1/fcm/token/{deviceId}/status", "test_device_id_001")
             .then()
             .log().all()
             .statusCode(200);
