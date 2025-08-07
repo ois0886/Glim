@@ -10,12 +10,14 @@ import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteResponse;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberLikeQuoteService {
@@ -27,8 +29,11 @@ public class MemberLikeQuoteService {
 
     @Transactional
     public void likeQuote(Long memberId, Long quoteId) {
+        log.info("좋아요 요청 시작 - 사용자: {}, 글귀 ID: {}", memberId, quoteId);
 
         if (!memberLikeQuoteRepository.existsByMemberIdAndQuote_QuoteId(memberId, quoteId)) {
+            log.info("새로운 좋아요 처리 - 사용자: {}, 글귀 ID: {}", memberId, quoteId);
+
             Quote quote = quoteRepository.findById(quoteId)
                 .orElseThrow(() -> new GeulgwiException("없는 글귀에 대한 좋아요 입니다, quoteId = " + quoteId));
 
@@ -36,13 +41,24 @@ public class MemberLikeQuoteService {
                 .memberId(memberId)
                 .quote(quote)
                 .build();
+
             memberLikeQuoteRepository.save(likeQuote);
 
             if (!quote.getMemberId().equals(memberId)) {
                 Member member = memberRepository.findById(quote.getMemberId())
                     .orElseThrow(() -> new GeulgwiException("글귀 작성자를 찾을 수 없습니다.  memberId = " + quote.getMemberId()));
 
-                fcmPushService.sendLikeNotification(member, quote);
+                try {
+                    log.info("FCM 좋아요 알림 전송 요청 - 좋아요한 사용자: {}, 글귀 작성자: {}, 글귀 ID: {}",
+                        memberId, member.getMemberId(), quoteId);
+                    fcmPushService.sendLikeNotification(member, quote);
+                } catch (Exception e) {
+                    log.error("FCM 좋아요 알림 전송 실패 - 좋아요한 사용자: {}, 글귀 작성자: {}, 글귀 ID: {}",
+                        memberId, member.getMemberId(), quoteId, e);
+                    e.printStackTrace();
+                }
+            } else {
+                log.info("이미 좋아요한 글귀 - 사용자: {}, 글귀 ID: {}", memberId, quoteId);
             }
         }
     }
