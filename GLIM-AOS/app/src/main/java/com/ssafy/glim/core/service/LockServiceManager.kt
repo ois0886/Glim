@@ -14,8 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,16 +25,20 @@ class LockServiceManager @Inject constructor(
     context = applicationContext,
     targetClass = LockService::class.java,
 ) {
-    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-    // 서비스 상태 관리
-    private var isServiceStarting = false
-    private var isServiceStopping = false
-    private var lastKnownState = false
-    private val stateMutex = Mutex()
+    @Volatile
+    private var lastKnownState: Boolean? = null
+
+    @Volatile
+    private var isInitialized = false
 
     init {
         Log.d(TAG, "LockServiceManager initialized")
+        observeSettingsChanges()
+    }
+
+    private fun observeSettingsChanges() {
         serviceScope.launch {
             try {
                 getLockSettingsUseCase()
@@ -48,126 +50,132 @@ class LockServiceManager @Inject constructor(
                     }
             } catch (e: Exception) {
                 Log.e(TAG, "Error in settings flow", e)
+                delay(RETRY_DELAY)
+                observeSettingsChanges()
             }
         }
     }
 
-    private suspend fun handleServiceStateChange(enabled: Boolean) = stateMutex.withLock {
-        // 상태가 실제로 변경되었을 때만 처리
-        if (enabled == lastKnownState) {
-            Log.d(TAG, "State unchanged, ignoring: $enabled")
-            return@withLock
-        }
-
-        val isCurrentlyRunning = applicationContext.isServiceRunning(LockService::class.java)
-        Log.d(TAG, "Handling state change: enabled=$enabled, lastKnown=$lastKnownState, currentlyRunning=$isCurrentlyRunning")
-
+    private suspend fun handleServiceStateChange(enabled: Boolean) {
+        val previousState = lastKnownState
         lastKnownState = enabled
 
-        if (enabled) {
-            startServiceSafely()
-        } else {
-            stopServiceSafely()
-        }
-    }
-
-    // BaseForegroundServiceManager의 suspend 메서드들 오버라이드
-    override suspend fun start() {
-        startServiceSafely()
-    }
-
-    override suspend fun stop() {
-        stopServiceSafely()
-    }
-
-    private suspend fun startServiceSafely() {
-        // 이미 시작 중이거나 실행 중이면 무시
-        if (isServiceStarting) {
-            Log.d(TAG, "Service is already starting, ignoring start request")
+        if (!isInitialized) {
+            isInitialized = true
+            Log.d(TAG, "Initial settings loaded: enabled=$enabled")
+        } else if (enabled == previousState) {
+            Log.d(TAG, "State unchanged, ignoring: $enabled")
             return
         }
 
+        val isCurrentlyRunning = applicationContext.isServiceRunning(LockService::class.java)
+        Log.d(TAG, "Handling state change: enabled=$enabled, previousState=$previousState, currentlyRunning=$isCurrentlyRunning")
+
+        if (enabled) {
+            if (!isCurrentlyRunning) {
+                startServiceWithRetry()
+            }
+        } else {
+            if (isCurrentlyRunning) {
+                stopServiceWithRetry()
+            }
+        }
+    }
+
+    override suspend fun start() {
+        if (!isInitialized) {
+            Log.d(TAG, "Settings not loaded yet, deferring start")
+            return
+        }
+
+        if (lastKnownState == true) {
+            startServiceWithRetry()
+        } else {
+            Log.d(TAG, "Service disabled in settings, ignoring start request")
+        }
+    }
+
+    override suspend fun stop() {
+        if (!isInitialized) {
+            Log.d(TAG, "Settings not loaded yet, deferring stop")
+            return
+        }
+
+        stopServiceWithRetry()
+    }
+
+    private suspend fun startServiceWithRetry() {
         if (applicationContext.isServiceRunning(LockService::class.java)) {
             Log.d(TAG, "Service is already running, ignoring start request")
             return
         }
 
-        isServiceStarting = true
-        try {
-            Log.d(TAG, "Starting service...")
+        repeat(MAX_RETRY_COUNT) { attempt ->
+            try {
+                Log.d(TAG, "Starting service... attempt ${attempt + 1}")
 
-            // 약간의 지연을 두어 중복 호출 방지
-            delay(100)
+                super.start()
 
-            // 다시 한 번 상태 확인 (지연 시간 동안 변경될 수 있음)
-            if (lastKnownState && !applicationContext.isServiceRunning(LockService::class.java)) {
-                super.start() // 부모 클래스의 start 메서드 호출
-                Log.d(TAG, "Service start request sent")
+                delay(START_TIMEOUT)
 
-                // 서비스가 실제로 시작될 때까지 잠시 대기
-                delay(500)
-
-                val isRunningAfterStart = applicationContext.isServiceRunning(LockService::class.java)
-                Log.d(TAG, "Service running after start: $isRunningAfterStart")
-            } else {
-                Log.d(TAG, "Service start cancelled due to state change or already running")
+                if (applicationContext.isServiceRunning(LockService::class.java)) {
+                    Log.d(TAG, "Service started successfully")
+                    return
+                } else {
+                    throw Exception("Service failed to start")
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Start attempt ${attempt + 1} failed", e)
+                if (attempt == MAX_RETRY_COUNT - 1) {
+                    Log.e(TAG, "Failed to start service after $MAX_RETRY_COUNT attempts")
+                    throw e
+                }
+                delay(RETRY_DELAY * (attempt + 1))
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start service", e)
-        } finally {
-            isServiceStarting = false
         }
     }
 
-    private suspend fun stopServiceSafely() {
-        // 이미 중지 중이거나 실행되지 않으면 무시
-        if (isServiceStopping) {
-            Log.d(TAG, "Service is already stopping, ignoring stop request")
-            return
-        }
-
+    private suspend fun stopServiceWithRetry() {
         if (!applicationContext.isServiceRunning(LockService::class.java)) {
             Log.d(TAG, "Service is not running, ignoring stop request")
             return
         }
 
-        isServiceStopping = true
-        try {
-            Log.d(TAG, "Stopping service...")
+        repeat(MAX_RETRY_COUNT) { attempt ->
+            try {
+                Log.d(TAG, "Stopping service... attempt ${attempt + 1}")
 
-            // 약간의 지연을 두어 중복 호출 방지
-            delay(100)
+                super.stop()
 
-            // 다시 한 번 상태 확인 (지연 시간 동안 변경될 수 있음)
-            if (!lastKnownState && applicationContext.isServiceRunning(LockService::class.java)) {
-                super.stop() // 부모 클래스의 stop 메서드 호출
-                Log.d(TAG, "Service stop request sent")
+                delay(STOP_TIMEOUT)
 
-                // 서비스가 실제로 중지될 때까지 잠시 대기
-                delay(500)
-
-                val isRunningAfterStop = applicationContext.isServiceRunning(LockService::class.java)
-                Log.d(TAG, "Service running after stop: $isRunningAfterStop")
-            } else {
-                Log.d(TAG, "Service stop cancelled due to state change or not running")
+                if (!applicationContext.isServiceRunning(LockService::class.java)) {
+                    Log.d(TAG, "Service stopped successfully")
+                    return
+                } else {
+                    throw Exception("Service failed to stop")
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Stop attempt ${attempt + 1} failed", e)
+                if (attempt == MAX_RETRY_COUNT - 1) {
+                    Log.e(TAG, "Failed to stop service after $MAX_RETRY_COUNT attempts")
+                    throw e
+                }
+                delay(RETRY_DELAY * (attempt + 1))
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop service", e)
-        } finally {
-            isServiceStopping = false
         }
     }
 
-    // 동기 메서드들 (BaseForegroundServiceManager 오버라이드)
     override fun startSync() {
         try {
             if (!applicationContext.isServiceRunning(LockService::class.java)) {
                 val intent = Intent(applicationContext, LockService::class.java)
                 applicationContext.startForegroundService(intent)
-                Log.d(TAG, "Service started synchronously via override")
+                Log.d(TAG, "Service started synchronously")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start service synchronously via override", e)
+            Log.e(TAG, "Failed to start service synchronously", e)
+            throw e
         }
     }
 
@@ -176,42 +184,19 @@ class LockServiceManager @Inject constructor(
             if (applicationContext.isServiceRunning(LockService::class.java)) {
                 val intent = Intent(applicationContext, LockService::class.java)
                 applicationContext.stopService(intent)
-                Log.d(TAG, "Service stopped synchronously via override")
+                Log.d(TAG, "Service stopped synchronously")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop service synchronously via override", e)
+            Log.e(TAG, "Failed to stop service synchronously", e)
+            throw e
         }
     }
-
-    // 수동으로 서비스 재시작이 필요한 경우
-    fun restartService() {
-        Log.d(TAG, "Service restart requested")
-        serviceScope.launch {
-            stateMutex.withLock {
-                try {
-                    if (applicationContext.isServiceRunning(LockService::class.java)) {
-                        Log.d(TAG, "Force stopping service for restart")
-                        stopSync()
-                        delay(1000) // 완전히 종료될 때까지 대기
-                    }
-
-                    if (lastKnownState) {
-                        Log.d(TAG, "Force starting service after restart")
-                        startSync()
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error during service restart", e)
-                }
-            }
-        }
-    }
-
-    // 현재 상태 확인용 메서드
-    fun getCurrentState(): Boolean = lastKnownState
-
-    fun isServiceCurrentlyRunning(): Boolean = applicationContext.isServiceRunning(LockService::class.java)
 
     private companion object {
         private const val TAG = "LockServiceManager"
+        private const val MAX_RETRY_COUNT = 3
+        private const val RETRY_DELAY = 1000L
+        private const val START_TIMEOUT = 500L
+        private const val STOP_TIMEOUT = 300L
     }
 }
