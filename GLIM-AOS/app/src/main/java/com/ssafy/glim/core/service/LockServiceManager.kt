@@ -26,7 +26,7 @@ class LockServiceManager @Inject constructor(
         Log.d(TAG, "LockServiceManager initialized")
         serviceScope.launch {
             getLockSettingsUseCase()
-                .map { it.isEnabled }
+                .map { it.isShowGlimEnabled }
                 .distinctUntilChanged()
                 .collect { enabled ->
                     Log.d(TAG, "Lock setting changed: $enabled")

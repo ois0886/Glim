@@ -22,11 +22,9 @@ class LockViewModel @Inject constructor(
     private val likeQuoteUseCase: LikeQuoteUseCase,
     private val unLikeQuoteUseCase: UnLikeQuoteUseCase
 ) : ViewModel(), ContainerHost<LockUiState, LockSideEffect> {
-    override val container =
-        container<LockUiState, LockSideEffect>(
-            initialState = LockUiState(),
-        ) {
-        }
+    override val container = container<LockUiState, LockSideEffect>(
+        initialState = LockUiState(),
+    )
 
     init {
         viewModelScope.launch {

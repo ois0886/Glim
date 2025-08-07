@@ -21,7 +21,7 @@ fun LockSettingSection(
         SettingsToggleItem(
             title = stringResource(R.string.lockscreen_glim_title),
             description = stringResource(R.string.lockscreen_glim_description),
-            checked = settings.isEnabled,
+            checked = settings.isShowGlimEnabled,
             onCheckedChange = onLockScreenGlimToggle
         )
     }
