@@ -481,3 +481,29 @@ include::{snippets}/admin_member_api_docs_test/soft_delete_member/path-parameter
 include::{snippets}/admin_member_api_docs_test/soft_delete_member/http-response.adoc[]
 
 include::{snippets}/admin_member_api_docs_test/soft_delete_member/response-fields.adoc[]
+
+== Admin Quote API
+
+=== Admin 모든 게시물 조회
+
+==== 요청
+
+include::{snippets}/admin_quote_api_docs_test/get_all_quotes/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_quote_api_docs_test/get_all_quotes/http-response.adoc[]
+
+include::{snippets}/admin_quote_api_docs_test/get_all_quotes/response-fields.adoc[]
+
+=== Admin 게시물 삭제
+
+==== 요청
+
+include::{snippets}/admin_quote_api_docs_test/delete_quote/http-request.adoc[]
+
+include::{snippets}/admin_quote_api_docs_test/delete_quote/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/admin_quote_api_docs_test/delete_quote/http-response.adoc[]
