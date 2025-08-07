@@ -36,7 +36,6 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.util.CaptureActions
 import com.ssafy.glim.core.util.rememberCaptureActions
-
 import kotlinx.coroutines.launch
 
 @Composable
@@ -59,32 +58,37 @@ fun ActionButtons(
 
     Column(
         modifier =
-        modifier
-            .fillMaxHeight()
-            .padding(4.dp)
-            .systemBarsPadding(),
+            modifier
+                .fillMaxHeight()
+                .padding(4.dp)
+                .systemBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End,
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(
-                onClick = onBackPress
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_close),
-                    contentDescription = null
-                )
+            DarkGrayRoundedSurface(modifier = modifier) {
+                IconButton(
+                    onClick = onBackPress
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_close),
+                        contentDescription = null
+                    )
+                }
             }
             Spacer(Modifier.weight(1f))
-            TextButton(onClick = {
-                coroutineScope.launch {
-                    clearFocus()
-                    onCompleteClick(captureAction)
+
+            DarkGrayRoundedSurface(modifier = modifier) {
+                TextButton(onClick = {
+                    coroutineScope.launch {
+                        clearFocus()
+                        onCompleteClick(captureAction)
+                    }
+                }) {
+                    Text("완료", color = Color.White, fontWeight = FontWeight.Bold)
                 }
-            }) {
-                Text("완료", color = Color.White, fontWeight = FontWeight.Bold)
             }
         }
 
@@ -128,6 +132,20 @@ fun ActionButtons(
 }
 
 @Composable
+fun DarkGrayRoundedSurface(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Surface(
+        modifier = modifier.padding(8.dp),
+        color = Color.DarkGray.copy(alpha = 0.8f),
+        shape = RoundedCornerShape(12.dp),
+    ) {
+        content()
+    }
+}
+
+@Composable
 fun ActionButton(
     onClick: () -> Unit,
     iconRes: Int,
@@ -162,7 +180,7 @@ fun IconButtonWithPopupMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             offset = DpOffset(x = (-56).dp, y = (-72).dp),
-            containerColor = Color.DarkGray.copy(alpha = 0.9f)
+            containerColor = Color.DarkGray.copy(alpha = 0.8f)
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.shot_background_image)) },

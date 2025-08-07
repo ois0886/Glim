@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
 import com.ssafy.glim.feature.post.TextStyleState
+import com.ssafy.glim.feature.post.component.DarkGrayRoundedSurface
 import com.ssafy.glim.ui.theme.FONT
 
 enum class TextControllerType {
@@ -62,11 +63,7 @@ fun TextConfigContent(
             FontFamilyController(modifier, updateFontFamily)
         }
 
-        Surface(
-            modifier = modifier.padding(8.dp),
-            color = Color.DarkGray.copy(alpha = 0.9f),
-            shape = RoundedCornerShape(8.dp),
-        ) {
+        DarkGrayRoundedSurface(modifier = modifier) {
             Row(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -105,12 +102,8 @@ private fun FontFamilyController(
         verticalAlignment = Alignment.CenterVertically
     ) {
         items(FONT.entries) {
-            Surface(
-                modifier = modifier
-                    .padding(8.dp)
-                    .clickable { updateFontFamily(it.fontFamily) },
-                color = Color.DarkGray.copy(alpha = 0.8f),
-                shape = RoundedCornerShape(8.dp),
+            DarkGrayRoundedSurface(
+                modifier = modifier.clickable { updateFontFamily(it.fontFamily) }
             ) {
                 Text(
                     text = stringResource(R.string.post_font_example_text),
