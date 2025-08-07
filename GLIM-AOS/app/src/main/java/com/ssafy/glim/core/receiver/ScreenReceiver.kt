@@ -7,6 +7,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.ssafy.glim.feature.lock.LockScreenActivity
 import jakarta.inject.Inject
+import androidx.core.content.edit
 
 class ScreenReceiver @Inject constructor() : BroadcastReceiver() {
     override fun onReceive(
@@ -19,7 +20,7 @@ class ScreenReceiver @Inject constructor() : BroadcastReceiver() {
                 val wasInApp = ProcessLifecycleOwner
                     .get().lifecycle.currentState
                     .isAtLeast(Lifecycle.State.STARTED)
-                prefs.edit().putBoolean("was_in_app_before_lock", wasInApp).apply()
+                prefs.edit { putBoolean("was_in_app_before_lock", wasInApp) }
             }
 
             Intent.ACTION_SCREEN_ON -> {
