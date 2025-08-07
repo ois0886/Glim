@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.navigation.BottomTabRoute
@@ -23,6 +24,7 @@ import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.service.LockServiceManager
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val REQ_CODE_OVERLAY_PERMISSION: Int = 0
@@ -107,7 +109,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun performInitialization() {
-        Thread {
+        // lifecycleScope를 사용해서 코루틴에서 호출
+        lifecycleScope.launch {
             try {
                 startLockService()
             } catch (e: Exception) {
@@ -117,10 +120,11 @@ class MainActivity : ComponentActivity() {
                     isLoading = false
                 }
             }
-        }.start()
+        }
     }
 
-    private fun startLockService() {
+    private suspend fun startLockService() {
+        // suspend 함수를 suspend 함수에서 호출
         lockServiceManager.start()
     }
 }
