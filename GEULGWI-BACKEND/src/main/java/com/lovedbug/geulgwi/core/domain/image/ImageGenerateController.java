@@ -1,8 +1,7 @@
-package com.lovedbug.geulgwi.external.gpt;
+package com.lovedbug.geulgwi.core.domain.image;
 
 import com.lovedbug.geulgwi.external.gpt.dto.GenerateRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,13 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.UUID;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/images")
 @RequiredArgsConstructor
 public class ImageGenerateController {
 
-    private final OpenAIService openAIService;
+    public static final String X_IMAGE_PROMPT = "X-Image-Prompt";
+    public static final String X_JOB_ID = "X-Job-ID";
+
+    private final ImageGenerateService imageGenerateService;
 
     @PostMapping("")
     public ResponseEntity<ByteArrayResource> generate(
@@ -32,16 +33,16 @@ public class ImageGenerateController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Prompt is empty.");
         }
 
-        String imgPrompt = openAIService.createImagePrompt(prompt);
-        log.info("Image prompt created: {}", imgPrompt);
-        byte[] imgBytes = openAIService.generateImageBytes(imgPrompt);
+        String imgPrompt = imageGenerateService.createImagePrompt(prompt);
+
+        byte[] imgBytes = imageGenerateService.generateImageBytes(imgPrompt);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Job-ID", UUID.randomUUID().toString());
+        headers.add(X_JOB_ID, UUID.randomUUID().toString());
         String safePrompt = imgPrompt.replaceAll("[\\r\\n]", " ");
-        headers.add("X-Image-Prompt", safePrompt);
+        headers.add(X_IMAGE_PROMPT, safePrompt);
 
-        return ResponseEntity.ok()
+        return ResponseEntity.status(HttpStatus.CREATED)
             .headers(headers)
             .contentType(MediaType.IMAGE_PNG)
             .body(new ByteArrayResource(imgBytes));

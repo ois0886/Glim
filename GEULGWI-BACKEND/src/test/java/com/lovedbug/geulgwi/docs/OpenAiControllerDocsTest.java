@@ -1,6 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
-import com.lovedbug.geulgwi.external.gpt.OpenAIService;
+import com.lovedbug.geulgwi.core.domain.image.ImageGenerateService;
 import com.lovedbug.geulgwi.external.gpt.dto.GenerateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,17 +20,17 @@ import static org.springframework.restdocs.restassured.RestAssuredRestDocumentat
 public class OpenAiControllerDocsTest extends RestDocsTestSupport {
 
     @MockitoBean
-    private OpenAIService openAiService;
+    private ImageGenerateService imageGenerateService;
 
     @DisplayName("글귀에 어울리는 이미지를 GPT가 생성한다")
     @Test
-    void generate_image_success() {
+    void generate_image() {
         String userPrompt = "인생은 아름답다";
         String imgPrompt  = "A beautiful watercolor of sunrise over mountains";
         byte[] imageBytes = "fakepngbytes".getBytes();
 
-        org.mockito.BDDMockito.given(openAiService.createImagePrompt(userPrompt)).willReturn(imgPrompt);
-        org.mockito.BDDMockito.given(openAiService.generateImageBytes(imgPrompt)).willReturn(imageBytes);
+        org.mockito.BDDMockito.given(imageGenerateService.createImagePrompt(userPrompt)).willReturn(imgPrompt);
+        org.mockito.BDDMockito.given(imageGenerateService.generateImageBytes(imgPrompt)).willReturn(imageBytes);
 
         GenerateRequest reqDto = GenerateRequest.builder()
             .prompt(userPrompt)
@@ -52,7 +52,7 @@ public class OpenAiControllerDocsTest extends RestDocsTestSupport {
                 .when()
                 .post("/api/v1/images")
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE)
                 .header("X-Image-Prompt", imgPrompt)
                 .extract()

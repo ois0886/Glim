@@ -9,12 +9,7 @@ public class ChatCompletionResponse {
 
     @Getter
     public static class Choice {
-        private Message message;
+        private GPTMessage message;
     }
 
-    @Getter
-    public static class Message {
-        private String role;
-        private String content;
-    }
 }

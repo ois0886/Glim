@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.external.gpt.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,8 @@ public class ImageGenerationResponse {
     @Getter
     public static class Data {
         private String url;
-        private String b64_json;
+
+        @JsonProperty("b64_json")
+        private String b64Json;
     }
 }
