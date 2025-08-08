@@ -89,11 +89,8 @@ class MainActivity : ComponentActivity() {
 
         // 알림 권한 확인
         checkNotificationPermission()
-
         enableEdgeToEdge()
-
         getFCMToken()
-
         performInitialization()
         splashScreen.setKeepOnScreenCondition { isLoading }
 

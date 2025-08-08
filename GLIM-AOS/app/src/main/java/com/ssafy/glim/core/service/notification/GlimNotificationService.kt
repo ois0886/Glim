@@ -4,11 +4,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ssafy.glim.R
+import com.ssafy.glim.core.common.extensions.toBitmap
 import com.ssafy.glim.feature.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,7 +32,6 @@ class GlimNotificationService : FirebaseMessagingService() {
 
         Log.d(TAG, "From: ${remoteMessage.from}")
 
-        // 데이터 페이로드 처리
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
             handleNotification(remoteMessage.data, remoteMessage.notification)
@@ -46,11 +47,13 @@ class GlimNotificationService : FirebaseMessagingService() {
         val screen = data["screen"]
         val title = notification?.title ?: "책 제목 없음"
         val body = notification?.body ?: ""
+        val image = notification?.imageUrl
 
         when (screen) {
             "LIKE" -> {
                 val quoteId = data["quoteId"]?.toLongOrNull() ?: -1L
-                showNotification(title, body, quoteId)
+                val bookId = data["bookId"]?.toLongOrNull() ?: -1L
+                showNotification(title, body, quoteId, bookId, image)
             }
 
             else -> {
@@ -62,9 +65,11 @@ class GlimNotificationService : FirebaseMessagingService() {
     private fun showNotification(
         title: String,
         body: String,
-        quoteId: Long = -1L
+        quoteId: Long = -1L,
+        bookId: Long = -1L,
+        image: Uri? = null
     ) {
-        val intent = Intent(this, MainActivity::class.java).apply {
+        val quoteIntent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             if (quoteId != -1L) {
                 putExtra("nav_route", "glim")
@@ -72,10 +77,25 @@ class GlimNotificationService : FirebaseMessagingService() {
             }
         }
 
-        val pendingIntent = PendingIntent.getActivity(
+        val pendingQuoteIntent = PendingIntent.getActivity(
             this,
             0,
-            intent,
+            quoteIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val bookIntent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            if (quoteId != -1L) {
+                putExtra("nav_route", "glim")
+                putExtra("book_id", bookId)
+            }
+        }
+
+        val pendingBookIntent = PendingIntent.getActivity(
+            this,
+            0,
+            bookIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -83,9 +103,21 @@ class GlimNotificationService : FirebaseMessagingService() {
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(body)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setLargeIcon(image?.toBitmap(this))
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(body)
+            )
+            .addAction(
+                R.drawable.ic_glim, "책 정보",
+                pendingBookIntent
+            )
+            .addAction(
+                R.drawable.ic_library, "글림",
+                pendingQuoteIntent
+            )
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
             .build()
 
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
