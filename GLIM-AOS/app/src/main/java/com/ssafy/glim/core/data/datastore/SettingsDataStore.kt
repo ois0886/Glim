@@ -39,8 +39,8 @@ class SettingsDataStore @Inject constructor(
                 isShowGlimEnabled = preferences[LOCK_SCREEN_ENABLED] != false,
                 allNotificationsEnabled = preferences[ALL_NOTIFICATIONS_ENABLED] != false,
                 doNotDisturbEnabled = preferences[DO_NOT_DISTURB_ENABLED] != false,
-                doNotDisturbTimeEnabled = preferences[DO_NOT_DISTURB_TIME_ENABLED] ?: false,
-                weeklyNotificationsEnabled = preferences[WEEKLY_NOTIFICATIONS_ENABLED] ?: false,
+                doNotDisturbTimeEnabled = preferences[DO_NOT_DISTURB_TIME_ENABLED] == true,
+                weeklyNotificationsEnabled = preferences[WEEKLY_NOTIFICATIONS_ENABLED] == true,
                 defaultTimeRange = preferences[DEFAULT_TIME_RANGE] ?: "22:00 - 08:00",
                 weekdayTimeRange = preferences[WEEKDAY_TIME_RANGE] ?: "22:00 - 07:00",
                 weekendTimeRange = preferences[WEEKEND_TIME_RANGE] ?: "23:00 - 09:00"
@@ -55,8 +55,8 @@ class SettingsDataStore @Inject constructor(
                         isShowGlimEnabled = preferences[LOCK_SCREEN_ENABLED] != false,
                         allNotificationsEnabled = preferences[ALL_NOTIFICATIONS_ENABLED] != false,
                         doNotDisturbEnabled = preferences[DO_NOT_DISTURB_ENABLED] != false,
-                        doNotDisturbTimeEnabled = preferences[DO_NOT_DISTURB_TIME_ENABLED] ?: false,
-                        weeklyNotificationsEnabled = preferences[WEEKLY_NOTIFICATIONS_ENABLED] ?: false,
+                        doNotDisturbTimeEnabled = preferences[DO_NOT_DISTURB_TIME_ENABLED] == true,
+                        weeklyNotificationsEnabled = preferences[WEEKLY_NOTIFICATIONS_ENABLED] == true,
                         defaultTimeRange = preferences[DEFAULT_TIME_RANGE] ?: "22:00 - 08:00",
                         weekdayTimeRange = preferences[WEEKDAY_TIME_RANGE] ?: "22:00 - 07:00",
                         weekendTimeRange = preferences[WEEKEND_TIME_RANGE] ?: "23:00 - 09:00"
