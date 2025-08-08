@@ -1,18 +1,18 @@
 package com.ssafy.glim.core.data.datasource.remote
 
-import com.ssafy.glim.core.data.service.QuoteService
+import com.ssafy.glim.core.data.api.QuoteApi
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject
 
 class QuoteRemoteDataSource @Inject constructor(
-    private val quoteService: QuoteService
+    private val quoteApi: QuoteApi
 ) {
     suspend fun getQuotes(
         page: Int,
         size: Int,
         sort: String
-    ) = quoteService.getQuotes(
+    ) = quoteApi.getQuotes(
         page = 0,
         size = size,
         sort = sort
@@ -22,37 +22,37 @@ class QuoteRemoteDataSource @Inject constructor(
         content: String,
         page: Int,
         size: Int,
-    ) = quoteService.searchQuotes(content, page, size)
+    ) = quoteApi.searchQuotes(content, page, size)
 
     suspend fun createQuote(
         quoteData: RequestBody,
         quoteImage: MultipartBody.Part?
-    ) = quoteService.createQuote(
+    ) = quoteApi.createQuote(
         quoteData = quoteData,
         quoteImage = quoteImage
     )
 
     suspend fun updateQuoteViewCount(
         quoteId: Long
-    ) = quoteService.updateQuoteViewCount(quoteId)
+    ) = quoteApi.updateQuoteViewCount(quoteId)
 
     suspend fun getQuoteByIsbn(
         isbn: String
-    ) = quoteService.getQuoteByIsbn(isbn)
+    ) = quoteApi.getQuoteByIsbn(isbn)
 
     suspend fun likeQuote(
         quoteId: Long
-    ) = quoteService.likeQuote(quoteId)
+    ) = quoteApi.likeQuote(quoteId)
 
     suspend fun unLikeQuote(
         quoteId: Long
-    ) = quoteService.unLikeQuote(quoteId)
+    ) = quoteApi.unLikeQuote(quoteId)
 
     suspend fun getQuoteById(
         quoteId: Long
-    ) = quoteService.getQuoteById(quoteId)
+    ) = quoteApi.getQuoteById(quoteId)
 
-    suspend fun getMyUploadQuotes() = quoteService.getMyUploadQuotes()
+    suspend fun getMyUploadQuotes() = quoteApi.getMyUploadQuotes()
 
-    suspend fun getMyLikedQuotes() = quoteService.getMyLikedQuotes()
+    suspend fun getMyLikedQuotes() = quoteApi.getMyLikedQuotes()
 }

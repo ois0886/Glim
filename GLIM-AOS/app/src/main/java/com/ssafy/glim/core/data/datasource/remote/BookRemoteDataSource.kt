@@ -1,20 +1,20 @@
 package com.ssafy.glim.core.data.datasource.remote
 
-import com.ssafy.glim.core.data.service.BookService
+import com.ssafy.glim.core.data.api.BookApi
 import javax.inject.Inject
 
 class BookRemoteDataSource @Inject constructor(
-    private val bookService: BookService
+    private val bookApi: BookApi
 ) {
     suspend fun getBooks(
         keyword: String,
         page: Int,
         queryType: String
-    ) = bookService.getBooks(keyword, page, queryType)
+    ) = bookApi.getBooks(keyword, page, queryType)
 
     suspend fun updateBookViewCount(
         bookId: Long,
-    ) = bookService.updateViewCount(bookId)
+    ) = bookApi.updateViewCount(bookId)
 
-    suspend fun getBook(bookId: Long) = bookService.getBook(bookId)
+    suspend fun getBook(bookId: Long) = bookApi.getBook(bookId)
 }

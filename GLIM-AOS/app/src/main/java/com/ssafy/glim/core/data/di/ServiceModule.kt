@@ -1,11 +1,11 @@
 package com.ssafy.glim.core.data.di
 
-import com.ssafy.glim.core.data.service.AuthService
-import com.ssafy.glim.core.data.service.BookService
-import com.ssafy.glim.core.data.service.CurationService
-import com.ssafy.glim.core.data.service.QuoteService
-import com.ssafy.glim.core.data.service.SearchQueryService
-import com.ssafy.glim.core.data.service.UserService
+import com.ssafy.glim.core.data.api.AuthApi
+import com.ssafy.glim.core.data.api.BookApi
+import com.ssafy.glim.core.data.api.CurationApi
+import com.ssafy.glim.core.data.api.QuoteApi
+import com.ssafy.glim.core.data.api.SearchQueryApi
+import com.ssafy.glim.core.data.api.UserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,35 +21,35 @@ object ServiceModule {
     @Singleton
     fun provideAuthService(
         @Named("auth") retrofit: Retrofit,
-    ): AuthService = retrofit.create(AuthService::class.java)
+    ): AuthApi = retrofit.create(AuthApi::class.java)
 
     @Provides
     @Singleton
     fun provideQuoteService(
         @Named("main") retrofit: Retrofit,
-    ): QuoteService = retrofit.create(QuoteService::class.java)
+    ): QuoteApi = retrofit.create(QuoteApi::class.java)
 
     @Provides
     @Singleton
     fun provideBookService(
         @Named("main") retrofit: Retrofit,
-    ): BookService = retrofit.create(BookService::class.java)
+    ): BookApi = retrofit.create(BookApi::class.java)
 
     @Provides
     @Singleton
     fun provideCurationService(
         @Named("main") retrofit: Retrofit,
-    ): CurationService = retrofit.create(CurationService::class.java)
+    ): CurationApi = retrofit.create(CurationApi::class.java)
 
     @Provides
     @Singleton
     fun provideUserService(
         @Named("main") retrofit: Retrofit
-    ): UserService = retrofit.create(UserService::class.java)
+    ): UserApi = retrofit.create(UserApi::class.java)
 
     @Provides
     @Singleton
     fun provideSearchQueryService(
         @Named("main") retrofit: Retrofit
-    ): SearchQueryService = retrofit.create(SearchQueryService::class.java)
+    ): SearchQueryApi = retrofit.create(SearchQueryApi::class.java)
 }
