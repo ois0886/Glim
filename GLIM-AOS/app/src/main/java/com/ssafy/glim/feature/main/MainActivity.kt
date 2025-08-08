@@ -121,7 +121,11 @@ class MainActivity : ComponentActivity() {
                         LaunchedEffect(initialRoute) {
                             if (destination == BottomTabRoute.Home && initialRoute == "glim") {
                                 val quoteId = intent.getLongExtra("quote_id", -1L)
-                                navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
+                                navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId = quoteId))
+                            }
+                            if ((destination == BottomTabRoute.Home && initialRoute == "book")) {
+                                val bookId = intent.getLongExtra("book_id", -1L)
+                                navigator.clearBackStackAndNavigate(Route.BookDetail(bookId = bookId))
                             }
                         }
                     }

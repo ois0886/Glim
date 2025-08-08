@@ -87,7 +87,7 @@ class GlimNotificationService : FirebaseMessagingService() {
         val bookIntent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             if (quoteId != -1L) {
-                putExtra("nav_route", "glim")
+                putExtra("nav_route", "book")
                 putExtra("book_id", bookId)
             }
         }

@@ -16,40 +16,40 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ServiceModule {
+object ApiModule {
     @Provides
     @Singleton
-    fun provideAuthService(
+    fun provideAuthApi(
         @Named("auth") retrofit: Retrofit,
     ): AuthApi = retrofit.create(AuthApi::class.java)
 
     @Provides
     @Singleton
-    fun provideQuoteService(
+    fun provideQuoteApi(
         @Named("main") retrofit: Retrofit,
     ): QuoteApi = retrofit.create(QuoteApi::class.java)
 
     @Provides
     @Singleton
-    fun provideBookService(
+    fun provideBookApi(
         @Named("main") retrofit: Retrofit,
     ): BookApi = retrofit.create(BookApi::class.java)
 
     @Provides
     @Singleton
-    fun provideCurationService(
+    fun provideCurationApi(
         @Named("main") retrofit: Retrofit,
     ): CurationApi = retrofit.create(CurationApi::class.java)
 
     @Provides
     @Singleton
-    fun provideUserService(
+    fun provideUserApi(
         @Named("main") retrofit: Retrofit
     ): UserApi = retrofit.create(UserApi::class.java)
 
     @Provides
     @Singleton
-    fun provideSearchQueryService(
+    fun provideSearchQueryApi(
         @Named("main") retrofit: Retrofit
     ): SearchQueryApi = retrofit.create(SearchQueryApi::class.java)
 }
