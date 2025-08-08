@@ -134,11 +134,12 @@ fun ActionButtons(
 @Composable
 fun DarkGrayRoundedSurface(
     modifier: Modifier = Modifier,
+    alpha: Float = 0.8f,
     content: @Composable () -> Unit
 ) {
     Surface(
         modifier = modifier.padding(8.dp),
-        color = Color.DarkGray.copy(alpha = 0.8f),
+        color = Color.DarkGray.copy(alpha = alpha),
         shape = RoundedCornerShape(12.dp),
     ) {
         content()

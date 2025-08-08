@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.bookdetail
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -22,20 +20,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.QuoteSummary
-import com.ssafy.glim.ui.theme.GlimColor.LightBrown
 
 @Composable
 fun BookDetailTopBar(
@@ -44,9 +38,7 @@ fun BookDetailTopBar(
     onBackClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(LightBrown),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onBackClick) {
@@ -71,97 +63,62 @@ fun BookDetailTopBar(
 }
 
 @Composable
-fun BookInfoSection(book: Book) {
-    Row(
-        modifier = Modifier
+fun BookInfoSection(modifier: Modifier = Modifier, book: Book) {
+    Column(
+        modifier = modifier
             .fillMaxWidth()
-            .background(
-                brush =
-                Brush.linearGradient(
-                    colors = listOf(LightBrown, LightBrown.copy(alpha = 0.0f)),
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, Float.POSITIVE_INFINITY),
-                ),
-            )
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        AsyncImage(
-            model = book.cover,
-            contentDescription = stringResource(R.string.book_cover),
-            modifier = Modifier
-                .size(80.dp, 120.dp),
-            contentScale = ContentScale.Crop,
-            placeholder = painterResource(id = R.drawable.ic_image),
-            error = painterResource(id = R.drawable.ic_image)
+        Text(
+            text = book.title,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
         )
 
-        Spacer(modifier = Modifier.width(20.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+        Text(
+            text = book.categoryText,
+            style = MaterialTheme.typography.bodySmall,
+        )
+
+        Text(
+            text = book.author,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .weight(1f),
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = book.title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .weight(1f),
-                )
+            Text(
+                text = book.publisher,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .weight(1f),
+                fontWeight = FontWeight.Bold
+            )
 
-                Text(
-                    text = book.categoryText,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = book.author,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .weight(1f),
-                )
-
-                Text(
-                    text = stringResource(R.string.publication_date) + " ${book.pubDate}",
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = book.publisher,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .weight(1f),
-                    fontWeight = FontWeight.Bold
-                )
-
-                Text(
-                    text = stringResource(R.string.price) + " ${book.priceText}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            Text(
+                text = book.pubDate,
+                style = MaterialTheme.typography.bodySmall,
+            )
         }
+
+        Spacer(Modifier.height(8.dp))
+
+        Text(
+            text = stringResource(R.string.price) + " ${book.priceText}",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.End)
+        )
     }
 }
 
@@ -175,33 +132,53 @@ fun QuoteCard(
         modifier = modifier
             .clickable { onClickCard(quote.quoteId) },
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = Color.White,
+            contentColor = Color.Black
         ),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Icon(
+                painter = painterResource(R.drawable.ic_quote),
+                contentDescription = null
+            )
             Text(
                 text = quote.content,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 5,
+                minLines = 3,
                 overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(vertical = 8.dp),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
             )
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
+
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_views),
+                    contentDescription = stringResource(R.string.views),
+                    modifier = Modifier.padding(end = 2.dp)
+                )
                 Text(
-                    text = "p.${quote.page}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.weight(1f)
+                    text = quote.views.toString(),
+                    style = MaterialTheme.typography.labelLarge,
                 )
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.Bottom
-                ) {
+                Spacer(Modifier.weight(1f))
+
                     Icon(
                         painter = painterResource(
                             if (quote.isLiked) {
@@ -212,35 +189,17 @@ fun QuoteCard(
                         ),
                         contentDescription = null,
                         tint =
-                        if (quote.isLiked) {
-                            Color.Red
-                        } else {
-                            Color.Black
-                        },
+                            if (quote.isLiked) {
+                                Color.Red
+                            } else {
+                                Color.Black
+                            },
                     )
                     Text(
                         text = quote.likes.toString(),
                         style = MaterialTheme.typography.labelLarge,
-                        color = Color.Black,
                     )
-                }
 
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_views),
-                        contentDescription = stringResource(R.string.views),
-                        modifier = Modifier.padding(end = 2.dp)
-                    )
-                    Text(
-                        text = quote.views.toString(),
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                }
             }
         }
     }

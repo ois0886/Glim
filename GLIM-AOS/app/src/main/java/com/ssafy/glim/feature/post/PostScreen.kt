@@ -20,6 +20,7 @@ import androidx.wear.compose.material.CircularProgressIndicator
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.common.utils.rememberCameraWithPermission
+import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.ui.DarkThemeScreen
 import com.ssafy.glim.feature.post.component.PostContent
 import com.ssafy.glim.feature.post.component.imageoverlay.TextExtractionImageOverlay
@@ -28,6 +29,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 internal fun PostRoute(
+    bookId: Long,
     padding: PaddingValues,
     popBackStack: () -> Unit,
     viewModel: PostViewModel = hiltViewModel(),
@@ -35,6 +37,9 @@ internal fun PostRoute(
     val state by viewModel.collectAsState()
     val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        viewModel.initialize(bookId)
+    }
     // 이미지 텍스트 추출
     val textImageLauncher =
         rememberLauncherForActivityResult(
@@ -84,10 +89,6 @@ internal fun PostRoute(
 
     BackHandler {
         viewModel.backPressed()
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.initialize()
     }
 
     DarkThemeScreen {
