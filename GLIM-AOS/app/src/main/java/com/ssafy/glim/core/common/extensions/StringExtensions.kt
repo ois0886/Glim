@@ -203,4 +203,13 @@ fun Gender.formatGenderToString(): String {
     }
 }
 
-fun String.parseHtmlString() = Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY).toString()
+fun String.parseHtmlString(): String {
+    return this
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&amp;", "&")
+        .replace("&quot;", "\"")
+        .replace("&apos;", "'")
+        .replace("&#39;", "'")
+        .replace("&nbsp;", " ")
+}

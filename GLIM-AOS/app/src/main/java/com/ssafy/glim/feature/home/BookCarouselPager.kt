@@ -38,12 +38,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import coil.compose.SubcomposeAsyncImage
-import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.ui.GlimErrorLoader
+import com.ssafy.glim.core.ui.GlimLoader
+import com.ssafy.glim.ui.theme.GlimColor.navy
 import kotlinx.coroutines.launch
 import kotlin.math.abs
-
 @Composable
 fun BookCarouselPager(
     books: List<Book>,
@@ -53,34 +54,33 @@ fun BookCarouselPager(
     if (books.isEmpty()) return
 
     val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp
     val cardWidth = 180.dp
-    val pageSpacing = 16.dp
-
-    // 화면 중앙에 카드가 오도록 패딩 계산
-    val sidePadding = (screenWidth - cardWidth) / 2
+    val sidePadding = (configuration.screenWidthDp.dp - cardWidth) / 2
 
     val pagerState = rememberPagerState(
-        initialPage = Integer.MAX_VALUE / 2,
-        pageCount = { Integer.MAX_VALUE }
+        initialPage = Int.MAX_VALUE / 2,
+        pageCount = { Int.MAX_VALUE }
     )
-
+    val scope = rememberCoroutineScope()
+    
     HorizontalPager(
         state = pagerState,
-        modifier = modifier.fillMaxWidth().height(272.dp),
-        pageSpacing = pageSpacing,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(272.dp),
+        pageSpacing = 16.dp,
         contentPadding = PaddingValues(horizontal = sidePadding),
         pageSize = PageSize.Fixed(cardWidth)
     ) { page ->
         val book = books[page % books.size]
         val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-        val scope = rememberCoroutineScope()
 
         BookPagerCard(
             book = book,
             pageOffset = pageOffset,
             onItemClick = { bookId ->
-                if (pageOffset == 0f) {
+                // 더 안전한 조건 사용
+                if (pagerState.currentPage == page) {
                     onItemClick(bookId)
                 } else {
                     scope.launch {
@@ -100,9 +100,9 @@ private fun BookPagerCard(
     onItemClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // 페이지 오프셋에 따른 스케일, 알파, 그림자 계산
-    val scale = lerp(0.6f, 1f, 1f - abs(pageOffset).coerceIn(0f, 1f))
-    val alpha = lerp(0.4f, 1f, 1f - abs(pageOffset).coerceIn(0f, 1f))
+    val absOffset = abs(pageOffset).coerceIn(0f, 1f)
+    val scale = lerp(0.6f, 1f, 1f - absOffset)
+    val alpha = lerp(0.4f, 1f, 1f - absOffset)
 
     Card(
         modifier = modifier
@@ -116,100 +116,58 @@ private fun BookPagerCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // 책 커버 이미지
-            SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(book.cover)
-                    .crossfade(true)
-                    .diskCachePolicy(CachePolicy.ENABLED)
-                    .memoryCachePolicy(CachePolicy.ENABLED)
-                    .build(),
-                contentDescription = book.title,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-                loading = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Gray.copy(alpha = 0.3f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(32.dp),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                },
-                error = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Gray.copy(alpha = 0.5f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Book,
-                            contentDescription = "Error",
-                            modifier = Modifier.size(48.dp),
-                            tint = Color.White.copy(alpha = 0.7f)
-                        )
-                    }
-                }
+            BookCoverImage(
+                imageUrl = book.cover,
+                title = book.title,
+                modifier = Modifier.fillMaxSize()
             )
 
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .background(
-                        Color(0xCC004784)
-                    )
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = book.title,
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
-                    color = Color.White
-                )
-
-                if (book.categoryText.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = book.categoryText,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = Color.White.copy(alpha = 0.7f),
-                            fontSize = 12.sp
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-
-            // 상단 우측 가격 정보 (선택사항)
-            if (book.priceStandard > 0) {
-                Card(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Black.copy(alpha = 0.6f)
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(
-                        text = book.priceText,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                    )
-                }
-            }
+            BookInfo(
+                title = book.title,
+                modifier = Modifier.align(Alignment.BottomStart)
+            )
         }
     }
+}
+
+@Composable
+private fun BookCoverImage(
+    imageUrl: String,
+    title: String,
+    modifier: Modifier = Modifier
+) {
+    SubcomposeAsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUrl)
+            .crossfade(true)
+            .build(),
+        contentDescription = title,
+        modifier = modifier,
+        contentScale = ContentScale.Crop,
+        loading = {
+            GlimLoader()
+        },
+        error = {
+            GlimErrorLoader()
+        }
+    )
+}
+
+@Composable
+private fun BookInfo(
+    title: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.bodySmall,
+        fontWeight = FontWeight.Bold,
+        maxLines = 3,
+        overflow = TextOverflow.Ellipsis,
+        color = Color.White,
+        modifier = modifier
+            .background(navy.copy(alpha = 0.8f))
+            .padding(16.dp)
+            .fillMaxWidth()
+    )
 }
