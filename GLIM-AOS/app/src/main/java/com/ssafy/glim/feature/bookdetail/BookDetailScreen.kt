@@ -155,7 +155,7 @@ fun BookDetailContent(
                 }
                 item {
                     Spacer(Modifier.height(8.dp))
-                    BookInfoSection(book = book)
+                    BookInfoSection(book = book, quoteCount = quotes.size)
                 }
                 item {
                     Spacer(modifier = Modifier.height(8.dp))

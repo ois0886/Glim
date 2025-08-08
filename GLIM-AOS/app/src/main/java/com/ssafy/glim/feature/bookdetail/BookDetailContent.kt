@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -63,13 +63,28 @@ fun BookDetailTopBar(
 }
 
 @Composable
-fun BookInfoSection(modifier: Modifier = Modifier, book: Book) {
+fun BookInfoSection(
+    modifier: Modifier = Modifier,
+    book: Book,
+    quoteCount: Int
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
+        Surface(
+            modifier = modifier.padding(vertical = 4.dp),
+            color = Color.LightGray.copy(alpha = 0.3f),
+            shape = RoundedCornerShape(8.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.quote_count_tag_text, quoteCount),
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
         Text(
             text = book.title,
             style = MaterialTheme.typography.bodyLarge,
@@ -179,26 +194,26 @@ fun QuoteCard(
 
                 Spacer(Modifier.weight(1f))
 
-                    Icon(
-                        painter = painterResource(
-                            if (quote.isLiked) {
-                                R.drawable.ic_like_200_fill
-                            } else {
-                                R.drawable.ic_like_200
-                            }
-                        ),
-                        contentDescription = null,
-                        tint =
-                            if (quote.isLiked) {
-                                Color.Red
-                            } else {
-                                Color.Black
-                            },
-                    )
-                    Text(
-                        text = quote.likes.toString(),
-                        style = MaterialTheme.typography.labelLarge,
-                    )
+                Icon(
+                    painter = painterResource(
+                        if (quote.isLiked) {
+                            R.drawable.ic_like_200_fill
+                        } else {
+                            R.drawable.ic_like_200
+                        }
+                    ),
+                    contentDescription = null,
+                    tint =
+                        if (quote.isLiked) {
+                            Color.Red
+                        } else {
+                            Color.Black
+                        },
+                )
+                Text(
+                    text = quote.likes.toString(),
+                    style = MaterialTheme.typography.labelLarge,
+                )
 
             }
         }

@@ -279,4 +279,5 @@
     <!-- 일반적인 텍스트 -->
     <string name="error_occurred">오류가 발생했습니다</string>
     <string name="retry">다시 시도</string>
+    <string name="quote_count_tag_text">글귀 %1$s개</string>
 </resources>
