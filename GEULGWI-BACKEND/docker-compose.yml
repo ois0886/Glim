@@ -10,6 +10,11 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     ports:
       - "5431:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "geulgwi_user" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - geulgwi-net
 
@@ -38,8 +43,10 @@ services:
       - ./upload-images:/uploads/images
       - ./backend-logs:/logs
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - geulgwi-net
 

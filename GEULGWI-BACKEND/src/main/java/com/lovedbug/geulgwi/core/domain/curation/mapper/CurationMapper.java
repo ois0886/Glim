@@ -29,7 +29,7 @@ public class CurationMapper {
     public static List<CurationContentResponse> toCurationContentListFromQuotes(List<QuoteWithBookResponse> quoteWithBooks) {
         return quoteWithBooks.stream()
             .map(CurationMapper::toCurationContent)
-            .toList();
+            .collect(Collectors.toList());
     }
 
     public static CurationContentResponse toCurationContent(AladdinBookResponse aladdinBook) {
@@ -54,7 +54,7 @@ public class CurationMapper {
     public static List<CurationContentResponse> toCurationContentListFromBooks(List<PopularBookResponse> popularBooks) {
         return popularBooks.stream()
             .map(CurationMapper::toCurationContent)
-            .toList();
+            .collect(Collectors.toList());
     }
 
     public static CurationContentResponse toCurationContent(CurationBook curationBook) {
@@ -80,7 +80,7 @@ public class CurationMapper {
 
                 List<CurationContentResponse> contents = curationItems.stream()
                     .map(CurationMapper::toCurationContent)
-                    .toList();
+                    .collect(Collectors.toList());
 
                 return new CurationItemResponse(
                     curationItemId,
@@ -90,7 +90,7 @@ public class CurationMapper {
                     contents
                 );
             })
-            .toList();
+            .collect(Collectors.toList());
     }
 
     public static CurationContentResponse toCurationContent(CurationQuote curationQuote) {
@@ -117,7 +117,7 @@ public class CurationMapper {
 
                 List<CurationContentResponse> contents = curationItems.stream()
                     .map(CurationMapper::toCurationContent)
-                    .toList();
+                    .collect(Collectors.toList());
 
                 return new CurationItemResponse(
                     curationItemId,
@@ -127,6 +127,6 @@ public class CurationMapper {
                     contents
                 );
             })
-            .toList();
+            .collect(Collectors.toList());
     }
 }

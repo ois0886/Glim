@@ -1,54 +1,60 @@
 package com.lovedbug.geulgwi.core.domain.curation;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import org.springframework.stereotype.Service;
+import com.lovedbug.geulgwi.core.common.exception.GeulgwiException;
 import com.lovedbug.geulgwi.core.domain.book.BookService;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
-import com.lovedbug.geulgwi.core.domain.curation.repository.MainCurationRepository;
-import com.lovedbug.geulgwi.core.domain.quote.QuoteService;
-import lombok.RequiredArgsConstructor;
-import java.util.List;
-import java.util.stream.Stream;
-import org.springframework.stereotype.Service;
-import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinListQueryType;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationContentResponse;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
 import com.lovedbug.geulgwi.core.domain.curation.mapper.CurationMapper;
+import com.lovedbug.geulgwi.core.domain.quote.QuoteRankingService;
+import com.lovedbug.geulgwi.core.domain.quote.QuoteService;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CurationService {
 
     private final BookService bookService;
     private final QuoteService quoteService;
-    private final MainCurationRepository mainCurationRepository;
+    private final QuoteRankingService quoteRankingService;
+    private final CurationCacheService curationCacheService;
 
     public List<CurationItemResponse> getMainCuration() {
         final long MAIN_CURATION_ID = 1L;
 
-        return Stream.of(
-                List.of(
-                    getPopularQuoteCuration(),
-                    getPopularBookCuration()),
-                getBookCurationsById(MAIN_CURATION_ID),
-                getQuoteCurationsById(MAIN_CURATION_ID))
-            .flatMap(List::stream)
-            .toList();
-    }
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List<Future<List<CurationItemResponse>>> futures = List.of(
+                executor.submit(() -> List.of(getPopularQuoteCuration())),
+                executor.submit(() -> List.of(getPopularBookCuration())),
+                executor.submit(() -> curationCacheService.getBookCurationsById(MAIN_CURATION_ID)),
+                executor.submit(() -> curationCacheService.getQuoteCurationsById(MAIN_CURATION_ID))
+            );
 
-    public List<CurationItemResponse> getBookCurationsById(long curationId) {
-        return CurationMapper.toCurationItemDtoListFromBooks(
-            mainCurationRepository.findCurationBooksByCurationId(curationId)
-        );
-    }
-
-    public List<CurationItemResponse> getQuoteCurationsById(long curationId) {
-        return CurationMapper.toCurationItemDtoListFromQuotes(
-            mainCurationRepository.findCurationQuotesByCurationId(curationId)
-        );
+            return futures.stream()
+                .flatMap(future -> {
+                    try {
+                        return future.get().stream();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        throw new GeulgwiException("병렬적으로 큐레이션 요소 조회 중 인터럽트 발생", e);
+                    } catch (ExecutionException e) {
+                        throw new GeulgwiException("메인 큐레이션 병렬 조회 중 오류 발생", e);
+                    }
+                })
+                .toList();
+        }
     }
 
     public CurationItemResponse getPopularQuoteCuration() {
         List<CurationContentResponse> contents = CurationMapper.toCurationContentListFromQuotes(
-            quoteService.getPopularQuotesWithBook()
+            quoteRankingService.getPopularQuotesWithBook()
         );
 
         return CurationItemResponse.builder()
