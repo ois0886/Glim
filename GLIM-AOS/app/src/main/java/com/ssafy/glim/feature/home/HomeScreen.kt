@@ -120,7 +120,7 @@ private fun HomeScreen(
 
                 is HomeSectionUiModel.BookSection -> {
                     SectionTitle(section.title)
-                    BookCarousel(
+                    BookCarouselPager(
                         books = section.books,
                         onItemClick = onBookClick,
                     )
@@ -209,7 +209,7 @@ fun QuoteCarousel(
             ) {
                 Card(
                     modifier = Modifier.size(itemSize),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(4.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 ) {
                     GlimSubcomposeAsyncImage(

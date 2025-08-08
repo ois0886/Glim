@@ -202,7 +202,7 @@ fun BookDetailContent(
                             action = toggleBookDescriptionExpanded
                         )
                         Text(
-                            text = Html.fromHtml(book.description, Html.FROM_HTML_MODE_LEGACY).toString(),
+                            text = book.description,
                             style = MaterialTheme.typography.bodyMedium,
                             maxLines = if (isDescriptionExpanded) Int.MAX_VALUE else 5,
                             overflow = TextOverflow.Ellipsis

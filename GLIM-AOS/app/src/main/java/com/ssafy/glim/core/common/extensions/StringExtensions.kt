@@ -1,5 +1,6 @@
 package com.ssafy.glim.core.common.extensions
 
+import android.text.Html
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.core.util.PatternsCompat
 import com.ssafy.glim.core.domain.model.user.Gender
@@ -201,3 +202,5 @@ fun Gender.formatGenderToString(): String {
         Gender.FEMALE -> "여자"
     }
 }
+
+fun String.parseHtmlString() = Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY).toString()
