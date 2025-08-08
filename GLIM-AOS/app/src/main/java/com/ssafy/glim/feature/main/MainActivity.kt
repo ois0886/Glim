@@ -22,11 +22,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.messaging.FirebaseMessaging
+import com.ssafy.glim.R
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.LaunchedNavigator
@@ -133,13 +135,12 @@ class MainActivity : ComponentActivity() {
                     navController = navController
                 )
 
-                // 알림 권한 거부 다이얼로그
                 if (showNotificationPermissionDialog) {
                     AlertDialog(
                         onDismissRequest = { showNotificationPermissionDialog = false },
-                        title = { Text("알림 권한 필요") },
+                        title = { Text(stringResource(R.string.notification_permission_title)) },
                         text = {
-                            Text("중요한 알림을 받기 위해 설정에서 수동으로 알림 권한을 허용해주세요.")
+                            Text(stringResource(R.string.notification_permission_message))
                         },
                         confirmButton = {
                             TextButton(
@@ -148,14 +149,14 @@ class MainActivity : ComponentActivity() {
                                     showNotificationPermissionDialog = false
                                 }
                             ) {
-                                Text("설정으로 이동")
+                                Text(stringResource(R.string.go_to_settings))
                             }
                         },
                         dismissButton = {
                             TextButton(
                                 onClick = { showNotificationPermissionDialog = false }
                             ) {
-                                Text("취소")
+                                Text(stringResource(R.string.cancel))
                             }
                         }
                     )
@@ -171,20 +172,18 @@ class MainActivity : ComponentActivity() {
                     this,
                     Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED -> {
-                    // 권한이 이미 있음
                     Log.d("Permission", "알림 권한이 이미 허용됨")
                 }
+
                 shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
-                    // 권한 설명이 필요한 경우
                     showPermissionRationale()
                 }
+
                 else -> {
-                    // 권한 요청
                     notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
         } else {
-            // Android 12 이하에서는 자동으로 권한이 있음
             Log.d("Permission", "Android 12 이하 - 알림 권한 자동 허용")
         }
     }

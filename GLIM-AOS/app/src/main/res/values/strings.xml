@@ -279,4 +279,9 @@
     <!-- 일반적인 텍스트 -->
     <string name="error_occurred">오류가 발생했습니다</string>
     <string name="retry">다시 시도</string>
+
+    <string name="notification_permission_title">알림 권한 필요</string>
+    <string name="notification_permission_message">알림을 통해 좋은 소식을 전달해드리고 싶어요. 설정에서 알림 권한을 허용해주시겠어요?</string>
+    <string name="notification_permission_granted">알림 권한이 허용되었습니다</string>
+    <string name="go_to_settings">설정으로 이동</string>
 </resources>
