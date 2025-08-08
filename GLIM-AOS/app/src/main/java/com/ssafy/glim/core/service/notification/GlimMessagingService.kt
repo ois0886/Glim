@@ -20,7 +20,7 @@ class GlimMessagingService : FirebaseMessagingService() {
 
         // 알림 페이로드 처리
         remoteMessage.notification?.let {
-            Log.d("NotificationService", "Message Notification Body: ${it.body}")
+            Log.d("NotificationService", "Message Notification Body: ${it.title}, ${it.body}, ${it.imageUrl}")
         }
     }
 

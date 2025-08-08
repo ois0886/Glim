@@ -58,10 +58,10 @@ fun ActionButtons(
 
     Column(
         modifier =
-            modifier
-                .fillMaxHeight()
-                .padding(4.dp)
-                .systemBarsPadding(),
+        modifier
+            .fillMaxHeight()
+            .padding(4.dp)
+            .systemBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End,
     ) {
