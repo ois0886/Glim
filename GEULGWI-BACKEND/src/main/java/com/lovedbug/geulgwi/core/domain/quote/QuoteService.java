@@ -134,7 +134,7 @@ public class QuoteService {
     }
 
     @Transactional(readOnly = true)
-    public List<QuoteResponse> getUploadedQuotesByMemberId (Long memberId) {
+    public List<QuoteResponse> getUploadedQuotesByMemberId(Long memberId) {
 
         List<MemberQuote> memberQuotes = memberQuoteRepository.findAllByMemberId(memberId);
 
