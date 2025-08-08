@@ -41,7 +41,7 @@ export const searchQuotes = async (content: string): Promise<QuoteSearchResult[]
 
 // Admin용 도서 검색
 export const adminSearchBooks = async (keyword: string): Promise<BookSearchResult[]> => {
-  const response = await axiosInstance.get('/api/v1/admin/search-keywords/books', {
+  const response = await axiosInstance.get('/v1/admin/search-keywords/books', {
     params: { keyword, page: 0, size: 10 }
   });
   return response.data.content || response.data;
@@ -49,7 +49,7 @@ export const adminSearchBooks = async (keyword: string): Promise<BookSearchResul
 
 // Admin용 글귀 검색
 export const adminSearchQuotes = async (keyword: string): Promise<QuoteSearchResult[]> => {
-  const response = await axiosInstance.get('/api/v1/admin/search-keywords/quotes', {
+  const response = await axiosInstance.get('/v1/admin/search-keywords/quotes', {
     params: { keyword, page: 0, size: 10 }
   });
   return response.data.content || response.data;

@@ -77,6 +77,9 @@ export function UserManagement() {
   const [statusFilter, setStatusFilter] = useState("all")
   // 사용자 목록 데이터를 저장하는 상태
   const [users, setUsers] = useState<User[]>([])
+  const [totalUsers, setTotalUsers] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // 기본값 10개
   // 사용자 편집 다이얼로그(모달)의 열림/닫힘 상태를 관리하는 상태
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   // 현재 편집 중인 사용자 정보를 저장하는 상태
@@ -88,11 +91,13 @@ export function UserManagement() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axiosInstance.get('/api/v1/members');
+        const response = await axiosInstance.get('/v1/admin/members');
         console.log("API Response (raw):", response);
         console.log("API Response (data):", response.data);
         console.log("API Response (data.data):", response.data.data);
-        setUsers(response.data || []); // 데이터가 null이나 undefined일 경우 빈 배열로 설정
+        const sortedUsers = (response.data || []).sort((a: any, b: any) => a.memberId - b.memberId);
+        setUsers(sortedUsers);
+        setTotalUsers(sortedUsers.length);
       } catch (error) {
         console.error("Failed to fetch users:", error);
       }
@@ -103,11 +108,10 @@ export function UserManagement() {
 
   // 검색어와 상태 필터에 따라 사용자 목록을 필터링합니다.
   const filteredUsers = users.filter((user) => {
-    console.log("Filtering user:", user);
     // 닉네임 또는 이메일에 검색어가 포함되는지 확인
     const matchesSearch =
       user.nickname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
     
     // 상태 필터에 따라 추가 필터링
     if (statusFilter === 'all') {
@@ -121,6 +125,21 @@ export function UserManagement() {
     }
     return matchesSearch; // 기본적으로 검색어만 일치하는 경우
   });
+
+  // 페이지네이션 로직
+  const indexOfLastUser = currentPage * itemsPerPage;
+  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleItemsPerPageChange = (value: string) => {
+    setItemsPerPage(Number(value));
+    setCurrentPage(1); // 항목 수 변경 시 첫 페이지로 이동
+  };
 
   // 사용자 편집 버튼 클릭 시 호출되는 함수
   const handleEditClick = (user: User) => {
@@ -220,7 +239,7 @@ export function UserManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>사용자 목록</CardTitle>
+          <CardTitle>사용자 목록 ({totalUsers}명)</CardTitle>
           <div className="flex gap-4">
             {/* 검색 입력 필드 */}
             <div className="relative flex-1">
@@ -243,14 +262,58 @@ export function UserManagement() {
                 <SelectItem value="inactive">비활성</SelectItem>
               </SelectContent>
             </Select>
+            {/* 페이지당 항목 수 선택 드롭다운 */}
+            <Select value={String(itemsPerPage)} onValueChange={handleItemsPerPageChange}>
+              <SelectTrigger className="h-10 w-[120px]">
+                <SelectValue placeholder="페이지당" />
+              </SelectTrigger>
+              <SelectContent side="top">
+                <SelectItem value="10">10개</SelectItem>
+                <SelectItem value="15">15개</SelectItem>
+                <SelectItem value="20">20개</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardHeader>
         <CardContent>
           <UserTable
-            users={filteredUsers}
+            users={currentUsers}
             onEditClick={handleEditClick}
             onStatusChangeClick={handleStatusChangeClick}
           />
+          <div className="flex items-center justify-between space-x-2 py-4">
+            <div className="flex-1 text-sm text-muted-foreground">
+              총 {filteredUsers.length}명 중 {indexOfFirstUser + 1}-{Math.min(indexOfLastUser, filteredUsers.length)}명 표시.
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                이전
+              </Button>
+              {[...Array(totalPages)].map((_, index) => (
+                <Button
+                  key={index + 1}
+                  variant={currentPage === index + 1 ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                다음
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
 

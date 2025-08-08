@@ -33,7 +33,7 @@ export interface CurationMutationPayload {
 
 // Admin 메인 큐레이션 목록 조회
 export const getCurations = async (): Promise<ApiCuration[]> => {
-  const response = await axiosInstance.get('/api/v1/admin/curations/main');
+  const response = await axiosInstance.get('/v1/admin/curations/main');
   return response.data;
 };
 
@@ -61,7 +61,7 @@ export const getCurationById = async (id: string): Promise<ApiCuration> => {
 
 // 큐레이션 생성
 export const createCuration = async (payload: CurationMutationPayload): Promise<any> => {
-  const response = await axiosInstance.post('/api/v1/admin/curations', payload);
+  const response = await axiosInstance.post('/v1/admin/curations', payload);
   return response.data;
 };
 
@@ -73,10 +73,10 @@ export const updateCuration = async (itemId: string, payload: CurationMutationPa
 // 큐레이션 순서 변경
 export const updateCurationOrder = async (orderedIds: number[]): Promise<void> => {
   // 메인 큐레이션 목록의 순서를 업데이트합니다.
-  await axiosInstance.put('/api/v1/admin/curations/order', { orderedIds });
+  await axiosInstance.put('/v1/admin/curations/order', { orderedIds });
 };
 
 // 큐레이션 삭제
 export const deleteCuration = async (itemId: number): Promise<void> => {
-  await axiosInstance.delete(`/api/v1/admin/curations/items/${itemId}`);
+  await axiosInstance.delete(`/v1/admin/curations/items/${itemId}`);
 };

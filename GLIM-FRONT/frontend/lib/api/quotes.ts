@@ -1,20 +1,20 @@
 // /frontend/lib/api/quotes.ts
 
 import axiosInstance from '@/lib/axiosInstance';
-import { Quote } from '@/types';
 
 /**
  * 글귀(게시물) 목록을 조회하는 API
- * (GET /)
+ * (GET /api/v1/admin/search-keywords/quotes)
+ * @param keyword 검색어 (선택 사항)
  * @param page 페이지 번호 (0부터 시작)
  * @param size 페이지 크기
  * @param sort 정렬 기준 (예: 'views,desc')
  * @returns 글귀(게시물) 배열
  */
-export const getQuotes = async (page: number, size: number, sort: string): Promise<Quote[]> => {
+export const getQuotes = async (keyword: string, page: number, size: number, sort: string): Promise<any[]> => {
   try {
-    const response = await axiosInstance.get('/api/v1/quotes', {
-      params: { page, size, sort }
+    const response = await axiosInstance.get('/v1/admin/search-keywords/quotes', {
+      params: { keyword, page, size, sort }
     });
     return response.data;
   } catch (error) {
@@ -30,7 +30,7 @@ export const getQuotes = async (page: number, size: number, sort: string): Promi
  */
 export const deleteQuote = async (quoteId: number): Promise<void> => {
     try {
-        await axiosInstance.delete(`/api/v1/admin/quotes/${quoteId}`);
+        await axiosInstance.delete(`/v1/admin/quotes/${quoteId}`);
     } catch (error) {
         console.error(`[관리자] 글귀(ID: ${quoteId}) 삭제 API 호출 실패:`, error);
         throw error;

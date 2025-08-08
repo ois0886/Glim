@@ -14,6 +14,16 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { BookText, Quote, GripVertical, Edit, Trash2, PlusCircle } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 import {
   DndContext,
@@ -141,6 +151,7 @@ interface CurationListProps {
 
 export function CurationList({ onNewCuration, onEditCuration }: CurationListProps) {
   const [curations, setCurations] = useState<CurationMetadata[]>([]);
+  const [curationToDelete, setCurationToDelete] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -184,18 +195,23 @@ export function CurationList({ onNewCuration, onEditCuration }: CurationListProp
     }
   };
 
-  // ✅ [수정됨] 삭제 핸들러가 올바른 API 함수를 호출하도록 변경
-  const handleDeleteCuration = async (id: string) => {
+  const handleDeleteCuration = (id: string) => {
+    setCurationToDelete(id);
+  };
+
+  const confirmDeleteCuration = async () => {
+    if (!curationToDelete) return;
+
     try {
-      const numericId = parseInt(id, 10);
+      const numericId = parseInt(curationToDelete, 10);
       if (isNaN(numericId)) {
         toast({ title: "오류", description: "유효하지 않은 ID입니다.", variant: "destructive" });
         return;
       }
 
-      await apiDeleteCuration(numericId); // 올바른 API 함수 호출
+      await apiDeleteCuration(numericId);
 
-      setCurations((prev) => prev.filter(curation => curation.id !== id));
+      setCurations((prev) => prev.filter(curation => curation.id !== curationToDelete));
       
       toast({
         title: "✅ 큐레이션 삭제 완료",
@@ -210,6 +226,8 @@ export function CurationList({ onNewCuration, onEditCuration }: CurationListProp
         description: errorMsg,
         variant: "destructive",
       });
+    } finally {
+      setCurationToDelete(null);
     }
   };
 
@@ -306,6 +324,21 @@ export function CurationList({ onNewCuration, onEditCuration }: CurationListProp
         </CardContent>
       </Card>
       <Toaster />
+
+      <AlertDialog open={curationToDelete !== null} onOpenChange={(open) => !open && setCurationToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>삭제 확인</AlertDialogTitle>
+            <AlertDialogDescription>
+              정말로 이 큐레이션을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>취소</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteCuration}>삭제</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

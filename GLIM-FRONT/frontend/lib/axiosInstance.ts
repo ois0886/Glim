@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
    * 이 값은 .env.local 파일에 정의된 NEXT_PUBLIC_API_URL 환경 변수에서 가져옵니다.
    * 이렇게 하면 실제 주소가 코드에 노출되지 않아 안전합니다.
    */
-  baseURL: process.env.NEXT_PUBLIC_API_URL || '/api',
+  baseURL: '/api',
 
   // 요청이 5초 이상 걸리면 타임아웃 처리합니다.
   timeout: 5000,

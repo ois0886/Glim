@@ -127,11 +127,6 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
     }
   }, [curationId, form, toast]);
 
-  const handleRemoveItem = (idToRemove: string) => {
-    setCurationItems((prev) => prev.filter((item) => item.id !== idToRemove));
-    toast({ title: "항목 제거됨", description: "리스트에서 항목이 제거되었습니다. 저장 시 반영됩니다." });
-  };
-
   const handleAddItemFromSearch = (item: CurationItem) => {
     if (!curationItems.some(curationItem => curationItem.id === item.id)) {
       setCurationItems((prev) => [...prev, item]);
@@ -281,7 +276,6 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
                   <SortableListWrapper
                     items={curationItems}
                     setItems={setCurationItems}
-                    onRemoveItem={handleRemoveItem}
                     onUpdateItem={() => {}}
                   />
                 )}

@@ -63,11 +63,10 @@ export type CurationItem = Quote | Book; // Union type for items
 
 interface SortableItemProps {
   item: CurationItem;
-  onRemove: (id: string) => void;
   onUpdate: (updatedItem: CurationItem) => void;
 }
 
-function SortableItem({ item, onRemove, onUpdate }: SortableItemProps) {
+function SortableItem({ item, onUpdate }: SortableItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState("content" in item ? item.content : item.title);
@@ -139,9 +138,6 @@ function SortableItem({ item, onRemove, onUpdate }: SortableItemProps) {
               <Edit className="h-4 w-4" />
             </Button>
           )}
-          <Button variant="ghost" size="icon" onClick={() => onRemove(item.id)}>
-            <Trash2 className="h-4 w-4" />
-          </Button>
         </div>
       </div>
       <div className="flex items-center justify-between text-sm text-muted-foreground">
@@ -175,11 +171,10 @@ function SortableItem({ item, onRemove, onUpdate }: SortableItemProps) {
 interface SortableListWrapperProps {
   items: CurationItem[];
   setItems: React.Dispatch<React.SetStateAction<CurationItem[]>>;
-  onRemoveItem: (id: string) => void;
   onUpdateItem: (updatedItem: CurationItem) => void;
 }
 
-export function SortableListWrapper({ items, setItems, onRemoveItem, onUpdateItem }: SortableListWrapperProps) {
+export function SortableListWrapper({ items, setItems, onUpdateItem }: SortableListWrapperProps) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -211,7 +206,7 @@ export function SortableListWrapper({ items, setItems, onRemoveItem, onUpdateIte
       >
         <div className="space-y-3">
           {items.map((item) => (
-            <SortableItem key={item.id} item={item} onRemove={onRemoveItem} onUpdate={onUpdateItem} />
+            <SortableItem key={item.id} item={item} onUpdate={onUpdateItem} />
           ))}
         </div>
       </SortableContext>
