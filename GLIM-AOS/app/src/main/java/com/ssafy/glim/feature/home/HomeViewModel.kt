@@ -9,6 +9,8 @@ import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
+import com.ssafy.glim.feature.main.MainNavController
+import com.ssafy.glim.feature.main.rememberMainNavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
@@ -18,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getMainCurationsUseCase: GetMainCurationsUseCase,
-    private val navigator: Navigator,
+    private val navigator: Navigator
 ) : ViewModel(), ContainerHost<HomeUiState, HomeSideEffect> {
     override val container = container<HomeUiState, HomeSideEffect>(initialState = HomeUiState())
 
