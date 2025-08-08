@@ -46,7 +46,7 @@ fun EditProfileDialogContainer(
             title = {
                 Text(
                     text = stringResource(R.string.edit_profile),
-                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -139,7 +139,7 @@ fun LogoutConfirmationDialog(
         title = {
             Text(
                 text = stringResource(R.string.logout_title),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -182,7 +182,7 @@ fun LogoutProcessingDialog() {
         title = {
             Text(
                 text = stringResource(R.string.logout_processing_title),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -235,7 +235,7 @@ fun WithdrawalWarningDialog(
 ) {
     AlertDialog(
         onDismissRequest = onCancel,
-        title = { Text(text = stringResource(R.string.withdrawal_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) },
+        title = { Text(text = stringResource(R.string.withdrawal_title), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
@@ -278,7 +278,7 @@ fun WithdrawalConfirmationDialog(
         title = {
             Text(
                 text = stringResource(R.string.withdrawal_confirmation_title),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -309,7 +309,7 @@ fun WithdrawalConfirmationDialog(
 fun WithdrawalProcessingDialog() {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text(text = stringResource(R.string.withdrawal_processing_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) },
+        title = { Text(text = stringResource(R.string.withdrawal_processing_title), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold) },
         text = {
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 CircularProgressIndicator(modifier = Modifier.size(24.dp))

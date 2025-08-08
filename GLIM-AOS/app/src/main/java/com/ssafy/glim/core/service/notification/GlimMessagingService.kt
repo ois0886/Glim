@@ -53,7 +53,7 @@ class GlimMessagingService : FirebaseMessagingService() {
 
     private fun handleNotification(data: Map<String, String>, notification: RemoteMessage.Notification?) {
         val screen = data["screen"]
-        val title = notification?.title ?: "글림"
+        val title = notification?.title ?: "책 제목 없음"
         val body = notification?.body ?: ""
 
         when (screen) {
