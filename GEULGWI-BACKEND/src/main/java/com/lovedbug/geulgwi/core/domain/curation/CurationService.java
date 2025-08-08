@@ -1,49 +1,49 @@
 package com.lovedbug.geulgwi.core.domain.curation;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import org.springframework.stereotype.Service;
 import com.lovedbug.geulgwi.core.domain.book.BookService;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
-import com.lovedbug.geulgwi.core.domain.curation.repository.MainCurationRepository;
-import com.lovedbug.geulgwi.core.domain.quote.QuoteService;
-import lombok.RequiredArgsConstructor;
-import java.util.List;
-import java.util.stream.Stream;
-import org.springframework.stereotype.Service;
-import com.lovedbug.geulgwi.external.book_provider.aladdin.constant.AladdinListQueryType;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationContentResponse;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
 import com.lovedbug.geulgwi.core.domain.curation.mapper.CurationMapper;
+import com.lovedbug.geulgwi.core.domain.quote.QuoteService;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CurationService {
 
     private final BookService bookService;
     private final QuoteService quoteService;
-    private final MainCurationRepository mainCurationRepository;
+    private final CurationCacheService curationCacheService;
 
     public List<CurationItemResponse> getMainCuration() {
         final long MAIN_CURATION_ID = 1L;
 
-        return Stream.of(
-                List.of(
-                    getPopularQuoteCuration(),
-                    getPopularBookCuration()),
-                getBookCurationsById(MAIN_CURATION_ID),
-                getQuoteCurationsById(MAIN_CURATION_ID))
-            .flatMap(List::stream)
-            .toList();
-    }
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List<Future<List<CurationItemResponse>>> futures = List.of(
+                executor.submit(() -> List.of(getPopularQuoteCuration())),
+                executor.submit(() -> List.of(getPopularBookCuration())),
+                executor.submit(() -> curationCacheService.getBookCurationsById(MAIN_CURATION_ID)),
+                executor.submit(() -> curationCacheService.getQuoteCurationsById(MAIN_CURATION_ID))
+            );
 
-    public List<CurationItemResponse> getBookCurationsById(long curationId) {
-        return CurationMapper.toCurationItemDtoListFromBooks(
-            mainCurationRepository.findCurationBooksByCurationId(curationId)
-        );
-    }
+            return futures.stream()
+                .flatMap(future -> {
+                    try {
+                        return future.get().stream();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Failed to get curation", e);
+                    }
+                })
+                .toList();
 
-    public List<CurationItemResponse> getQuoteCurationsById(long curationId) {
-        return CurationMapper.toCurationItemDtoListFromQuotes(
-            mainCurationRepository.findCurationQuotesByCurationId(curationId)
-        );
+        }
     }
 
     public CurationItemResponse getPopularQuoteCuration() {
