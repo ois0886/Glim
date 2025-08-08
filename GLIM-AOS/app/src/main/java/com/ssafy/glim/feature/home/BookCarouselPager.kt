@@ -67,7 +67,7 @@ fun BookCarouselPager(
 
     HorizontalPager(
         state = pagerState,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().height(272.dp),
         pageSpacing = pageSpacing,
         contentPadding = PaddingValues(horizontal = sidePadding),
         pageSize = PageSize.Fixed(cardWidth)
