@@ -133,13 +133,13 @@ include::{snippets}/quote_api_docs_test/create_quote/response-body.adoc[]
 
 ==== 요청
 
-include::{snippets}/open_ai_controller_docs_test/generate_image_success/http-request.adoc[]
+include::{snippets}/open_ai_controller_docs_test/generate_image/http-request.adoc[]
 
 ==== 응답
 
-include::{snippets}/open_ai_controller_docs_test/generate_image_success/http-response.adoc[]
+include::{snippets}/open_ai_controller_docs_test/generate_image/http-response.adoc[]
 
-include::{snippets}/open_ai_controller_docs_test/generate_image_success/response-body.adoc[]
+include::{snippets}/open_ai_controller_docs_test/generate_image/response-body.adoc[]
 
 === 글귀 조회수 증가
 
