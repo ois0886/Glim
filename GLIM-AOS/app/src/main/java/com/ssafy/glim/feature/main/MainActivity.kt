@@ -8,6 +8,7 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +25,7 @@ import com.ssafy.glim.core.service.LockServiceManager
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.getValue
 
 private const val REQ_CODE_OVERLAY_PERMISSION: Int = 0
 
@@ -43,6 +45,9 @@ object PermissionUtil {
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+
     @Inject
     lateinit var lockServiceManager: LockServiceManager
 
@@ -85,7 +90,18 @@ class MainActivity : ComponentActivity() {
                     val initialRoute = intent.getStringExtra("nav_route")
 
                     if (!isLoading) {
-                        MainScreen(navigator = navigator)
+                        MainScreen(
+                            navigator = navigator,
+                            onTabSelected = {
+                                when (it.route) {
+                                    BottomTabRoute.Home -> viewModel.navigateHome()
+                                    BottomTabRoute.Post -> viewModel.navigatePost()
+                                    BottomTabRoute.Profile -> viewModel.navigateProfile()
+                                    BottomTabRoute.Search -> viewModel.navigateSearch()
+                                    is BottomTabRoute.Shorts -> viewModel.navigateQuote(-1L)
+                                }
+                            },
+                        )
 
                         LaunchedEffect(initialRoute) {
                             if (destination == BottomTabRoute.Home && initialRoute == "glim") {

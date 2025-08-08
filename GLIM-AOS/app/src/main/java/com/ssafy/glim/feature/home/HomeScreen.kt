@@ -54,6 +54,8 @@ import com.ssafy.glim.core.ui.GlimErrorLoader
 import com.ssafy.glim.core.ui.GlimLoader
 import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
+import com.ssafy.glim.feature.main.MainNavController
+import com.ssafy.glim.feature.main.rememberMainNavController
 import com.ssafy.glim.ui.theme.GlimColor.LightGray600
 import com.ssafy.glim.ui.theme.GlimColor.LightGray700
 import com.ssafy.glim.ui.theme.GlimColor.LightGray900
@@ -63,7 +65,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 internal fun HomeRoute(
     padding: PaddingValues,
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val homeUiState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
