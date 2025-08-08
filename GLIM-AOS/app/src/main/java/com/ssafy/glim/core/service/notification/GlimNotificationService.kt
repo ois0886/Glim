@@ -4,7 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
-import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -14,10 +13,10 @@ import com.ssafy.glim.feature.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class GlimMessagingService : FirebaseMessagingService() {
+class GlimNotificationService : FirebaseMessagingService() {
 
     companion object {
-        private const val TAG = "GlimMessagingService"
+        private const val TAG = "GlimNotificationService"
         private const val CHANNEL_ID = "glim_notifications"
     }
 
@@ -35,14 +34,6 @@ class GlimMessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
             handleNotification(remoteMessage.data, remoteMessage.notification)
-        }
-
-        // 알림 페이로드만 있는 경우
-        remoteMessage.notification?.let {
-            Log.d(TAG, "Message Notification: ${it.title}, ${it.body}")
-            if (remoteMessage.data.isEmpty()) {
-                showNotification(it.title ?: "글림", it.body ?: "")
-            }
         }
     }
 
@@ -102,14 +93,12 @@ class GlimMessagingService : FirebaseMessagingService() {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "글림 알림",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            "글림 알림",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }

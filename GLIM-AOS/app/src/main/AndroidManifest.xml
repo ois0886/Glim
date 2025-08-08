@@ -63,7 +63,7 @@
             android:foregroundServiceType="specialUse" />
 
         <service
-            android:name=".core.service.notification.GlimMessagingService"
+            android:name=".core.service.notification.GlimNotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
