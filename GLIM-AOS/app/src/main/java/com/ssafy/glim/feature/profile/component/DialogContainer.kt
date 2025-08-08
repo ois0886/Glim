@@ -45,7 +45,7 @@ fun EditProfileDialogContainer(
             onDismissRequest = onCancel,
             title = {
                 Text(
-                    text = "프로필 편집",
+                    text = stringResource(R.string.edit_profile),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -55,7 +55,7 @@ fun EditProfileDialogContainer(
             text = {
                 Column {
                     Text(
-                        text = "어떤 정보를 수정하시겠습니까?",
+                        text = stringResource(R.string.edit_profile_message),
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
@@ -71,7 +71,7 @@ fun EditProfileDialogContainer(
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = "개인정보 변경하기",
+                            text = stringResource(R.string.change_personal_info),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -87,7 +87,7 @@ fun EditProfileDialogContainer(
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = "비밀번호 변경하기",
+                            text = stringResource(R.string.change_password),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -99,7 +99,7 @@ fun EditProfileDialogContainer(
                 Button(
                     onClick = onCancel
                 ) {
-                    Text("취소")
+                    Text(stringResource(R.string.cancel))
                 }
             },
             shape = RoundedCornerShape(16.dp)
@@ -120,9 +120,11 @@ fun LogoutDialogContainer(
                 onCancel = onLogoutCancel
             )
         }
+
         LogoutDialogState.Processing -> {
             LogoutProcessingDialog()
         }
+
         LogoutDialogState.Hidden -> Unit
     }
 }
@@ -137,7 +139,7 @@ fun LogoutConfirmationDialog(
         title = {
             Text(
                 text = stringResource(R.string.logout_title),
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -180,7 +182,7 @@ fun LogoutProcessingDialog() {
         title = {
             Text(
                 text = stringResource(R.string.logout_processing_title),
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -220,6 +222,7 @@ fun WithdrawalDialogContainer(
             onConfirm = onFinalConfirm,
             onCancel = onFinalCancel
         )
+
         WithdrawalDialogState.Processing -> WithdrawalProcessingDialog()
         WithdrawalDialogState.Hidden -> Unit
     }
@@ -232,16 +235,24 @@ fun WithdrawalWarningDialog(
 ) {
     AlertDialog(
         onDismissRequest = onCancel,
-        title = { Text(text = stringResource(R.string.withdrawal_title), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) },
+        title = { Text(text = stringResource(R.string.withdrawal_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(text = stringResource(R.string.withdrawal_warning_description), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+                Text(
+                    text = stringResource(R.string.withdrawal_warning_description),
+                    style = MaterialTheme.typography.bodyMedium
+                )
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     BulletPoint(stringResource(R.string.withdrawal_retained_glims))
                     BulletPoint(stringResource(R.string.withdrawal_retained_likes))
                     BulletPoint(stringResource(R.string.withdrawal_retained_profile))
                 }
-                Text(text = stringResource(R.string.withdrawal_warning_caution), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                Text(
+                    text = stringResource(R.string.withdrawal_warning_caution),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    fontWeight = FontWeight.Bold
+                )
             }
         },
         confirmButton = { Button(onClick = onConfirm, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)) { Text(stringResource(R.string.withdrawal_continue)) } },
@@ -264,7 +275,13 @@ fun WithdrawalConfirmationDialog(
 
     AlertDialog(
         onDismissRequest = onCancel,
-        title = { Text(text = stringResource(R.string.withdrawal_confirmation_title), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) },
+        title = {
+            Text(
+                text = stringResource(R.string.withdrawal_confirmation_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+        },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Text(text = stringResource(R.string.withdrawal_confirmation_question), style = MaterialTheme.typography.bodyMedium)
@@ -292,7 +309,7 @@ fun WithdrawalConfirmationDialog(
 fun WithdrawalProcessingDialog() {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text(text = stringResource(R.string.withdrawal_processing_title), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) },
+        title = { Text(text = stringResource(R.string.withdrawal_processing_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) },
         text = {
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 CircularProgressIndicator(modifier = Modifier.size(24.dp))
