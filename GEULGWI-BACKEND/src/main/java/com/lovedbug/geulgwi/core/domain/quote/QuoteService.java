@@ -1,8 +1,5 @@
 package com.lovedbug.geulgwi.core.domain.quote;
 
-import com.lovedbug.geulgwi.core.domain.quote.entity.MemberQuote;
-import com.lovedbug.geulgwi.core.domain.quote.repository.MemberQuoteRepository;
-import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
@@ -24,8 +21,11 @@ import com.lovedbug.geulgwi.core.domain.quote.dto.request.QuoteCreateRequest;
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteResponse;
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteSearchResponse;
 import com.lovedbug.geulgwi.core.domain.quote.dto.response.QuoteWithBookResponse;
+import com.lovedbug.geulgwi.core.domain.quote.entity.MemberQuote;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import com.lovedbug.geulgwi.core.domain.quote.mapper.QuoteMapper;
+import com.lovedbug.geulgwi.core.domain.quote.repository.MemberQuoteRepository;
+import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import com.lovedbug.geulgwi.core.domain.search.SearchKeywordService;
 import com.lovedbug.geulgwi.external.image.ImageMetaData;
 import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
@@ -35,14 +35,15 @@ import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
 @RequiredArgsConstructor
 public class QuoteService {
 
-    private final ImageHandler imageHandler;
-
+    private final QuoteRankingService quoteRankingService;
     private final MemberLikeQuoteService memberLikeQuoteService;
     private final SearchKeywordService searchKeywordService;
 
     private final MemberQuoteRepository memberQuoteRepository;
     private final QuoteRepository quoteRepository;
     private final BookRepository bookRepository;
+
+    private final ImageHandler imageHandler;
 
     public List<QuoteWithBookResponse> getQuotesByRandom(Pageable pageable, Long memberId) {
         List<Quote> quotes = quoteRepository.findPublicQuotesByRandom(pageable);
@@ -96,6 +97,7 @@ public class QuoteService {
             .orElseThrow(() -> new EntityNotFoundException("없는 글귀 id 입니다. 글귀 id = " + quoteId));
 
         quote.increaseViewCount();
+        quoteRankingService.updateQuoteRanking(quote);
     }
 
     @Transactional

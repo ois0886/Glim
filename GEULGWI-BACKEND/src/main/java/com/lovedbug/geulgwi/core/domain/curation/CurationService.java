@@ -1,6 +1,5 @@
 package com.lovedbug.geulgwi.core.domain.curation;
 
-import com.lovedbug.geulgwi.core.common.exception.GeulgwiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
@@ -8,11 +7,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.springframework.stereotype.Service;
+import com.lovedbug.geulgwi.core.common.exception.GeulgwiException;
 import com.lovedbug.geulgwi.core.domain.book.BookService;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationContentResponse;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
 import com.lovedbug.geulgwi.core.domain.curation.mapper.CurationMapper;
+import com.lovedbug.geulgwi.core.domain.quote.QuoteRankingService;
 import com.lovedbug.geulgwi.core.domain.quote.QuoteService;
 
 @Slf4j
@@ -22,6 +23,7 @@ public class CurationService {
 
     private final BookService bookService;
     private final QuoteService quoteService;
+    private final QuoteRankingService quoteRankingService;
     private final CurationCacheService curationCacheService;
 
     public List<CurationItemResponse> getMainCuration() {
@@ -52,7 +54,7 @@ public class CurationService {
 
     public CurationItemResponse getPopularQuoteCuration() {
         List<CurationContentResponse> contents = CurationMapper.toCurationContentListFromQuotes(
-            quoteService.getPopularQuotesWithBook()
+            quoteRankingService.getPopularQuotesWithBook()
         );
 
         return CurationItemResponse.builder()
