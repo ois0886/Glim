@@ -32,16 +32,17 @@ import com.ssafy.glim.feature.update.navigation.updateNavGraph
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal fun MainScreen(navigator: MainNavController = rememberMainNavController()) {
+internal fun MainScreen(
+    navigator: MainNavController = rememberMainNavController(),
+    onTabSelected: (MainTab) -> Unit,
+) {
     Scaffold(
         bottomBar = {
             if (navigator.currentTab != MainTab.POST) {
                 MainBottomBar(
                     tabs = MainTab.entries.toImmutableList(),
                     currentTab = navigator.currentTab,
-                    onTabSelected = {
-                        navigator.navigate(it)
-                    },
+                    onTabSelected =onTabSelected,
                     visible = navigator.shouldShowBottomBar(),
                 )
             }

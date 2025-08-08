@@ -38,24 +38,24 @@ internal class MainNavController(
             currentDestination?.hasRoute(it::class) == true
         }
 
-    fun navigate(tab: MainTab) {
-        val navOptions =
-            navOptions {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-
-        when (tab) {
-            MainTab.HOME -> navController.navigateToHome(navOptions)
-            MainTab.LIBRARY -> navController.navigateToSearch(navOptions)
-            MainTab.POST -> navController.navigateToPost(navOptions)
-            MainTab.REELS -> navController.navigateToShorts(navOptions)
-            MainTab.PROFILE -> navController.navigateToProfile(navOptions)
-        }
-    }
+//    fun navigate(tab: MainTab) {
+//        val navOptions =
+//            navOptions {
+//                popUpTo(navController.graph.findStartDestination().id) {
+//                    saveState = true
+//                }
+//                launchSingleTop = true
+//                restoreState = true
+//            }
+//
+//        when (tab) {
+//            MainTab.HOME -> navController.navigateToHome(navOptions)
+//            MainTab.LIBRARY -> navController.navigateToSearch(navOptions)
+//            MainTab.POST -> navController.navigateToPost(navOptions)
+//            MainTab.REELS -> navController.navigateToShorts(navOptions)
+//            MainTab.PROFILE -> navController.navigateToProfile(navOptions)
+//        }
+//    }
 
     fun popBackStack() {
         navController.popBackStack()
