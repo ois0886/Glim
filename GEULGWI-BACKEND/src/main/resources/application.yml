@@ -55,9 +55,6 @@ logging:
     org.springframework.web: debug
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
-    com.lovedbug.geulgwi.external.fcm: DEBUG
-    com.lovedbug.geulgwi.core.domain.like: DEBUG
-    com.google.firebase: WARN
 
 jwt:
   secret: ${JWT_SECRET}
