@@ -1,8 +1,10 @@
 package com.lovedbug.geulgwi.core.domain.curation;
 
+import com.lovedbug.geulgwi.core.common.exception.GeulgwiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.springframework.stereotype.Service;
@@ -37,12 +39,14 @@ public class CurationService {
                 .flatMap(future -> {
                     try {
                         return future.get().stream();
-                    } catch (Exception e) {
-                        throw new RuntimeException("Failed to get curation", e);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        throw new GeulgwiException("병렬적으로 큐레이션 요소 조회 중 인터럽트 발생", e);
+                    } catch (ExecutionException e) {
+                        throw new GeulgwiException("메인 큐레이션 병렬 조회 중 오류 발생", e);
                     }
                 })
                 .toList();
-
         }
     }
 
