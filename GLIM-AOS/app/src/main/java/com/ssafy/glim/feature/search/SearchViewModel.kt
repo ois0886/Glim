@@ -92,6 +92,8 @@ constructor(
                     state.copy(
                         searchQuery = query,
                         searchMode = SearchMode.RESULT,
+                        bookCurrentPage = 1,
+                        quoteCurrentPage = 1
                     )
                 }
                 saveRecentSearchQueryUseCase(query)
