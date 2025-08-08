@@ -68,11 +68,9 @@ public class FcmPushService {
 //            firebaseMessaging.send(messageBuilder.putAllData(likeFcmMessageData(fcmMessage)).build());
             String messageId = firebaseMessaging.send(messageBuilder.putAllData(likeFcmMessageData(fcmMessage)).build());
 
-            // 성공 로그 추가 - INFO 레벨
             log.info("FCM 알림 전송 성공 - MessageId: {}, Token: {}, Title: {}",
                 messageId, fcmMessage.getTo(), fcmMessage.getNotification().getTitle());
 
-            // 상세 로그 - DEBUG 레벨
             log.debug("FCM 알림 상세 정보 - Body: {}, Data: {}",
                 fcmMessage.getNotification().getBody(),
                 likeFcmMessageData(fcmMessage));

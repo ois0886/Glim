@@ -55,8 +55,8 @@ logging:
     org.springframework.web: debug
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
-    com.lovedbug.geulgwi.external.fcm: DEBUG  # 👈 패키지 경로 수정
-    com.lovedbug.geulgwi.core.domain.like: DEBUG  # 👈 좋아요 서비스 로그 추가
+    com.lovedbug.geulgwi.external.fcm: DEBUG
+    com.lovedbug.geulgwi.core.domain.like: DEBUG
     com.google.firebase: WARN
 
 jwt:
