@@ -1,26 +1,37 @@
 package com.ssafy.glim.feature.main
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.LaunchedNavigator
 import com.ssafy.glim.core.navigation.Route
-import com.ssafy.glim.core.service.LockServiceManager
+import com.ssafy.glim.core.service.setting.LockServiceManager
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -50,15 +61,36 @@ class MainActivity : ComponentActivity() {
     lateinit var authManager: AuthManager
 
     private var isLoading by mutableStateOf(true)
+    private var showNotificationPermissionDialog by mutableStateOf(false)
+
+    // 알림 권한 요청 런처
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Log.d("Permission", "알림 권한 허용됨")
+            Toast.makeText(this, "알림 권한이 허용되었습니다", Toast.LENGTH_SHORT).show()
+        } else {
+            Log.d("Permission", "알림 권한 거부됨")
+            showNotificationPermissionDialog = true
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
+        // 오버레이 권한 확인
         if (PermissionUtil.alertPermissionCheck(this)) {
             PermissionUtil.onObtainingPermissionOverlayWindow(this)
         }
+
+        // 알림 권한 확인
+        checkNotificationPermission()
+
         enableEdgeToEdge()
+
+        getFCMToken()
 
         performInitialization()
         splashScreen.setKeepOnScreenCondition { isLoading }
@@ -100,11 +132,88 @@ class MainActivity : ComponentActivity() {
                     authManager = authManager,
                     navController = navController
                 )
+
+                // 알림 권한 거부 다이얼로그
+                if (showNotificationPermissionDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showNotificationPermissionDialog = false },
+                        title = { Text("알림 권한 필요") },
+                        text = {
+                            Text("중요한 알림을 받기 위해 설정에서 수동으로 알림 권한을 허용해주세요.")
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    openAppSettings()
+                                    showNotificationPermissionDialog = false
+                                }
+                            ) {
+                                Text("설정으로 이동")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = { showNotificationPermissionDialog = false }
+                            ) {
+                                Text("취소")
+                            }
+                        }
+                    )
+                }
             }
         }
     }
 
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    // 권한이 이미 있음
+                    Log.d("Permission", "알림 권한이 이미 허용됨")
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                    // 권한 설명이 필요한 경우
+                    showPermissionRationale()
+                }
+                else -> {
+                    // 권한 요청
+                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+        } else {
+            // Android 12 이하에서는 자동으로 권한이 있음
+            Log.d("Permission", "Android 12 이하 - 알림 권한 자동 허용")
+        }
+    }
+
+    private fun showPermissionRationale() {
+        showNotificationPermissionDialog = true
+    }
+
+    private fun openAppSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = ("package:$packageName").toUri()
+        }
+        startActivity(intent)
+    }
+
     private fun performInitialization() {
         isLoading = false
+    }
+
+    private fun getFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCM", "토큰 가져오기 실패", task.exception)
+                return@addOnCompleteListener
+            }
+
+            // 토큰 획득
+            val token = task.result
+            Log.d("FCM", "FCM 토큰: $token")
+        }
     }
 }

@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -173,6 +174,11 @@ dependencies {
     // MockK
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.android)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics)
 }
 
 tasks.register("codeQualityCheck") {
