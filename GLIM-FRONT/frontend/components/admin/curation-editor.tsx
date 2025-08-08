@@ -186,12 +186,19 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
       .map(item => parseInt(item.id, 10))
       .filter(id => !isNaN(id));
 
-    const curationType = bookIds.length > 0 ? 'BOOK' : (quoteIds.length > 0 ? 'QUOTE' : 'BOOK');
+    let curationType: 'BOOK' | 'QUOTE' | undefined;
+    if (bookIds.length > 0) {
+      curationType = 'BOOK';
+    } else if (quoteIds.length > 0) {
+      curationType = 'QUOTE';
+    } else {
+      curationType = undefined;
+    }
 
     const payload: CurationMutationPayload = {
       name: values.title,
       description: values.description,
-      curationType,
+      ...(curationType && { curationType }),
       bookIds,
       quoteIds,
     };
@@ -277,6 +284,10 @@ export function CurationEditor({ curationId, onSaveSuccess, onGoBack }: Curation
                     items={curationItems}
                     setItems={setCurationItems}
                     onUpdateItem={() => {}}
+                    onRemoveItem={(idToRemove) => {
+                      setCurationItems(prevItems => prevItems.filter(item => item.id !== idToRemove));
+                      toast({ title: "항목 삭제", description: "큐레이션 항목이 삭제되었습니다." });
+                    }}
                   />
                 )}
               </ScrollArea>

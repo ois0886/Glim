@@ -64,9 +64,10 @@ export type CurationItem = Quote | Book; // Union type for items
 interface SortableItemProps {
   item: CurationItem;
   onUpdate: (updatedItem: CurationItem) => void;
+  onRemove: (id: string) => void;
 }
 
-function SortableItem({ item, onUpdate }: SortableItemProps) {
+function SortableItem({ item, onUpdate, onRemove }: SortableItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState("content" in item ? item.content : item.title);
@@ -134,9 +135,14 @@ function SortableItem({ item, onUpdate }: SortableItemProps) {
               </Button>
             </>
           ) : (
-            <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
-              <Edit className="h-4 w-4" />
-            </Button>
+            <>
+              <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => onRemove(item.id)}>
+                <Trash2 className="h-4 w-4 text-red-500" />
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -172,9 +178,10 @@ interface SortableListWrapperProps {
   items: CurationItem[];
   setItems: React.Dispatch<React.SetStateAction<CurationItem[]>>;
   onUpdateItem: (updatedItem: CurationItem) => void;
+  onRemoveItem: (id: string) => void;
 }
 
-export function SortableListWrapper({ items, setItems, onUpdateItem }: SortableListWrapperProps) {
+export function SortableListWrapper({ items, setItems, onUpdateItem, onRemoveItem }: SortableListWrapperProps) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -206,7 +213,7 @@ export function SortableListWrapper({ items, setItems, onUpdateItem }: SortableL
       >
         <div className="space-y-3">
           {items.map((item) => (
-            <SortableItem key={item.id} item={item} onUpdate={onUpdateItem} />
+            <SortableItem key={item.id} item={item} onUpdate={onUpdateItem} onRemove={onRemoveItem} />
           ))}
         </div>
       </SortableContext>

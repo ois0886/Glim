@@ -67,7 +67,7 @@ export const createCuration = async (payload: CurationMutationPayload): Promise<
 
 // 큐레이션 수정 
 export const updateCuration = async (itemId: string, payload: CurationMutationPayload): Promise<void> => {
-  await axiosInstance.put(`/api/v1/admin/curations/items/${itemId}`, payload);
+  await axiosInstance.put(`/v1/admin/curations/items/${itemId}`, payload);
 };
 
 // 큐레이션 순서 변경
