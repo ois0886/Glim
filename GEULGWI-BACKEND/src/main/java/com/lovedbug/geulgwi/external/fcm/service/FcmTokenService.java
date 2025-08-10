@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.external.fcm.service;
 
+import com.lovedbug.geulgwi.external.fcm.constant.SaveResult;
 import com.lovedbug.geulgwi.external.fcm.dto.request.FcmTokenRequestDto;
 import com.lovedbug.geulgwi.external.fcm.entity.FcmTokens;
 import com.lovedbug.geulgwi.external.fcm.repository.FcmTokenRepository;
@@ -18,29 +19,41 @@ public class FcmTokenService {
     private final FcmTokenRepository fcmTokenRepository;
 
     @Transactional
-    public void saveFcmToken(AuthenticatedUser user, FcmTokenRequestDto fcmTokenRequest) {
+    public SaveResult saveFcmToken(AuthenticatedUser user, FcmTokenRequestDto fcmTokenRequest) {
 
         Member member = memberRepository.findById(user.getMemberId())
             .orElseThrow(() -> new IllegalStateException("회원이 존재하지 않습니다."));
 
-        fcmTokenRepository.findByMemberAndDeviceId(member, fcmTokenRequest.getDeviceId())
-            .ifPresentOrElse(saved -> {
-                if (!saved.getDeviceToken().equals(fcmTokenRequest.getDeviceToken())) {
-                    saved.updateDeviceToken(fcmTokenRequest.getDeviceToken());
-                    saved.updateIsActive(true);
-                }
-            },
-            () -> {
-                FcmTokens token = FcmTokens.builder()
-                    .member(member)
-                    .deviceToken(fcmTokenRequest.getDeviceToken())
-                    .deviceType(fcmTokenRequest.getDeviceType())
-                    .deviceId(fcmTokenRequest.getDeviceId())
-                    .isActive(true)
-                    .build();
-
-                fcmTokenRepository.save(token);
+        return fcmTokenRepository.findByMemberAndDeviceId(member, fcmTokenRequest.getDeviceId())
+            .map(saved -> {
+                updateFcmToken(saved, fcmTokenRequest);
+                return SaveResult.UPDATED;
+            })
+            .orElseGet(() -> {
+                createdFcmToken(member, fcmTokenRequest);
+                return SaveResult.CREATED;
             });
+    }
+
+    private void updateFcmToken (FcmTokens savedToken, FcmTokenRequestDto fcmTokenRequest) {
+
+        if (!savedToken.getDeviceToken().equals(fcmTokenRequest.getDeviceToken())){
+            savedToken.updateDeviceToken(fcmTokenRequest.getDeviceToken());
+            savedToken.updateIsActive(true);
+        }
+    }
+
+    private void createdFcmToken(Member member, FcmTokenRequestDto fcmTokenRequest) {
+
+        FcmTokens token = FcmTokens.builder()
+            .member(member)
+            .deviceToken(fcmTokenRequest.getDeviceToken())
+            .deviceType(fcmTokenRequest.getDeviceType())
+            .deviceId(fcmTokenRequest.getDeviceId())
+            .isActive(true)
+            .build();
+
+        fcmTokenRepository.save(token);
     }
 
     @Transactional

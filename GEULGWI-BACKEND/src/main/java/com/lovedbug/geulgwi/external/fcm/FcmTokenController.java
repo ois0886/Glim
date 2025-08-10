@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.external.fcm;
 
+import com.lovedbug.geulgwi.external.fcm.constant.SaveResult;
 import com.lovedbug.geulgwi.external.fcm.dto.request.FcmTokenRequestDto;
 import com.lovedbug.geulgwi.external.fcm.service.FcmTokenService;
 import com.lovedbug.geulgwi.core.security.annotation.CurrentUser;
@@ -7,6 +8,8 @@ import com.lovedbug.geulgwi.core.security.dto.AuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +23,15 @@ public class FcmTokenController {
         @CurrentUser AuthenticatedUser user,
         @RequestBody FcmTokenRequestDto fcmTokenRequest) {
 
-        fcmTokenService.saveFcmToken(user, fcmTokenRequest);
+        if (fcmTokenService.saveFcmToken(user, fcmTokenRequest) == SaveResult.CREATED){
+
+            URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .build()
+                .toUri();
+
+            return ResponseEntity.created(location).build();
+        }
 
         return ResponseEntity.ok().build();
     }

@@ -1,6 +1,7 @@
 package com.lovedbug.geulgwi.docs;
 
 import com.lovedbug.geulgwi.external.fcm.dto.request.FcmTokenRequestDto;
+import com.lovedbug.geulgwi.external.fcm.entity.FcmTokens;
 import com.lovedbug.geulgwi.external.fcm.repository.FcmTokenRepository;
 import com.lovedbug.geulgwi.external.fcm.service.FcmPushService;
 import com.lovedbug.geulgwi.core.domain.member.Member;
@@ -69,11 +70,51 @@ public class FcmApiDocsTest extends RestDocsTestSupport{
         accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getMemberId());
     }
 
-    @DisplayName("사용자가 FCM 디바이스 토큰을 등록한다")
+    @DisplayName("사용자의 FCM 디바이스 토큰을 등록한다")
     @Test
-    void save_fcm_token() {
+    void save_fcm_token_created() {
         FcmTokenRequestDto fcmTokenRequest = FcmTokenRequestDto.builder()
             .deviceToken("test_fcm_token_123456789abcdef")
+            .deviceType("ANDROID")
+            .deviceId("device_unique_id_001")
+            .build();
+
+        given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(fcmTokenRequest)
+            .filter(document("{class_name}/{method_name}",
+                requestHeaders(
+                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
+                ),
+                requestFields(
+                    fieldWithPath("deviceToken").description("FCM device 토큰 (필수)"),
+                    fieldWithPath("deviceType").description("device 타입 (ANDROID)"),
+                    fieldWithPath("deviceId").description("고유 device 식별자")
+                )
+            ))
+            .when()
+            .post("/api/v1/fcm/token")
+            .then()
+            .log().all()
+            .statusCode(201);
+    }
+
+    @DisplayName("기존 fcm 토큰이 등록되어 있을 때 새로운 토큰으로 업데이트 한다.")
+    @Test
+    void update_existing_fcm_token() {
+        FcmTokens oldToken = FcmTokens.builder()
+            .member(member)
+            .deviceToken("test_old_fcm_token_123456789abcdef")
+            .deviceType("ANDROID")
+            .deviceId("device_unique_id_001")
+            .isActive(true)
+            .build();
+
+        fcmTokenRepository.save(oldToken);
+
+        FcmTokenRequestDto fcmTokenRequest = FcmTokenRequestDto.builder()
+            .deviceToken("test_new_fcm_token_123456789abcdef")
             .deviceType("ANDROID")
             .deviceId("device_unique_id_001")
             .build();
@@ -99,7 +140,7 @@ public class FcmApiDocsTest extends RestDocsTestSupport{
             .statusCode(200);
     }
 
-    @DisplayName("사용자가 FCM 디바이스 토큰을 비활성화한다")
+    @DisplayName("사용자의 FCM 디바이스 토큰을 비활성화한다")
     @Test
     void inActive_fcm_token() {
         given(this.spec)
