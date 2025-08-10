@@ -134,7 +134,7 @@ private fun BookPagerCard(
 ) {
     val absOffset = abs(pageOffset).coerceIn(0f, 1f)
     val scale = lerp(0.6f, 1f, 1f - absOffset)
-    val alpha = lerp(0.4f, 1f, 1f - absOffset)
+    val alpha = lerp(0.6f, 1f, 1f - absOffset)
 
     Card(
         modifier = modifier

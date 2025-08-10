@@ -61,8 +61,9 @@ fun PostUI(
         if (state.visibility) {
             DarkGrayRoundedSurface(
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
                     .height(300.dp)
+                    .padding(4.dp)
+                    .align(Alignment.CenterStart)
             ) {
                 VerticalSlider(
                     value = state.backgroundImageAlpha,

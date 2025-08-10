@@ -159,9 +159,7 @@ fun QuoteHomeTitle() {
         Spacer(Modifier.height(16.dp))
         Text(
             text = stringResource(R.string.glim_home_description),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 16.sp,
-            ),
+            style = MaterialTheme.typography.labelMedium,
             color = LightGray600,
         )
     }
@@ -176,7 +174,7 @@ fun SectionTitle(text: String) {
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Default
         ),
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(20.dp),
     )
 }
 

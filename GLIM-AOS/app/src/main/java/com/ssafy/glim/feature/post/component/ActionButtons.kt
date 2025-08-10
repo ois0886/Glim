@@ -2,6 +2,7 @@ package com.ssafy.glim.feature.post.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -40,7 +41,7 @@ import com.ssafy.glim.core.util.rememberCaptureActions
 import kotlinx.coroutines.launch
 
 @Composable
-fun ActionButtons(
+fun BoxScope.ActionButtons(
     visibility: Boolean,
     startCameraAction: (CameraType) -> Unit,
     onTextExtractionClick: () -> Unit,
@@ -110,46 +111,42 @@ fun ActionButtons(
                 }
             }
         }
+    }
 
-        Spacer(modifier = Modifier.weight(1f))
-
-        if (visibility) {
-            Surface(
-                modifier = modifier.padding(horizontal = 8.dp, vertical = 16.dp),
-                color = Color.DarkGray.copy(alpha = 0.6f),
-                shape = RoundedCornerShape(12.dp),
+    if (visibility) {
+        Surface(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 16.dp).align(Alignment.CenterEnd),
+            color = Color.DarkGray.copy(alpha = 0.6f),
+            shape = RoundedCornerShape(12.dp),
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.End
             ) {
-                Column(
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalAlignment = Alignment.End
-                ) {
-                    IconButtonWithPopupMenu(
-                        startCameraAction = startCameraAction
-                    )
+                IconButtonWithPopupMenu(
+                    startCameraAction = startCameraAction
+                )
 
-                    ActionButton(
-                        onClick = onTextExtractionClick,
-                        iconRes = R.drawable.ic_recognize,
-                        contentDescription = stringResource(R.string.recognize_text),
-                    )
+                ActionButton(
+                    onClick = onTextExtractionClick,
+                    iconRes = R.drawable.ic_recognize,
+                    contentDescription = stringResource(R.string.recognize_text),
+                )
 
-                    ActionButton(
-                        onClick = onBackgroundImageButtonClick,
-                        iconRes = R.drawable.ic_image,
-                        contentDescription = stringResource(R.string.background_image),
-                    )
+                ActionButton(
+                    onClick = onBackgroundImageButtonClick,
+                    iconRes = R.drawable.ic_image,
+                    contentDescription = stringResource(R.string.background_image),
+                )
 
-                    ActionButton(
-                        onClick = { onCreateTextClick(true) },
-                        iconRes = R.drawable.ic_title,
-                        contentDescription = stringResource(R.string.new_text),
-                    )
-                }
+                ActionButton(
+                    onClick = { onCreateTextClick(true) },
+                    iconRes = R.drawable.ic_title,
+                    contentDescription = stringResource(R.string.new_text),
+                )
             }
         }
-
-        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
