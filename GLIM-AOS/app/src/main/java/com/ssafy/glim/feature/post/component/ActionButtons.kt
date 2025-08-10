@@ -62,10 +62,10 @@ fun BoxScope.ActionButtons(
 
     Column(
         modifier =
-            modifier
-                .fillMaxHeight()
-                .padding(4.dp)
-                .systemBarsPadding(),
+        modifier
+            .fillMaxHeight()
+            .padding(4.dp)
+            .systemBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End,
     ) {
@@ -74,7 +74,11 @@ fun BoxScope.ActionButtons(
         ) {
             DarkGrayRoundedSurface(modifier = modifier.alpha(if (visibility) 1f else 0f)) {
                 IconButton(
-                    onClick = if(visibility) onBackPress else {{}}
+                    onClick = if (visibility) {
+                        onBackPress
+                    } else {
+                        {} 
+                    }
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),

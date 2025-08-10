@@ -9,8 +9,6 @@ import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.feature.home.model.HomeSectionUiModel
-import com.ssafy.glim.feature.main.MainNavController
-import com.ssafy.glim.feature.main.rememberMainNavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost

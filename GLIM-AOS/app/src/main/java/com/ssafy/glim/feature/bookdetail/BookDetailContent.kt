@@ -181,7 +181,6 @@ fun QuoteCard(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
-
                 Icon(
                     painter = painterResource(id = R.drawable.ic_views),
                     contentDescription = stringResource(R.string.views),
@@ -204,17 +203,16 @@ fun QuoteCard(
                     ),
                     contentDescription = null,
                     tint =
-                        if (quote.isLiked) {
-                            Color.Red
-                        } else {
-                            Color.Black
-                        },
+                    if (quote.isLiked) {
+                        Color.Red
+                    } else {
+                        Color.Black
+                    },
                 )
                 Text(
                     text = quote.likes.toString(),
                     style = MaterialTheme.typography.labelLarge,
                 )
-
             }
         }
     }

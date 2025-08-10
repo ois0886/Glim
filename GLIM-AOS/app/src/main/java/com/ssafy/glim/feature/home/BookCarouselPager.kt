@@ -120,7 +120,6 @@ fun BookCarouselPager(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-
         }
     }
 }

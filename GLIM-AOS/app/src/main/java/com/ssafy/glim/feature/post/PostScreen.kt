@@ -20,7 +20,6 @@ import androidx.wear.compose.material.CircularProgressIndicator
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.common.utils.rememberCameraWithPermission
-import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.ui.DarkThemeScreen
 import com.ssafy.glim.feature.post.component.PostContent
 import com.ssafy.glim.feature.post.component.imageoverlay.TextExtractionImageOverlay

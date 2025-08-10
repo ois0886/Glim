@@ -1,12 +1,10 @@
 package com.ssafy.glim.feature.bookdetail
 
 import android.content.Intent
-import android.text.Html
 import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,10 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -155,7 +151,6 @@ fun BookDetailContent(
                                 elevation = 12.dp,
                             )
                             .clip(RoundedCornerShape(4.dp)),
-
                         contentScale = ContentScale.Crop,
                         placeholder = painterResource(id = R.drawable.ic_image),
                         error = painterResource(id = R.drawable.ic_image)
@@ -297,7 +292,6 @@ fun BookDetailContent(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(8.dp)
                     )
-
                 }
             }
         }

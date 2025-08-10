@@ -36,8 +36,7 @@ class BookRepositoryImpl @Inject constructor(
                 throw IllegalArgumentException("Either isbn or bookId must be provided")
             }
             bookRemoteDataSource.getBook(bookId).toDomain()
-        }
-        else {
+        } else {
             Log.d("BookRepositoryImpl", "getBookDetail called with isbn: $isbn, bookId: $bookId")
             books.first {
                 it.isbn == isbn

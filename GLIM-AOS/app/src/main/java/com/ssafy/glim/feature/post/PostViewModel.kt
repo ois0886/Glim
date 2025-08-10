@@ -10,7 +10,6 @@ import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.usecase.book.GetCachedBookDetail
 import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
-import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.util.CaptureActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -120,10 +119,10 @@ class PostViewModel @Inject constructor(
         reduce {
             state.copy(
                 textPosition =
-                    currentPosition.copy(
-                        offsetX = currentPosition.offsetX + deltaX,
-                        offsetY = currentPosition.offsetY + deltaY,
-                    ),
+                currentPosition.copy(
+                    offsetX = currentPosition.offsetX + deltaX,
+                    offsetY = currentPosition.offsetY + deltaY,
+                ),
             )
         }
     }
@@ -304,6 +303,6 @@ class PostViewModel @Inject constructor(
     }
 
     fun updateBackgroundImageAlpha(value: Float) = intent {
-        reduce { state.copy(backgroundImageAlpha = value)}
+        reduce { state.copy(backgroundImageAlpha = value) }
     }
 }

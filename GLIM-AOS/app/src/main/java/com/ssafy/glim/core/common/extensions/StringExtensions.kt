@@ -1,6 +1,5 @@
 package com.ssafy.glim.core.common.extensions
 
-import android.text.Html
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.core.util.PatternsCompat
 import com.ssafy.glim.core.domain.model.user.Gender

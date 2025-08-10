@@ -4,18 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navOptions
 import com.ssafy.glim.core.navigation.Route
-import com.ssafy.glim.feature.home.navigation.navigateToHome
-import com.ssafy.glim.feature.post.navigation.navigateToPost
-import com.ssafy.glim.feature.profile.navigation.navigateToProfile
-import com.ssafy.glim.feature.search.navigation.navigateToSearch
-import com.ssafy.glim.feature.shorts.navigation.navigateToShorts
 
 internal class MainNavController(
     val navController: NavHostController,

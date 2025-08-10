@@ -46,7 +46,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.ssafy.glim.R
@@ -78,9 +77,9 @@ fun SearchResultSection(
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .background(Color.White),
+        modifier
+            .fillMaxSize()
+            .background(Color.White),
     ) {
         TabRow(
             selectedTabIndex = selectedTab.ordinal,
@@ -343,9 +342,9 @@ private fun BookCard(
 ) {
     Card(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
@@ -410,9 +409,9 @@ private fun QuoteCard(
 ) {
     Card(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
@@ -478,11 +477,11 @@ private fun QuoteCard(
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
                         tint =
-                            if (quote.isLiked) {
-                                Color.Red
-                            } else {
-                                Color.Black
-                            },
+                        if (quote.isLiked) {
+                            Color.Red
+                        } else {
+                            Color.Black
+                        },
                     )
                     Text(
                         text = quote.likes.toString(),

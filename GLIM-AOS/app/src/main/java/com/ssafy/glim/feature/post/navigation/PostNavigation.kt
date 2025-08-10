@@ -6,7 +6,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.feature.post.PostRoute
