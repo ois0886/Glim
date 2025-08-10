@@ -71,7 +71,7 @@ fun EditableTextField(
             textStyle =
             MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center,
-                lineHeight = 40.sp,
+                lineHeight = textStyle.fontSizeUnit * 2.2f,
                 fontSize = textStyle.fontSizeUnit,
                 fontWeight = textStyle.fontWeight,
                 fontStyle = textStyle.fontStyle,
