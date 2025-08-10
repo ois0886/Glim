@@ -298,4 +298,12 @@ class PostViewModel @Inject constructor(
         val currentStyle = state.textStyle
         reduce { state.copy(textStyle = currentStyle.copy(textColor = color)) }
     }
+
+    fun toggleVisibility() = intent {
+        reduce { state.copy(visibility = !state.visibility) }
+    }
+
+    fun updateBackgroundImageAlpha(value: Float) = intent {
+        reduce { state.copy(backgroundImageAlpha = value)}
+    }
 }

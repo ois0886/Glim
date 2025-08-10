@@ -119,6 +119,8 @@ internal fun PostRoute(
                     onConfirmExit = viewModel::confirmExit,
                     onCancelExit = viewModel::cancelExit,
                     onBackPress = viewModel::backPressed,
+                    onVisibilityClick = viewModel::toggleVisibility,
+                    onAlphaSlideValueChange = viewModel::updateBackgroundImageAlpha,
                     updateBottomSheetState = viewModel::updateBottomSheetState,
                     updateFontFamily = viewModel::updateFontFamily,
                     updateTextColor = viewModel::updateTextColor,

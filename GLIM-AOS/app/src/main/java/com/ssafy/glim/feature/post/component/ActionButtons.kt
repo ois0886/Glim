@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.res.painterResource
@@ -40,11 +41,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ActionButtons(
+    visibility: Boolean,
     startCameraAction: (CameraType) -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageButtonClick: () -> Unit,
     onCreateTextClick: (Boolean) -> Unit,
     onCompleteClick: (CaptureActions) -> Unit,
+    onVisibilityClick: () -> Unit,
     clearFocus: () -> Unit,
     onBackPress: () -> Unit,
     graphicsLayer: GraphicsLayer,
@@ -68,9 +71,9 @@ fun ActionButtons(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            DarkGrayRoundedSurface(modifier = modifier) {
+            DarkGrayRoundedSurface(modifier = modifier.alpha(if (visibility) 1f else 0f)) {
                 IconButton(
-                    onClick = onBackPress
+                    onClick = if(visibility) onBackPress else {{}}
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),
@@ -78,55 +81,74 @@ fun ActionButtons(
                     )
                 }
             }
-            Spacer(Modifier.weight(1f))
 
             DarkGrayRoundedSurface(modifier = modifier) {
-                TextButton(onClick = {
-                    coroutineScope.launch {
-                        clearFocus()
-                        onCompleteClick(captureAction)
+                IconButton(
+                    onClick = onVisibilityClick
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            if (visibility) R.drawable.ic_visibility else R.drawable.ic_ic_visibility_off
+                        ),
+                        contentDescription = null
+                    )
+                }
+            }
+
+            Spacer(Modifier.weight(1f))
+
+            if (visibility) {
+                DarkGrayRoundedSurface(modifier = modifier) {
+                    TextButton(onClick = {
+                        coroutineScope.launch {
+                            clearFocus()
+                            onCompleteClick(captureAction)
+                        }
+                    }) {
+                        Text("완료", color = Color.White, fontWeight = FontWeight.Bold)
                     }
-                }) {
-                    Text("완료", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Surface(
-            modifier = modifier.padding(horizontal = 8.dp, vertical = 16.dp),
-            color = Color.DarkGray.copy(alpha = 0.6f),
-            shape = RoundedCornerShape(12.dp),
-        ) {
-            Column(
-                modifier = Modifier.padding(vertical = 4.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.End
+        if (visibility) {
+            Surface(
+                modifier = modifier.padding(horizontal = 8.dp, vertical = 16.dp),
+                color = Color.DarkGray.copy(alpha = 0.6f),
+                shape = RoundedCornerShape(12.dp),
             ) {
-                IconButtonWithPopupMenu(
-                    startCameraAction = startCameraAction
-                )
+                Column(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    IconButtonWithPopupMenu(
+                        startCameraAction = startCameraAction
+                    )
 
-                ActionButton(
-                    onClick = onTextExtractionClick,
-                    iconRes = R.drawable.ic_recognize,
-                    contentDescription = stringResource(R.string.recognize_text),
-                )
+                    ActionButton(
+                        onClick = onTextExtractionClick,
+                        iconRes = R.drawable.ic_recognize,
+                        contentDescription = stringResource(R.string.recognize_text),
+                    )
 
-                ActionButton(
-                    onClick = onBackgroundImageButtonClick,
-                    iconRes = R.drawable.ic_image,
-                    contentDescription = stringResource(R.string.background_image),
-                )
+                    ActionButton(
+                        onClick = onBackgroundImageButtonClick,
+                        iconRes = R.drawable.ic_image,
+                        contentDescription = stringResource(R.string.background_image),
+                    )
 
-                ActionButton(
-                    onClick = { onCreateTextClick(true) },
-                    iconRes = R.drawable.ic_title,
-                    contentDescription = stringResource(R.string.new_text),
-                )
+                    ActionButton(
+                        onClick = { onCreateTextClick(true) },
+                        iconRes = R.drawable.ic_title,
+                        contentDescription = stringResource(R.string.new_text),
+                    )
+                }
             }
         }
+
         Spacer(modifier = Modifier.weight(1f))
     }
 }
