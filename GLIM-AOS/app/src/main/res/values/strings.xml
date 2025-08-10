@@ -116,7 +116,7 @@
 
     <!-- 글림/도서 관련 -->
     <string name="today_glim">오늘의 글림</string>
-    <string name="glim_home_description">잠시 멈춰 서서, 글귀를 둘러보세요.</string>
+    <string name="glim_home_description">마음에 울림을 주는 글귀를 발견하세요.</string>
     <string name="text_size_down">텍스트 크기 줄이기</string>
     <string name="bold">굵게</string>
     <string name="italic">기울이기</string>
@@ -280,4 +280,5 @@
     <string name="error_occurred">오류가 발생했습니다</string>
     <string name="retry">다시 시도</string>
     <string name="quote_count_tag_text">글귀 %1$s개</string>
+    <string name="no_relative_quote">등록된 글귀가 없습니다.</string>
 </resources>

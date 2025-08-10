@@ -1,6 +1,7 @@
 package com.ssafy.glim.feature.home
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -59,6 +61,7 @@ import com.ssafy.glim.feature.main.rememberMainNavController
 import com.ssafy.glim.ui.theme.GlimColor.LightGray600
 import com.ssafy.glim.ui.theme.GlimColor.LightGray700
 import com.ssafy.glim.ui.theme.GlimColor.LightGray900
+import com.ssafy.glim.ui.theme.caveatFont
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -142,13 +145,15 @@ fun QuoteHomeTitle() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.today_glim),
+            text = "Glim",
             style = MaterialTheme.typography.headlineMedium.copy(
-                fontSize = 32.sp,
+                fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = caveatFont
             ),
         )
         Spacer(Modifier.height(16.dp))
@@ -169,6 +174,7 @@ fun SectionTitle(text: String) {
         style = MaterialTheme.typography.titleMedium.copy(
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Default
         ),
         modifier = Modifier.padding(16.dp),
     )

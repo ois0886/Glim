@@ -38,6 +38,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -147,7 +149,13 @@ fun BookDetailContent(
                     AsyncImage(
                         model = book.cover,
                         contentDescription = stringResource(R.string.book_cover),
-                        modifier = Modifier,
+                        modifier = Modifier
+                            .padding(top = 12.dp)
+                            .shadow(
+                                elevation = 12.dp,
+                            )
+                            .clip(RoundedCornerShape(4.dp)),
+
                         contentScale = ContentScale.Crop,
                         placeholder = painterResource(id = R.drawable.ic_image),
                         error = painterResource(id = R.drawable.ic_image)
@@ -170,6 +178,17 @@ fun BookDetailContent(
                     ) {
                         TitleWithAction(title = stringResource(R.string.relative_quote))
                         Spacer(modifier = Modifier.height(8.dp))
+
+                        if (quotes.isEmpty()) {
+                            Text(
+                                text = stringResource(R.string.no_relative_quote),
+                                modifier = Modifier
+                                    .padding(top = 16.dp, bottom = 8.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+
                         HorizontalPager(
                             state = pagerState,
                             modifier = Modifier.fillMaxWidth(),

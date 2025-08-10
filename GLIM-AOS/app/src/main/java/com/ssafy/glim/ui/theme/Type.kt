@@ -29,6 +29,11 @@ val nanumBrushScriptFont =
         Font(R.font.nanum_brush_script_regular, FontWeight.Normal)
     )
 
+val caveatFont =
+    FontFamily(
+        Font(R.font.caveat_variable, FontWeight.Normal)
+    )
+
 enum class FONT(val fontName: String, val fontFamily: FontFamily) {
     GOWUN_BATANG("default", glimDefaultFont),
     DOHYEON("dohyeon", dohyeonFont),

@@ -1,29 +1,31 @@
 package com.ssafy.glim.feature.home
 
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Book
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,18 +35,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.ui.GlimErrorLoader
 import com.ssafy.glim.core.ui.GlimLoader
-import com.ssafy.glim.ui.theme.GlimColor.navy
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+
 @Composable
 fun BookCarouselPager(
     books: List<Book>,
@@ -54,7 +56,7 @@ fun BookCarouselPager(
     if (books.isEmpty()) return
 
     val configuration = LocalConfiguration.current
-    val cardWidth = 180.dp
+    val cardWidth = 140.dp
     val sidePadding = (configuration.screenWidthDp.dp - cardWidth) / 2
 
     val pagerState = rememberPagerState(
@@ -62,34 +64,64 @@ fun BookCarouselPager(
         pageCount = { Int.MAX_VALUE }
     )
     val scope = rememberCoroutineScope()
-    
-    HorizontalPager(
-        state = pagerState,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(272.dp),
-        pageSpacing = 16.dp,
-        contentPadding = PaddingValues(horizontal = sidePadding),
-        pageSize = PageSize.Fixed(cardWidth)
-    ) { page ->
-        val book = books[page % books.size]
-        val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
 
-        BookPagerCard(
-            book = book,
-            pageOffset = pageOffset,
-            onItemClick = { bookId ->
-                // 더 안전한 조건 사용
-                if (pagerState.currentPage == page) {
-                    onItemClick(bookId)
-                } else {
-                    scope.launch {
-                        pagerState.animateScrollToPage(page)
+    // 현재 선택된 책 정보를 애니메이션과 함께
+    val currentBookIndex by remember {
+        derivedStateOf { pagerState.currentPage % books.size }
+    }
+    val currentBook = books[currentBookIndex]
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = sidePadding),
+            pageSize = PageSize.Fixed(cardWidth)
+        ) { page ->
+            val book = books[page % books.size]
+            val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+
+            BookPagerCard(
+                book = book,
+                pageOffset = pageOffset,
+                onItemClick = { bookId ->
+                    if (pagerState.currentPage == page) {
+                        onItemClick(bookId)
+                    } else {
+                        scope.launch {
+                            pagerState.animateScrollToPage(page)
+                        }
                     }
-                }
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        // 애니메이션과 함께 책 정보 변경
+        AnimatedContent(
+            targetState = currentBook,
+            transitionSpec = {
+                slideInVertically { it } + fadeIn() togetherWith
+                    slideOutVertically { -it } + fadeOut()
             },
-            modifier = Modifier.fillMaxSize()
-        )
+            label = "book_info_animation"
+        ) { book ->
+            Column(
+                modifier = Modifier.padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                BookInfo(
+                    title = book.title,
+                    author = book.author,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+        }
     }
 }
 
@@ -115,16 +147,14 @@ private fun BookPagerCard(
         shape = RoundedCornerShape(4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             BookCoverImage(
                 imageUrl = book.cover,
                 title = book.title,
-                modifier = Modifier.fillMaxSize()
-            )
-
-            BookInfo(
-                title = book.title,
-                modifier = Modifier.align(Alignment.BottomStart)
+                modifier = Modifier.height(210.dp)
             )
         }
     }
@@ -156,18 +186,26 @@ private fun BookCoverImage(
 @Composable
 private fun BookInfo(
     title: String,
+    author: String,
     modifier: Modifier = Modifier
 ) {
     Text(
         text = title,
-        style = MaterialTheme.typography.bodySmall,
-        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
         maxLines = 3,
         overflow = TextOverflow.Ellipsis,
-        color = Color.White,
-        modifier = modifier
-            .background(navy.copy(alpha = 0.8f))
-            .padding(16.dp)
-            .fillMaxWidth()
+        color = Color.Black,
+        modifier = modifier.fillMaxWidth(),
+        textAlign = TextAlign.Center
+    )
+
+    Text(
+        text = author,
+        style = MaterialTheme.typography.labelMedium,
+        maxLines = 3,
+        overflow = TextOverflow.Ellipsis,
+        color = Color.Black,
+        modifier = modifier.fillMaxWidth(),
+        textAlign = TextAlign.Center
     )
 }
