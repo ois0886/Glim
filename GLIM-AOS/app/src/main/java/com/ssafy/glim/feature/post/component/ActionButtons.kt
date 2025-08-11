@@ -70,7 +70,7 @@ fun BoxScope.ActionButtons(
         fileName = "Quote_${System.currentTimeMillis()}.jpg",
     )
     val coroutineScope = rememberCoroutineScope()
-    val tooltipState = rememberTooltipState()
+    val tooltipState = rememberTooltipState(isPersistent = true)
     var hasShownTip by remember { mutableStateOf(false) }
 
     LaunchedEffect(isTextNotEmpty) {
@@ -146,7 +146,9 @@ fun BoxScope.ActionButtons(
 
     if (visibility) {
         Surface(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 16.dp).align(Alignment.CenterEnd),
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 16.dp)
+                .align(Alignment.CenterEnd),
             color = Color.DarkGray.copy(alpha = 0.6f),
             shape = RoundedCornerShape(12.dp),
         ) {
@@ -159,7 +161,7 @@ fun BoxScope.ActionButtons(
                     modifier = modifier,
                     positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
                     tooltip = {
-                        PlainTooltip { Text("AI를 통해\n텍스트에 어울리는\n이미지를 만들어 보세요") }
+                        PlainTooltip { Text(stringResource(R.string.image_generation_btn_description)) }
                     },
                     state = tooltipState
                 ) {

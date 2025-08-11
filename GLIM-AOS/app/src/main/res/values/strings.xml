@@ -285,4 +285,5 @@
     <string name="quote_count_tag_text">글귀 %1$s개</string>
     <string name="no_relative_quote">등록된 글귀가 없습니다.</string>
     <string name="image_generate">이미지 생성</string>
+    <string name="image_generation_btn_description">AI를 통해\n텍스트에 어울리는\n이미지를 만들어 보세요</string>
 </resources>
