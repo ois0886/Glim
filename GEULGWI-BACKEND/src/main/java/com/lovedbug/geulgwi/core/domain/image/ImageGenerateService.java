@@ -25,7 +25,7 @@ public class ImageGenerateService {
                                 .build(),
                         GPTMessage.builder()
                                 .role("user")
-                                .content("다음 문구를 바탕으로, 사용자가 잠금화면으로 사용할 수 있는 풍경 사진 이미지 생성 프롬프트를 영어 한 문장으로 만들어 주세요:\n\n\""
+                                .content("다음 문구를 바탕으로, 사용자가 잠금화면으로 사용할 수 있는 텍스트가 포함되어 있지 않은 풍경 사진 이미지 생성 프롬프트를 영어 한 문장으로 만들어 주세요:\n\n\""
                                         + userText + "\"")
                                 .build()
                 ))
@@ -48,7 +48,7 @@ public class ImageGenerateService {
         ImageGenerationRequest imageGenerationRequest = ImageGenerationRequest.builder()
                 .model("dall-e-3")
                 .prompt(imgPrompt)
-                .size("1024x1024")
+                .size("1024x1792")
                 .responseFormat("b64_json")
                 .build();
 
