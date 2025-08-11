@@ -13,4 +13,6 @@ interface BookRepository {
     suspend fun updateBookViewCount(isbn: Long)
 
     suspend fun getBookDetail(isbn: String?, bookId: Long?): Book
+
+    fun getCachedBookDetail(bookId: Long): Book
 }

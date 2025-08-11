@@ -12,6 +12,7 @@ class BookRepositoryImpl @Inject constructor(
 ) : BookRepository {
 
     private val books = mutableListOf<Book>()
+    private lateinit var recentBookDetail: Book
 
     override suspend fun searchBooks(
         query: String,
@@ -30,16 +31,23 @@ class BookRepositoryImpl @Inject constructor(
         bookRemoteDataSource.updateBookViewCount(isbn)
 
     override suspend fun getBookDetail(isbn: String?, bookId: Long?): Book {
-        if (isbn == null) {
+        val book = if (isbn == null) {
             if (bookId == null) {
                 throw IllegalArgumentException("Either isbn or bookId must be provided")
             }
-            return bookRemoteDataSource.getBook(bookId).toDomain()
+            bookRemoteDataSource.getBook(bookId).toDomain()
+        } else {
+            Log.d("BookRepositoryImpl", "getBookDetail called with isbn: $isbn, bookId: $bookId")
+            books.first {
+                it.isbn == isbn
+            }
         }
+        recentBookDetail = book
+        return book
+    }
 
-        Log.d("BookRepositoryImpl", "getBookDetail called with isbn: $isbn, bookId: $bookId")
-        return books.first {
-            it.isbn == isbn
-        }
+    override fun getCachedBookDetail(bookId: Long): Book {
+        if (bookId == recentBookDetail.bookId) return recentBookDetail
+        throw Exception("메모리에 저장된 책 정보의 id와 일치하지 않습니다.")
     }
 }

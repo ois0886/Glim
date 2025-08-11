@@ -3,6 +3,8 @@ package com.ssafy.glim.feature.post.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -29,6 +31,8 @@ fun PostUI(
     updateTextFocusChanged: (Boolean) -> Unit,
     onCompleteClick: (CaptureActions) -> Unit,
     onBackPress: () -> Unit,
+    onVisibilityClick: () -> Unit,
+    onAlphaSlideValueChange: (Float) -> Unit,
     updateBottomSheetState: (Boolean) -> Unit,
     selectedBook: (Book) -> Unit,
     focusManager: FocusManager,
@@ -38,16 +42,34 @@ fun PostUI(
     Box(modifier = modifier) {
         // ActionButtons - 오른쪽 하단
         ActionButtons(
+            visibility = state.visibility,
             startCameraAction = startCameraAction,
             onTextExtractionClick = onTextExtractionClick,
             onBackgroundImageButtonClick = onBackgroundImageClick,
             onCreateTextClick = updateTextFocusChanged,
             onCompleteClick = onCompleteClick,
+            onVisibilityClick = onVisibilityClick,
             clearFocus = { focusManager.clearFocus() },
             onBackPress = onBackPress,
             graphicsLayer = imageGraphicsLayer,
             modifier = Modifier.align(Alignment.BottomEnd)
         )
+
+        if (state.visibility) {
+            DarkGrayRoundedSurface(
+                modifier = Modifier
+                    .height(300.dp)
+                    .padding(4.dp)
+                    .align(Alignment.CenterStart)
+            ) {
+                VerticalSlider(
+                    value = state.backgroundImageAlpha,
+                    onValueChange = onAlphaSlideValueChange,
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    valueRange = 0.1f..1f
+                )
+            }
+        }
 
         // BookInfoSection - 왼쪽 하단
         BookInfoSection(

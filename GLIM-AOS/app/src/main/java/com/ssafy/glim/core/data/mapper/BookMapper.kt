@@ -1,5 +1,6 @@
 package com.ssafy.glim.core.data.mapper
 
+import com.ssafy.glim.core.common.extensions.parseHtmlString
 import com.ssafy.glim.core.data.dto.response.BookDetailResponse
 import com.ssafy.glim.core.data.dto.response.BookResponse
 import com.ssafy.glim.core.domain.model.Book
@@ -10,8 +11,8 @@ fun BookResponse.toDomain(): Book {
         author = author,
         categoryId = categoryId,
         categoryName = categoryName,
-        cover = coverUrl,
-        description = description,
+        cover = coverUrl.replace("/coversum/", "/cover500/"),
+        description = description.parseHtmlString(),
         isbn = isbn,
         isbn13 = isbn13,
         link = linkUrl,
@@ -19,7 +20,7 @@ fun BookResponse.toDomain(): Book {
         priceStandard = priceStandard,
         pubDate = publishedDate,
         publisher = publisher,
-        title = title,
+        title = title.parseHtmlString(),
         translator = translator ?: ""
     )
 }
@@ -34,8 +35,8 @@ fun BookDetailResponse.toDomain() = Book(
     author = author,
     categoryId = categoryId,
     categoryName = categoryName,
-    cover = coverUrl,
-    description = description,
+    cover = coverUrl.replace("/coversum/", "/cover500/"),
+    description = description.parseHtmlString(),
     isbn = isbn,
     isbn13 = isbn13,
     link = linkUrl,
@@ -43,6 +44,6 @@ fun BookDetailResponse.toDomain() = Book(
     priceStandard = 0,
     pubDate = publishedDate,
     publisher = publisher,
-    title = title,
+    title = title.parseHtmlString(),
     views = views,
 )
