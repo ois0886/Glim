@@ -9,11 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.R
-import com.ssafy.glim.feature.setting.NotificationSettings
+import com.ssafy.glim.core.domain.model.Settings
 
 @Composable
 fun NotificationSettingSection(
-    settings: NotificationSettings,
+    settings: Settings,
     onAllNotificationsToggle: (Boolean) -> Unit,
     onDoNotDisturbModeToggle: (Boolean) -> Unit,
     onDoNotDisturbTimeToggle: (Boolean) -> Unit,
