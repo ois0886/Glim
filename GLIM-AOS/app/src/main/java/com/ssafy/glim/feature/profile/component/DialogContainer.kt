@@ -88,7 +88,10 @@ fun EditProfileDialogContainer(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.Black
+                        )
                     ) {
                         Text(
                             text = stringResource(R.string.profile_edit_password),
@@ -176,7 +179,12 @@ fun LogoutConfirmationDialog(
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onCancel) {
+            OutlinedButton(
+                onClick = onCancel,
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color.Black
+                )
+            ) {
                 Text(stringResource(R.string.cancel))
             }
         },
@@ -286,7 +294,12 @@ fun WithdrawalWarningDialog(
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onCancel) {
+            OutlinedButton(
+                onClick = onCancel,
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color.Black
+                )
+            ) {
                 Text(stringResource(R.string.cancel))
             }
         },
@@ -379,7 +392,12 @@ fun WithdrawalConfirmationDialog(
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onCancel) {
+            OutlinedButton(
+                onClick = onCancel,
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color.Black
+                )
+            ) {
                 Text(stringResource(R.string.cancel))
             }
         },
