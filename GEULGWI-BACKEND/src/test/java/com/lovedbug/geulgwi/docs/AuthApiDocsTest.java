@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.core.domain.auth.dto.request.EmailVerificationRequest;
 import com.lovedbug.geulgwi.core.domain.auth.dto.request.LoginRequest;
 import com.lovedbug.geulgwi.core.domain.member.Member;
@@ -44,6 +45,9 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
 
     @MockitoBean
     private EmailVerifier emailVerifier;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @DisplayName("사용자가_이메일_인증코드를_발송한다")
     @Test

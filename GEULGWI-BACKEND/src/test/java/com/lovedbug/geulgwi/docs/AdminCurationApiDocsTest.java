@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.config.TestRedisConfig;
 import com.lovedbug.geulgwi.core.domain.admin.dto.request.CreateCurationRequest;
 import com.lovedbug.geulgwi.core.domain.admin.dto.request.UpdateCurationRequest;
@@ -31,6 +32,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
@@ -68,6 +70,9 @@ class AdminCurationApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @PersistenceContext
     private EntityManager entityManager;

@@ -329,6 +329,32 @@ include::{snippets}/like_api_docs_test/get_liked_quotes/http-response.adoc[]
 
 include::{snippets}/like_api_docs_test/get_liked_quotes/response-fields.adoc[]
 
+== FCM 푸시 알림 API
+
+=== FCM 토큰 등록
+
+==== 요청
+
+include::{snippets}/fcm_api_docs_test/save_fcm_token/http-request.adoc[]
+
+include::{snippets}/fcm_api_docs_test/save_fcm_token/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/fcm_api_docs_test/save_fcm_token/http-response.adoc[]
+
+=== FCM 토큰 비활성화
+
+==== 요청
+
+include::{snippets}/fcm_api_docs_test/in_active_fcm_token/http-request.adoc[]
+
+include::{snippets}/fcm_api_docs_test/in_active_fcm_token/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/fcm_api_docs_test/in_active_fcm_token/http-response.adoc[]
+
 == Admin API
 == Admin Curation API
 

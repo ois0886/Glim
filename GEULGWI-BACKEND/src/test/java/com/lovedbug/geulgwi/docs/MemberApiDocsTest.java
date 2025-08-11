@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
@@ -36,6 +37,9 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @BeforeEach
     void clearDatabase() {
