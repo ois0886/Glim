@@ -1,9 +1,10 @@
 package com.ssafy.glim.core.domain.repository
 
-import com.ssafy.glim.core.domain.model.LockSettings
+import com.ssafy.glim.core.domain.model.Settings
 import kotlinx.coroutines.flow.Flow
 
 interface SettingsRepository {
-    fun getLockScreenSettings(): Flow<LockSettings>
-    suspend fun updateLockScreenSettings(settings: LockSettings)
+    fun getCurrentSettings(): Settings
+    fun getSettingsFlow(): Flow<Settings>
+    suspend fun updateSettings(settings: Settings)
 }

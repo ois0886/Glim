@@ -3,6 +3,7 @@ package com.ssafy.glim.feature.post.component
 import android.os.SystemClock
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.res.painterResource
@@ -48,14 +50,16 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActionButtons(
+fun BoxScope.ActionButtons(
     isTextNotEmpty: Boolean,
+    visibility: Boolean,
     startCameraAction: (CameraType) -> Unit,
     onImageGenerateClick: () -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageButtonClick: () -> Unit,
     onCreateTextClick: (Boolean) -> Unit,
     onCompleteClick: (CaptureActions) -> Unit,
+    onVisibilityClick: () -> Unit,
     clearFocus: () -> Unit,
     onBackPress: () -> Unit,
     graphicsLayer: GraphicsLayer,
@@ -85,19 +89,23 @@ fun ActionButtons(
 
     Column(
         modifier =
-            modifier
-                .fillMaxHeight()
-                .padding(4.dp)
-                .systemBarsPadding(),
+        modifier
+            .fillMaxHeight()
+            .padding(4.dp)
+            .systemBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.End,
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            DarkGrayRoundedSurface(modifier = modifier) {
+            DarkGrayRoundedSurface(modifier = modifier.alpha(if (visibility) 1f else 0f)) {
                 IconButton(
-                    onClick = onBackPress
+                    onClick = if (visibility) {
+                        onBackPress
+                    } else {
+                        {}
+                    }
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),
@@ -105,24 +113,40 @@ fun ActionButtons(
                     )
                 }
             }
-            Spacer(Modifier.weight(1f))
 
             DarkGrayRoundedSurface(modifier = modifier) {
-                TextButton(onClick = {
-                    coroutineScope.launch {
-                        clearFocus()
-                        onCompleteClick(captureAction)
+                IconButton(
+                    onClick = onVisibilityClick
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            if (visibility) R.drawable.ic_visibility else R.drawable.ic_ic_visibility_off
+                        ),
+                        contentDescription = null
+                    )
+                }
+            }
+
+            Spacer(Modifier.weight(1f))
+
+            if (visibility) {
+                DarkGrayRoundedSurface(modifier = modifier) {
+                    TextButton(onClick = {
+                        coroutineScope.launch {
+                            clearFocus()
+                            onCompleteClick(captureAction)
+                        }
+                    }) {
+                        Text("완료", color = Color.White, fontWeight = FontWeight.Bold)
                     }
-                }) {
-                    Text("완료", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
         }
+    }
 
-        Spacer(modifier = Modifier.weight(1f))
-
+    if (visibility) {
         Surface(
-            modifier = modifier.padding(horizontal = 8.dp, vertical = 16.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 16.dp).align(Alignment.CenterEnd),
             color = Color.DarkGray.copy(alpha = 0.6f),
             shape = RoundedCornerShape(12.dp),
         ) {
@@ -171,18 +195,18 @@ fun ActionButtons(
                 )
             }
         }
-        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
 fun DarkGrayRoundedSurface(
     modifier: Modifier = Modifier,
+    alpha: Float = 0.8f,
     content: @Composable () -> Unit
 ) {
     Surface(
         modifier = modifier.padding(8.dp),
-        color = Color.DarkGray.copy(alpha = 0.8f),
+        color = Color.DarkGray.copy(alpha = alpha),
         shape = RoundedCornerShape(12.dp),
     ) {
         content()

@@ -42,7 +42,7 @@ internal fun MainScreen(
                 MainBottomBar(
                     tabs = MainTab.entries.toImmutableList(),
                     currentTab = navigator.currentTab,
-                    onTabSelected =onTabSelected,
+                    onTabSelected = onTabSelected,
                     visible = navigator.shouldShowBottomBar(),
                 )
             }

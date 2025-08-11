@@ -40,6 +40,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 internal fun PostRoute(
+    bookId: Long,
     padding: PaddingValues,
     popBackStack: () -> Unit,
     viewModel: PostViewModel = hiltViewModel(),
@@ -47,6 +48,9 @@ internal fun PostRoute(
     val state by viewModel.collectAsState()
     val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        viewModel.initialize(bookId)
+    }
     // 이미지 텍스트 추출
     val textImageLauncher =
         rememberLauncherForActivityResult(
@@ -103,10 +107,6 @@ internal fun PostRoute(
         viewModel.backPressed()
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.initialize()
-    }
-
     DarkThemeScreen {
         Box(modifier = Modifier.fillMaxSize()) {
             state.capturedTextExtractionImageUri?.let {
@@ -136,6 +136,8 @@ internal fun PostRoute(
                     onConfirmExit = viewModel::confirmExit,
                     onCancelExit = viewModel::cancelExit,
                     onBackPress = viewModel::backPressed,
+                    onVisibilityClick = viewModel::toggleVisibility,
+                    onAlphaSlideValueChange = viewModel::updateBackgroundImageAlpha,
                     updateBottomSheetState = viewModel::updateBottomSheetState,
                     updateFontFamily = viewModel::updateFontFamily,
                     updateTextColor = viewModel::updateTextColor,

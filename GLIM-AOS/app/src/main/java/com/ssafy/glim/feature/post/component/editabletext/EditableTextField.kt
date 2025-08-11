@@ -41,6 +41,9 @@ fun EditableTextField(
     onDrag: (Float, Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // 터치이벤트를 위해 텍스트 입력 전에는 컴포넌트 생성하지 않기
+    if (text.text.isEmpty() && !isFocused) return
+
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
@@ -68,7 +71,7 @@ fun EditableTextField(
             textStyle =
             MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center,
-                lineHeight = 40.sp,
+                lineHeight = textStyle.fontSizeUnit * 2.2f,
                 fontSize = textStyle.fontSizeUnit,
                 fontWeight = textStyle.fontWeight,
                 fontStyle = textStyle.fontStyle,

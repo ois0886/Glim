@@ -64,7 +64,7 @@ internal fun MyGlimsRoute(
         padding = padding,
         listType = listType,
         onBackClick = popBackStack,
-        onTabChange = { newType -> viewModel.loadMyGlims(newType) }
+        onNavigateToQuote = viewModel::navigateToQuote
     )
 }
 
@@ -75,7 +75,7 @@ private fun MyGlimsScreen(
     padding: PaddingValues,
     listType: MyGlimsType,
     onBackClick: () -> Unit,
-    onTabChange: (MyGlimsType) -> Unit
+    onNavigateToQuote: (Long) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -113,7 +113,7 @@ private fun MyGlimsScreen(
                     val quote = uiState.myGlims[index]
                     MyGlimsItem(
                         quote = quote,
-                        onClick = { /* 상세 화면으로 이동 */ }
+                        onClick = { onNavigateToQuote(quote.quoteId) }
                     )
                 }
             }
@@ -174,7 +174,7 @@ private fun MyGlimsScreenPreview() {
             padding = PaddingValues(0.dp),
             listType = MyGlimsType.LIKED,
             onBackClick = {},
-            onTabChange = {}
+            onNavigateToQuote = {}
         )
     }
 }
@@ -191,7 +191,7 @@ private fun MyGlimsScreenLoadingPreview() {
             padding = PaddingValues(0.dp),
             listType = MyGlimsType.LIKED,
             onBackClick = {},
-            onTabChange = {}
+            onNavigateToQuote = {}
         )
     }
 }
@@ -208,7 +208,7 @@ private fun MyGlimsScreenEmptyLikedPreview() {
             padding = PaddingValues(0.dp),
             listType = MyGlimsType.LIKED,
             onBackClick = {},
-            onTabChange = {}
+            onNavigateToQuote = {}
         )
     }
 }
@@ -225,29 +225,7 @@ private fun MyGlimsScreenEmptyUploadedPreview() {
             padding = PaddingValues(0.dp),
             listType = MyGlimsType.UPLOADED,
             onBackClick = {},
-            onTabChange = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "글림 아이템 (정상)")
-@Composable
-private fun MyGlimsItemPreview() {
-    MaterialTheme {
-        MyGlimsItem(
-            quote = sampleQuotes[0],
-            onClick = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "글림 아이템 (빈 내용)")
-@Composable
-private fun MyGlimsItemEmptyContentPreview() {
-    MaterialTheme {
-        MyGlimsItem(
-            quote = sampleQuotes[2],
-            onClick = {}
+            onNavigateToQuote = {}
         )
     }
 }

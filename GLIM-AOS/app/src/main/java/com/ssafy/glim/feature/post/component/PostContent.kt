@@ -12,8 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
@@ -51,6 +49,8 @@ fun PostContent(
     onCompleteClick: (CaptureActions) -> Unit,
     onConfirmExit: () -> Unit,
     onCancelExit: () -> Unit,
+    onVisibilityClick: () -> Unit,
+    onAlphaSlideValueChange: (Float) -> Unit,
     updateBottomSheetState: (Boolean) -> Unit,
     updateFontFamily: (FontFamily) -> Unit,
     updateTextColor: (Color) -> Unit,
@@ -113,6 +113,8 @@ fun PostContent(
                 updateTextFocusChanged = updateTextFocusChanged,
                 onCompleteClick = onCompleteClick,
                 onBackPress = onBackPress,
+                onVisibilityClick = onVisibilityClick,
+                onAlphaSlideValueChange = onAlphaSlideValueChange,
                 updateBottomSheetState = updateBottomSheetState,
                 selectedBook = selectedBook,
                 focusManager = focusManager,
@@ -152,6 +154,7 @@ private fun PostCaptureContent(
     ) {
         TransformableImage(
             imageUri = state.backgroundImageUri,
+            alpha = state.backgroundImageAlpha,
             transformState = transformState
         )
 
