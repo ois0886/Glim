@@ -1,4 +1,4 @@
-package com.lovedbug.geulgwi.core.common.config;
+package com.lovedbug.geulgwi.external.redis;
 
 import java.time.Duration;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;

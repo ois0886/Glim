@@ -28,6 +28,7 @@ public class BookService {
     private final AladdinClient bookProviderClient;
 
     private final SearchKeywordService searchKeywordService;
+    private final BookRankingService bookRankingService;
 
     private final BookRepository bookRepository;
 
@@ -63,7 +64,7 @@ public class BookService {
         List<Book> books = bookRepository.findTop10ByOrderByViewsDesc();
 
         return books.stream()
-            .map(book -> new PopularBookResponse(book.getBookId(), book.getTitle(), book.getAuthor(), book.getPublisher(), book.getCoverUrl()))
+            .map(BookMapper::toPopularBookResponse)
             .toList();
     }
 
@@ -72,6 +73,7 @@ public class BookService {
         Book book = bookRepository.findById(bookId)
             .orElseThrow(() -> new EntityNotFoundException("없는 책 id 입니다. 책 id = " + bookId));
 
+        bookRankingService.updateBookRanking(book);
         book.increaseViewCount();
     }
 

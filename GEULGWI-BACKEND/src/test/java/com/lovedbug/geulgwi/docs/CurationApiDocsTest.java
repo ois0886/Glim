@@ -1,10 +1,26 @@
 package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.config.TestRedisConfig;
-import com.lovedbug.geulgwi.core.domain.book.entity.Book;
+import com.lovedbug.geulgwi.core.domain.book.BookRankingService;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
+import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItem;
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItemBook;
@@ -19,24 +35,17 @@ import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
+import com.lovedbug.geulgwi.core.domain.quote.QuoteRankingService;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 class CurationApiDocsTest extends RestDocsTestSupport {
+
+    @Autowired
+    private BookRankingService bookRankingService;
+
+    @Autowired
+    private QuoteRankingService quoteRankingService;
 
     @Autowired
     private MainCurationRepository mainCurationRepository;
@@ -62,6 +71,9 @@ class CurationApiDocsTest extends RestDocsTestSupport {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     @MockitoBean
     private FirebaseMessaging firebaseMessaging;
 
@@ -75,6 +87,8 @@ class CurationApiDocsTest extends RestDocsTestSupport {
 
     @BeforeEach
     void clearDatabase() {
+        stringRedisTemplate.getConnectionFactory().getConnection().serverCommands().flushDb();
+
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
         jdbcTemplate.execute("TRUNCATE TABLE curation_item_quote");
         jdbcTemplate.execute("TRUNCATE TABLE curation_item_book");
@@ -104,7 +118,7 @@ class CurationApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("[].contents").description("큐레이션 콘텐츠 목록"),
                     fieldWithPath("[].contents[].bookId").description("책 ID").optional(),
                     fieldWithPath("[].contents[].bookTitle").description("책 제목"),
-                    fieldWithPath("[].contents[].author").description("책 저자"),
+                    fieldWithPath("[].contents[].author").type(JsonFieldType.STRING).description("책 저자"),
                     fieldWithPath("[].contents[].publisher").type(JsonFieldType.STRING).description("출판사").optional(),
                     fieldWithPath("[].contents[].bookCoverUrl").type(JsonFieldType.STRING).description("책 커버 URL").optional(),
                     fieldWithPath("[].contents[].quoteId").type(JsonFieldType.NUMBER).description("글귀 ID").optional(),
@@ -140,7 +154,9 @@ class CurationApiDocsTest extends RestDocsTestSupport {
             .coverUrl("/book/cover/url")
             .build();
 
-        bookRepository.save(book);
+        book = bookRepository.save(book);
+
+        bookRankingService.updateBookRanking(book);
 
         CurationItemBook curationItemBook = CurationItemBook.builder()
             .curationItemId(bookCurationItem.getCurationItemId())
@@ -177,7 +193,9 @@ class CurationApiDocsTest extends RestDocsTestSupport {
             .bookTitle("책 제목")
             .build();
 
-        quoteRepository.save(quote);
+        quote = quoteRepository.save(quote);
+
+        quoteRankingService.updateQuoteRanking(quote);
 
         CurationItemQuote curationItemQuote = CurationItemQuote.builder()
             .curationItemId(quoteCurationItem.getCurationItemId())

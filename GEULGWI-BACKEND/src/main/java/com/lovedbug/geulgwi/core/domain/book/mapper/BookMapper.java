@@ -1,8 +1,9 @@
 package com.lovedbug.geulgwi.core.domain.book.mapper;
 
-import com.lovedbug.geulgwi.core.domain.book.dto.BookInfoResponse;
-import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import java.time.format.DateTimeFormatter;
+import com.lovedbug.geulgwi.core.domain.book.dto.BookInfoResponse;
+import com.lovedbug.geulgwi.core.domain.book.dto.PopularBookResponse;
+import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 
 public class BookMapper {
 
@@ -24,5 +25,15 @@ public class BookMapper {
             book.getLinkUrl(),
             book.getViews()
         );
+    }
+
+    public static PopularBookResponse toPopularBookResponse(Book book) {
+        return PopularBookResponse.builder()
+            .bookId(book.getBookId())
+            .bookTitle(book.getTitle())
+            .author(book.getAuthor())
+            .publisher(book.getPublisher())
+            .bookCoverUrl(book.getCoverUrl())
+            .build();
     }
 }

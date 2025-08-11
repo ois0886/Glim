@@ -1,4 +1,4 @@
-package com.lovedbug.geulgwi.core.common.config;
+package com.lovedbug.geulgwi.external.redis;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
