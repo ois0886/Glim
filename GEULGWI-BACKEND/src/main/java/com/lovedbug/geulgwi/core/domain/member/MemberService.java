@@ -6,12 +6,15 @@ import com.lovedbug.geulgwi.core.domain.member.dto.response.SignUpResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
 import com.lovedbug.geulgwi.core.domain.member.mapper.MemberMapper;
 import com.lovedbug.geulgwi.external.email.EmailSender;
+import com.lovedbug.geulgwi.external.image.ImageMetaData;
+import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
 import lombok.RequiredArgsConstructor;
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
 
@@ -23,9 +26,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
+    private final ImageHandler imageHandler;
 
     @Transactional
-    public SignUpResponse registerMember(SignUpRequest signUpRequest){
+    public SignUpResponse registerMember(SignUpRequest signUpRequest, MultipartFile profileImage){
 
         if (memberRepository.existsByEmail(signUpRequest.getEmail())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 가입된 이메일 입니다.");
@@ -35,12 +39,15 @@ public class MemberService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용 중인 닉네임입니다.");
         }
 
+        String profileUrl = savedProfileUrl(profileImage);
+
         Member reigisterMember = Member.builder()
             .email(signUpRequest.getEmail())
             .password(passwordEncoder.encode(signUpRequest.getPassword()))
             .nickname(signUpRequest.getNickname())
             .gender(signUpRequest.getGender())
             .birthDate(signUpRequest.getBirthDate())
+            .profileUrl(profileUrl)
             .build();
 
         memberRepository.save(reigisterMember);
@@ -52,6 +59,17 @@ public class MemberService {
             .nickname(signUpRequest.getNickname())
             .message("회원가입이 완료되었습니다.")
             .build();
+    }
+
+    public String savedProfileUrl(MultipartFile profileImage) {
+
+        if (profileImage == null || profileImage.isEmpty()){
+            return null;
+        }
+
+        ImageMetaData imageMetaData = imageHandler.saveImage(profileImage);
+
+        return "/images" + imageMetaData.imageName();
     }
 
     public MemberResponse findByMemberId(Long memberId){

@@ -32,4 +32,7 @@ public class MemberResponse {
 
     @Column(name="status")
     private MemberStatus status;
+
+    @Column(name="profile_url")
+    private String profileUrl;
 }

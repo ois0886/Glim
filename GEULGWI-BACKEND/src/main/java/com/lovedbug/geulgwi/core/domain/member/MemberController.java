@@ -7,6 +7,7 @@ import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -19,7 +20,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("")
-    public ResponseEntity<SignUpResponse> signup(@RequestBody SignUpRequest signUpRequest){
+    public ResponseEntity<SignUpResponse> signup(
+        @RequestPart SignUpRequest signUpRequest,
+        @RequestPart MultipartFile profileImage){
 
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest()
@@ -28,7 +31,7 @@ public class MemberController {
 
         return ResponseEntity
             .created(location)
-            .body(memberService.registerMember(signUpRequest));
+            .body(memberService.registerMember(signUpRequest, profileImage));
     }
 
     @GetMapping("/{memberId}")
