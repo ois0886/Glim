@@ -21,6 +21,7 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.common.utils.rememberCameraWithPermission
 import com.ssafy.glim.core.ui.DarkThemeScreen
+import com.ssafy.glim.core.util.toCacheImageUri
 import com.ssafy.glim.feature.post.component.PostContent
 import com.ssafy.glim.feature.post.component.imageoverlay.TextExtractionImageOverlay
 import org.orbitmvi.orbit.compose.collectAsState
@@ -79,6 +80,11 @@ internal fun PostRoute(
             is PostSideEffect.ShowToast -> {
                 Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
             }
+
+            is PostSideEffect.SaveGeneratedToCache -> {
+                val uri = sideEffect.bitmap.toCacheImageUri(context)
+                viewModel.backgroundImageSelected(uri)
+            }
         }
     }
 
@@ -112,6 +118,7 @@ internal fun PostRoute(
                     onToggleBold = viewModel::toggleBold,
                     onToggleItalic = viewModel::toggleItalic,
                     startCameraAction = viewModel::startCameraAction,
+                    onImageGenerateClick = viewModel::onImageGenerateClick,
                     onTextExtractionClick = viewModel::textExtractionClick,
                     onBackgroundImageClick = viewModel::backgroundImageClick,
                     onCompleteClick = viewModel::completeClick,

@@ -23,6 +23,7 @@ import com.ssafy.glim.feature.search.SearchRoute
 @Composable
 fun PostUI(
     state: PostState,
+    onImageGenerateClick : () -> Unit,
     startCameraAction: (CameraType) -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageClick: () -> Unit,
@@ -39,6 +40,7 @@ fun PostUI(
         // ActionButtons - 오른쪽 하단
         ActionButtons(
             startCameraAction = startCameraAction,
+            onImageGenerateClick = onImageGenerateClick,
             onTextExtractionClick = onTextExtractionClick,
             onBackgroundImageButtonClick = onBackgroundImageClick,
             onCreateTextClick = updateTextFocusChanged,

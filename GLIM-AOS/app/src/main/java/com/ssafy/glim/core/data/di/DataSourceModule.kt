@@ -4,9 +4,11 @@ import com.ssafy.glim.core.data.datasource.local.QuoteLocalDataSource
 import com.ssafy.glim.core.data.datasource.remote.QuoteRemoteDataSource
 import com.ssafy.glim.core.data.datasource.remote.AuthRemoteDataSource
 import com.ssafy.glim.core.data.datasource.remote.BookRemoteDataSource
+import com.ssafy.glim.core.data.datasource.remote.ImageRemoteDataSource
 import com.ssafy.glim.core.data.datasource.remote.SearchQueryRemoteDataSource
 import com.ssafy.glim.core.data.service.AuthService
 import com.ssafy.glim.core.data.service.BookService
+import com.ssafy.glim.core.data.service.ImageService
 import com.ssafy.glim.core.data.service.QuoteService
 import com.ssafy.glim.core.data.service.SearchQueryService
 import dagger.Module
@@ -38,4 +40,8 @@ object DataSourceModule {
     @Singleton
     @Provides
     fun provideQuoteLocalDataSource(): QuoteLocalDataSource = QuoteLocalDataSource()
+
+    @Singleton
+    @Provides
+    fun provideImageRemoteDataSource(service: ImageService): ImageRemoteDataSource = ImageRemoteDataSource(service)
 }

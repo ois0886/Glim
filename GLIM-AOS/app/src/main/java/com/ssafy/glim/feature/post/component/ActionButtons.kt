@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ActionButtons(
     startCameraAction: (CameraType) -> Unit,
+    onImageGenerateClick : () -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageButtonClick: () -> Unit,
     onCreateTextClick: (Boolean) -> Unit,
@@ -104,6 +105,13 @@ fun ActionButtons(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.End
             ) {
+
+                ActionButton(
+                    onClick = onImageGenerateClick,
+                    iconRes = R.drawable.ic_landscape,
+                    contentDescription = stringResource(R.string.image_generate),
+                )
+
                 IconButtonWithPopupMenu(
                     startCameraAction = startCameraAction
                 )

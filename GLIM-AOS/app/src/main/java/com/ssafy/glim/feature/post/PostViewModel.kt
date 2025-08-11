@@ -8,6 +8,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.usecase.image.ImageGenerateUseCase
 import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.util.CaptureActions
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PostViewModel @Inject constructor(
     val createQuoteUseCase: CreateQuoteUseCase,
+    val imageGenerateUseCase: ImageGenerateUseCase,
     private val imageProcessor: ImageProcessor,
     private val navigator: Navigator
 ) : ViewModel(), ContainerHost<PostState, PostSideEffect> {
@@ -81,6 +83,34 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun onImageGenerateClick() = intent {
+        if (state.recognizedText.text.isNotBlank()) {
+            runCatching {
+                reduce {
+                    state.copy(
+                        isLoading = true
+                    )
+                }
+                imageGenerateUseCase.invoke(state.recognizedText.text)
+            }
+                .onSuccess {
+                    reduce {
+                        state.copy(
+                            isLoading = false
+                        )
+                    }
+                    postSideEffect(PostSideEffect.SaveGeneratedToCache(it.bitmap))
+                }
+                .onFailure {
+                    reduce {
+                        state.copy(
+                            isLoading = false
+                        )
+                    }
+                }
+        }
+    }
+
     fun onBackgroundClick() =
         intent {
             reduce { state.copy(isFocused = false) }
@@ -114,10 +144,10 @@ class PostViewModel @Inject constructor(
         reduce {
             state.copy(
                 textPosition =
-                currentPosition.copy(
-                    offsetX = currentPosition.offsetX + deltaX,
-                    offsetY = currentPosition.offsetY + deltaY,
-                ),
+                    currentPosition.copy(
+                        offsetX = currentPosition.offsetX + deltaX,
+                        offsetY = currentPosition.offsetY + deltaY,
+                    ),
             )
         }
     }

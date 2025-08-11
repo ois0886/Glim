@@ -1,8 +1,10 @@
 package com.ssafy.glim.core.data.di
 
+import androidx.navigation.Navigator
 import com.ssafy.glim.core.data.service.AuthService
 import com.ssafy.glim.core.data.service.BookService
 import com.ssafy.glim.core.data.service.CurationService
+import com.ssafy.glim.core.data.service.ImageService
 import com.ssafy.glim.core.data.service.QuoteService
 import com.ssafy.glim.core.data.service.SearchQueryService
 import com.ssafy.glim.core.data.service.UserService
@@ -52,4 +54,10 @@ object ServiceModule {
     fun provideSearchQueryService(
         @Named("main") retrofit: Retrofit
     ): SearchQueryService = retrofit.create(SearchQueryService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideImageService(
+        @Named("main") retrofit: Retrofit,
+    ): ImageService = retrofit.create(ImageService::class.java)
 }

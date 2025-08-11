@@ -45,6 +45,7 @@ fun PostContent(
     onToggleBold: () -> Unit,
     onToggleItalic: () -> Unit,
     startCameraAction: (CameraType) -> Unit,
+    onImageGenerateClick : () -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageClick: () -> Unit,
     onCompleteClick: (CaptureActions) -> Unit,
@@ -105,6 +106,7 @@ fun PostContent(
         } else {
             PostUI(
                 state = state,
+                onImageGenerateClick = onImageGenerateClick,
                 startCameraAction = startCameraAction,
                 onTextExtractionClick = onTextExtractionClick,
                 onBackgroundImageClick = onBackgroundImageClick,
