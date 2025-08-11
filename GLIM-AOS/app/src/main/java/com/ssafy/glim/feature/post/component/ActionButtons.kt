@@ -77,7 +77,7 @@ fun BoxScope.ActionButtons(
                     onClick = if (visibility) {
                         onBackPress
                     } else {
-                        {} 
+                        {}
                     }
                 ) {
                     Icon(

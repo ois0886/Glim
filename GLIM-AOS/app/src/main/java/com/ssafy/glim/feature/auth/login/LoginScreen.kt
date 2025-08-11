@@ -12,27 +12,32 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.ui.GlimTopBar
-import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.EmailInputTextField
 import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
+import com.ssafy.glim.ui.theme.caveatFont
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
@@ -62,6 +67,7 @@ internal fun LoginRoute(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LoginScreen(
     state: LoginUiState,
@@ -74,21 +80,34 @@ internal fun LoginScreen(
 ) {
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .imePadding()
-                .navigationBarsPadding()
+        Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .imePadding()
+            .navigationBarsPadding()
     ) {
-        GlimTopBar(
-            showBack = false,
-            alignment = TitleAlignment.Center
+        CenterAlignedTopAppBar(
+            title = {
+                Text(
+                    text = stringResource(R.string.app_name_english),
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = caveatFont
+                    ),
+                )
+            },
+            colors =
+            TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = Color.Transparent,
+            ),
         )
+        Spacer(Modifier.height(20.dp))
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(PaddingValues(16.dp)),
+            Modifier
+                .fillMaxSize()
+                .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -118,11 +137,11 @@ internal fun LoginScreen(
 
             GlimButton(
                 text =
-                    if (state.isLoading) {
-                        stringResource(R.string.login_loading)
-                    } else {
-                        stringResource(R.string.login_button)
-                    },
+                if (state.isLoading) {
+                    stringResource(R.string.login_loading)
+                } else {
+                    stringResource(R.string.login_button)
+                },
                 onClick = onLoginClicked,
                 enabled = state.isLoginEnabled && !state.isLoading,
             )
@@ -163,12 +182,12 @@ fun PreviewLoginScreen_Empty() {
 fun PreviewLoginScreen_Errors() {
     LoginScreen(
         state =
-            LoginUiState(
-                email = TextFieldValue("invalid-email"),
-                password = TextFieldValue("short"),
-                emailError = R.string.error_email_invalid,
-                passwordError = R.string.error_password_invalid,
-            ),
+        LoginUiState(
+            email = TextFieldValue("invalid-email"),
+            password = TextFieldValue("short"),
+            emailError = R.string.error_email_invalid,
+            passwordError = R.string.error_password_invalid,
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},
@@ -183,10 +202,10 @@ fun PreviewLoginScreen_Errors() {
 fun PreviewLoginScreen_Valid() {
     LoginScreen(
         state =
-            LoginUiState(
-                email = TextFieldValue("user@example.com"),
-                password = TextFieldValue("Aa1!abcd"),
-            ),
+        LoginUiState(
+            email = TextFieldValue("user@example.com"),
+            password = TextFieldValue("Aa1!abcd"),
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},
@@ -201,11 +220,11 @@ fun PreviewLoginScreen_Valid() {
 fun PreviewLoginScreen_Loading() {
     LoginScreen(
         state =
-            LoginUiState(
-                email = TextFieldValue("user@example.com"),
-                password = TextFieldValue("Aa1!abcd"),
-                isLoading = true,
-            ),
+        LoginUiState(
+            email = TextFieldValue("user@example.com"),
+            password = TextFieldValue("Aa1!abcd"),
+            isLoading = true,
+        ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},
