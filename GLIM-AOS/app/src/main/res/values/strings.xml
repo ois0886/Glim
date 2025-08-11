@@ -1,5 +1,8 @@
+
 <resources>
     <string name="app_name">글:림</string>
+
+    <string name="app_name_english">Glim</string>
 
     <!-- 로그인/인증 관련 -->
     <string name="login_title">로그인</string>

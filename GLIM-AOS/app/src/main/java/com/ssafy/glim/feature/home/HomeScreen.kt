@@ -146,7 +146,7 @@ fun QuoteHomeTitle() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Glim",
+            text = stringResource(R.string.app_name_english),
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,

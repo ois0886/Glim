@@ -67,7 +67,9 @@ fun BookCarouselPager(
 
     // 현재 선택된 책 정보를 애니메이션과 함께
     val currentBookIndex by remember {
-        derivedStateOf { pagerState.currentPage % books.size }
+        derivedStateOf {
+            if (books.isNotEmpty()) pagerState.currentPage % books.size else 0
+        }
     }
     val currentBook = books[currentBookIndex]
 
