@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
+import com.ssafy.glim.core.domain.model.Settings
 import com.ssafy.glim.core.ui.GlimTopBar
 import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.GlimButton
@@ -41,10 +41,6 @@ internal fun SettingRoute(
 ) {
     val state by viewModel.collectAsState()
     val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        viewModel.loadSettings()
-    }
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
@@ -106,7 +102,7 @@ internal fun SettingScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             NotificationSettingSection(
-                settings = state.notificationSettings,
+                settings = state.settings,
                 onAllNotificationsToggle = onAllNotificationsToggle,
                 onDoNotDisturbModeToggle = onDoNotDisturbModeToggle,
                 onDoNotDisturbTimeToggle = onDoNotDisturbTimeToggle,
@@ -117,7 +113,7 @@ internal fun SettingScreen(
             Spacer(modifier = Modifier.height(36.dp))
 
             LockSettingSection(
-                settings = state.lockSettings,
+                settings = state.settings,
                 onLockScreenGlimToggle = onLockScreenGlimToggle
             )
 
@@ -161,7 +157,7 @@ private fun PreviewSettingScreenEnabled() {
     MaterialTheme {
         SettingScreen(
             state = SettingUiState(
-                notificationSettings = NotificationSettings(
+                settings = Settings(
                     doNotDisturbTimeEnabled = true,
                     weeklyNotificationsEnabled = true
                 )

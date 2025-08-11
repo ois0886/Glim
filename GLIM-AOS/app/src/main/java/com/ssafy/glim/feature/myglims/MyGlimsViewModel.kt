@@ -1,15 +1,11 @@
 package com.ssafy.glim.feature.myglims
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.ssafy.glim.core.domain.usecase.quote.GetMyLikedQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetMyUploadQuoteUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
-import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -51,13 +47,7 @@ internal class MyGlimsViewModel @Inject constructor(
     }
 
     fun navigateToQuote(quoteId: Long) =
-        viewModelScope.launch {
+        intent {
             navigator.navigate(BottomTabRoute.Shorts(quoteId))
-        }
-
-    fun navigateToBookDetail(bookId: Long) =
-        viewModelScope.launch {
-            Log.d("HomeViewModel", "Navigating to BookDetail with bookId: $bookId")
-            navigator.navigate(Route.BookDetail(bookId = bookId))
         }
 }
