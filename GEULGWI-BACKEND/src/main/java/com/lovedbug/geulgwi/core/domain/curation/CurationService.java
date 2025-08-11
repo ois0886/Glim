@@ -8,21 +8,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.springframework.stereotype.Service;
 import com.lovedbug.geulgwi.core.common.exception.GeulgwiException;
-import com.lovedbug.geulgwi.core.domain.book.BookService;
+import com.lovedbug.geulgwi.core.domain.book.BookRankingService;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationContentResponse;
 import com.lovedbug.geulgwi.core.domain.curation.dto.response.CurationItemResponse;
 import com.lovedbug.geulgwi.core.domain.curation.mapper.CurationMapper;
 import com.lovedbug.geulgwi.core.domain.quote.QuoteRankingService;
-import com.lovedbug.geulgwi.core.domain.quote.QuoteService;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CurationService {
 
-    private final BookService bookService;
-    private final QuoteService quoteService;
+    private final BookRankingService bookRankingService;
     private final QuoteRankingService quoteRankingService;
     private final CurationCacheService curationCacheService;
 
@@ -67,7 +65,7 @@ public class CurationService {
 
     public CurationItemResponse getPopularBookCuration() {
         List<CurationContentResponse> contents = CurationMapper.toCurationContentListFromBooks(
-            bookService.getPopularBooks());
+            bookRankingService.getPopularBooks());
 
         return CurationItemResponse.builder()
             .title("현재 인기 많은 도서")
