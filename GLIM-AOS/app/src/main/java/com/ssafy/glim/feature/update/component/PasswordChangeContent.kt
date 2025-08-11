@@ -29,7 +29,7 @@ fun PasswordChangeContent(
     Column {
         Text(
             text = stringResource(R.string.change_password_info),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
