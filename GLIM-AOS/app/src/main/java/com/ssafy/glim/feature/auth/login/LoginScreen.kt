@@ -74,27 +74,26 @@ internal fun LoginScreen(
 ) {
     Column(
         modifier =
-        Modifier
-            .fillMaxSize()
-            .padding(padding)
-            .imePadding()
-            .navigationBarsPadding()
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .imePadding()
+                .navigationBarsPadding()
     ) {
         GlimTopBar(
-            title = stringResource(id = R.string.login_title),
             showBack = false,
             alignment = TitleAlignment.Center
         )
         Column(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(PaddingValues(16.dp)),
+                Modifier
+                    .fillMaxSize()
+                    .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(id = R.string.login_subtitle),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Start,
             )
@@ -119,11 +118,11 @@ internal fun LoginScreen(
 
             GlimButton(
                 text =
-                if (state.isLoading) {
-                    stringResource(R.string.login_loading)
-                } else {
-                    stringResource(R.string.login_button)
-                },
+                    if (state.isLoading) {
+                        stringResource(R.string.login_loading)
+                    } else {
+                        stringResource(R.string.login_button)
+                    },
                 onClick = onLoginClicked,
                 enabled = state.isLoginEnabled && !state.isLoading,
             )
@@ -164,12 +163,12 @@ fun PreviewLoginScreen_Empty() {
 fun PreviewLoginScreen_Errors() {
     LoginScreen(
         state =
-        LoginUiState(
-            email = TextFieldValue("invalid-email"),
-            password = TextFieldValue("short"),
-            emailError = R.string.error_email_invalid,
-            passwordError = R.string.error_password_invalid,
-        ),
+            LoginUiState(
+                email = TextFieldValue("invalid-email"),
+                password = TextFieldValue("short"),
+                emailError = R.string.error_email_invalid,
+                passwordError = R.string.error_password_invalid,
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},
@@ -184,10 +183,10 @@ fun PreviewLoginScreen_Errors() {
 fun PreviewLoginScreen_Valid() {
     LoginScreen(
         state =
-        LoginUiState(
-            email = TextFieldValue("user@example.com"),
-            password = TextFieldValue("Aa1!abcd"),
-        ),
+            LoginUiState(
+                email = TextFieldValue("user@example.com"),
+                password = TextFieldValue("Aa1!abcd"),
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},
@@ -202,11 +201,11 @@ fun PreviewLoginScreen_Valid() {
 fun PreviewLoginScreen_Loading() {
     LoginScreen(
         state =
-        LoginUiState(
-            email = TextFieldValue("user@example.com"),
-            password = TextFieldValue("Aa1!abcd"),
-            isLoading = true,
-        ),
+            LoginUiState(
+                email = TextFieldValue("user@example.com"),
+                password = TextFieldValue("Aa1!abcd"),
+                isLoading = true,
+            ),
         padding = PaddingValues(0.dp),
         onEmailChanged = {},
         onPasswordChanged = {},

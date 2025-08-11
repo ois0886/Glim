@@ -33,7 +33,7 @@ import com.ssafy.glim.ui.theme.Typography
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GlimTopBar(
-    title: String,
+    title: String = "",
     showBack: Boolean = false,
     onBack: () -> Unit = {},
     alignment: TitleAlignment = TitleAlignment.Center,
