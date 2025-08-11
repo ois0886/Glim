@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.core.domain.image.ImageGenerateService;
 import com.lovedbug.geulgwi.external.gpt.dto.GenerateRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +22,9 @@ public class OpenAiControllerDocsTest extends RestDocsTestSupport {
 
     @MockitoBean
     private ImageGenerateService imageGenerateService;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @DisplayName("글귀에 어울리는 이미지를 GPT가 생성한다")
     @Test

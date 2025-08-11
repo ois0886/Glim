@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.member.Member;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.time.LocalDate;
 import java.util.List;
 import static io.restassured.RestAssured.given;
@@ -38,6 +40,9 @@ public class AdminQuoteApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
