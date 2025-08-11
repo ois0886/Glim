@@ -2,6 +2,7 @@ package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
 import com.lovedbug.geulgwi.config.TestRedisConfig;
+import com.lovedbug.geulgwi.core.domain.book.BookRankingService;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
@@ -18,6 +19,7 @@ import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
+import com.lovedbug.geulgwi.core.domain.quote.QuoteRankingService;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
 import jakarta.persistence.EntityManager;
@@ -37,6 +39,12 @@ import org.springframework.test.context.DynamicPropertySource;
 
 @ActiveProfiles("test")
 class CurationApiDocsTest extends RestDocsTestSupport {
+
+    @Autowired
+    private BookRankingService bookRankingService;
+
+    @Autowired
+    private QuoteRankingService quoteRankingService;
 
     @Autowired
     private MainCurationRepository mainCurationRepository;
@@ -137,7 +145,9 @@ class CurationApiDocsTest extends RestDocsTestSupport {
             .coverUrl("/book/cover/url")
             .build();
 
-        bookRepository.save(book);
+        book = bookRepository.save(book);
+
+        bookRankingService.updateBookRanking(book);
 
         CurationItemBook curationItemBook = CurationItemBook.builder()
             .curationItemId(bookCurationItem.getCurationItemId())
@@ -174,7 +184,9 @@ class CurationApiDocsTest extends RestDocsTestSupport {
             .bookTitle("책 제목")
             .build();
 
-        quoteRepository.save(quote);
+        quote = quoteRepository.save(quote);
+
+        quoteRankingService.updateQuoteRanking(quote);
 
         CurationItemQuote curationItemQuote = CurationItemQuote.builder()
             .curationItemId(quoteCurationItem.getCurationItemId())
