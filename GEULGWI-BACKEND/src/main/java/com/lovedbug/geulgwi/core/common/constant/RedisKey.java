@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum RedisKey {
 
-    POPULAR_QUOTES("popular:quotes");
+    POPULAR_QUOTES("popular:quotes"),
+    POPULAR_BOOKS("popular:books");
 
     private final String key;
 }
