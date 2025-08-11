@@ -153,9 +153,7 @@ fun QuoteItem(
     val scope = rememberCoroutineScope()
     val imageGraphicsLayer = rememberGraphicsLayer()
 
-    // ScreenCaptureManager와 ShareWithImageManager 생성
-    val screenCaptureManager = remember { ScreenCaptureManager(context) }
-    val shareManager = remember { ShareWithImageManager(context, screenCaptureManager) }
+    val shareManager = remember { ShareWithImageManager(context) }
 
     val captureAction = rememberCaptureAction(
         graphicsLayer = imageGraphicsLayer,
@@ -231,9 +229,7 @@ fun QuoteItem(
                         try {
                             // ShareWithImageManager의 shareQuoteWithImage 메서드 사용
                             shareManager.shareQuoteWithImage(
-                                graphicsLayer = imageGraphicsLayer,
-                                quote = quote,
-                                includeFallbackUrl = true
+                                quote = quote
                             )
                         } catch (e: Exception) {
                             e.printStackTrace()
