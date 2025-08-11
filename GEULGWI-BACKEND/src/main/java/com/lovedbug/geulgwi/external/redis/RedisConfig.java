@@ -25,9 +25,9 @@ public class RedisConfig {
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
         GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
-        poolConfig.setMaxTotal(20);
-        poolConfig.setMaxIdle(10);
-        poolConfig.setMinIdle(5);
+        poolConfig.setMaxTotal(50);
+        poolConfig.setMaxIdle(30);
+        poolConfig.setMinIdle(10);
 
         LettucePoolingClientConfiguration clientConfig = LettucePoolingClientConfiguration.builder()
             .poolConfig(poolConfig)
