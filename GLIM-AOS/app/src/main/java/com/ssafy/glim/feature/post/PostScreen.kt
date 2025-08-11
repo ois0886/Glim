@@ -4,6 +4,9 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +34,7 @@ import com.ssafy.glim.core.ui.GifDisplay
 import com.ssafy.glim.core.util.toCacheImageUri
 import com.ssafy.glim.feature.post.component.PostContent
 import com.ssafy.glim.feature.post.component.imageoverlay.TextExtractionImageOverlay
+import com.ssafy.glim.ui.theme.GlimColor
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -142,21 +147,8 @@ internal fun PostRoute(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(padding)
-                        .padding(24.dp)
+                        .clickable(indication = null, interactionSource = remember { MutableInteractionSource() }) { }
                 ) {
-                    GifDisplay(
-                        gifResourceId = R.drawable.celebration,
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .size(140.dp)
-                    )
-                    GifDisplay(
-                        gifResourceId = R.drawable.celebration,
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .size(140.dp)
-                    )
                     Column(
                         modifier = Modifier
                             .align(Alignment.Center)

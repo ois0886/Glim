@@ -107,6 +107,7 @@ class PostViewModel @Inject constructor(
                             isLoading = false
                         )
                     }
+                    postSideEffect(PostSideEffect.ShowToast(it.message ?: "에러가 발생했습니다."))
                 }
         }
     }
