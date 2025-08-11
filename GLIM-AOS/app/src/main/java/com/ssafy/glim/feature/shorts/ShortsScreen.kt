@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.shorts
 
+import ShareWithImageManager
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -25,6 +26,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,10 +49,12 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.DarkThemeScreen
 import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
+import com.ssafy.glim.core.util.ScreenCaptureManager
 import com.ssafy.glim.core.util.rememberCaptureAction
 import com.ssafy.glim.feature.main.excludeSystemBars
 import com.ssafy.glim.feature.post.component.DarkGrayRoundedSurface
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -113,9 +118,9 @@ internal fun ShortsRoute(
         VerticalPager(
             state = pagerState,
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(padding.excludeSystemBars())
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding.excludeSystemBars())
         ) { page ->
             val quote = state.quotes[page]
 
@@ -123,7 +128,7 @@ internal fun ShortsRoute(
                 quote = quote,
                 modifier = Modifier.fillMaxSize(),
                 onLikeClick = { viewModel.toggleLike() },
-                onShareClick = { viewModel.onShareClick() },
+                onShareClick = { /* 개별 컴포넌트에서 처리 */ },
                 onMoreClick = { },
                 onBookInfoClick = {
                     it?.let {
@@ -144,7 +149,13 @@ fun QuoteItem(
     onMoreClick: () -> Unit = {},
     onBookInfoClick: (Long?) -> Unit
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val imageGraphicsLayer = rememberGraphicsLayer()
+
+    // ScreenCaptureManager와 ShareWithImageManager 생성
+    val screenCaptureManager = remember { ScreenCaptureManager(context) }
+    val shareManager = remember { ShareWithImageManager(context, screenCaptureManager) }
 
     val captureAction = rememberCaptureAction(
         graphicsLayer = imageGraphicsLayer,
@@ -170,8 +181,8 @@ fun QuoteItem(
 
         Column(
             modifier =
-            Modifier
-                .fillMaxSize(),
+                Modifier
+                    .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.End
         ) {
@@ -194,13 +205,13 @@ fun QuoteItem(
                 IconButton(onClick = onLikeClick) {
                     Icon(
                         painter =
-                        painterResource(
-                            if (quote.isLike) {
-                                R.drawable.ic_favorite_fill
-                            } else {
-                                R.drawable.ic_favorite
-                            },
-                        ),
+                            painterResource(
+                                if (quote.isLike) {
+                                    R.drawable.ic_favorite_fill
+                                } else {
+                                    R.drawable.ic_favorite
+                                },
+                            ),
                         contentDescription = stringResource(R.string.like),
                         tint = if (quote.isLike) Color.Red else Color.White,
                     )
@@ -212,9 +223,24 @@ fun QuoteItem(
                 )
             }
 
+            // 공유 버튼 - ShareWithImageManager 활용
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
-                onClick = onShareClick
+                onClick = {
+                    scope.launch {
+                        try {
+                            // ShareWithImageManager의 shareQuoteWithImage 메서드 사용
+                            shareManager.shareQuoteWithImage(
+                                graphicsLayer = imageGraphicsLayer,
+                                quote = quote,
+                                includeFallbackUrl = true
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Toast.makeText(context, "공유 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_share),
@@ -251,9 +277,9 @@ fun QuoteBookContent(
     DarkGrayRoundedSurface(modifier = modifier) {
         Row(
             modifier =
-            Modifier
-                .padding(16.dp)
-                .clickable { onBookInfoClick(bookId) },
+                Modifier
+                    .padding(16.dp)
+                    .clickable { onBookInfoClick(bookId) },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

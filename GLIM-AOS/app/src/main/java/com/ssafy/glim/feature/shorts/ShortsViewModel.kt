@@ -99,10 +99,12 @@ constructor(
             }
         }
 
-    fun onShareClick() =
-        intent {
-            postSideEffect(ShortsSideEffect.ShowToast("개발 중 입니다!"))
-        }
+//    fun onShareClick(shareManager: ShareWithImageManager) =
+//        intent {
+//            val quote = state.currentQuote ?: return@intent
+//            shareManager.shareWithBitmap(quote.quoteId, quote.bookTitle, quote.author)
+//            postSideEffect(ShortsSideEffect.ShowToast("개발 중 입니다!"))
+//        }
 
     fun loadQuote(quoteId: Long) = intent {
         runCatching { getQuoteByIdUseCase(quoteId) }

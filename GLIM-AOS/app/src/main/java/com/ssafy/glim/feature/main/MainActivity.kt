@@ -42,7 +42,6 @@ object PermissionUtil {
         return !Settings.canDrawOverlays(context)
     }
 }
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -64,6 +63,9 @@ class MainActivity : ComponentActivity() {
             PermissionUtil.onObtainingPermissionOverlayWindow(this)
         }
         enableEdgeToEdge()
+
+        // 딥링크 처리 추가
+        handleDeepLink(intent)
 
         performInitialization()
         splashScreen.setKeepOnScreenCondition { isLoading }
@@ -88,6 +90,7 @@ class MainActivity : ComponentActivity() {
                     )
                     LaunchedNavigator(navigator.navController)
                     val initialRoute = intent.getStringExtra("nav_route")
+                    val deepLinkQuoteId = intent.getLongExtra("quote_id", -1L)
 
                     if (!isLoading) {
                         MainScreen(
@@ -103,10 +106,18 @@ class MainActivity : ComponentActivity() {
                             },
                         )
 
-                        LaunchedEffect(initialRoute) {
-                            if (destination == BottomTabRoute.Home && initialRoute == "glim") {
-                                val quoteId = intent.getLongExtra("quote_id", -1L)
-                                navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
+                        // 딥링크 네비게이션 처리 수정
+                        LaunchedEffect(initialRoute, deepLinkQuoteId) {
+                            when {
+                                // 딥링크로 특정 명언 열기
+                                deepLinkQuoteId > 0 -> {
+                                    navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(deepLinkQuoteId))
+                                }
+                                // 기존 로직
+                                destination == BottomTabRoute.Home && initialRoute == "glim" -> {
+                                    val quoteId = intent.getLongExtra("quote_id", -1L)
+                                    navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
+                                }
                             }
                         }
                     }
@@ -116,6 +127,37 @@ class MainActivity : ComponentActivity() {
                     authManager = authManager,
                     navController = navController
                 )
+            }
+        }
+    }
+
+    // 새 Intent 처리 (앱이 이미 실행 중일 때)
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleDeepLink(intent)
+    }
+
+    private fun handleDeepLink(intent: Intent?) {
+        val data = intent?.data ?: return
+
+        if (data.scheme == "glim") {
+            when (data.host) {
+                "quote" -> {
+                    val pathSegments = data.pathSegments
+                    if (!pathSegments.isNullOrEmpty()) {
+                        val quoteId = pathSegments[0].toLongOrNull()
+
+                        if (quoteId != null && quoteId > 0) {
+                            intent.putExtra("nav_route", "deeplink_quote")
+                            intent.putExtra("quote_id", quoteId)
+                        }
+                    }
+                }
+
+                "home" -> {
+                    intent.putExtra("nav_route", "deeplink_home")
+                }
             }
         }
     }
