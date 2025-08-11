@@ -123,7 +123,7 @@ class MainActivity : ComponentActivity() {
                                 val quoteId = intent.getLongExtra("quote_id", -1L)
                                 navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId = quoteId))
                             }
-                            if ((destination == BottomTabRoute.Home && initialRoute == "book")) {
+                            if (destination == BottomTabRoute.Home && initialRoute == "book") {
                                 val bookId = intent.getLongExtra("book_id", -1L)
                                 navigator.clearBackStackAndNavigate(Route.BookDetail(bookId = bookId))
                             }

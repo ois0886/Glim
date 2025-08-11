@@ -10,7 +10,7 @@ import retrofit2.http.Path
 
 interface UserApi {
 
-    // 사용자 정보를 이메일로 조회
+    // 사용자 정보를 아이디로 조회
     @GET("api/v1/members/{memberId}")
     suspend fun getUserById(
         @Path("memberId") memberId: String,

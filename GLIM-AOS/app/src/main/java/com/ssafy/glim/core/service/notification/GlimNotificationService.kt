@@ -45,28 +45,23 @@ class GlimNotificationService : FirebaseMessagingService() {
 
     private fun handleNotification(data: Map<String, String>, notification: RemoteMessage.Notification?) {
         val screen = data["screen"]
-        val title = notification?.title ?: "책 제목 없음"
-        val body = notification?.body ?: ""
         val image = notification?.imageUrl
 
         when (screen) {
             "LIKE" -> {
                 val quoteId = data["quoteId"]?.toLongOrNull() ?: -1L
-                val bookId = data["bookId"]?.toLongOrNull() ?: -1L
-                showNotification(title, body, quoteId, bookId, image)
+                showLikeNotification(quoteId, image)
             }
 
             else -> {
-                showNotification(title, body)
+                Unit
             }
         }
     }
 
-    private fun showNotification(
-        title: String,
-        body: String,
+    // 좋아요 알람
+    private fun showLikeNotification(
         quoteId: Long = -1L,
-        bookId: Long = -1L,
         image: Uri? = null
     ) {
         val quoteIntent = Intent(this, MainActivity::class.java).apply {
@@ -84,38 +79,11 @@ class GlimNotificationService : FirebaseMessagingService() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val bookIntent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            if (quoteId != -1L) {
-                putExtra("nav_route", "book")
-                putExtra("book_id", bookId)
-            }
-        }
-
-        val pendingBookIntent = PendingIntent.getActivity(
-            this,
-            0,
-            bookIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(title)
-            .setContentText(body)
+            .setContentTitle("누군가 내 글림을 좋아합니다")
+            .setContentIntent(pendingQuoteIntent)
             .setLargeIcon(image?.toBitmap(this))
-            .setStyle(
-                NotificationCompat.BigTextStyle()
-                    .bigText(body)
-            )
-            .addAction(
-                R.drawable.ic_glim, "책 정보",
-                pendingBookIntent
-            )
-            .addAction(
-                R.drawable.ic_library, "글림",
-                pendingQuoteIntent
-            )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .build()
