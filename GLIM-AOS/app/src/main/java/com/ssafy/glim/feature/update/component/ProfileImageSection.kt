@@ -89,7 +89,7 @@ fun ProfileImageSection(
             Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary)
+                .background(Color.Black)
                 .align(Alignment.BottomCenter)
                 .clickable { onImageClicked() },
             contentAlignment = Alignment.Center,
