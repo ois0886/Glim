@@ -122,10 +122,12 @@ private fun HomeScreen(
 
                 is HomeSectionUiModel.BookSection -> {
                     SectionTitle(section.title)
-                    BookCarouselPager(
-                        books = section.books,
-                        onItemClick = onBookClick,
-                    )
+                    if (section.books.isNotEmpty()) {
+                        BookCarouselPager(
+                            books = section.books,
+                            onItemClick = onBookClick,
+                        )
+                    }
                     HorizontalDivider(
                         modifier = Modifier.padding(top = 16.dp),
                         thickness = 8.dp,
