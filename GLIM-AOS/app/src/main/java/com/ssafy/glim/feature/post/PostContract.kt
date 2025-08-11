@@ -35,6 +35,8 @@ data class PostState(
     val originalTextPosition: TextPosition = TextPosition(),
     val isFocused: Boolean = false,
     val isDragging: Boolean = false,
+    val visibility: Boolean = true,
+    val backgroundImageAlpha: Float = 1f,
     val book: Book? = null,
     val showBottomSheet: Boolean = false,
     val isLoading: Boolean = false,

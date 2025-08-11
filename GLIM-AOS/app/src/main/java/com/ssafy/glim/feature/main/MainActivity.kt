@@ -95,7 +95,7 @@ class MainActivity : ComponentActivity() {
                             onTabSelected = {
                                 when (it.route) {
                                     BottomTabRoute.Home -> viewModel.navigateHome()
-                                    BottomTabRoute.Post -> viewModel.navigatePost()
+                                    is BottomTabRoute.Post -> viewModel.navigatePost()
                                     BottomTabRoute.Profile -> viewModel.navigateProfile()
                                     BottomTabRoute.Search -> viewModel.navigateSearch()
                                     is BottomTabRoute.Shorts -> viewModel.navigateQuote(-1L)

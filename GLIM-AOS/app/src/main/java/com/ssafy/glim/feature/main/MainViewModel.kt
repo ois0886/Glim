@@ -26,7 +26,7 @@ internal class MainViewModel @Inject constructor(
 
     fun navigatePost() = viewModelScope.launch {
         navigator.navigate(
-            route = BottomTabRoute.Post,
+            route = BottomTabRoute.Post(),
             saveState = true,
             launchSingleTop = true,
         )

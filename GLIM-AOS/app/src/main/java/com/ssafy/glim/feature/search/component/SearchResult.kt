@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -354,7 +357,11 @@ private fun BookCard(
                 model = book.cover,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(width = 60.dp, height = 80.dp)
+                    .height(140.dp)
+                    .shadow(
+                        elevation = 8.dp
+                    )
+                    .clip(RoundedCornerShape(4.dp))
             )
 
             // 책 정보
@@ -366,6 +373,8 @@ private fun BookCard(
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -374,6 +383,8 @@ private fun BookCard(
                     text = "${book.author} • ${book.publisher} • ${book.pubDate}",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -383,7 +394,8 @@ private fun BookCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Black,
                     lineHeight = 20.sp,
-                    maxLines = 3
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

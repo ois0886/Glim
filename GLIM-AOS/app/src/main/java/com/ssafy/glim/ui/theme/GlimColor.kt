@@ -47,4 +47,6 @@ object GlimColor {
 
     // 테두리 색상
     val GrassBorder = Color(0xFFE1E4E8)
+
+    val navy = Color(0xFF004784)
 }

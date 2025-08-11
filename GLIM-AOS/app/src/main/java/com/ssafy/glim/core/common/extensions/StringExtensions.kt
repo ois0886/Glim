@@ -201,3 +201,14 @@ fun Gender.formatGenderToString(): String {
         Gender.FEMALE -> "여자"
     }
 }
+
+fun String.parseHtmlString(): String {
+    return this
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&amp;", "&")
+        .replace("&quot;", "\"")
+        .replace("&apos;", "'")
+        .replace("&#39;", "'")
+        .replace("&nbsp;", " ")
+}

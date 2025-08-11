@@ -8,8 +8,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.usecase.book.GetCachedBookDetail
 import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
-import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.util.CaptureActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -20,16 +20,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    val createQuoteUseCase: CreateQuoteUseCase,
+    private val createQuoteUseCase: CreateQuoteUseCase,
+    private val getCachedBookDetail: GetCachedBookDetail,
     private val imageProcessor: ImageProcessor,
-    private val navigator: Navigator
 ) : ViewModel(), ContainerHost<PostState, PostSideEffect> {
     override val container: Container<PostState, PostSideEffect> = container(PostState())
 
-    fun initialize() =
-        intent {
-            // 초기화 로직
-        }
+    fun initialize(bookId: Long) = intent {
+        runCatching { getCachedBookDetail(bookId) }
+            .onSuccess {
+                reduce { state.copy(book = it) }
+            }
+            .onFailure {
+                Log.d("PostViewModel", "저장된 책 정보가 없거나 id가 일치하지 않습니다.")
+            }
+    }
 
     fun backPressed() =
         intent {
@@ -291,5 +296,13 @@ class PostViewModel @Inject constructor(
     fun updateTextColor(color: Color) = intent {
         val currentStyle = state.textStyle
         reduce { state.copy(textStyle = currentStyle.copy(textColor = color)) }
+    }
+
+    fun toggleVisibility() = intent {
+        reduce { state.copy(visibility = !state.visibility) }
+    }
+
+    fun updateBackgroundImageAlpha(value: Float) = intent {
+        reduce { state.copy(backgroundImageAlpha = value) }
     }
 }

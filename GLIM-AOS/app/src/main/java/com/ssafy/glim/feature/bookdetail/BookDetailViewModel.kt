@@ -65,6 +65,10 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
+    fun clickPostGlim() = intent {
+        navigator.navigate(route = BottomTabRoute.Post(state.bookDetail.bookId))
+    }
+
     private fun increaseViewCount(bookId: Long) = intent {
         runCatching { updateBookViewCountUseCase(bookId) }
             .onSuccess {
