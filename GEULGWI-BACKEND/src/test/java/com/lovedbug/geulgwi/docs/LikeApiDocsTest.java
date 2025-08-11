@@ -146,6 +146,7 @@ public class LikeApiDocsTest extends RestDocsTestSupport {
                 responseFields(
                     fieldWithPath("[].quoteId").description("글귀 ID"),
                     fieldWithPath("[].content").description("글귀 내용"),
+                    fieldWithPath("[].bookTitle").description("책 제목"),
                     fieldWithPath("[].views").description("글귀 조회수"),
                     fieldWithPath("[].page").description("글귀가 등장하는 페이지"),
                     fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
@@ -173,7 +174,7 @@ public class LikeApiDocsTest extends RestDocsTestSupport {
 
     private Book createTestBook() {
         return Book.builder()
-            .title("테스트 책")
+            .title("test_title")
             .isbn("1234567890123")
             .author("테스트 저자")
             .build();
@@ -182,6 +183,7 @@ public class LikeApiDocsTest extends RestDocsTestSupport {
     private Quote createTestQuote(Book book, Member member) {
         return Quote.builder()
             .content("테스트 글귀입니다. 아주 감명 깊어요.")
+            .bookTitle(book.getTitle())
             .page(100)
             .book(book)
             .memberId(member.getMemberId())

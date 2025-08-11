@@ -300,6 +300,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
 
         Quote quote1 = quoteRepository.save(Quote.builder()
             .content("테스트 quote1 입니다. 아주 감명 깊어요.")
+            .bookTitle(book.getTitle())
             .page(100)
             .book(book)
             .memberId(member.getMemberId())
@@ -307,17 +308,18 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
 
         Quote quote2 = quoteRepository.save(Quote.builder()
             .content("테스트 quote2 입니다. 아주 감명 깊어요.")
+            .bookTitle(book.getTitle())
             .page(250)
             .book(book)
             .memberId(member.getMemberId())
             .build());
 
-        MemberQuote memberQuote = memberQuoteRepository.save(MemberQuote.builder()
+         memberQuoteRepository.save(MemberQuote.builder()
                 .memberId(member.getMemberId())
                 .quote(quote1)
                 .build());
 
-        memberQuote = memberQuoteRepository.save(MemberQuote.builder()
+        memberQuoteRepository.save(MemberQuote.builder()
             .memberId(member.getMemberId())
             .quote(quote2)
             .build());
@@ -333,6 +335,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
                 responseFields(
                     fieldWithPath("[].quoteId").description("글귀 ID"),
                     fieldWithPath("[].content").description("글귀 내용"),
+                    fieldWithPath("[].bookTitle").description("책 제목"),
                     fieldWithPath("[].views").description("글귀 조회수"),
                     fieldWithPath("[].page").description("글귀가 등장하는 페이지"),
                     fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
@@ -377,7 +380,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
 
     static Book createBook() {
         return Book.builder()
-            .title("제목")
+            .title("test_title")
             .author("작가 : 김작가")
             .isbn("1234567890")
             .coverUrl("/aladdin/image.jpg")
