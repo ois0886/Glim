@@ -4,9 +4,15 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,11 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.wear.compose.material.CircularProgressIndicator
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.common.utils.rememberCameraWithPermission
 import com.ssafy.glim.core.ui.DarkThemeScreen
+import com.ssafy.glim.core.ui.GifDisplay
 import com.ssafy.glim.core.util.toCacheImageUri
 import com.ssafy.glim.feature.post.component.PostContent
 import com.ssafy.glim.feature.post.component.imageoverlay.TextExtractionImageOverlay
@@ -133,11 +139,38 @@ internal fun PostRoute(
             }
 
             if (state.isLoading) {
-                CircularProgressIndicator(
+                Box(
                     modifier = Modifier
-                        .size(52.dp)
-                        .align(Alignment.Center)
-                )
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(24.dp)
+                ) {
+                    GifDisplay(
+                        gifResourceId = R.drawable.celebration,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .size(140.dp)
+                    )
+                    GifDisplay(
+                        gifResourceId = R.drawable.celebration,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .size(140.dp)
+                    )
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Spacer(modifier = Modifier.height(32.dp))
+                        GifDisplay(
+                            gifResourceId = R.drawable.book,
+                            modifier = Modifier.size(120.dp)
+                        )
+                    }
+                }
             }
         }
     }

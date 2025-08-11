@@ -39,6 +39,7 @@ fun PostUI(
     Box(modifier = modifier) {
         // ActionButtons - 오른쪽 하단
         ActionButtons(
+            isTextNotEmpty = !state.recognizedText.text.isEmpty(),
             startCameraAction = startCameraAction,
             onImageGenerateClick = onImageGenerateClick,
             onTextExtractionClick = onTextExtractionClick,
