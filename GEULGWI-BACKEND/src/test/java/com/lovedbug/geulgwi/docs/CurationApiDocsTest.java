@@ -1,10 +1,26 @@
 package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.config.TestRedisConfig;
 import com.lovedbug.geulgwi.core.domain.book.BookRankingService;
-import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
+import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItem;
 import com.lovedbug.geulgwi.core.domain.curation.entity.CurationItemBook;
@@ -22,24 +38,7 @@ import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
 import com.lovedbug.geulgwi.core.domain.quote.QuoteRankingService;
 import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 
-@ActiveProfiles("test")
 class CurationApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
@@ -74,6 +73,9 @@ class CurationApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @PersistenceContext
     private EntityManager entityManager;

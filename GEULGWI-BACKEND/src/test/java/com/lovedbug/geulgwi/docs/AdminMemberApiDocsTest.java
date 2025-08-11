@@ -1,6 +1,7 @@
 package com.lovedbug.geulgwi.docs;
 
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
@@ -17,6 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -29,6 +31,9 @@ public class AdminMemberApiDocsTest extends RestDocsTestSupport{
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

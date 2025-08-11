@@ -1,4 +1,4 @@
-package com.lovedbug.geulgwi.core.domain.fcm;
+package com.lovedbug.geulgwi.external.fcm;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -15,7 +15,7 @@ import java.io.IOException;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("${firebase.service-account.path}")
+    @Value("${firebase.service-account.path:firebase/service-account.json}")
     private String SERVICE_ACCOUNT_PATH;
 
     @Bean

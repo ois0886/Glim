@@ -1,15 +1,14 @@
 package com.lovedbug.geulgwi.docs;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.lovedbug.geulgwi.core.domain.book.BookRepository;
-import com.lovedbug.geulgwi.core.domain.book.entity.Book;
+import com.lovedbug.geulgwi.external.fcm.dto.request.FcmTokenRequestDto;
+import com.lovedbug.geulgwi.external.fcm.entity.FcmTokens;
+import com.lovedbug.geulgwi.external.fcm.repository.FcmTokenRepository;
+import com.lovedbug.geulgwi.external.fcm.service.FcmPushService;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
-import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
-import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
 import com.lovedbug.geulgwi.core.security.JwtUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -22,27 +21,23 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-
+import java.time.LocalDateTime;
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
 @ActiveProfiles("test")
-public class LikeApiDocsTest extends RestDocsTestSupport {
+public class FcmApiDocsTest extends RestDocsTestSupport{
 
     @Autowired
     private MemberRepository memberRepository;
 
     @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
-    private QuoteRepository quoteRepository;
+    private FcmTokenRepository fcmTokenRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -53,38 +48,101 @@ public class LikeApiDocsTest extends RestDocsTestSupport {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @MockitoBean
-    private FirebaseMessaging firebaseMessaging;
-
     @PersistenceContext
     private EntityManager entityManager;
 
+    @MockitoBean
+    private FcmPushService fcmPushService;
+
     private Member member;
-    private Book book;
-    private Quote quote;
     private String accessToken;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
-        jdbcTemplate.execute("TRUNCATE TABLE member_like_quote");
-        jdbcTemplate.execute("TRUNCATE TABLE quote");
-        jdbcTemplate.execute("TRUNCATE TABLE book");
+        jdbcTemplate.execute("TRUNCATE TABLE fcm_tokens");
         jdbcTemplate.execute("TRUNCATE TABLE member");
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
 
         entityManager.clear();
 
         member = memberRepository.save(createTestMember());
-        book = bookRepository.save(createTestBook());
-        quote = quoteRepository.save(createTestQuote(book, member));
         accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getMemberId());
     }
 
-    @DisplayName("사용자가 글귀에 좋아요를 등록한다.")
+    @DisplayName("사용자의 FCM 디바이스 토큰을 등록한다")
     @Test
-    void like_to_quote(){
+    void save_fcm_token_created() {
+        FcmTokenRequestDto fcmTokenRequest = FcmTokenRequestDto.builder()
+            .deviceToken("test_fcm_token_123456789abcdef")
+            .deviceType("ANDROID")
+            .deviceId("device_unique_id_001")
+            .build();
 
+        given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(fcmTokenRequest)
+            .filter(document("{class_name}/{method_name}",
+                requestHeaders(
+                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
+                ),
+                requestFields(
+                    fieldWithPath("deviceToken").description("FCM device 토큰 (필수)"),
+                    fieldWithPath("deviceType").description("device 타입 (ANDROID)"),
+                    fieldWithPath("deviceId").description("고유 device 식별자")
+                )
+            ))
+            .when()
+            .post("/api/v1/fcm/token")
+            .then()
+            .log().all()
+            .statusCode(201);
+    }
+
+    @DisplayName("기존 fcm 토큰이 등록되어 있을 때 새로운 토큰으로 업데이트 한다.")
+    @Test
+    void update_existing_fcm_token() {
+        FcmTokens oldToken = FcmTokens.builder()
+            .member(member)
+            .deviceToken("test_old_fcm_token_123456789abcdef")
+            .deviceType("ANDROID")
+            .deviceId("device_unique_id_001")
+            .isActive(true)
+            .build();
+
+        fcmTokenRepository.save(oldToken);
+
+        FcmTokenRequestDto fcmTokenRequest = FcmTokenRequestDto.builder()
+            .deviceToken("test_new_fcm_token_123456789abcdef")
+            .deviceType("ANDROID")
+            .deviceId("device_unique_id_001")
+            .build();
+
+        given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(fcmTokenRequest)
+            .filter(document("{class_name}/{method_name}",
+                requestHeaders(
+                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
+                ),
+                requestFields(
+                    fieldWithPath("deviceToken").description("FCM device 토큰 (필수)"),
+                    fieldWithPath("deviceType").description("device 타입 (ANDROID)"),
+                    fieldWithPath("deviceId").description("고유 device 식별자")
+                )
+            ))
+            .when()
+            .post("/api/v1/fcm/token")
+            .then()
+            .log().all()
+            .statusCode(200);
+    }
+
+    @DisplayName("사용자의 FCM 디바이스 토큰을 비활성화한다")
+    @Test
+    void inActive_fcm_token() {
         given(this.spec)
             .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -93,67 +151,11 @@ public class LikeApiDocsTest extends RestDocsTestSupport {
                     headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
                 ),
                 pathParameters(
-                    parameterWithName("quoteId").description("사용자가 좋아요 누른 글귀 id(필수)")
+                    parameterWithName("deviceId").description("비활성화할 device ID")
                 )
             ))
             .when()
-            .post("/api/v1/likes/quotes/{quoteId}", quote.getQuoteId())
-            .then()
-            .log().all()
-            .statusCode(200);
-    }
-
-    @DisplayName("사용자가 글귀에 좋아요를 등록한다.")
-    @Test
-    void unlike_to_quote(){
-
-        given(this.spec)
-            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .filter(document("{class_name}/{method_name}",
-                requestHeaders(
-                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
-                ),
-                pathParameters(
-                    parameterWithName("quoteId").description("사용자가 좋아요 누른 글귀 id(필수)")
-                )
-            ))
-            .when()
-            .delete("/api/v1/likes/quotes/{quoteId}", quote.getQuoteId())
-            .then()
-            .log().all()
-            .statusCode(200);
-    }
-
-    @DisplayName("사용자가 좋아요한 글귀를 조회한다.")
-    @Test
-    void get_liked_quotes(){
-
-        given(this.spec)
-            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/v1/likes/quotes/{quoteId}", quote.getQuoteId())
-            .then()
-            .statusCode(200);
-
-        given(this.spec)
-            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
-            .filter(document("{class_name}/{method_name}",
-                requestHeaders(
-                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
-                ),
-                responseFields(
-                    fieldWithPath("[].quoteId").description("글귀 ID"),
-                    fieldWithPath("[].content").description("글귀 내용"),
-                    fieldWithPath("[].views").description("글귀 조회수"),
-                    fieldWithPath("[].page").description("글귀가 등장하는 페이지"),
-                    fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
-                    fieldWithPath("[].liked").description("사용자 좋아요 여부")
-                )
-            ))
-            .when()
-            .get("/api/v1/likes/quotes/me")
+            .put("/api/v1/fcm/token/{deviceId}/status", "test_device_id_001")
             .then()
             .log().all()
             .statusCode(200);
@@ -162,29 +164,13 @@ public class LikeApiDocsTest extends RestDocsTestSupport {
 
     private Member createTestMember() {
         return Member.builder()
-            .email("like_test_" + System.currentTimeMillis() + "@example.com")
+            .email("fcm_test_" + System.currentTimeMillis() + "@example.com")
             .password(passwordEncoder.encode("password123"))
-            .nickname("likeTestUser")
+            .nickname("FCM 테스트유저")
             .status(MemberStatus.ACTIVE)
             .role(MemberRole.USER)
             .gender(MemberGender.MALE)
-            .build();
-    }
-
-    private Book createTestBook() {
-        return Book.builder()
-            .title("테스트 책")
-            .isbn("1234567890123")
-            .author("테스트 저자")
-            .build();
-    }
-
-    private Quote createTestQuote(Book book, Member member) {
-        return Quote.builder()
-            .content("테스트 글귀입니다. 아주 감명 깊어요.")
-            .page(100)
-            .book(book)
-            .memberId(member.getMemberId())
+            .birthDate(LocalDateTime.of(1999, 1, 7, 0, 0, 0))
             .build();
     }
 }

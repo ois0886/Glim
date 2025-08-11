@@ -2,6 +2,7 @@ package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.config.TestRedisConfig;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -26,6 +27,7 @@ import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ActiveProfiles("test")
 public class BookApiDocsTest extends RestDocsTestSupport {
@@ -35,6 +37,9 @@ public class BookApiDocsTest extends RestDocsTestSupport {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
 
     @PersistenceContext
     private EntityManager entityManager;
