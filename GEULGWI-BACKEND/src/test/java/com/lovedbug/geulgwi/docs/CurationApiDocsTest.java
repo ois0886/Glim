@@ -1,7 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
 import static io.restassured.RestAssured.given;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.core.domain.book.entity.Book;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
 import com.lovedbug.geulgwi.core.domain.curation.constant.CurationType;
@@ -31,8 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-
+import org.springframework.test.context.ActiveProfiles;
 
 class CurationApiDocsTest extends RestDocsTestSupport {
 
@@ -66,6 +64,11 @@ class CurationApiDocsTest extends RestDocsTestSupport {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @DynamicPropertySource
+    static void setRedisProps(DynamicPropertyRegistry registry) {
+        TestRedisConfig.overrideRedisProps(registry);
+    }
+
     @BeforeEach
     void clearDatabase() {
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
@@ -98,7 +101,7 @@ class CurationApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("[].contents[].bookId").description("책 ID").optional(),
                     fieldWithPath("[].contents[].bookTitle").description("책 제목"),
                     fieldWithPath("[].contents[].author").description("책 저자"),
-                    fieldWithPath("[].contents[].publisher").description("출판사"),
+                    fieldWithPath("[].contents[].publisher").type(JsonFieldType.STRING).description("출판사").optional(),
                     fieldWithPath("[].contents[].bookCoverUrl").type(JsonFieldType.STRING).description("책 커버 URL").optional(),
                     fieldWithPath("[].contents[].quoteId").type(JsonFieldType.NUMBER).description("글귀 ID").optional(),
                     fieldWithPath("[].contents[].imageName").type(JsonFieldType.STRING).description("글귀 이미지 이름").optional()
@@ -166,6 +169,8 @@ class CurationApiDocsTest extends RestDocsTestSupport {
             .imageName("image.jpg")
             .memberId(member.getMemberId())
             .book(book)
+            .author("작가")
+            .bookTitle("책 제목")
             .build();
 
         quoteRepository.save(quote);

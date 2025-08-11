@@ -33,7 +33,7 @@ public class QuoteController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<List<QuoteResponse>> getUploadedQuotes (@CurrentUser AuthenticatedUser user) {
+    public ResponseEntity<List<QuoteResponse>> getUploadedQuotes(@CurrentUser AuthenticatedUser user) {
 
         List<QuoteResponse> uploadedQuotes = quoteService.getUploadedQuotesByMemberId(user.getMemberId());
 
@@ -51,7 +51,7 @@ public class QuoteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<QuoteWithBookResponse> getQuoteById(@CurrentUser AuthenticatedUser user,
-                                                                 @PathVariable(value = "id") Long quoteId) {
+                                                              @PathVariable(value = "id") Long quoteId) {
 
         Long memberId = (user != null) ? user.getMemberId() : null;
 

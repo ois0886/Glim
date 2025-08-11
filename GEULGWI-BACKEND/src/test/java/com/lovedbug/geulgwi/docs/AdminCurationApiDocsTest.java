@@ -1,6 +1,7 @@
 package com.lovedbug.geulgwi.docs;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.lovedbug.geulgwi.config.TestRedisConfig;
 import com.lovedbug.geulgwi.core.domain.admin.dto.request.CreateCurationRequest;
 import com.lovedbug.geulgwi.core.domain.admin.dto.request.UpdateCurationRequest;
 import com.lovedbug.geulgwi.core.domain.book.BookRepository;
@@ -32,6 +33,8 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +46,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
 @ActiveProfiles("test")
-class AdminApiDocsTest extends RestDocsTestSupport {
+class AdminCurationApiDocsTest extends RestDocsTestSupport {
     @Autowired
     private MainCurationRepository mainCurationRepository;
 
@@ -73,6 +76,11 @@ class AdminApiDocsTest extends RestDocsTestSupport {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @DynamicPropertySource
+    static void setRedisProps(DynamicPropertyRegistry registry) {
+        TestRedisConfig.overrideRedisProps(registry);
+    }
 
     @BeforeEach
     void clearDatabase() {
@@ -106,7 +114,7 @@ class AdminApiDocsTest extends RestDocsTestSupport {
                                 fieldWithPath("[].contents[].bookId").description("책 ID").optional(),
                                 fieldWithPath("[].contents[].bookTitle").description("책 제목"),
                                 fieldWithPath("[].contents[].author").description("책 저자"),
-                                fieldWithPath("[].contents[].publisher").description("출판사"),
+                                fieldWithPath("[].contents[].publisher").type(JsonFieldType.STRING).description("출판사").optional(),
                                 fieldWithPath("[].contents[].bookCoverUrl").type(JsonFieldType.STRING).description("책 커버 URL").optional(),
                                 fieldWithPath("[].contents[].quoteId").type(JsonFieldType.NUMBER).description("글귀 ID").optional(),
                                 fieldWithPath("[].contents[].imageName").type(JsonFieldType.STRING).description("글귀 이미지 이름").optional()
@@ -261,6 +269,8 @@ class AdminApiDocsTest extends RestDocsTestSupport {
         Quote quote = Quote.builder()
                 .imageName("image.jpg")
                 .memberId(member.getMemberId())
+                .bookTitle("책 제목")
+                .author("작가")
                 .book(book)
                 .build();
 

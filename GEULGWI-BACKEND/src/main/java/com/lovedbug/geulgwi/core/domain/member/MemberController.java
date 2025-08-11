@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -36,24 +35,6 @@ public class MemberController {
     public ResponseEntity<MemberResponse> getMemberById(@PathVariable("memberId") Long memberId){
 
         return ResponseEntity.ok(memberService.findByMemberId(memberId));
-    }
-
-    @GetMapping("")
-    public ResponseEntity<List<MemberResponse>> getAllMembers(){
-
-        return ResponseEntity.ok(memberService.findAllMembers());
-    }
-
-    @GetMapping("/active/{memberId}")
-    public ResponseEntity<MemberResponse> getActiveMemberByEmail(@PathVariable Long memberId){
-
-        return ResponseEntity.ok(memberService.getActiveMemberByMemberId(memberId));
-    }
-
-    @GetMapping("/active")
-    public ResponseEntity<List<MemberResponse>> getAllActiveMembers() {
-
-        return ResponseEntity.ok(memberService.getAllActiveMembers());
     }
 
     @PutMapping("/{memberId}")

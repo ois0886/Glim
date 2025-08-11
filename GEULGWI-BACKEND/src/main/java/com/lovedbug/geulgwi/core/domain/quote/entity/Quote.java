@@ -33,6 +33,8 @@ public class Quote extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    private String author;
+
     @Column(length = 10)
     @Builder.Default
     private String visibility = "PUBLIC";

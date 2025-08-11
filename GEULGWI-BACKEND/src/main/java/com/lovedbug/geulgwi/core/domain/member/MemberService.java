@@ -4,9 +4,9 @@ import com.lovedbug.geulgwi.core.domain.member.dto.response.MemberResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.SignUpRequest;
 import com.lovedbug.geulgwi.core.domain.member.dto.response.SignUpResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
+import com.lovedbug.geulgwi.core.domain.member.mapper.MemberMapper;
 import com.lovedbug.geulgwi.external.email.EmailSender;
 import lombok.RequiredArgsConstructor;
-import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,7 +60,7 @@ public class MemberService {
             .orElseThrow(() -> new NoSuchElementException(
                     "회원이 존재 하지 않습니다. memberId = " + memberId));
 
-        return toMemberDto(member);
+        return MemberMapper.toMemberDto(member);
     }
 
     public MemberResponse findByMemberEmail(String email){
@@ -69,30 +69,7 @@ public class MemberService {
                 .orElseThrow(() -> new NoSuchElementException(
                         "회원이 존재 하지 않습니다. email = " + email));
 
-        return toMemberDto(member);
-    }
-
-    public List<MemberResponse> findAllMembers(){
-
-        return memberRepository.findAll().stream()
-                .map(this::toMemberDto)
-                .toList();
-    }
-
-    public MemberResponse getActiveMemberByMemberId(Long memberId){
-
-        Member member = memberRepository.findByMemberIdAndStatus(memberId, MemberStatus.ACTIVE)
-                .orElseThrow(() -> new NoSuchElementException(
-                        "활성 회원이 존재 하지 않습니다. memberId = " + memberId));
-
-        return toMemberDto(member);
-    }
-
-    public List<MemberResponse> getAllActiveMembers(){
-
-        return memberRepository.findAllByStatus(MemberStatus.ACTIVE).stream()
-                .map(this::toMemberDto)
-                .toList();
+        return MemberMapper.toMemberDto(member);
     }
 
     @Transactional
@@ -103,7 +80,7 @@ public class MemberService {
                         "수정할 회원이 존재 하지 않습니다, memberId = " + memberId));
 
         existingMember.updateFromRequest(updateRequest, memberRepository, passwordEncoder);
-        return toMemberDto(existingMember);
+        return MemberMapper.toMemberDto(existingMember);
     }
 
     @Transactional
@@ -114,19 +91,6 @@ public class MemberService {
                         "회원이 존재 하지 않습니다."));
 
         member.changeStatus(MemberStatus.INACTIVE);
-        return toMemberDto(member);
+        return MemberMapper.toMemberDto(member);
     }
-
-    private MemberResponse toMemberDto(Member member){
-
-        return MemberResponse.builder()
-            .memberId(member.getMemberId())
-            .email(member.getEmail())
-            .nickname(member.getNickname())
-            .birthDate(member.getBirthDate())
-            .gender(member.getGender())
-            .status(member.getStatus())
-            .build();
-    }
-
 }

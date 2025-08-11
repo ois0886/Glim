@@ -1,4 +1,4 @@
-package com.lovedbug.geulgwi.core.domain.admin;
+package com.lovedbug.geulgwi.core.domain.admin.curation;
 
 
 import com.lovedbug.geulgwi.core.domain.admin.dto.request.CreateCurationRequest;
@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class AdminService {
+public class AdminCurationService {
 
     private static final long MAIN_CURATION_ID = 1L;
 

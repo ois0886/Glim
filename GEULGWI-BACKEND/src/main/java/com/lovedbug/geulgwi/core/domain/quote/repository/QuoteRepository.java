@@ -15,6 +15,9 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
 
     @EntityGraph(attributePaths = {"book"})
     @Query("SELECT q FROM Quote q WHERE q.visibility = 'PUBLIC'")
+    List<Quote> findPublicQuotesWithBook(Pageable pageable);
+
+    @Query("SELECT q FROM Quote q WHERE q.visibility = 'PUBLIC'")
     List<Quote> findPublicQuotes(Pageable pageable);
 
     @EntityGraph(attributePaths = {"book"})
@@ -28,4 +31,6 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
 
     @EntityGraph(attributePaths = {"book", "likes"})
     Optional<Quote> findByQuoteIdAndVisibility(Long quoteId, String visibility);
+
+    Page<Quote> findByContentContainingIgnoreCase(String content, Pageable pageable);
 }
