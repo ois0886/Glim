@@ -13,6 +13,7 @@ public class QuoteResponse {
 
     private Long quoteId;
     private String content;
+    private String bookTitle;
     private Integer views;
     private Integer page;
 
@@ -35,6 +36,7 @@ public class QuoteResponse {
         return QuoteResponse.builder()
             .quoteId(quote.getQuoteId())
             .content(quote.getContent())
+            .bookTitle(quote.getBookTitle())
             .views(quote.getViews())
             .page(quote.getPage())
             .isLiked(isLiked)

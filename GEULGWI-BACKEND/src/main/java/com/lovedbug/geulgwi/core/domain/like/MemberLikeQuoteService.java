@@ -94,7 +94,7 @@ public class MemberLikeQuoteService {
                 Quote quote = likeQuote.getQuote();
                 long likeCount = likeCountMap.getOrDefault(quote.getQuoteId(), 0L);
 
-                return QuoteResponse.toResponseDto(quote, true, likeCount);
+                return QuoteResponse.toResponseDto(quote, true, likeCount, null);
             })
             .toList();
     }
