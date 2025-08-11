@@ -27,10 +27,12 @@ import jakarta.persistence.PersistenceContext;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
@@ -70,6 +72,9 @@ class CurationApiDocsTest extends RestDocsTestSupport {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -80,6 +85,8 @@ class CurationApiDocsTest extends RestDocsTestSupport {
 
     @BeforeEach
     void clearDatabase() {
+        stringRedisTemplate.getConnectionFactory().getConnection().serverCommands().flushDb();
+
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
         jdbcTemplate.execute("TRUNCATE TABLE curation_item_quote");
         jdbcTemplate.execute("TRUNCATE TABLE curation_item_book");
@@ -109,7 +116,7 @@ class CurationApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("[].contents").description("큐레이션 콘텐츠 목록"),
                     fieldWithPath("[].contents[].bookId").description("책 ID").optional(),
                     fieldWithPath("[].contents[].bookTitle").description("책 제목"),
-                    fieldWithPath("[].contents[].author").description("책 저자"),
+                    fieldWithPath("[].contents[].author").type(JsonFieldType.STRING).description("책 저자"),
                     fieldWithPath("[].contents[].publisher").type(JsonFieldType.STRING).description("출판사").optional(),
                     fieldWithPath("[].contents[].bookCoverUrl").type(JsonFieldType.STRING).description("책 커버 URL").optional(),
                     fieldWithPath("[].contents[].quoteId").type(JsonFieldType.NUMBER).description("글귀 ID").optional(),
