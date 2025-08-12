@@ -20,4 +20,5 @@ fun UserResponse.toDomain() = User(
         "INACTIVE" -> UserStatus.INACTIVE
         else -> UserStatus.ACTIVE
     },
+    profileUrl = profileUrl
 )

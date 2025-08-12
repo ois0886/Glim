@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.update
 
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.ui.text.input.TextFieldValue
 
@@ -10,7 +11,7 @@ data class UpdateInfoUiState(
     val gender: String = "",
     val birthDate: String = "",
     val newName: TextFieldValue = TextFieldValue(""),
-    val profileImageUri: String? = null,
+    val profileImageUri: Uri? = null,
     val password: TextFieldValue = TextFieldValue(""),
     val newPassword: TextFieldValue = TextFieldValue(""),
     val confirmPassword: TextFieldValue = TextFieldValue(""),

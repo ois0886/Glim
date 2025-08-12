@@ -88,7 +88,7 @@ class ProfileViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             userName = user.nickname,
-                            profileImageUrl = null,
+                            profileImageUrl = user.profileUrl,
                             publishedGlimCount = uploadQuotes.size,
                             uploadQuotes = uploadQuotes,
                             likedGlimCount = likedQuotes.size,

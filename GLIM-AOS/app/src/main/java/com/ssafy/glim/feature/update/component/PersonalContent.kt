@@ -24,7 +24,7 @@ fun PersonalInfoContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ProfileImageSection(
-            imageUri = state.profileImageUri,
+            imageUri = state.profileImageUri.toString(),
             onImageClicked = onProfileImageClicked,
         )
 

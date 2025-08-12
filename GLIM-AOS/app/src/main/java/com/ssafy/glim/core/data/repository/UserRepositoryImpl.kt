@@ -1,5 +1,6 @@
 package com.ssafy.glim.core.data.repository
 
+import android.graphics.Bitmap
 import android.util.Log
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.data.authmanager.LogoutReason
@@ -28,6 +29,7 @@ class UserRepositoryImpl @Inject constructor(
         nickname: String,
         gender: String,
         birthDate: List<Int>,
+        profileUrl: Bitmap?
     ): User {
         val request = UpdateUserRequest(
             password = password,

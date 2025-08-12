@@ -62,7 +62,7 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     fun onImageSelected(uri: Uri) = intent {
-        reduce { state.copy(profileImageUri = uri.toString(), isImageSelected = true) }
+        reduce { state.copy(profileImageUri = uri, isImageSelected = true) }
     }
 
     fun onNameChanged(name: TextFieldValue) = intent {
@@ -192,7 +192,8 @@ internal class UpdateViewModel @Inject constructor(
                 password = state.password.text,
                 nickname = state.newName.text,
                 gender = state.gender.formatGender(),
-                birthDate = state.birthDate.formatBirthDate()
+                birthDate = state.birthDate.formatBirthDate(),
+                profileUrl = null
             )
         }.onSuccess { updatedUser ->
             reduce {
@@ -265,7 +266,8 @@ internal class UpdateViewModel @Inject constructor(
                 password = state.newPassword.text,
                 nickname = state.name,
                 gender = state.gender.formatGender(),
-                birthDate = state.birthDate.formatBirthDate()
+                birthDate = state.birthDate.formatBirthDate(),
+                profileUrl = null
             )
         }.onSuccess { updatedUser ->
             reduce {

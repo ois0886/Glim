@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import com.ssafy.glim.core.navigation.internal.viewmodel.NavigatorViewModel
 import com.ssafy.glim.core.navigation.internal.viewmodel.RouteSideEffect
 import kotlinx.coroutines.flow.collectLatest
+
 @Composable
 fun LaunchedNavigator(navHostController: NavHostController) {
     InternalLaunchedNavigator(
