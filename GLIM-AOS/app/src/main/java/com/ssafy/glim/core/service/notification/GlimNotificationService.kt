@@ -11,6 +11,9 @@ import com.google.firebase.messaging.RemoteMessage
 import com.ssafy.glim.R
 import com.ssafy.glim.feature.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -24,6 +27,9 @@ class GlimNotificationService : FirebaseMessagingService() {
     @Inject
     lateinit var fcmTokenManager: FcmTokenManager
 
+    @Inject
+    lateinit var notificationPermissionManager: NotificationPermissionManager
+
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
@@ -33,15 +39,24 @@ class GlimNotificationService : FirebaseMessagingService() {
         super.onMessageReceived(remoteMessage)
 
         Log.d(TAG, "From: ${remoteMessage.from}")
-
         Log.d(TAG, "Message data payload: ${remoteMessage.data}")
-        handleNotification(remoteMessage.data, remoteMessage.notification)
+
+        // 알림 권한 체크 후 처리
+        CoroutineScope(Dispatchers.IO).launch {
+            val shouldShow = notificationPermissionManager.shouldShowNotification()
+            if (!shouldShow) {
+                Log.d(TAG, "Notification blocked by permission manager")
+                return@launch
+            }
+
+            // 알림 표시 허용된 경우에만 처리
+            handleNotification(remoteMessage.data, remoteMessage.notification)
+        }
     }
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d(TAG, "new token : $token")
-
         fcmTokenManager.handleNewToken(token)
     }
 
@@ -52,13 +67,11 @@ class GlimNotificationService : FirebaseMessagingService() {
         Log.d(TAG, "Data: $data")
         Log.d(TAG, "Notification: $notification")
 
-        // Firebase 자동 알림이 있는 경우 무시하고 우리 커스텀 알림만 표시
         val screen = data["screen"] ?: run {
             Log.w(TAG, "No screen type in notification data")
             return
         }
 
-        // 커스텀 제목/내용 사용 (data에서 가져오거나 기본값)
         val title = data["title"] ?: "누군가 내 글림을 좋아합니다"
         val body = data["body"] ?: "새로운 좋아요를 받았어요!"
 
@@ -81,17 +94,26 @@ class GlimNotificationService : FirebaseMessagingService() {
         title: String,
         body: String
     ) {
-        try {
-            val quoteIntent = Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                putExtra("nav_route", "glim")
-                putExtra("quote_id", quoteId)
-            }
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("nav_route", "glim")
+            putExtra("quote_id", quoteId)
+        }
+        showNotification(quoteId.toInt(), title, body, intent)
+    }
 
-            val pendingQuoteIntent = PendingIntent.getActivity(
+    // 공통 알림 표시 함수
+    private fun showNotification(
+        notificationId: Int,
+        title: String,
+        body: String,
+        intent: Intent
+    ) {
+        try {
+            val pendingIntent = PendingIntent.getActivity(
                 this,
-                quoteId.toInt(),
-                quoteIntent,
+                notificationId,
+                intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
@@ -99,15 +121,15 @@ class GlimNotificationService : FirebaseMessagingService() {
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setContentIntent(pendingQuoteIntent)
+                .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
                 .build()
 
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.notify(quoteId.toInt(), notification)
+            notificationManager.notify(notificationId, notification)
 
-            Log.d(TAG, "Custom notification shown: $title - $body")
+            Log.d(TAG, "Notification shown: $title")
         } catch (e: Exception) {
             Log.e(TAG, "Error showing notification: ${e.message}", e)
         }
@@ -118,7 +140,12 @@ class GlimNotificationService : FirebaseMessagingService() {
             CHANNEL_ID,
             "글림 알림",
             NotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            description = "글림 앱의 알림"
+            enableVibration(true)
+            setShowBadge(true)
+        }
+
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
