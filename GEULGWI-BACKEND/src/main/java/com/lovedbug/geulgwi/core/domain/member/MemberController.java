@@ -6,6 +6,8 @@ import com.lovedbug.geulgwi.core.domain.member.dto.response.SignUpResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
 import com.lovedbug.geulgwi.core.security.annotation.CurrentUser;
 import com.lovedbug.geulgwi.core.security.dto.AuthenticatedUser;
+import com.lovedbug.geulgwi.external.fcm.dto.request.FcmTokenRequestDto;
+import com.lovedbug.geulgwi.external.fcm.service.FcmTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ import java.net.URI;
 public class MemberController {
 
     private final MemberService memberService;
+    private final FcmTokenService fcmTokenService;
 
     @PostMapping("")
     public ResponseEntity<SignUpResponse> signup(
@@ -51,10 +54,13 @@ public class MemberController {
         return ResponseEntity.ok(memberService.updateMember(user.getMemberId(), updateRequest, profileImage));
     }
 
-    @PatchMapping("/{memberId}/status")
+    @PatchMapping("/me/status")
     public ResponseEntity<MemberResponse> deleteMember(
-            @PathVariable Long memberId){
+        @CurrentUser AuthenticatedUser user,
+        @RequestBody FcmTokenRequestDto fcmTokenRequestDto){
 
-        return ResponseEntity.ok(memberService.softDeleteMember(memberId));
+        fcmTokenService.inActivateToken(user.getMemberId(), fcmTokenRequestDto.getDeviceId());
+
+        return ResponseEntity.ok(memberService.softDeleteMember(user.getMemberId()));
     }
 }
