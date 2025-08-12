@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.auth.login.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -10,6 +9,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,15 +43,17 @@ fun PasswordInputTextField(
         singleLine = true,
         isError = error != null,
         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        modifier =
-        modifier
-            .fillMaxWidth()
-            .background(Color.Transparent),
+        modifier = modifier.fillMaxWidth(),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            errorContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent
+        ),
         label = {
             Text(
                 text = labelText,
-                color =
-                if (error != null) {
+                color = if (error != null) {
                     MaterialTheme.colorScheme.error
                 } else {
                     Color.Gray
@@ -62,8 +64,7 @@ fun PasswordInputTextField(
         trailingIcon = {
             IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                 Icon(
-                    imageVector =
-                    if (isPasswordVisible) {
+                    imageVector = if (isPasswordVisible) {
                         Icons.Filled.VisibilityOff
                     } else {
                         Icons.Filled.Visibility

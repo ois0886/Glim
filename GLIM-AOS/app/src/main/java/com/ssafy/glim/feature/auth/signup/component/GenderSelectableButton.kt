@@ -23,21 +23,21 @@ fun GenderSelectableButton(
         enabled = enabled,
         modifier = modifier,
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
-            contentColor = if (isSelected) Color.White else MaterialTheme.colorScheme.primary,
+            containerColor = if (isSelected) Color.Black else Color.Transparent,
+            contentColor = if (isSelected) Color.White else Color.Black,
             disabledContainerColor = if (isSelected) {
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                Color.Black.copy(alpha = 0.6f)
             } else {
                 Color.Transparent
             },
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            disabledContentColor = Color.Black.copy(alpha = 0.6f)
         ),
         border = BorderStroke(
             width = 1.dp,
             color = if (enabled) {
-                if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+                if (isSelected) Color.Black else Color.Gray
             } else {
-                MaterialTheme.colorScheme.outline.copy(alpha = 0.6f)
+                Color.Gray.copy(alpha = 0.6f)
             }
         )
     ) {

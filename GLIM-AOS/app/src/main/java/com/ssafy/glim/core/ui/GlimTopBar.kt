@@ -24,16 +24,13 @@ import com.ssafy.glim.ui.theme.Typography
  * @param showBack    Whether to show a back navigation icon.
  * @param onBack      Callback invoked when the back icon is pressed.
  * @param alignment   Alignment of the title: centered or left-aligned.
- * @param titleColor  Color of the title text.
- * @param titleSize   Font size for the title text.
- *
  * The bar renders with a fully transparent background,
  * letting underlying content or background bleed through.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GlimTopBar(
-    title: String,
+    title: String = "",
     showBack: Boolean = false,
     onBack: () -> Unit = {},
     alignment: TitleAlignment = TitleAlignment.Center,

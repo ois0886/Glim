@@ -150,7 +150,6 @@ private fun ProfileScreen(
                     Box(modifier = Modifier.padding(8.dp)) {
                         GlimGrassGrid(
                             uploadQuotes = state.uploadQuotes,
-                            firstUploadDateStr = state.firstUploadDate,
                             error = state.error
                         )
                     }

@@ -16,9 +16,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.resume
 
 @Singleton
-class ImageProcessor
-@Inject
-constructor(
+class ImageProcessor @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
     fun uriToBitmap(uri: Uri): Bitmap? {
@@ -30,7 +28,7 @@ constructor(
                 @Suppress("DEPRECATION")
                 MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

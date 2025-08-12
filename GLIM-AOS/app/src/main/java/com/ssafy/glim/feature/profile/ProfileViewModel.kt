@@ -83,16 +83,12 @@ class ProfileViewModel @Inject constructor(
                     val uploadQuotes = uploadQuotesResult.getOrThrow()
                     val likedQuotes = likedQuotesResult.getOrThrow()
 
-                    val firstUploadDate = uploadQuotes.minByOrNull { it.createdAt }?.createdAt
-                        ?.substringBefore('T') ?: ""
-
                     reduce {
                         state.copy(
                             userName = user.nickname,
                             profileImageUrl = null,
                             publishedGlimCount = uploadQuotes.size,
                             uploadQuotes = uploadQuotes,
-                            firstUploadDate = firstUploadDate,
                             likedGlimCount = likedQuotes.size,
                             isRefreshing = false,
                             error = false
@@ -106,7 +102,6 @@ class ProfileViewModel @Inject constructor(
                             publishedGlimCount = 0,
                             likedGlimCount = 0,
                             uploadQuotes = emptyList(),
-                            firstUploadDate = "",
                             isRefreshing = false,
                             error = true
                         )
@@ -120,7 +115,6 @@ class ProfileViewModel @Inject constructor(
                         publishedGlimCount = 0,
                         likedGlimCount = 0,
                         uploadQuotes = emptyList(),
-                        firstUploadDate = "",
                         isRefreshing = false,
                         error = true
                     )
