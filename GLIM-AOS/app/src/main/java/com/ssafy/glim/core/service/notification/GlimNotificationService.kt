@@ -13,6 +13,7 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.common.extensions.toBitmap
 import com.ssafy.glim.feature.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class GlimNotificationService : FirebaseMessagingService() {
@@ -21,6 +22,9 @@ class GlimNotificationService : FirebaseMessagingService() {
         private const val TAG = "GlimNotificationService"
         private const val CHANNEL_ID = "glim_notifications"
     }
+
+    @Inject
+    lateinit var fcmTokenManager: FcmTokenManager
 
     override fun onCreate() {
         super.onCreate()
@@ -41,9 +45,14 @@ class GlimNotificationService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d(TAG, "new token : $token")
+
+        fcmTokenManager.handleNewToken(token)
     }
 
-    private fun handleNotification(data: Map<String, String>, notification: RemoteMessage.Notification?) {
+    private fun handleNotification(
+        data: Map<String, String>,
+        notification: RemoteMessage.Notification?
+    ) {
         val screen = data["screen"]
         val image = notification?.imageUrl
 

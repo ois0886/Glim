@@ -6,9 +6,5 @@ import jakarta.inject.Inject
 class RegisterTokenUseCase @Inject constructor(
     private val fcmRepository: FcmRepository
 ) {
-    suspend operator fun invoke(
-        deviceToken: String
-    ) = fcmRepository.registerToken(
-        deviceToken = deviceToken
-    )
+    suspend operator fun invoke() = fcmRepository.registerToken()
 }

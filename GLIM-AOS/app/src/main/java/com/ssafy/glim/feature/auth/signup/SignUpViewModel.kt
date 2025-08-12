@@ -340,6 +340,17 @@ internal class SignUpViewModel @Inject constructor(
                 birthDate = formattedBirthDate
             )
         }.onSuccess {
+            registerFcmToken()
+        }.onFailure { exception ->
+            reduce { state.copy(isLoading = false) }
+            postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
+        }
+    }
+
+    private fun registerFcmToken() = intent {
+        runCatching {
+            registerTokenUseCase()
+        }.onSuccess {
             reduce { state.copy(isLoading = false) }
             navigator.navigateAndClearBackStack(Route.Celebration(state.name.text))
         }.onFailure { exception ->
