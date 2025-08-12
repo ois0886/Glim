@@ -26,6 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.common.utils.rememberCameraWithPermission
@@ -146,6 +149,8 @@ internal fun PostRoute(
             }
 
             if (state.isLoading) {
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.triangle_loading))
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -159,9 +164,10 @@ internal fun PostRoute(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Spacer(modifier = Modifier.height(32.dp))
-                        GifDisplay(
-                            gifResourceId = R.drawable.book,
-                            modifier = Modifier.size(120.dp)
+                        LottieAnimation(
+                            modifier = Modifier.size(250.dp),
+                            composition = composition,
+                            iterations = Int.MAX_VALUE
                         )
                     }
                 }

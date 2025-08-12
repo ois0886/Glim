@@ -173,6 +173,9 @@ dependencies {
     // MockK
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.android)
+
+    // Lottie
+    implementation(libs.lottie.compose)
 }
 
 tasks.register("codeQualityCheck") {
