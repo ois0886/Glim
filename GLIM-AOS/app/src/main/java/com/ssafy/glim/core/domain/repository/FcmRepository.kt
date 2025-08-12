@@ -1,12 +1,11 @@
 package com.ssafy.glim.core.domain.repository
 
 interface FcmRepository {
-    suspend fun registerToken(
-        deviceToken: String,
-        deviceId: String
-    )
+    suspend fun registerToken(): Result<Unit>
 
-    suspend fun deleteToken(
-        deviceId: String
-    )
+    suspend fun refreshToken(
+        deviceToken: String
+    ): Result<Unit>
+
+    suspend fun deleteToken(): Result<Unit>
 }

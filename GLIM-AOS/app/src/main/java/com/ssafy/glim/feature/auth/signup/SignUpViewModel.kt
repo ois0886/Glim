@@ -12,6 +12,7 @@ import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.common.utils.toErrorRes
 import com.ssafy.glim.core.domain.usecase.auth.SignUpUseCase
 import com.ssafy.glim.core.domain.usecase.auth.VerifyEmailUseCase
+import com.ssafy.glim.core.domain.usecase.fcm.RegisterTokenUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +25,7 @@ internal class SignUpViewModel @Inject constructor(
     private val navigator: Navigator,
     private val signUpUseCase: SignUpUseCase,
     private val verifyEmailUseCase: VerifyEmailUseCase,
+    private val registerTokenUseCase: RegisterTokenUseCase
 ) : ViewModel(), ContainerHost<SignUpUiState, SignUpSideEffect> {
 
     override val container = container<SignUpUiState, SignUpSideEffect>(SignUpUiState())

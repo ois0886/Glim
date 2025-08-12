@@ -6,5 +6,5 @@ import jakarta.inject.Inject
 class DeleteTokenUseCase @Inject constructor(
     private val fcmRepository: FcmRepository
 ) {
-    operator fun invoke(deviceId: String) = fcmRepository.deleteToken(deviceId = deviceId)
+    suspend operator fun invoke() = fcmRepository.deleteToken()
 }

@@ -2,12 +2,12 @@ package com.ssafy.glim.core.data.repository
 
 import android.util.Log
 import com.ssafy.glim.core.data.authmanager.AuthManager
+import com.ssafy.glim.core.data.authmanager.LogoutReason
 import com.ssafy.glim.core.data.datasource.remote.UserRemoteDataSource
 import com.ssafy.glim.core.data.dto.request.UpdateUserRequest
 import com.ssafy.glim.core.data.mapper.toDomain
 import com.ssafy.glim.core.domain.model.user.User
 import com.ssafy.glim.core.domain.repository.UserRepository
-import com.ssafy.glim.core.data.authmanager.LogoutReason
 import jakarta.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
