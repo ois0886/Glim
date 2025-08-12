@@ -277,6 +277,20 @@ include::{snippets}/auth_api_docs_test/login_test/http-response.adoc[]
 
 include::{snippets}/auth_api_docs_test/login_test/response-fields.adoc[]
 
+=== 사용자 로그아웃
+
+==== 요청
+
+include::{snippets}/auth_api_docs_test/logout_test/http-request.adoc[]
+
+include::{snippets}/auth_api_docs_test/logout_test/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/auth_api_docs_test/logout_test/http-response.adoc[]
+
+include::{snippets}/auth_api_docs_test/logout_test/response-body.adoc[]
+
 === 토큰 갱신
 
 ==== 요청

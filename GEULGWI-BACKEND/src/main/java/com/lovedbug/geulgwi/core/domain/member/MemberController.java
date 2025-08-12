@@ -4,9 +4,12 @@ import com.lovedbug.geulgwi.core.domain.member.dto.response.MemberResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.SignUpRequest;
 import com.lovedbug.geulgwi.core.domain.member.dto.response.SignUpResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
+import com.lovedbug.geulgwi.core.security.annotation.CurrentUser;
+import com.lovedbug.geulgwi.core.security.dto.AuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -19,7 +22,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("")
-    public ResponseEntity<SignUpResponse> signup(@RequestBody SignUpRequest signUpRequest){
+    public ResponseEntity<SignUpResponse> signup(
+        @RequestPart SignUpRequest signUpRequest,
+        @RequestPart MultipartFile profileImage){
 
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest()
@@ -28,7 +33,7 @@ public class MemberController {
 
         return ResponseEntity
             .created(location)
-            .body(memberService.registerMember(signUpRequest));
+            .body(memberService.registerMember(signUpRequest, profileImage));
     }
 
     @GetMapping("/{memberId}")
@@ -37,12 +42,13 @@ public class MemberController {
         return ResponseEntity.ok(memberService.findByMemberId(memberId));
     }
 
-    @PutMapping("/{memberId}")
+    @PutMapping("/me")
     public ResponseEntity<MemberResponse> updateMember(
-        @PathVariable("memberId") Long memberId,
-        @RequestBody UpdateRequest updateRequest) {
+        @CurrentUser AuthenticatedUser user,
+        @RequestPart UpdateRequest updateRequest,
+        @RequestPart MultipartFile profileImage) {
 
-        return ResponseEntity.ok(memberService.updateMember(memberId, updateRequest));
+        return ResponseEntity.ok(memberService.updateMember(user.getMemberId(), updateRequest, profileImage));
     }
 
     @PatchMapping("/{memberId}/status")

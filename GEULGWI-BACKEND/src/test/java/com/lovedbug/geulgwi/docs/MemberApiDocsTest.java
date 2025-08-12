@@ -1,5 +1,6 @@
 package com.lovedbug.geulgwi.docs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
@@ -34,6 +37,9 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -52,14 +58,14 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
     @DisplayName("사용자가_사용할_계정을_생성한다")
     @Test
-    void create_member(){
+    void create_member() throws Exception{
 
         doNothing().when(emailSender).sendWelcomeEmail(any(String.class), any(String.class));
 
-        Member testMember = TestMemberFactory.createGetTestMember(passwordEncoder);
+        Member member = TestMemberFactory.createGetTestMember(passwordEncoder);
 
         SignUpRequest signUpRequest = SignUpRequest.builder()
-            .email(testMember.getEmail())
+            .email(member.getEmail())
             .password("pwd1234")
             .nickname("testNickname1")
             .birthDate(LocalDateTime.of(1999, 1, 7, 0,0,0))
@@ -67,22 +73,20 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
             .build();
 
         given(this.spec)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(signUpRequest)
+            .multiPart("signUpRequest", "sign-up.json", objectMapper.writeValueAsBytes(signUpRequest), "application/json")
+            .multiPart("profileImage", "profile.jpg", "fake-image-content".getBytes(), "image/jpeg")
+            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
             .filter(document("{class_name}/{method_name}",
-                    requestFields(
-                        fieldWithPath("email").description("로그인시 사용할 id(필수)"),
-                        fieldWithPath("password").description("로그인시 사용할 pwd(필수)"),
-                        fieldWithPath("nickname").description("사용자가 사용할 nickname(필수)"),
-                        fieldWithPath("birthDate").description("생년월일 (선택, 기본값 CURRENT_TIMESTAMP)"),
-                        fieldWithPath("gender").description("성별 (선택, 기본값 MALE)")
-                    ),
-                    responseFields(
-                        fieldWithPath("email").description("가입한 사용자 이메일"),
-                        fieldWithPath("nickname").description("가입한 사용자 닉네임"),
-                        fieldWithPath("message").description("회원가입 처리 결과 메시지")
-                    )
-                ))
+                requestParts(
+                    partWithName("signUpRequest").description("회원가입 정보(JSON)"),
+                    partWithName("profileImage").description("프로필 이미지 파일")
+                ),
+                responseFields(
+                    fieldWithPath("email").description("가입한 사용자 이메일"),
+                    fieldWithPath("nickname").description("가입한 사용자 닉네임"),
+                    fieldWithPath("message").description("회원가입 처리 결과 메시지")
+                )
+            ))
             .when()
             .post("/api/v1/members")
             .then().log().all()
@@ -111,7 +115,7 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
     @DisplayName("사용자_정보를_수정한다")
     @Test
-    void update_member() {
+    void update_member() throws Exception {
 
         Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
         Member savedMember = memberRepository.save(testMember);
@@ -126,22 +130,21 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
         given(this.spec)
             .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(updateRequest)
+            .multiPart("updateRequest", "sign-up.json", objectMapper.writeValueAsBytes(updateRequest), "application/json")
+            .multiPart("profileImage", "profile.jpg", "fake-image-content".getBytes(), "image/jpeg")
+            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
             .filter(document("{class_name}/{method_name}",
-                pathParameters(
-                    parameterWithName("memberId").description("수정할 사용자의 ID")
+                requestHeaders(
+                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 엑세스 토큰")
                 ),
-                requestFields(
-                    fieldWithPath("password").description("수정할 비밀번호(선택)"),
-                    fieldWithPath("nickname").description("수정할 닉네임 (선택)"),
-                    fieldWithPath("birthDate").description("수정할 생년월일 (선택)"),
-                    fieldWithPath("gender").description("수정할 성별 (선택)")
+                requestParts(
+                    partWithName("updateRequest").description("수정할 회원정보(JSON)"),
+                    partWithName("profileImage").description("수정할 프로필 이미지 파일")
                 ),
                 responseFields(memberItemFields())
             ))
             .when()
-            .put("/api/v1/members/{memberId}", savedMember.getMemberId())
+            .put("/api/v1/members/me")
             .then().log().all()
             .statusCode(200);
     }
@@ -176,7 +179,8 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
             fieldWithPath("nickname").description("사용자 닉네임"),
             fieldWithPath("status").description("회원 상태 (ACTIVE, INACTIVE)"),
             fieldWithPath("birthDate").description("사용자 생년월일"),
-            fieldWithPath("gender").description("사용자 성별 (MALE, FEMALE)")
+            fieldWithPath("gender").description("사용자 성별 (MALE, FEMALE)"),
+            fieldWithPath("profileUrl").description("사용자 프로필 사진")
         );
     }
 
@@ -188,7 +192,8 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
             fieldWithPath("nickname").description("회원 닉네임"),
             fieldWithPath("status").description("회원 상태 (INACTIVE로 변경됨)"),
             fieldWithPath("birthDate").description("회원 생년월일"),
-            fieldWithPath("gender").description("회원 성별")
+            fieldWithPath("gender").description("회원 성별"),
+            fieldWithPath("profileUrl").description("사용자 프로필 사진")
         );
     }
 
@@ -200,7 +205,8 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
                 .password(passwordEncoder.encode("pwd1234"))
                 .nickname("testNickname")
                 .birthDate(LocalDateTime.of(1999, 1, 7, 0,0,0))
-                .gender(MemberGender.MALE);
+                .gender(MemberGender.MALE)
+                .profileUrl("http://test.com/profile.jpg");
         }
 
         public static Member createMember(String emailPrefix, PasswordEncoder passwordEncoder) {

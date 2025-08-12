@@ -13,6 +13,7 @@ public final class MemberMapper {
             .birthDate(member.getBirthDate())
             .gender(member.getGender())
             .status(member.getStatus())
+            .profileUrl(member.getProfileUrl())
             .build();
     }
 }

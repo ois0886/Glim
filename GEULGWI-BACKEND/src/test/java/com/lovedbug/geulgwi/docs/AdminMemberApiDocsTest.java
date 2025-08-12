@@ -63,7 +63,8 @@ public class AdminMemberApiDocsTest extends RestDocsTestSupport{
                     fieldWithPath("[].nickname").type(JsonFieldType.STRING).description("닉네임"),
                     fieldWithPath("[].gender").type(JsonFieldType.STRING).description("성별"),
                     fieldWithPath("[].status").type(JsonFieldType.STRING).description("회원 상태"),
-                    fieldWithPath("[].birthDate").description("회원 생일")
+                    fieldWithPath("[].birthDate").description("회원 생일"),
+                    fieldWithPath("[].profileUrl").description("사용자 프로필 사진")
                 )
             ))
             .when()
@@ -92,7 +93,8 @@ public class AdminMemberApiDocsTest extends RestDocsTestSupport{
                     fieldWithPath("nickname").description("사용자 닉네임"),
                     fieldWithPath("status").description("회원 상태 (ACTIVE, INACTIVE)"),
                     fieldWithPath("birthDate").description("사용자 생년월일"),
-                    fieldWithPath("gender").description("사용자 성별 (MALE, FEMALE)")
+                    fieldWithPath("gender").description("사용자 성별 (MALE, FEMALE)"),
+                    fieldWithPath("profileUrl").description("사용자 프로필 사진")
                 )
             ))
             .when()
@@ -113,7 +115,8 @@ public class AdminMemberApiDocsTest extends RestDocsTestSupport{
                     fieldWithPath("[].nickname").type(JsonFieldType.STRING).description("닉네임"),
                     fieldWithPath("[].gender").type(JsonFieldType.STRING).description("성별"),
                     fieldWithPath("[].status").type(JsonFieldType.STRING).description("회원 상태"),
-                    fieldWithPath("[].birthDate").description("회원 생일")
+                    fieldWithPath("[].birthDate").description("회원 생일"),
+                    fieldWithPath("[].profileUrl").description("사용자 프로필 사진")
                 )
             ))
             .when()
@@ -177,7 +180,8 @@ public class AdminMemberApiDocsTest extends RestDocsTestSupport{
             fieldWithPath("nickname").description("사용자 닉네임"),
             fieldWithPath("status").description("회원 상태 (ACTIVE, INACTIVE)"),
             fieldWithPath("birthDate").description("사용자 생년월일"),
-            fieldWithPath("gender").description("사용자 성별 (MALE, FEMALE)")
+            fieldWithPath("gender").description("사용자 성별 (MALE, FEMALE)"),
+            fieldWithPath("profileUrl").description("사용자 프로필 사진")
         );
     }
 
@@ -189,7 +193,8 @@ public class AdminMemberApiDocsTest extends RestDocsTestSupport{
             fieldWithPath("nickname").description("회원 닉네임"),
             fieldWithPath("status").description("회원 상태 (INACTIVE로 변경됨)"),
             fieldWithPath("birthDate").description("회원 생년월일"),
-            fieldWithPath("gender").description("회원 성별")
+            fieldWithPath("gender").description("회원 성별"),
+            fieldWithPath("profileUrl").description("사용자 프로필 사진")
         );
     }
 
@@ -201,6 +206,7 @@ public class AdminMemberApiDocsTest extends RestDocsTestSupport{
             .gender(MemberGender.MALE)
             .status(MemberStatus.ACTIVE)
             .role(MemberRole.USER)
+            .profileUrl("http://test.com/active1_profile.jpg")
             .build();
 
         Member active2 = Member.builder()
@@ -210,6 +216,7 @@ public class AdminMemberApiDocsTest extends RestDocsTestSupport{
             .gender(MemberGender.FEMALE)
             .status(MemberStatus.ACTIVE)
             .role(MemberRole.USER)
+            .profileUrl("http://test.com/active2_profile.jpg")
             .build();
 
         Member inactive = Member.builder()
@@ -219,6 +226,7 @@ public class AdminMemberApiDocsTest extends RestDocsTestSupport{
             .gender(MemberGender.MALE)
             .status(MemberStatus.INACTIVE)
             .role(MemberRole.USER)
+            .profileUrl("http://test.com/inactive_profile.jpg")
             .build();
 
         memberRepository.saveAll(List.of(active1, active2, inactive));
