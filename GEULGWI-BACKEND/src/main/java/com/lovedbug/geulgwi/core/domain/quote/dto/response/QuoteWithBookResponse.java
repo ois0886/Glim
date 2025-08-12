@@ -15,6 +15,7 @@ public class QuoteWithBookResponse {
     private Long bookId;
     private String bookTitle;
     private String author;
+    private String content;
     private String publisher;
     private String bookCoverUrl;
 

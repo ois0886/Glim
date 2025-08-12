@@ -57,6 +57,7 @@ public class QuoteMapper {
             .bookId(quote.getBook().getBookId())
             .bookTitle(quote.getBook().getTitle())
             .author(quote.getBook().getAuthor())
+            .content(quote.getContent())
             .publisher(quote.getBook().getPublisher())
             .bookCoverUrl(quote.getBook().getCoverUrl())
             .isLiked(quote.getLikes().stream()

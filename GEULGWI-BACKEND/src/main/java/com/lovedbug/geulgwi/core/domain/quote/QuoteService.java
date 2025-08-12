@@ -60,6 +60,7 @@ public class QuoteService {
                     .bookId(quote.getBook().getBookId())
                     .quoteViews(quote.getViews())
                     .bookTitle(quote.getBook().getTitle())
+                    .content(quote.getContent())
                     .author(quote.getBook().getAuthor())
                     .publisher(quote.getBook().getPublisher())
                     .bookCoverUrl(quote.getBook().getCoverUrl())

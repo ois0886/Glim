@@ -152,6 +152,7 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("[].bookId").description("책 ID"),
                     fieldWithPath("[].bookTitle").description("책 제목"),
                     fieldWithPath("[].author").description("책 저자"),
+                    fieldWithPath("[].content").description("글귀 내용"),
                     fieldWithPath("[].publisher").description("출판사"),
                     fieldWithPath("[].bookCoverUrl").description("책 표지 URL"),
                     fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
@@ -275,8 +276,8 @@ class QuoteApiDocsTest extends RestDocsTestSupport {
                     fieldWithPath("quoteImageName").description("글귀 이미지 파일 이름"),
                     fieldWithPath("quoteViews").description("글귀 조회수"),
                     fieldWithPath("page").description("글귀가 포함된 도서 페이지 번호"),
-
                     fieldWithPath("bookId").description("도서 ID"),
+                    fieldWithPath("content").description("글귀 내용"),
                     fieldWithPath("bookTitle").description("도서 제목"),
                     fieldWithPath("author").description("도서 저자"),
                     fieldWithPath("publisher").description("도서 출판사"),
