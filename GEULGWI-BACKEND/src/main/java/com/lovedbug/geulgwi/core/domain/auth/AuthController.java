@@ -2,10 +2,14 @@ package com.lovedbug.geulgwi.core.domain.auth;
 
 import com.lovedbug.geulgwi.core.domain.auth.dto.request.EmailVerificationRequest;
 import com.lovedbug.geulgwi.core.domain.auth.dto.request.LoginRequest;
+import com.lovedbug.geulgwi.core.domain.auth.dto.request.LogoutRequest;
 import com.lovedbug.geulgwi.core.domain.auth.dto.response.EmailVerificationResponse;
 import com.lovedbug.geulgwi.core.domain.auth.dto.response.JwtResponse;
 import com.lovedbug.geulgwi.core.security.JwtUtil;
+import com.lovedbug.geulgwi.core.security.annotation.CurrentUser;
+import com.lovedbug.geulgwi.core.security.dto.AuthenticatedUser;
 import com.lovedbug.geulgwi.external.email.EmailVerifier;
+import com.lovedbug.geulgwi.external.fcm.service.FcmTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +24,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final EmailVerifier emailVerifier;
+    private final FcmTokenService fcmTokenService;
 
     @PostMapping("/email-verification-code")
     public ResponseEntity<EmailVerificationResponse> sendVerificationCode(
@@ -47,5 +52,15 @@ public class AuthController {
     public ResponseEntity<JwtResponse> refresh(HttpServletRequest request) {
 
         return ResponseEntity.ok(authService.refresh(request.getHeader(JwtUtil.HEADER_AUTH)));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+        @CurrentUser AuthenticatedUser user,
+        @RequestBody LogoutRequest logoutRequest){
+
+        fcmTokenService.inActivateToken(user.getMemberId(), logoutRequest.getDeviceId());
+
+        return ResponseEntity.noContent().build();
     }
 }
