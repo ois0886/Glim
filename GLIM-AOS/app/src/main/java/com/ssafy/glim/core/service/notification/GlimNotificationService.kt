@@ -108,12 +108,10 @@ class GlimNotificationService : FirebaseMessagingService() {
             notificationManager.notify(quoteId.toInt(), notification)
 
             Log.d(TAG, "Custom notification shown: $title - $body")
-
         } catch (e: Exception) {
             Log.e(TAG, "Error showing notification: ${e.message}", e)
         }
     }
-
 
     private fun createNotificationChannel() {
         val channel = NotificationChannel(

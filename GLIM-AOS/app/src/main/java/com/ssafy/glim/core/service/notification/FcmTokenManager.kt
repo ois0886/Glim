@@ -1,6 +1,5 @@
 package com.ssafy.glim.core.service.notification
 
-
 import android.util.Log
 import com.ssafy.glim.core.domain.usecase.fcm.RefreshTokenUseCase
 import kotlinx.coroutines.CoroutineScope
