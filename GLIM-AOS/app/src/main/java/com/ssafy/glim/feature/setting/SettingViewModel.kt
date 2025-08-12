@@ -6,8 +6,6 @@ import com.ssafy.glim.core.domain.usecase.setting.GetSettingsUseCase
 import com.ssafy.glim.core.domain.usecase.setting.UpdateSettingsUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.distinctUntilChanged
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject

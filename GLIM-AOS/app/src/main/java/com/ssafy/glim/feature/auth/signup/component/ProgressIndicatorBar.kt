@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,7 +24,7 @@ fun ProgressIndicatorBar(progress: Float) {
             Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(progress)
-                .background(MaterialTheme.colorScheme.primary),
+                .background(Color.Black),
         )
     }
 }

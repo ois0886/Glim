@@ -280,7 +280,7 @@ fun BookDetailContent(
 
                 Button(
                     onClick = clickPostGlim,
-                    modifier = Modifier.weight(1f), // 더 넓게
+                    modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = LightBrown,
                         contentColor = Color.White

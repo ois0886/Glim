@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.ssafy.glim.core.domain.usecase.setting.GetSettingsFlowUseCase
-import com.ssafy.glim.core.domain.usecase.setting.GetSettingsUseCase
 import com.ssafy.glim.core.util.isServiceRunning
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope

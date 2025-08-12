@@ -11,6 +11,7 @@ private val DATE_FMT: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-d
 fun LocalDate.formatKey(): String = this.format(DATE_FMT)
 
 /** KST 기준 오늘 */
+fun sixMonthsBeforeKst(): LocalDate = LocalDate.now(KST).minusMonths(6)
 fun todayKst(): LocalDate = LocalDate.now(KST)
 
 /** start…end 사이의 날짜 리스트 */

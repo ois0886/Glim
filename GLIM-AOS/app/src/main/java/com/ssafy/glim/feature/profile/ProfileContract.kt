@@ -9,7 +9,6 @@ data class ProfileUiState(
     val publishedGlimCount: Int = 0,
     val likedGlimCount: Int = 0,
     val uploadQuotes: List<QuoteSummary> = emptyList(),
-    val firstUploadDate: String = "",
     val error: Boolean = false,
     val isRefreshing: Boolean = false,
     val logoutDialogState: LogoutDialogState = LogoutDialogState.Hidden,
