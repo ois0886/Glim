@@ -43,7 +43,7 @@ fun UserProfileInputContent(
         if (!isUpdate) {
             Text(
                 text = stringResource(id = R.string.profile_title),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = Color.Gray,
             )
             Spacer(modifier = Modifier.height(8.dp))

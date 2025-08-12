@@ -27,20 +27,12 @@ fun EmailAuthInputContent(
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.auth_greeting),
-            style =
-            MaterialTheme.typography.bodySmall.copy(
-                color = Color.Gray,
-                fontSize = 14.sp,
-            ),
+            style = MaterialTheme.typography.labelMedium
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(R.string.email_auth_instruction),
-            style =
-            MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-            ),
+            style = MaterialTheme.typography.labelLarge
         )
         Spacer(modifier = Modifier.height(12.dp))
         EmailInputTextField(
