@@ -175,6 +175,9 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.android)
 
+    // Lottie
+    implementation(libs.lottie.compose)
+
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
