@@ -1,13 +1,13 @@
 package com.ssafy.glim.core.data.datasource.remote
 
 import com.ssafy.glim.core.data.dto.request.GenerateRequest
-import com.ssafy.glim.core.data.service.ImageService
+import com.ssafy.glim.core.data.api.ImageApi
 import javax.inject.Inject
 
 class ImageRemoteDataSource @Inject constructor(
-    private val imageService: ImageService
+    private val imageApi: ImageApi
 ) {
     suspend fun generateImage(
         request: GenerateRequest,
-    ) = imageService.generateImage(request)
+    ) = imageApi.generateImage(request)
 }

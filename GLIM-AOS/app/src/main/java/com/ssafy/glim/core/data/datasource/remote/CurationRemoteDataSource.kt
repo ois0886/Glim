@@ -1,10 +1,10 @@
 package com.ssafy.glim.core.data.datasource.remote
 
-import com.ssafy.glim.core.data.service.CurationService
+import com.ssafy.glim.core.data.api.CurationApi
 import javax.inject.Inject
 
 class CurationRemoteDataSource @Inject constructor(
-    private val curationService: CurationService
+    private val curationApi: CurationApi
 ) {
-    suspend fun fetchMainCurations() = curationService.getMainCurations()
+    suspend fun fetchMainCurations() = curationApi.getMainCurations()
 }

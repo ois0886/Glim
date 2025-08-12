@@ -286,4 +286,14 @@
     <string name="no_relative_quote">등록된 글귀가 없습니다.</string>
     <string name="image_generate">이미지 생성</string>
     <string name="image_generation_btn_description">AI를 통해\n텍스트에 어울리는\n이미지를 만들어 보세요</string>
+
+    <string name="notification_permission_title">알림 권한 필요</string>
+    <string name="notification_permission_message">알림을 통해 좋은 소식을 전달해드리고 싶어요. 설정에서 알림 권한을 허용해주시겠어요?</string>
+    <string name="notification_permission_granted">알림 권한이 허용되었습니다</string>
+    <string name="go_to_settings">설정으로 이동</string>
+
+    <string name="edit_profile">프로필 편집</string>
+    <string name="edit_profile_message">어떤 정보를 수정하시겠습니까?</string>
+    <string name="change_personal_info">개인정보 변경하기</string>
+    <string name="change_password">비밀번호 변경하기</string>
 </resources>
