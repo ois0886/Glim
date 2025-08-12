@@ -6,7 +6,6 @@ import com.lovedbug.geulgwi.core.domain.member.dto.response.SignUpResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
 import com.lovedbug.geulgwi.core.domain.member.mapper.MemberMapper;
 import com.lovedbug.geulgwi.external.email.EmailSender;
-import com.lovedbug.geulgwi.external.fcm.service.FcmTokenService;
 import com.lovedbug.geulgwi.external.image.ImageMetaData;
 import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +69,7 @@ public class MemberService {
 
         ImageMetaData imageMetaData = imageHandler.saveImage(profileImage);
 
-        return "/images" + imageMetaData.imageName();
+        return imageMetaData.imageName();
     }
 
     public MemberResponse findByMemberId(Long memberId){

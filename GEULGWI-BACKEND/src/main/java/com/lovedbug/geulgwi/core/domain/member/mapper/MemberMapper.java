@@ -2,7 +2,6 @@ package com.lovedbug.geulgwi.core.domain.member.mapper;
 
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.dto.response.MemberResponse;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 public final class MemberMapper {
     public static MemberResponse toMemberDto(Member member){

@@ -283,7 +283,7 @@ include::{snippets}/auth_api_docs_test/login_test/response-fields.adoc[]
 
 include::{snippets}/auth_api_docs_test/logout_test/http-request.adoc[]
 
-include::{snippets}/auth_api_docs_test/logout_test/request-body.adoc[]
+include::{snippets}/auth_api_docs_test/logout_test/request-fields.adoc[]
 
 ==== 응답
 
