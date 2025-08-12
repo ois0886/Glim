@@ -1,4 +1,14 @@
 services:
+  nginxproxymanager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
   postgres:
     image: postgres:15.3
     container_name: geulgwi_postgres
