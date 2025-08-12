@@ -289,4 +289,6 @@
     <string name="profile_edit_question">어떤 정보를 수정하시겠습니까?</string>
     <string name="profile_edit_personal_info">개인정보 변경하기</string>
     <string name="profile_edit_password">비밀번호 변경하기</string>
+    <string name="image_generate">이미지 생성</string>
+    <string name="image_generation_btn_description">AI를 통해\n텍스트에 어울리는\n이미지를 만들어 보세요</string>
 </resources>

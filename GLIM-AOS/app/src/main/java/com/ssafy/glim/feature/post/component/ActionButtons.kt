@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.post.component
 
+import android.os.SystemClock
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -12,14 +13,21 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuItemColors
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,10 +48,13 @@ import com.ssafy.glim.core.util.CaptureActions
 import com.ssafy.glim.core.util.rememberCaptureActions
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BoxScope.ActionButtons(
+    isTextNotEmpty: Boolean,
     visibility: Boolean,
     startCameraAction: (CameraType) -> Unit,
+    onImageGenerateClick: () -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageButtonClick: () -> Unit,
     onCreateTextClick: (Boolean) -> Unit,
@@ -59,6 +70,22 @@ fun BoxScope.ActionButtons(
         fileName = "Quote_${System.currentTimeMillis()}.jpg",
     )
     val coroutineScope = rememberCoroutineScope()
+    val tooltipState = rememberTooltipState(isPersistent = true)
+    var hasShownTip by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isTextNotEmpty) {
+        if (isTextNotEmpty && !hasShownTip) {
+            hasShownTip = true
+            coroutineScope.launch { tooltipState.show() }
+            coroutineScope.launch {
+                kotlinx.coroutines.delay(10000L)
+                tooltipState.dismiss()
+            }
+        } else if (!isTextNotEmpty) {
+            tooltipState.dismiss()
+            hasShownTip = false
+        }
+    }
 
     Column(
         modifier =
@@ -119,7 +146,9 @@ fun BoxScope.ActionButtons(
 
     if (visibility) {
         Surface(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 16.dp).align(Alignment.CenterEnd),
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 16.dp)
+                .align(Alignment.CenterEnd),
             color = Color.DarkGray.copy(alpha = 0.6f),
             shape = RoundedCornerShape(12.dp),
         ) {
@@ -128,6 +157,23 @@ fun BoxScope.ActionButtons(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.End
             ) {
+                TooltipBox(
+                    modifier = modifier,
+                    positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                    tooltip = {
+                        PlainTooltip { Text(stringResource(R.string.image_generation_btn_description)) }
+                    },
+                    state = tooltipState
+                ) {
+                    ActionButton(
+                        onClick = onImageGenerateClick,
+                        iconRes = R.drawable.ic_landscape,
+                        contentDescription = stringResource(R.string.image_generate),
+                        enabled = isTextNotEmpty,
+                        minClickIntervalMillis = 1000L
+                    )
+                }
+
                 IconButtonWithPopupMenu(
                     startCameraAction = startCameraAction
                 )
@@ -175,9 +221,16 @@ fun ActionButton(
     iconRes: Int,
     contentDescription: String,
     enabled: Boolean = true,
+    minClickIntervalMillis: Long = 0L
 ) {
+    val actualOnClick =
+        if (minClickIntervalMillis > 0L)
+            rememberThrottledClick(onClick, minClickIntervalMillis)
+        else
+            onClick
+
     IconButton(
-        onClick = onClick,
+        onClick = actualOnClick,
         enabled = enabled,
     ) {
         Icon(
@@ -242,6 +295,21 @@ fun IconButtonWithPopupMenu(
                     disabledTrailingIconColor = Color.Gray,
                 )
             )
+        }
+    }
+}
+
+@Composable
+fun rememberThrottledClick(
+    onClick: () -> Unit,
+    minIntervalMillis: Long = 800L
+): () -> Unit {
+    var lastClickAt by remember { mutableLongStateOf(0L) }
+    return {
+        val now = SystemClock.elapsedRealtime()
+        if (now - lastClickAt >= minIntervalMillis) {
+            lastClickAt = now
+            onClick()
         }
     }
 }
