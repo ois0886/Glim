@@ -9,6 +9,7 @@ import com.ssafy.glim.core.domain.model.QuoteSummary
 
 fun QuoteResponse.toDomain() =
     Quote(
+        content = content,
         author = author,
         bookCoverUrl = bookCoverUrl,
         bookId = bookId,
