@@ -36,7 +36,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 internal fun SettingRoute(
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     viewModel: SettingViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
