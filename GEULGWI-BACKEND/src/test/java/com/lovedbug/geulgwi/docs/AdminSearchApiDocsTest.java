@@ -102,6 +102,7 @@ public class AdminSearchApiDocsTest extends RestDocsTestSupport{
             .gender(MemberGender.FEMALE)
             .status(MemberStatus.ACTIVE)
             .role(MemberRole.USER)
+            .profileUrl("http://test.com/active1_profile.jpg")
             .build();
         memberRepository.save(m);
 
@@ -204,7 +205,8 @@ public class AdminSearchApiDocsTest extends RestDocsTestSupport{
                     fieldWithPath("[].nickname").type(JsonFieldType.STRING).description("닉네임"),
                     fieldWithPath("[].gender").type(JsonFieldType.STRING).description("성별"),
                     fieldWithPath("[].status").type(JsonFieldType.STRING).description("회원 상태"),
-                    fieldWithPath("[].birthDate").description("회원 생일")
+                    fieldWithPath("[].birthDate").description("회원 생일"),
+                    fieldWithPath("[].profileUrl").description("사용자 프로필 사진")
                 )
             ))
             .when()

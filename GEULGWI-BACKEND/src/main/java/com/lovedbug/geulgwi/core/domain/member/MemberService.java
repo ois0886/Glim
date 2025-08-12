@@ -94,10 +94,26 @@ public class MemberService {
     public MemberResponse updateMember(Long memberId, UpdateRequest updateRequest){
 
         Member existingMember = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NoSuchElementException(
+                "수정할 회원이 존재 하지 않습니다, memberId = " + memberId));
+
+        existingMember.updateFromRequest(updateRequest, memberRepository, passwordEncoder);
+
+        return MemberMapper.toMemberDto(existingMember);
+    }
+
+    @Transactional
+    public MemberResponse updateMember(Long memberId, UpdateRequest updateRequest, MultipartFile profileImage){
+
+        Member existingMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException(
                         "수정할 회원이 존재 하지 않습니다, memberId = " + memberId));
 
+        String profileUrl = savedProfileUrl(profileImage);
+
         existingMember.updateFromRequest(updateRequest, memberRepository, passwordEncoder);
+        existingMember.changeProfileUrl(profileUrl);
+
         return MemberMapper.toMemberDto(existingMember);
     }
 

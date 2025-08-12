@@ -4,6 +4,8 @@ import com.lovedbug.geulgwi.core.domain.member.dto.response.MemberResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.SignUpRequest;
 import com.lovedbug.geulgwi.core.domain.member.dto.response.SignUpResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
+import com.lovedbug.geulgwi.core.security.annotation.CurrentUser;
+import com.lovedbug.geulgwi.core.security.dto.AuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,12 +42,13 @@ public class MemberController {
         return ResponseEntity.ok(memberService.findByMemberId(memberId));
     }
 
-    @PutMapping("/{memberId}")
+    @PutMapping("/me")
     public ResponseEntity<MemberResponse> updateMember(
-        @PathVariable("memberId") Long memberId,
-        @RequestBody UpdateRequest updateRequest) {
+        @CurrentUser AuthenticatedUser user,
+        @RequestPart UpdateRequest updateRequest,
+        @RequestPart MultipartFile profileImage) {
 
-        return ResponseEntity.ok(memberService.updateMember(memberId, updateRequest));
+        return ResponseEntity.ok(memberService.updateMember(user.getMemberId(), updateRequest, profileImage));
     }
 
     @PatchMapping("/{memberId}/status")

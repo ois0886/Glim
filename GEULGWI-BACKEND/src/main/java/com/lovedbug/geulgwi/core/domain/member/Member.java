@@ -132,7 +132,13 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.gender = gender;
     }
 
-    public void updateFromRequest(UpdateRequest updateRequest, MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public void changeProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
+
+    public void updateFromRequest(UpdateRequest updateRequest,
+                                  MemberRepository memberRepository,
+                                  PasswordEncoder passwordEncoder) {
         updateNickname(updateRequest.getNickname(), memberRepository);
         updatePassword(updateRequest.getPassword(), passwordEncoder);
         updateBirthDate(updateRequest.getBirthDate());
