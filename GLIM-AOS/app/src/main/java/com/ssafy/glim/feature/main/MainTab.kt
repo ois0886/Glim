@@ -27,7 +27,7 @@ internal enum class MainTab(
         iconResId = R.drawable.icon_post,
         contentDescription = "Post Icon",
         label = "포스트",
-        route = BottomTabRoute.Post,
+        route = BottomTabRoute.Post(),
     ),
     REELS(
         iconResId = R.drawable.ic_glim,

@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,13 +58,14 @@ import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.ui.theme.GlimColor.LightGray600
 import com.ssafy.glim.ui.theme.GlimColor.LightGray700
 import com.ssafy.glim.ui.theme.GlimColor.LightGray900
+import com.ssafy.glim.ui.theme.caveatFont
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeRoute(
     padding: PaddingValues,
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val homeUiState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
@@ -120,10 +122,12 @@ private fun HomeScreen(
 
                 is HomeSectionUiModel.BookSection -> {
                     SectionTitle(section.title)
-                    BookCarousel(
-                        books = section.books,
-                        onItemClick = onBookClick,
-                    )
+                    if (section.books.isNotEmpty()) {
+                        BookCarouselPager(
+                            books = section.books,
+                            onItemClick = onBookClick,
+                        )
+                    }
                     HorizontalDivider(
                         modifier = Modifier.padding(top = 16.dp),
                         thickness = 8.dp,
@@ -140,21 +144,21 @@ fun QuoteHomeTitle() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.today_glim),
+            text = stringResource(R.string.app_name_english),
             style = MaterialTheme.typography.headlineMedium.copy(
-                fontSize = 32.sp,
+                fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = caveatFont
             ),
         )
         Spacer(Modifier.height(16.dp))
         Text(
             text = stringResource(R.string.glim_home_description),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 16.sp,
-            ),
+            style = MaterialTheme.typography.labelMedium,
             color = LightGray600,
         )
     }
@@ -167,8 +171,9 @@ fun SectionTitle(text: String) {
         style = MaterialTheme.typography.titleMedium.copy(
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Default
         ),
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(20.dp),
     )
 }
 
@@ -209,7 +214,7 @@ fun QuoteCarousel(
             ) {
                 Card(
                     modifier = Modifier.size(itemSize),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(4.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 ) {
                     GlimSubcomposeAsyncImage(

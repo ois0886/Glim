@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
@@ -16,6 +17,7 @@ import coil.compose.AsyncImage
 @Composable
 fun TransformableImage(
     imageUri: Uri?,
+    alpha: Float,
     transformState: ImageTransformStateHolder,
     modifier: Modifier = Modifier
 ) {
@@ -32,6 +34,7 @@ fun TransformableImage(
         contentDescription = null,
         modifier = modifier
             .fillMaxSize()
+            .alpha(alpha)
             .onSizeChanged { size ->
                 transformState.updateContainerSize(
                     Size(size.width.toFloat(), size.height.toFloat())

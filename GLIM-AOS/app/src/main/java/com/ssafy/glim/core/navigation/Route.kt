@@ -44,7 +44,7 @@ sealed interface BottomTabRoute : Route {
     data object Search : BottomTabRoute
 
     @Serializable
-    data object Post : BottomTabRoute
+    data class Post(val bookId: Long = -1) : BottomTabRoute
 
     @Serializable
     data class Shorts(val quoteId: Long = -1) : BottomTabRoute

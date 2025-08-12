@@ -43,11 +43,14 @@ fun PostContent(
     onToggleBold: () -> Unit,
     onToggleItalic: () -> Unit,
     startCameraAction: (CameraType) -> Unit,
+    onImageGenerateClick : () -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageClick: () -> Unit,
     onCompleteClick: (CaptureActions) -> Unit,
     onConfirmExit: () -> Unit,
     onCancelExit: () -> Unit,
+    onVisibilityClick: () -> Unit,
+    onAlphaSlideValueChange: (Float) -> Unit,
     updateBottomSheetState: (Boolean) -> Unit,
     updateFontFamily: (FontFamily) -> Unit,
     updateTextColor: (Color) -> Unit,
@@ -103,12 +106,15 @@ fun PostContent(
         } else {
             PostUI(
                 state = state,
+                onImageGenerateClick = onImageGenerateClick,
                 startCameraAction = startCameraAction,
                 onTextExtractionClick = onTextExtractionClick,
                 onBackgroundImageClick = onBackgroundImageClick,
                 updateTextFocusChanged = updateTextFocusChanged,
                 onCompleteClick = onCompleteClick,
                 onBackPress = onBackPress,
+                onVisibilityClick = onVisibilityClick,
+                onAlphaSlideValueChange = onAlphaSlideValueChange,
                 updateBottomSheetState = updateBottomSheetState,
                 selectedBook = selectedBook,
                 focusManager = focusManager,
@@ -148,6 +154,7 @@ private fun PostCaptureContent(
     ) {
         TransformableImage(
             imageUri = state.backgroundImageUri,
+            alpha = state.backgroundImageAlpha,
             transformState = transformState
         )
 

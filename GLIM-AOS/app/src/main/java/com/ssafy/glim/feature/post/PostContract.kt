@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.post
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -21,6 +22,8 @@ sealed interface PostSideEffect {
 
     data object OpenBackgroundImagePicker : PostSideEffect
 
+    data class SaveGeneratedToCache(val bitmap: Bitmap) : PostSideEffect
+
     data class ShowToast(val message: String) : PostSideEffect
 }
 
@@ -35,6 +38,8 @@ data class PostState(
     val originalTextPosition: TextPosition = TextPosition(),
     val isFocused: Boolean = false,
     val isDragging: Boolean = false,
+    val visibility: Boolean = true,
+    val backgroundImageAlpha: Float = 1f,
     val book: Book? = null,
     val showBottomSheet: Boolean = false,
     val isLoading: Boolean = false,

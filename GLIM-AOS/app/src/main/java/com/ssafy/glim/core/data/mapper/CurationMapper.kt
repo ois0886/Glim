@@ -1,6 +1,7 @@
 package com.ssafy.glim.core.data.mapper
 
 import android.util.Log
+import com.ssafy.glim.core.common.extensions.parseHtmlString
 import com.ssafy.glim.core.data.dto.response.CurationContentResponse
 import com.ssafy.glim.core.data.dto.response.CurationItemResponse
 import com.ssafy.glim.core.domain.model.Book
@@ -12,18 +13,15 @@ import com.ssafy.glim.core.domain.model.Quote
 fun CurationItemResponse.toDomain(): Curation {
     val typeEnum = CurationType.valueOf(this.curationType)
     val books = if (typeEnum == CurationType.BOOK) {
-        Log.d("CurationMapper", "Curation type is BOOK, converting contents to Book ${contents.get(0)}")
         this.contents.map { it.toBook() }
     } else {
         emptyList()
     }
-
     val glims = if (typeEnum == CurationType.QUOTE) {
         this.contents.map { it.toQuote() }
     } else {
         emptyList()
     }
-
     return Curation(
         id = this.curationItemId,
         title = this.title,
@@ -39,13 +37,13 @@ fun CurationItemResponse.toDomain(): Curation {
 private fun CurationContentResponse.toBook(): Book =
     Book(
         bookId = this.bookId ?: -1L,
-        title = this.bookTitle,
+        title = this.bookTitle.parseHtmlString(),
         author = this.author,
         publisher = this.publisher,
         pubDate = "",
         isbn = "",
         description = "",
-        cover = this.bookCoverUrl ?: "",
+        cover = this.bookCoverUrl?.replace("/coversum/", "/cover500/") ?: "",
     )
 
 private fun CurationContentResponse.toQuote(): Quote =
@@ -53,9 +51,9 @@ private fun CurationContentResponse.toQuote(): Quote =
         bookId = bookId ?: -1L,
         isLike = false,
         likes = 0L,
-        bookTitle = bookTitle,
+        bookTitle = bookTitle.parseHtmlString(),
         author = author,
-        bookCoverUrl = bookCoverUrl ?: "",
+        bookCoverUrl = bookCoverUrl?.replace("/coversum/", "/cover500/") ?: "",
         page = 0,
         publisher = publisher,
         quoteId = quoteId ?: -1L,
