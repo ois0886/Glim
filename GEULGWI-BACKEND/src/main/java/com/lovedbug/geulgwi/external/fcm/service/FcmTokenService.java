@@ -41,8 +41,8 @@ public class FcmTokenService {
 
         if (!savedToken.getDeviceToken().equals(fcmTokenRequest.getDeviceToken())){
             savedToken.updateDeviceToken(fcmTokenRequest.getDeviceToken());
-            savedToken.updateIsActive(true);
         }
+        savedToken.updateIsActive(true);
     }
 
     private void createdFcmToken(Member member, FcmTokenRequestDto fcmTokenRequest) {
@@ -64,9 +64,7 @@ public class FcmTokenService {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND, "memberId = " + memberId));
 
-        fcmTokenRepository.findByMemberAndDeviceId(member, deviceId)
-            .ifPresent(
-                token -> token.updateIsActive(false)
-            );
+        fcmTokenRepository.findAllByMemberAndIsActive(member, true)
+            .forEach(token -> token.updateIsActive(false));
     }
 }
