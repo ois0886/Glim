@@ -9,7 +9,7 @@ interface AuthRepository {
         nickname: String,
         password: String,
         gender: String,
-        birthDate: List<Int>,
+        birthDate: List<Int>
     )
 
     suspend fun login(
@@ -18,4 +18,6 @@ interface AuthRepository {
     )
 
     suspend fun verifyEmail(email: String): VerifyEmail
+
+    suspend fun refreshFcmToken(newToken: String): Result<Unit>
 }

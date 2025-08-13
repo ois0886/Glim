@@ -60,8 +60,7 @@ internal fun LoginRoute(
         onEmailChanged = viewModel::onEmailChanged,
         onPasswordChanged = viewModel::onPasswordChanged,
         onLoginClicked = viewModel::onLoginClicked,
-        navigateToSignUp = viewModel::navigateToSignUp,
-        navigateToForgotPassword = viewModel::navigateToForgotPassword
+        navigateToSignUp = viewModel::navigateToSignUp
     )
 }
 
@@ -73,8 +72,7 @@ internal fun LoginScreen(
     onEmailChanged: (TextFieldValue) -> Unit,
     onPasswordChanged: (TextFieldValue) -> Unit,
     onLoginClicked: () -> Unit,
-    navigateToSignUp: () -> Unit,
-    navigateToForgotPassword: () -> Unit
+    navigateToSignUp: () -> Unit
 ) {
     Column(
         modifier =
@@ -164,8 +162,7 @@ fun PreviewLoginScreen_Empty() {
         onEmailChanged = {},
         onPasswordChanged = {},
         onLoginClicked = {},
-        navigateToSignUp = {},
-        navigateToForgotPassword = {}
+        navigateToSignUp = {}
     )
 }
 
@@ -184,8 +181,7 @@ fun PreviewLoginScreen_Errors() {
         onEmailChanged = {},
         onPasswordChanged = {},
         onLoginClicked = {},
-        navigateToSignUp = {},
-        navigateToForgotPassword = {}
+        navigateToSignUp = {}
     )
 }
 
@@ -202,8 +198,7 @@ fun PreviewLoginScreen_Valid() {
         onEmailChanged = {},
         onPasswordChanged = {},
         onLoginClicked = {},
-        navigateToSignUp = {},
-        navigateToForgotPassword = {}
+        navigateToSignUp = {}
     )
 }
 
@@ -221,7 +216,6 @@ fun PreviewLoginScreen_Loading() {
         onEmailChanged = {},
         onPasswordChanged = {},
         onLoginClicked = {},
-        navigateToSignUp = {},
-        navigateToForgotPassword = {}
+        navigateToSignUp = {}
     )
 }

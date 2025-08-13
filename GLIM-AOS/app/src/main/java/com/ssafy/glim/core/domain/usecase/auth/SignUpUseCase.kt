@@ -1,5 +1,6 @@
 package com.ssafy.glim.core.domain.usecase.auth
 
+import android.graphics.Bitmap
 import com.ssafy.glim.core.domain.repository.AuthRepository
 import javax.inject.Inject
 
@@ -11,6 +12,6 @@ class SignUpUseCase @Inject constructor(
         nickname: String,
         password: String,
         gender: String,
-        birthDate: List<Int>,
+        birthDate: List<Int>
     ) = repository.signUp(email, nickname, password, gender, birthDate)
 }

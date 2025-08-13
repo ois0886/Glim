@@ -2,9 +2,7 @@ package com.ssafy.glim.feature.profile
 
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.data.authmanager.AuthManager
-import com.ssafy.glim.core.data.authmanager.LogoutReason
-import com.ssafy.glim.core.domain.usecase.fcm.DeleteTokenUseCase
+import com.ssafy.glim.core.domain.usecase.user.LogOutUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetMyLikedQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetMyUploadQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
@@ -26,12 +24,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val authManager: AuthManager,
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
     private val getMyUploadQuoteUseCase: GetMyUploadQuoteUseCase,
     private val getMyLikedQuoteUseCase: GetMyLikedQuoteUseCase,
-    private val deleteTokenUseCase: DeleteTokenUseCase
+    private val logOutUseCase: LogOutUseCase
 ) : ViewModel(), ContainerHost<ProfileUiState, ProfileSideEffect> {
 
     override val container: Container<ProfileUiState, ProfileSideEffect> =
@@ -132,12 +129,13 @@ class ProfileViewModel @Inject constructor(
 
     fun onLogoutConfirm() = intent {
         reduce { state.copy(logoutDialogState = LogoutDialogState.Processing) }
-        runCatching { deleteTokenUseCase() }
+        runCatching { logOutUseCase() }
             .onSuccess {
-                authManager.logout(LogoutReason.UserLogout)
                 postSideEffect(ProfileSideEffect.ShowError(R.string.logout_success))
+                reduce { state.copy(logoutDialogState = LogoutDialogState.Hidden) }
             }.onFailure {
                 postSideEffect(ProfileSideEffect.ShowError(R.string.logout_failed))
+                reduce { state.copy(logoutDialogState = LogoutDialogState.Hidden) }
             }
     }
 
@@ -200,7 +198,16 @@ class ProfileViewModel @Inject constructor(
         }
         runCatching { deleteUserUseCase() }
             .onSuccess {
-                deleteFcmToken()
+                reduce {
+                    state.copy(
+                        withdrawalDialogState = WithdrawalDialogState.Hidden,
+                        isWithdrawalLoading = false,
+                        userInputText = "",
+                        countdownSeconds = 0
+                    )
+                }
+                postSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_success))
+                navigator.navigateAndClearBackStack(Route.Login)
             }
             .onFailure {
                 reduce {
@@ -213,25 +220,6 @@ class ProfileViewModel @Inject constructor(
                 }
                 postSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_failed))
             }
-    }
-
-    private fun deleteFcmToken() = intent {
-        runCatching {
-            deleteTokenUseCase()
-        }.onSuccess {
-            reduce {
-                state.copy(
-                    withdrawalDialogState = WithdrawalDialogState.Hidden,
-                    isWithdrawalLoading = false,
-                    userInputText = "",
-                    countdownSeconds = 0
-                )
-            }
-            postSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_success))
-            navigator.navigateAndClearBackStack(Route.Login)
-        }.onFailure { exception ->
-            postSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_failed))
-        }
     }
 
     fun onFinalCancel() = intent {

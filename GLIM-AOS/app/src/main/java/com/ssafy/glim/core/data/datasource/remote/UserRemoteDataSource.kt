@@ -2,6 +2,8 @@ package com.ssafy.glim.core.data.datasource.remote
 
 import com.ssafy.glim.core.data.dto.request.UpdateUserRequest
 import com.ssafy.glim.core.data.api.UserApi
+import com.ssafy.glim.core.data.dto.request.DeleteUserRequest
+import com.ssafy.glim.core.data.dto.request.LogOutRequest
 import javax.inject.Inject
 
 class UserRemoteDataSource @Inject constructor(
@@ -13,5 +15,7 @@ class UserRemoteDataSource @Inject constructor(
     suspend fun updateUser(memberId: Long, request: UpdateUserRequest) =
         service.updateUser(memberId, request)
 
-    suspend fun deleteUser(memberId: Long) = service.deleteUser(memberId)
+    suspend fun deleteUser(request: DeleteUserRequest) = service.deleteUser(request)
+
+    suspend fun logout(request: LogOutRequest) = service.logout(request)
 }

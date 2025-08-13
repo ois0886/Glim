@@ -12,7 +12,6 @@ import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.common.utils.toErrorRes
 import com.ssafy.glim.core.domain.usecase.auth.SignUpUseCase
 import com.ssafy.glim.core.domain.usecase.auth.VerifyEmailUseCase
-import com.ssafy.glim.core.domain.usecase.fcm.RegisterTokenUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +23,7 @@ import javax.inject.Inject
 internal class SignUpViewModel @Inject constructor(
     private val navigator: Navigator,
     private val signUpUseCase: SignUpUseCase,
-    private val verifyEmailUseCase: VerifyEmailUseCase,
-    private val registerTokenUseCase: RegisterTokenUseCase
+    private val verifyEmailUseCase: VerifyEmailUseCase
 ) : ViewModel(), ContainerHost<SignUpUiState, SignUpSideEffect> {
 
     override val container = container<SignUpUiState, SignUpSideEffect>(SignUpUiState())
@@ -339,17 +337,6 @@ internal class SignUpViewModel @Inject constructor(
                 gender = formattedGender,
                 birthDate = formattedBirthDate
             )
-        }.onSuccess {
-            registerFcmToken()
-        }.onFailure { exception ->
-            reduce { state.copy(isLoading = false) }
-            postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
-        }
-    }
-
-    private fun registerFcmToken() = intent {
-        runCatching {
-            registerTokenUseCase()
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
             navigator.navigateAndClearBackStack(Route.Celebration(state.name.text))

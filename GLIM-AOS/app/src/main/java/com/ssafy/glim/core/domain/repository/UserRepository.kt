@@ -17,4 +17,6 @@ interface UserRepository {
     ): User
 
     suspend fun deleteUser()
+
+    suspend fun logout()
 }
