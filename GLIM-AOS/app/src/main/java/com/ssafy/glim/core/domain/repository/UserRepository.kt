@@ -13,7 +13,7 @@ interface UserRepository {
         nickname: String,
         gender: String,
         birthDate: List<Int>,
-        profileUrl: Bitmap?
+        profileImage: Bitmap
     ): User
 
     suspend fun deleteUser()

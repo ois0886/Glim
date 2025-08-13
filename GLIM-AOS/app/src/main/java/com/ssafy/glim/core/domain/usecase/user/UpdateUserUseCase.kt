@@ -13,13 +13,13 @@ class UpdateUserUseCase @Inject constructor(
         nickname: String,
         gender: String,
         birthDate: List<Int>,
-        profileUrl: Bitmap?
+        profileImage: Bitmap
     ) = repository.updateUser(
         memberId = memberId,
         password = password,
         nickname = nickname,
         gender = gender,
         birthDate = birthDate,
-        profileUrl = profileUrl
+        profileImage = profileImage
     )
 }

@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.update
 
+import android.content.Context
 import android.net.Uri
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
 import com.ssafy.glim.core.domain.usecase.user.UpdateUserUseCase
+import com.ssafy.glim.core.util.DefaultImageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -40,6 +42,7 @@ internal class UpdateViewModel @Inject constructor(
                     email = user.email,
                     gender = user.gender.formatGenderToString(),
                     birthDate = user.birthDate,
+                    profileImageUri = user.profileUrl,
                     newName = TextFieldValue(user.nickname)
                 )
             }
@@ -62,7 +65,7 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     fun onImageSelected(uri: Uri) = intent {
-        reduce { state.copy(profileImageUri = uri, isImageSelected = true) }
+        reduce { state.copy(profileImageUri = uri.toString(), isImageSelected = true) }
     }
 
     fun onNameChanged(name: TextFieldValue) = intent {
@@ -158,14 +161,14 @@ internal class UpdateViewModel @Inject constructor(
         reduce { state.copy(confirmPassword = confirmPassword, confirmPasswordError = error) }
     }
 
-    fun onSaveClicked() = intent {
+    fun onSaveClicked(context: Context) = intent {
         when (state.updateType) {
-            UpdateType.PERSONAL -> updatePersonalInfo()
-            UpdateType.PASSWORD -> updatePassword()
+            UpdateType.PERSONAL -> updatePersonalInfo(context)
+            UpdateType.PASSWORD -> updatePassword(context)
         }
     }
 
-    private fun updatePersonalInfo() = intent {
+    private fun updatePersonalInfo(context: Context) = intent {
         val nameValidation = ValidationUtils.validateName(
             name = state.newName.text,
             emptyErrorRes = R.string.error_name_empty,
@@ -186,6 +189,17 @@ internal class UpdateViewModel @Inject constructor(
 
         reduce { state.copy(isLoading = true) }
 
+        val profileBitmap = if (state.isImageSelected) {
+            val imageUri = state.profileImageUri
+            if (imageUri != null) {
+                DefaultImageUtils.uriToBitmap(context, imageUri)
+            } else {
+                null
+            }
+        } else {
+            null
+        }
+
         runCatching {
             updateUserUseCase(
                 memberId = state.userId,
@@ -193,14 +207,16 @@ internal class UpdateViewModel @Inject constructor(
                 nickname = state.newName.text,
                 gender = state.gender.formatGender(),
                 birthDate = state.birthDate.formatBirthDate(),
-                profileUrl = null
+                profileImage = profileBitmap
             )
         }.onSuccess { updatedUser ->
             reduce {
                 state.copy(
                     isLoading = false,
                     name = updatedUser.nickname,
-                    newName = TextFieldValue(updatedUser.nickname)
+                    profileImageUri = updatedUser.profileUrl,
+                    newName = TextFieldValue(updatedUser.nickname),
+                    isImageSelected = false
                 )
             }
             postSideEffect(UpdateInfoSideEffect.ProfileUpdated)
@@ -210,7 +226,7 @@ internal class UpdateViewModel @Inject constructor(
         }
     }
 
-    private fun updatePassword() = intent {
+    private fun updatePassword(context: Context) = intent {
         val currentPasswordValidation = ValidationUtils.validatePassword(
             password = state.password.text,
             emptyErrorRes = R.string.error_current_password_empty,
@@ -260,6 +276,13 @@ internal class UpdateViewModel @Inject constructor(
 
         reduce { state.copy(isLoading = true) }
 
+        val profileBitmap = if (state.isImageSelected) {
+            val imageUri = state.profileImageUri
+
+            DefaultImageUtils.uriToBitmap(context, imageUri)
+        }
+
+
         runCatching {
             updateUserUseCase(
                 memberId = state.userId,
@@ -267,7 +290,7 @@ internal class UpdateViewModel @Inject constructor(
                 nickname = state.name,
                 gender = state.gender.formatGender(),
                 birthDate = state.birthDate.formatBirthDate(),
-                profileUrl = null
+                profileImage = profileBitmap
             )
         }.onSuccess { updatedUser ->
             reduce {
@@ -278,7 +301,9 @@ internal class UpdateViewModel @Inject constructor(
                     confirmPassword = TextFieldValue(""),
                     currentPasswordError = null,
                     newPasswordError = null,
-                    confirmPasswordError = null
+                    confirmPasswordError = null,
+                    profileImageUri = updatedUser.profileUrl,
+                    isImageSelected = false
                 )
             }
             postSideEffect(UpdateInfoSideEffect.PasswordUpdated)

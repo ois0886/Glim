@@ -11,7 +11,7 @@ data class UpdateInfoUiState(
     val gender: String = "",
     val birthDate: String = "",
     val newName: TextFieldValue = TextFieldValue(""),
-    val profileImageUri: Uri? = null,
+    val profileImageUri: String? = null,
     val password: TextFieldValue = TextFieldValue(""),
     val newPassword: TextFieldValue = TextFieldValue(""),
     val confirmPassword: TextFieldValue = TextFieldValue(""),

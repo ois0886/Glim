@@ -9,6 +9,8 @@ import com.ssafy.glim.core.data.datastore.DeviceDataStore
 import com.ssafy.glim.core.data.dto.request.DeleteUserRequest
 import com.ssafy.glim.core.data.dto.request.LogOutRequest
 import com.ssafy.glim.core.data.dto.request.UpdateUserRequest
+import com.ssafy.glim.core.data.extensions.toImagePart
+import com.ssafy.glim.core.data.extensions.toJsonRequestBody
 import com.ssafy.glim.core.data.mapper.toDomain
 import com.ssafy.glim.core.domain.model.user.User
 import com.ssafy.glim.core.domain.repository.UserRepository
@@ -33,7 +35,7 @@ class UserRepositoryImpl @Inject constructor(
         nickname: String,
         gender: String,
         birthDate: List<Int>,
-        profileUrl: Bitmap?
+        profileImage: Bitmap
     ): User {
         val request = UpdateUserRequest(
             password = password,
@@ -41,7 +43,16 @@ class UserRepositoryImpl @Inject constructor(
             gender = gender,
             birthDate = birthDate,
         )
-        return authDataSource.updateUser(memberId, request).toDomain()
+
+        val jsonRequestBody = request.toJsonRequestBody()
+
+        val profileImagePart = profileImage.toImagePart(
+            partName = "profileImage",
+            fileName = "profile_${System.currentTimeMillis()}.jpg",
+            quality = 85
+        ) ?: throw IllegalStateException("프로필 이미지 변환에 실패했습니다")
+
+        return authDataSource.updateUser(memberId, jsonRequestBody, profileImagePart).toDomain()
     }
 
     override suspend fun logout() {

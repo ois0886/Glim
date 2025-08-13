@@ -4,11 +4,15 @@ import com.ssafy.glim.core.data.dto.request.DeleteUserRequest
 import com.ssafy.glim.core.data.dto.request.LogOutRequest
 import com.ssafy.glim.core.data.dto.request.UpdateUserRequest
 import com.ssafy.glim.core.data.dto.response.UserResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface UserApi {
@@ -20,10 +24,12 @@ interface UserApi {
     ): UserResponse
 
     // 사용자 정보 수정
+    @Multipart
     @PUT("api/v1/members/{memberId}")
     suspend fun updateUser(
         @Path("memberId") memberId: Long,
-        @Body request: UpdateUserRequest,
+        @Part request: RequestBody,
+        @Part profileImage: MultipartBody.Part?
     ): UserResponse
 
     // 사용자 정보 삭제 (회원 탈퇴)
