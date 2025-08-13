@@ -8,14 +8,12 @@ class UpdateUserUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(
-        memberId: Long,
         password: String,
         nickname: String,
         gender: String,
-        birthDate: List<Int>,
+        birthDate: String,
         profileImage: Bitmap
     ) = repository.updateUser(
-        memberId = memberId,
         password = password,
         nickname = nickname,
         gender = gender,

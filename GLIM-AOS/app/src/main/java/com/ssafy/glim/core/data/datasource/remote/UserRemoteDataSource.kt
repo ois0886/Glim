@@ -13,8 +13,8 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun getUserById(memberId: String) = service.getUserById(memberId)
 
-    suspend fun updateUser(memberId: Long, request: RequestBody, profileImage: MultipartBody.Part?) =
-        service.updateUser(memberId, request, profileImage)
+    suspend fun updateUser(request: RequestBody, profileImage: MultipartBody.Part?) =
+        service.updateUser(request, profileImage)
 
     suspend fun deleteUser(request: DeleteUserRequest) = service.deleteUser(request)
 

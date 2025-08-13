@@ -30,11 +30,10 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateUser(
-        memberId: Long,
         password: String,
         nickname: String,
         gender: String,
-        birthDate: List<Int>,
+        birthDate: String,
         profileImage: Bitmap
     ): User {
         val request = UpdateUserRequest(
@@ -44,15 +43,19 @@ class UserRepositoryImpl @Inject constructor(
             birthDate = birthDate,
         )
 
-        val jsonRequestBody = request.toJsonRequestBody()
+        Log.d("UserRepository", request.toString())
+        Log.d("UserRepository", profileImage.toString())
 
+        val jsonRequestBody = request.toJsonRequestBody()
+        Log.d("UserRepository", jsonRequestBody.toString())
         val profileImagePart = profileImage.toImagePart(
             partName = "profileImage",
-            fileName = "profile_${System.currentTimeMillis()}.jpg",
+            fileName = "profile.jpg",
             quality = 85
         ) ?: throw IllegalStateException("프로필 이미지 변환에 실패했습니다")
+        Log.d("UserRepository", profileImagePart.body.toString())
 
-        return authDataSource.updateUser(memberId, jsonRequestBody, profileImagePart).toDomain()
+        return authDataSource.updateUser(jsonRequestBody, profileImagePart).toDomain()
     }
 
     override suspend fun logout() {

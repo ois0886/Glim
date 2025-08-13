@@ -25,10 +25,9 @@ interface UserApi {
 
     // 사용자 정보 수정
     @Multipart
-    @PUT("api/v1/members/{memberId}")
+    @PUT("api/v1/members/me")
     suspend fun updateUser(
-        @Path("memberId") memberId: Long,
-        @Part request: RequestBody,
+        @Part("updateRequest") request: RequestBody,
         @Part profileImage: MultipartBody.Part?
     ): UserResponse
 
@@ -39,7 +38,7 @@ interface UserApi {
     ): UserResponse
 
     // 로그아웃
-    @POST("/api/v1/auth/logout")
+    @POST("api/v1/auth/logout")
     suspend fun logout(
         @Body request: LogOutRequest
     )

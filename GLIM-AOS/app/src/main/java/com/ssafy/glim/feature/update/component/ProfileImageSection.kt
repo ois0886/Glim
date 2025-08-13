@@ -26,7 +26,7 @@ import com.ssafy.glim.R
 
 @Composable
 fun ProfileImageSection(
-    imageUri: String?,
+    profileImageUrl: String?,
     onImageClicked: () -> Unit,
 ) {
     Box(
@@ -36,9 +36,8 @@ fun ProfileImageSection(
         contentAlignment = Alignment.Center,
     ) {
         SubcomposeAsyncImage(
-            model =
-            ImageRequest.Builder(LocalContext.current)
-                .data(imageUri)
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(profileImageUrl ?: R.drawable.base_profile)
                 .crossfade(true)
                 .build(),
             contentDescription = stringResource(R.string.content_description_profile_image),
@@ -65,22 +64,34 @@ fun ProfileImageSection(
                 }
             },
             error = {
-                Box(
-                    modifier =
-                    Modifier
+                // 에러 시에도 기본 이미지 표시
+                SubcomposeAsyncImage(
+                    model = R.drawable.base_profile,
+                    contentDescription = stringResource(R.string.content_description_profile_image),
+                    modifier = Modifier
                         .size(80.dp)
-                        .background(
-                            color = Color.Gray.copy(alpha = 0.2f),
-                        ),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = stringResource(R.string.content_description_profile_image),
-                        tint = Color.Gray,
-                        modifier = Modifier.size(48.dp),
-                    )
-                }
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop,
+                    error = {
+                        // 기본 이미지도 로드 실패 시 아이콘 표시
+                        Box(
+                            modifier = Modifier
+                                .size(80.dp)
+                                .background(
+                                    color = Color.Gray.copy(alpha = 0.2f),
+                                    shape = CircleShape,
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = stringResource(R.string.content_description_profile_image),
+                                tint = Color.Gray,
+                                modifier = Modifier.size(48.dp),
+                            )
+                        }
+                    }
+                )
             },
         )
 
