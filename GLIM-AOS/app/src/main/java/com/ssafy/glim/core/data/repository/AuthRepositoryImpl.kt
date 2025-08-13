@@ -4,12 +4,10 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.glim.core.data.authmanager.AuthManager
-import com.ssafy.glim.core.data.authmanager.LogoutReason
 import com.ssafy.glim.core.data.datasource.remote.AuthRemoteDataSource
 import com.ssafy.glim.core.data.datasource.remote.FcmRemoteDataSource
 import com.ssafy.glim.core.data.datastore.DeviceDataStore
 import com.ssafy.glim.core.data.dto.request.FcmRequest
-import com.ssafy.glim.core.data.dto.request.LogOutRequest
 import com.ssafy.glim.core.data.dto.request.LoginRequest
 import com.ssafy.glim.core.data.dto.request.SignUpRequest
 import com.ssafy.glim.core.data.dto.request.VerifyEmailRequest
@@ -18,7 +16,6 @@ import com.ssafy.glim.core.data.extensions.toJsonRequestBody
 import com.ssafy.glim.core.data.mapper.toDomain
 import com.ssafy.glim.core.domain.repository.AuthRepository
 import kotlinx.coroutines.tasks.await
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -33,7 +30,8 @@ class AuthRepositoryImpl @Inject constructor(
         nickname: String,
         password: String,
         gender: String,
-        birthDate: List<Int>
+        birthDate: List<Int>,
+        profileBitmap: Bitmap
     ) {
         val request = SignUpRequest(
             email = email,
@@ -45,7 +43,16 @@ class AuthRepositoryImpl @Inject constructor(
 
         val jsonRequestBody = request.toJsonRequestBody()
 
+        val profileImagePart = profileBitmap.toImagePart(
+            partName = "profileImage",
+            fileName = "profile_${System.currentTimeMillis()}.jpg",
+            quality = 85
+        ) ?: throw IllegalStateException("프로필 이미지 변환에 실패했습니다")
 
+        authDataSource.signUp(
+            request = jsonRequestBody,
+            profileImage = profileImagePart
+        )
     }
 
     override suspend fun login(email: String, password: String) {
@@ -57,7 +64,6 @@ class AuthRepositoryImpl @Inject constructor(
         }.onFailure { exception ->
             Log.d("AuthRepositoryImpl", "login failed: ${exception.message}")
         }.getOrThrow()
-
 
         authManager.saveToken(
             accessToken = response.accessToken,
@@ -85,15 +91,6 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun verifyEmail(email: String) =
         authDataSource.verifyEmail(VerifyEmailRequest(email)).toDomain()
-
-
-    private fun createQuoteMultipartData(
-        bitmap: Bitmap
-    ): MultipartBody.Part? = bitmap.toImagePart(
-        partName = "profileImage",
-        fileName = "profile.jpg",
-        quality = 85
-    )
 
     override suspend fun refreshFcmToken(newToken: String): Result<Unit> = runCatching {
         deviceDataStore.saveFcmToken(newToken)

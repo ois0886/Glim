@@ -57,7 +57,7 @@ internal fun SignUpRoute(
         onNameChanged = viewModel::onNameChanged,
         onBirthChanged = viewModel::onBirthChanged,
         onGenderSelected = viewModel::onGenderSelected,
-        onNextStep = viewModel::onNextStep,
+        onNextStep = { viewModel.onNextStep(context) },
         onBackStep = viewModel::onBackStep,
     )
 }

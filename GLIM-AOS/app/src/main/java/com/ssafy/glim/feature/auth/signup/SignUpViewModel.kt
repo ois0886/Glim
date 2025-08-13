@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.auth.signup
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -160,12 +161,12 @@ internal class SignUpViewModel @Inject constructor(
         reduce { state.copy(gender = gender) }
     }
 
-    fun onNextStep() = intent {
+    fun onNextStep(context: Context) = intent {
         when (state.currentStep) {
             SignUpStep.Email -> sendVerificationCode()
             SignUpStep.Code -> validateCodeStep()
             SignUpStep.Password -> validatePasswordStep()
-            SignUpStep.Profile -> validateProfileStep()
+            SignUpStep.Profile -> validateProfileStep(context)
         }
     }
 
@@ -269,7 +270,7 @@ internal class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun validateProfileStep() = intent {
+    private fun validateProfileStep(context: Context) = intent {
         val nameValidation = ValidationUtils.validateName(
             name = state.name.text,
             emptyErrorRes = R.string.error_name_empty,
@@ -306,7 +307,7 @@ internal class SignUpViewModel @Inject constructor(
             val firstError = nameError ?: birthDateError ?: genderError!!
             postSideEffect(SignUpSideEffect.ShowToast(firstError))
         } else {
-            performSignUp()
+            performSignUp(context)
         }
     }
 
@@ -322,7 +323,8 @@ internal class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun performSignUp() = intent {
+    // Context를 SideEffect로 요청
+    private fun performSignUp(context: Context) = intent {
         val formattedBirthDate = state.birthDate.formatBirthDate()
         val genderData = checkNotNull(state.gender) { "Data must not be null at this point" }
         val formattedGender = genderData.formatGender()
@@ -331,6 +333,7 @@ internal class SignUpViewModel @Inject constructor(
 
         runCatching {
             signUpUseCase(
+                context = context,
                 email = state.email.text,
                 nickname = state.name.text,
                 password = state.password.text,

@@ -61,6 +61,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun deleteUser() {
         val deviceId = deviceDataStore.getDeviceId()
+
         runCatching {
             authDataSource.deleteUser(request = DeleteUserRequest(deviceId)).toDomain()
         }.onSuccess {
