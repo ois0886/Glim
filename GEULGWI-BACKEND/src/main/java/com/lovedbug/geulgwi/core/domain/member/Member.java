@@ -1,7 +1,9 @@
 package com.lovedbug.geulgwi.core.domain.member;
 
 import com.lovedbug.geulgwi.core.common.entity.BaseTimeEntity;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberErrorCode;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
+import com.lovedbug.geulgwi.core.domain.member.exception.MemberException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -176,7 +178,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private void validateNickname(String newNickname, MemberRepository memberRepository) {
         if (memberRepository.existsByNickname(newNickname)) {
-            throw new IllegalArgumentException("이미 사용 중인 닉네임 입니다. nickname = " + newNickname);
+            throw new MemberException(MemberErrorCode.NICKNAME_DUPLICATE, "nickname = " + newNickname);
         }
     }
 

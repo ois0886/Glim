@@ -9,6 +9,7 @@ import com.lovedbug.geulgwi.core.domain.member.dto.request.SignUpRequest;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
 import com.lovedbug.geulgwi.core.security.JwtUtil;
 import com.lovedbug.geulgwi.external.email.EmailSender;
+import com.lovedbug.geulgwi.external.fcm.dto.request.FcmTokenInActiveRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -151,22 +152,31 @@ public class MemberApiDocsTest extends RestDocsTestSupport{
 
     @DisplayName("회원을_삭제한다(논리삭제)")
     @Test
-    void soft_delete_member() {
+    void soft_delete_member() throws Exception {
 
-        Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
-        Member savedMember = memberRepository.save(testMember);
+        Member member = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
+        Member savedMember = memberRepository.save(member);
         String accessToken = jwtUtil.generateAccessToken(savedMember.getEmail(), savedMember.getMemberId());
+
+        FcmTokenInActiveRequestDto fcmTokenInActiveRequest = FcmTokenInActiveRequestDto.builder()
+            .deviceId("test_device-id")
+            .build();
 
         given(this.spec)
             .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(objectMapper.writeValueAsBytes(fcmTokenInActiveRequest))
             .filter(document("{class_name}/{method_name}",
-                pathParameters(
-                    parameterWithName("memberId").description("삭제할 회원의 ID")
+                requestHeaders(
+                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 엑세스 토큰")
+                ),
+                requestFields(
+                    fieldWithPath("deviceId").description("디바이스 식별자")
                 ),
                 responseFields(softDeleteResponseFields())
             ))
             .when()
-            .patch("/api/v1/members/{memberId}/status", savedMember.getMemberId())
+            .patch("/api/v1/members/me/status")
             .then().log().all()
             .statusCode(200);
     }

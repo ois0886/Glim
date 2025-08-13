@@ -6,7 +6,7 @@ import com.lovedbug.geulgwi.core.domain.member.dto.response.SignUpResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
 import com.lovedbug.geulgwi.core.security.annotation.CurrentUser;
 import com.lovedbug.geulgwi.core.security.dto.AuthenticatedUser;
-import com.lovedbug.geulgwi.external.fcm.dto.request.FcmTokenRequestDto;
+import com.lovedbug.geulgwi.external.fcm.dto.request.FcmTokenInActiveRequestDto;
 import com.lovedbug.geulgwi.external.fcm.service.FcmTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -57,9 +57,9 @@ public class MemberController {
     @PatchMapping("/me/status")
     public ResponseEntity<MemberResponse> deleteMember(
         @CurrentUser AuthenticatedUser user,
-        @RequestBody FcmTokenRequestDto fcmTokenRequestDto){
+        @RequestBody FcmTokenInActiveRequestDto fcmTokenInActiveRequest){
 
-        fcmTokenService.inActivateToken(user.getMemberId(), fcmTokenRequestDto.getDeviceId());
+        fcmTokenService.inActivateToken(user.getMemberId(), fcmTokenInActiveRequest.getDeviceId());
 
         return ResponseEntity.ok(memberService.softDeleteMember(user.getMemberId()));
     }

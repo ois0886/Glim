@@ -1,21 +1,20 @@
 package com.lovedbug.geulgwi.core.domain.member;
 
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberErrorCode;
 import com.lovedbug.geulgwi.core.domain.member.dto.response.MemberResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.SignUpRequest;
 import com.lovedbug.geulgwi.core.domain.member.dto.response.SignUpResponse;
 import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
+import com.lovedbug.geulgwi.core.domain.member.exception.MemberException;
 import com.lovedbug.geulgwi.core.domain.member.mapper.MemberMapper;
 import com.lovedbug.geulgwi.external.email.EmailSender;
 import com.lovedbug.geulgwi.external.image.ImageMetaData;
 import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
 import lombok.RequiredArgsConstructor;
-import java.util.NoSuchElementException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
 
 
@@ -32,11 +31,11 @@ public class MemberService {
     public SignUpResponse registerMember(SignUpRequest signUpRequest, MultipartFile profileImage){
 
         if (memberRepository.existsByEmail(signUpRequest.getEmail())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 가입된 이메일 입니다.");
+            throw new MemberException(MemberErrorCode.EMAIL_DUPLICATE, "email = " + signUpRequest.getEmail());
         }
 
         if (memberRepository.existsByNickname(signUpRequest.getNickname())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용 중인 닉네임입니다.");
+            throw new MemberException(MemberErrorCode.NICKNAME_DUPLICATE, "nickname = " + signUpRequest.getNickname());
         }
 
         String profileUrl = savedProfileUrl(profileImage);
@@ -67,25 +66,19 @@ public class MemberService {
             return null;
         }
 
-        ImageMetaData imageMetaData = imageHandler.saveImage(profileImage);
+        try{
+            ImageMetaData imageMetaData = imageHandler.saveImage(profileImage);
+            return imageMetaData.imageName();
+        } catch (Exception e) {
+            throw new MemberException(MemberErrorCode.PROFILE_IMAGE_SAVE_FAILED, e.getMessage());
+        }
 
-        return imageMetaData.imageName();
     }
 
     public MemberResponse findByMemberId(Long memberId){
 
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new NoSuchElementException(
-                    "회원이 존재 하지 않습니다. memberId = " + memberId));
-
-        return MemberMapper.toMemberDto(member);
-    }
-
-    public MemberResponse findByMemberEmail(String email){
-
-        Member member =  memberRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException(
-                        "회원이 존재 하지 않습니다. email = " + email));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND, "memberId = " + memberId));
 
         return MemberMapper.toMemberDto(member);
     }
@@ -94,8 +87,7 @@ public class MemberService {
     public MemberResponse updateMember(Long memberId, UpdateRequest updateRequest){
 
         Member existingMember = memberRepository.findById(memberId)
-            .orElseThrow(() -> new NoSuchElementException(
-                "수정할 회원이 존재 하지 않습니다, memberId = " + memberId));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND, "memberId = " + memberId));
 
         existingMember.updateFromRequest(updateRequest, memberRepository, passwordEncoder);
 
@@ -106,8 +98,7 @@ public class MemberService {
     public MemberResponse updateMember(Long memberId, UpdateRequest updateRequest, MultipartFile profileImage){
 
         Member existingMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException(
-                        "수정할 회원이 존재 하지 않습니다, memberId = " + memberId));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND, "memberId = " + memberId));
 
         String profileUrl = savedProfileUrl(profileImage);
 
@@ -121,8 +112,7 @@ public class MemberService {
     public MemberResponse softDeleteMember(Long memberId){
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException(
-                        "회원이 존재 하지 않습니다."));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND, "memberId = " + memberId));
 
         member.changeStatus(MemberStatus.INACTIVE);
         return MemberMapper.toMemberDto(member);

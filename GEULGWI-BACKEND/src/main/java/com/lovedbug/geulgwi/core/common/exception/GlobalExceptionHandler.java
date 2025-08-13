@@ -35,6 +35,7 @@ public class GlobalExceptionHandler {
         MissingServletRequestPartException.class
     })
     public ResponseEntity<GeulgwiErrorResponse> handleBadRequest(Exception e) {
+
         log.warn("Bad request: {}", e.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

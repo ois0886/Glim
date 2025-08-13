@@ -1,5 +1,7 @@
 package com.lovedbug.geulgwi.external.fcm.service;
 
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberErrorCode;
+import com.lovedbug.geulgwi.core.domain.member.exception.MemberException;
 import com.lovedbug.geulgwi.external.fcm.constant.SaveResult;
 import com.lovedbug.geulgwi.external.fcm.dto.request.FcmTokenRequestDto;
 import com.lovedbug.geulgwi.external.fcm.entity.FcmTokens;
@@ -22,7 +24,7 @@ public class FcmTokenService {
     public SaveResult saveFcmToken(AuthenticatedUser user, FcmTokenRequestDto fcmTokenRequest) {
 
         Member member = memberRepository.findById(user.getMemberId())
-            .orElseThrow(() -> new IllegalStateException("회원이 존재하지 않습니다."));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND, "memberId = " + user.getMemberId()));
 
         return fcmTokenRepository.findByMemberAndDeviceId(member, fcmTokenRequest.getDeviceId())
             .map(saved -> {
@@ -60,7 +62,7 @@ public class FcmTokenService {
     public void inActivateToken(Long memberId, String deviceId) {
 
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new IllegalArgumentException("존재해자 않는 사용자입니다"));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND, "memberId = " + memberId));
 
         fcmTokenRepository.findByMemberAndDeviceId(member, deviceId)
             .ifPresent(
