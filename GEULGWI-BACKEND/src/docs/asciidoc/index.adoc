@@ -239,7 +239,7 @@ include::{snippets}/member_api_docs_test/update_member/response-fields.adoc[]
 
 include::{snippets}/member_api_docs_test/soft_delete_member/http-request.adoc[]
 
-include::{snippets}/member_api_docs_test/soft_delete_member/path-parameters.adoc[]
+include::{snippets}/member_api_docs_test/soft_delete_member/request-fields.adoc[]
 
 ==== 응답
 
