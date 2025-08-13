@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -75,12 +77,12 @@ internal fun LoginScreen(
     navigateToSignUp: () -> Unit
 ) {
     Column(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(padding)
             .imePadding()
             .navigationBarsPadding()
+            .verticalScroll(rememberScrollState()) // 스크롤 추가
     ) {
         CenterAlignedTopAppBar(
             title = {
@@ -93,16 +95,16 @@ internal fun LoginScreen(
                     ),
                 )
             },
-            colors =
-            TopAppBarDefaults.centerAlignedTopAppBarColors(
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = Color.Transparent,
             ),
         )
+
         Spacer(Modifier.height(20.dp))
+
         Column(
-            modifier =
-            Modifier
-                .fillMaxSize()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -132,8 +134,7 @@ internal fun LoginScreen(
             Spacer(Modifier.height(24.dp))
 
             GlimButton(
-                text =
-                if (state.isLoading) {
+                text = if (state.isLoading) {
                     stringResource(R.string.login_loading)
                 } else {
                     stringResource(R.string.login_button)
@@ -145,10 +146,11 @@ internal fun LoginScreen(
             Spacer(Modifier.height(12.dp))
 
             TextButton(onClick = navigateToSignUp) {
-                    Text(stringResource(id = R.string.login_signup), color = Color.Black)
-                }
+                Text(stringResource(id = R.string.login_signup), color = Color.Black)
+            }
 
-            Spacer(Modifier.height(24.dp))
+            // 키보드가 올라올 때를 위한 추가 여백
+            Spacer(Modifier.height(80.dp))
         }
     }
 }
@@ -170,8 +172,7 @@ fun PreviewLoginScreen_Empty() {
 @Composable
 fun PreviewLoginScreen_Errors() {
     LoginScreen(
-        state =
-        LoginUiState(
+        state = LoginUiState(
             email = TextFieldValue("invalid-email"),
             password = TextFieldValue("short"),
             emailError = R.string.error_email_invalid,
@@ -189,8 +190,7 @@ fun PreviewLoginScreen_Errors() {
 @Composable
 fun PreviewLoginScreen_Valid() {
     LoginScreen(
-        state =
-        LoginUiState(
+        state = LoginUiState(
             email = TextFieldValue("user@example.com"),
             password = TextFieldValue("Aa1!abcd"),
         ),
@@ -206,8 +206,7 @@ fun PreviewLoginScreen_Valid() {
 @Composable
 fun PreviewLoginScreen_Loading() {
     LoginScreen(
-        state =
-        LoginUiState(
+        state = LoginUiState(
             email = TextFieldValue("user@example.com"),
             password = TextFieldValue("Aa1!abcd"),
             isLoading = true,

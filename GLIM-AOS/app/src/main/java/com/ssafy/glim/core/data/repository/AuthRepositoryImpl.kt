@@ -45,7 +45,7 @@ class AuthRepositoryImpl @Inject constructor(
 
         val profileImagePart = profileBitmap.toImagePart(
             partName = "profileImage",
-            fileName = "profile_${System.currentTimeMillis()}.jpg",
+            fileName = "profile.jpg",
             quality = 85
         ) ?: throw IllegalStateException("프로필 이미지 변환에 실패했습니다")
 
