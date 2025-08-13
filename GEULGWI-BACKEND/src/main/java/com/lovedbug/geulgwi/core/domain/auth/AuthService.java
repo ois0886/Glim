@@ -4,7 +4,9 @@ import com.lovedbug.geulgwi.core.domain.auth.dto.request.LoginRequest;
 import com.lovedbug.geulgwi.core.domain.auth.dto.response.JwtResponse;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberErrorCode;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
+import com.lovedbug.geulgwi.core.domain.member.exception.MemberException;
 import com.lovedbug.geulgwi.core.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +28,14 @@ public class AuthService {
     public JwtResponse login(LoginRequest loginRequest){
         try{
             Member member = memberRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "존재하지 않는 사용자입니다"));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
             if (!passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "패스워드가 올바르지 않습니다.");
             }
 
             if (member.getStatus() != MemberStatus.ACTIVE) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비활성화된 사용자입니다.");
+                throw new MemberException(MemberErrorCode.MEMBER_INACTIVE, "memberId = " + member.getMemberId());
             }
 
             String accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getMemberId());
@@ -57,7 +59,7 @@ public class AuthService {
         String email = jwtUtil.extractEmail(refreshToken);
 
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "존재하지 않는 사용자입니다."));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         String newAccessToken = jwtUtil.generateAccessToken(email, member.getMemberId());
         String newRefreshToken =  jwtUtil.generateRefreshToken(email, member.getMemberId());
