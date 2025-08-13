@@ -301,4 +301,5 @@
     <string name="edit_profile_message">어떤 정보를 수정하시겠습니까?</string>
     <string name="change_personal_info">개인정보 변경하기</string>
     <string name="change_password">비밀번호 변경하기</string>
+    <string name="error_terms_required">필수 약관을 확인해주세요</string>
 </resources>

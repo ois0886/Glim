@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +30,7 @@ import com.ssafy.glim.feature.auth.signup.component.EmailAuthInputContent
 import com.ssafy.glim.feature.auth.signup.component.EmailVerificationCodeInputContent
 import com.ssafy.glim.feature.auth.signup.component.PasswordConfirmInputContent
 import com.ssafy.glim.feature.auth.signup.component.ProgressIndicatorBar
+import com.ssafy.glim.feature.auth.signup.component.TermsConsentContent
 import com.ssafy.glim.feature.auth.signup.component.UserProfileInputContent
 import com.ssafy.glim.feature.main.excludeSystemBars
 import org.orbitmvi.orbit.compose.collectAsState
@@ -59,6 +64,12 @@ internal fun SignUpRoute(
         onGenderSelected = viewModel::onGenderSelected,
         onNextStep = viewModel::onNextStep,
         onBackStep = viewModel::onBackStep,
+        onToggleAll = viewModel::onToggleAll,
+        onToggleTerms = viewModel::onToggleTerms,
+        onTogglePrivacy = viewModel::onTogglePrivacy,
+        onToggleMarketing = viewModel::onToggleMarketing,
+        onOpenTerms = { viewModel.onOpenTerms(context) },
+        onOpenPrivacy = { viewModel.onOpenPrivacy(context) },
     )
 }
 
@@ -75,11 +86,16 @@ private fun SignUpScreen(
     onGenderSelected: (String) -> Unit,
     onNextStep: () -> Unit,
     onBackStep: () -> Unit,
+    onToggleAll: (Boolean) -> Unit = {},
+    onToggleTerms: (Boolean) -> Unit = {},
+    onTogglePrivacy: (Boolean) -> Unit = {},
+    onToggleMarketing: (Boolean) -> Unit = {},
+    onOpenTerms: () -> Unit = {},
+    onOpenPrivacy: () -> Unit = {},
 ) {
     BackHandler(enabled = state.currentStep != SignUpStep.Email) {
         onBackStep()
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,7 +109,6 @@ private fun SignUpScreen(
             onBack = onBackStep,
             alignment = TitleAlignment.Center
         )
-
         ProgressIndicatorBar(progress = state.currentStep.progress)
 
         Column(
@@ -103,6 +118,20 @@ private fun SignUpScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (state.currentStep) {
+                SignUpStep.Terms ->
+                    TermsConsentContent(
+                        termsChecked = state.termsAgree,
+                        privacyChecked = state.privacyAgree,
+                        marketingChecked = state.marketingAgree,
+                        allChecked = state.allAgree,
+                        onToggleTerms = onToggleTerms,
+                        onTogglePrivacy = onTogglePrivacy,
+                        onToggleMarketing = onToggleMarketing,
+                        onToggleAll = onToggleAll,
+                        onOpenTerms = onOpenTerms,
+                        onOpenPrivacy = onOpenPrivacy
+                    )
+
                 SignUpStep.Email ->
                     EmailAuthInputContent(
                         value = state.email,
@@ -145,6 +174,7 @@ private fun SignUpScreen(
 
             GlimButton(
                 text = when (state.currentStep) {
+                    SignUpStep.Terms -> "동의하고 시작하기"
                     SignUpStep.Email -> stringResource(R.string.signup_send_verification_code)
                     SignUpStep.Code -> stringResource(R.string.signup_verify_code)
                     SignUpStep.Password -> stringResource(R.string.password_confirm)
