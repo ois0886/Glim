@@ -1,10 +1,11 @@
 package com.ssafy.glim.core.navigation.internal.viewmodel
 
+import androidx.navigation3.runtime.NavKey
 import com.ssafy.glim.core.navigation.Route
 
 sealed interface RouteSideEffect {
     data class Navigate(
-        val route: Route,
+        val route: NavKey,
         val saveState: Boolean,
         val launchSingleTop: Boolean
     ) : RouteSideEffect
@@ -12,6 +13,6 @@ sealed interface RouteSideEffect {
     data object NavigateBack : RouteSideEffect
 
     data class NavigateAndClearBackStack(
-        val route: Route
+        val route: NavKey
     ) : RouteSideEffect
 }

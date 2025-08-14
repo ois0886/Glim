@@ -82,7 +82,6 @@ private fun MyGlimsScreen(
             .fillMaxSize()
             .padding(padding.excludeSystemBars())
             .imePadding()
-            .navigationBarsPadding()
     ) {
         GlimTopBar(
             title = listType.displayName,

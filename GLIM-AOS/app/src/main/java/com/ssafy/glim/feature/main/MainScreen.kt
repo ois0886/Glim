@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
@@ -27,6 +28,7 @@ import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.navigation.UpdateInfoRoute
 import com.ssafy.glim.feature.auth.login.LoginRoute
+import com.ssafy.glim.feature.auth.signup.SignUpRoute
 import com.ssafy.glim.feature.bookdetail.BookDetailScreen
 import com.ssafy.glim.feature.celebrations.CelebrationsRoute
 import com.ssafy.glim.feature.home.HomeRoute
@@ -48,7 +50,7 @@ internal fun MainScreen(
 ) {
     // 현재 라우트와 탭 계산
     val currentRoute = backStack.lastOrNull()
-    val currentTab = when(currentRoute) {
+    val currentTab = when (currentRoute) {
         is BottomTabRoute.Home -> MainTab.HOME
         is BottomTabRoute.Post -> MainTab.POST
         is BottomTabRoute.Search -> MainTab.LIBRARY
@@ -59,7 +61,10 @@ internal fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            if (currentRoute !is BottomTabRoute.Post && currentRoute !is Route.BookDetail) {
+            if (
+                currentRoute !is BottomTabRoute.Post &&
+                currentRoute !is Route
+            ) {
                 MainBottomBar(
                     tabs = MainTab.entries.toImmutableList(),
                     currentTab = currentTab,
@@ -74,8 +79,7 @@ internal fun MainScreen(
                 // Add the default decorators for managing scenes and saving state
                 rememberSceneSetupNavEntryDecorator(),
                 rememberSavedStateNavEntryDecorator(),
-                // Then add the view model store decorator
-//                            rememberViewModelStoreNavEntryDecorator()
+                rememberViewModelStoreNavEntryDecorator()
             ),
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() },
@@ -93,7 +97,7 @@ internal fun MainScreen(
             },
             modifier = Modifier.background(Color.White),
             entryProvider = { key ->
-                when(key) {
+                when (key) {
                     is BottomTabRoute.Home -> NavEntry(key) {
                         HomeRoute(
                             padding = innerPadding,
@@ -141,6 +145,12 @@ internal fun MainScreen(
                     is Route.Login -> NavEntry(key) {
                         LoginRoute(
                             padding = innerPadding,
+                        )
+                    }
+
+                    is Route.SignUp -> NavEntry(key) {
+                        SignUpRoute(
+                            padding = innerPadding
                         )
                     }
 
