@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.auth.signup
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,6 @@ import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.common.utils.toErrorRes
 import com.ssafy.glim.core.domain.usecase.auth.SignUpUseCase
 import com.ssafy.glim.core.domain.usecase.auth.VerifyEmailUseCase
-import com.ssafy.glim.core.domain.usecase.fcm.RegisterTokenUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +24,7 @@ import javax.inject.Inject
 internal class SignUpViewModel @Inject constructor(
     private val navigator: Navigator,
     private val signUpUseCase: SignUpUseCase,
-    private val verifyEmailUseCase: VerifyEmailUseCase,
-    private val registerTokenUseCase: RegisterTokenUseCase
+    private val verifyEmailUseCase: VerifyEmailUseCase
 ) : ViewModel(), ContainerHost<SignUpUiState, SignUpSideEffect> {
 
     override val container = container<SignUpUiState, SignUpSideEffect>(SignUpUiState())
@@ -162,12 +161,12 @@ internal class SignUpViewModel @Inject constructor(
         reduce { state.copy(gender = gender) }
     }
 
-    fun onNextStep() = intent {
+    fun onNextStep(context: Context) = intent {
         when (state.currentStep) {
             SignUpStep.Email -> sendVerificationCode()
             SignUpStep.Code -> validateCodeStep()
             SignUpStep.Password -> validatePasswordStep()
-            SignUpStep.Profile -> validateProfileStep()
+            SignUpStep.Profile -> validateProfileStep(context)
         }
     }
 
@@ -271,7 +270,7 @@ internal class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun validateProfileStep() = intent {
+    private fun validateProfileStep(context: Context) = intent {
         val nameValidation = ValidationUtils.validateName(
             name = state.name.text,
             emptyErrorRes = R.string.error_name_empty,
@@ -308,7 +307,7 @@ internal class SignUpViewModel @Inject constructor(
             val firstError = nameError ?: birthDateError ?: genderError!!
             postSideEffect(SignUpSideEffect.ShowToast(firstError))
         } else {
-            performSignUp()
+            performSignUp(context)
         }
     }
 
@@ -324,7 +323,8 @@ internal class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun performSignUp() = intent {
+    // Context를 SideEffect로 요청
+    private fun performSignUp(context: Context) = intent {
         val formattedBirthDate = state.birthDate.formatBirthDate()
         val genderData = checkNotNull(state.gender) { "Data must not be null at this point" }
         val formattedGender = genderData.formatGender()
@@ -333,23 +333,13 @@ internal class SignUpViewModel @Inject constructor(
 
         runCatching {
             signUpUseCase(
+                context = context,
                 email = state.email.text,
                 nickname = state.name.text,
                 password = state.password.text,
                 gender = formattedGender,
                 birthDate = formattedBirthDate
             )
-        }.onSuccess {
-            registerFcmToken()
-        }.onFailure { exception ->
-            reduce { state.copy(isLoading = false) }
-            postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_failed))
-        }
-    }
-
-    private fun registerFcmToken() = intent {
-        runCatching {
-            registerTokenUseCase()
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
             navigator.navigateAndClearBackStack(Route.Celebration(state.name.text))

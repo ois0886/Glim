@@ -7,5 +7,5 @@ data class UpdateUserRequest(
     val password: String,
     val nickname: String,
     val gender: String,
-    val birthDate: List<Int>,
+    val birthDate: String,
 )

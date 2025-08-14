@@ -12,6 +12,7 @@ import androidx.navigation3.runtime.NavBackStack
 import com.ssafy.glim.core.navigation.internal.viewmodel.NavigatorViewModel
 import com.ssafy.glim.core.navigation.internal.viewmodel.RouteSideEffect
 import kotlinx.coroutines.flow.collectLatest
+
 @Composable
 fun LaunchedNavigator(navBackStack: NavBackStack) {
     InternalLaunchedNavigator(

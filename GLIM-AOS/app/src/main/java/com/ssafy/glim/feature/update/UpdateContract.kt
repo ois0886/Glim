@@ -1,10 +1,10 @@
 package com.ssafy.glim.feature.update
 
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.ui.text.input.TextFieldValue
 
 data class UpdateInfoUiState(
-    val userId: Long = 0L,
     val name: String = "",
     val email: String = "",
     val gender: String = "",

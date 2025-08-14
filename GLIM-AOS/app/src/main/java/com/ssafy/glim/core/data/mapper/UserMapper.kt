@@ -1,5 +1,6 @@
 package com.ssafy.glim.core.data.mapper
 
+import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.core.data.dto.response.UserResponse
 import com.ssafy.glim.core.domain.model.user.Gender
 import com.ssafy.glim.core.domain.model.user.User
@@ -20,4 +21,5 @@ fun UserResponse.toDomain() = User(
         "INACTIVE" -> UserStatus.INACTIVE
         else -> UserStatus.ACTIVE
     },
+    profileUrl = BuildConfig.BASE_URL + "/images/" + profileUrl
 )

@@ -167,8 +167,22 @@ fun String.formatBirthDateToNumber(): String {
     return try {
         val dateOnly = this.substringBefore("T")
         dateOnly.replace("-", "")
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         ""
+    }
+}
+
+/**
+ * YYYYMMDD 형식을 ISO "1999-01-01T00:00:00" 형식으로 변환
+ */
+fun String.formatBirthDateToISO(): String {
+    return if (this.length == 8) {
+        val year = this.substring(0, 4)
+        val month = this.substring(4, 6)
+        val day = this.substring(6, 8)
+        "${year}-${month}-${day}T00:00:00"
+    } else {
+        "1999-01-01T00:00:00"
     }
 }
 

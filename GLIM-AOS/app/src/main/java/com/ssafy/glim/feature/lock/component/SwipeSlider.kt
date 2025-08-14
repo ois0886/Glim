@@ -54,14 +54,11 @@ import androidx.wear.compose.material.swipeable
 import com.ssafy.glim.R
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
 import kotlinx.coroutines.launch
-import kotlin.math.PI
 import kotlin.math.roundToInt
 
 @Composable
 fun BottomSwipeButton(
     modifier: Modifier = Modifier,
-    text: String? = null,
-    isIcon: Boolean = false,
     @DrawableRes paintRes: Int? = 0,
     backgroundColor: Color = Color.Gray.copy(alpha = 0.4f),
     isComplete: Boolean = false,
@@ -138,10 +135,6 @@ fun BottomSwipeButton(
         }
     }
 }
-
-// radian <-> degree 변환
-private fun Float.toRadians() = (this / 180f * PI).toFloat()
-private fun Float.toDegrees() = (this * 180f / PI).toFloat()
 
 // 드래그 방향 지정
 enum class SwipeDirection {

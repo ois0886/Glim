@@ -46,8 +46,7 @@ fun EditProfileDialogContainer(
             title = {
                 Text(
                     text = stringResource(R.string.profile_edit_title),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -150,8 +149,9 @@ fun LogoutConfirmationDialog(
         title = {
             Text(
                 text = stringResource(R.string.logout_title),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
         },
         text = {
@@ -199,8 +199,9 @@ fun LogoutProcessingDialog() {
         title = {
             Text(
                 text = stringResource(R.string.logout_processing_title),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
         },
         text = {
@@ -258,8 +259,9 @@ fun WithdrawalWarningDialog(
         title = {
             Text(
                 text = stringResource(R.string.withdrawal_title),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
         },
         text = {
@@ -324,8 +326,9 @@ fun WithdrawalConfirmationDialog(
         title = {
             Text(
                 text = stringResource(R.string.withdrawal_confirmation_title),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
         },
         text = {
@@ -412,8 +415,9 @@ fun WithdrawalProcessingDialog() {
         title = {
             Text(
                 text = stringResource(R.string.withdrawal_processing_title),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
         },
         text = {

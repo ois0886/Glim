@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,11 +31,9 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.common.utils.rememberCameraWithPermission
 import com.ssafy.glim.core.ui.DarkThemeScreen
-import com.ssafy.glim.core.ui.GifDisplay
 import com.ssafy.glim.core.util.toCacheImageUri
 import com.ssafy.glim.feature.post.component.PostContent
 import com.ssafy.glim.feature.post.component.imageoverlay.TextExtractionImageOverlay
-import com.ssafy.glim.ui.theme.GlimColor
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 

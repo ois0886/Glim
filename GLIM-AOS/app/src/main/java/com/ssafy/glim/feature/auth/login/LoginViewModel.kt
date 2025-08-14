@@ -7,7 +7,6 @@ import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.domain.usecase.auth.LoginUseCase
-import com.ssafy.glim.core.domain.usecase.fcm.RegisterTokenUseCase
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
@@ -19,8 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class LoginViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val loginUseCase: LoginUseCase,
-    private val registerTokenUseCase: RegisterTokenUseCase
+    private val loginUseCase: LoginUseCase
 ) : ViewModel(), ContainerHost<LoginUiState, LoginSideEffect> {
     override val container = container<LoginUiState, LoginSideEffect>(initialState = LoginUiState())
 
@@ -100,7 +98,8 @@ internal class LoginViewModel @Inject constructor(
                 password = state.password.text,
             )
         }.onSuccess {
-            registerFcmToken()
+            reduce { state.copy(isLoading = false) }
+            navigateToHome()
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
             Log.d("LoginViewModel", "Manual login failed: ${exception.message}")
@@ -117,23 +116,4 @@ internal class LoginViewModel @Inject constructor(
         intent {
             navigator.navigateAndClearBackStack(BottomTabRoute.Home)
         }
-
-    fun navigateToForgotPassword() =
-        intent {
-            // TODO: 비밀번호 찾기 기능 구현
-            postSideEffect(LoginSideEffect.ShowError(R.string.not_ready_function))
-        }
-
-    private fun registerFcmToken() = intent {
-        runCatching {
-            registerTokenUseCase()
-        }.onSuccess {
-            reduce { state.copy(isLoading = false) }
-            navigateToHome()
-        }.onFailure { exception ->
-            reduce { state.copy(isLoading = false) }
-            Log.d("LoginViewModel", "Manual login failed: ${exception.message}")
-            postSideEffect(LoginSideEffect.ShowError(R.string.login_failed))
-        }
-    }
 }

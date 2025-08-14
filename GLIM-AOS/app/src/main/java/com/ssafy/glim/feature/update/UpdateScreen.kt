@@ -99,7 +99,7 @@ internal fun UpdateRoute(
         onCurrentPasswordChanged = viewModel::onCurrentPasswordChanged,
         onNewPasswordChanged = viewModel::onNewPasswordChanged,
         onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
-        onSaveClicked = viewModel::onSaveClicked,
+        onSaveClicked = { viewModel.onSaveClicked(context) },
         onBackClick = { popBackStack() },
     )
 }

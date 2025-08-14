@@ -224,10 +224,11 @@ fun ActionButton(
     minClickIntervalMillis: Long = 0L
 ) {
     val actualOnClick =
-        if (minClickIntervalMillis > 0L)
+        if (minClickIntervalMillis > 0L) {
             rememberThrottledClick(onClick, minClickIntervalMillis)
-        else
+        } else {
             onClick
+        }
 
     IconButton(
         onClick = actualOnClick,

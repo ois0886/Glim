@@ -3,7 +3,6 @@ package com.ssafy.glim.core.data.di
 import com.ssafy.glim.core.data.repository.AuthRepositoryImpl
 import com.ssafy.glim.core.data.repository.BookRepositoryImpl
 import com.ssafy.glim.core.data.repository.CurationRepositoryImpl
-import com.ssafy.glim.core.data.repository.FcmRepositoryImpl
 import com.ssafy.glim.core.data.repository.ImageRepositoryImpl
 import com.ssafy.glim.core.data.repository.QuoteRepositoryImpl
 import com.ssafy.glim.core.data.repository.SearchQueryRepositoryImpl
@@ -12,7 +11,6 @@ import com.ssafy.glim.core.data.repository.UserRepositoryImpl
 import com.ssafy.glim.core.domain.repository.AuthRepository
 import com.ssafy.glim.core.domain.repository.BookRepository
 import com.ssafy.glim.core.domain.repository.CurationRepository
-import com.ssafy.glim.core.domain.repository.FcmRepository
 import com.ssafy.glim.core.domain.repository.ImageRepository
 import com.ssafy.glim.core.domain.repository.QuoteRepository
 import com.ssafy.glim.core.domain.repository.SearchQueryRepository
@@ -59,8 +57,4 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindImageRepository(imageRepositoryImpl: ImageRepositoryImpl): ImageRepository
-
-    @Binds
-    @Singleton
-    fun bindFcmRepository(fcmRepositoryImpl: FcmRepositoryImpl): FcmRepository
 }

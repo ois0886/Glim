@@ -25,7 +25,7 @@ import com.ssafy.glim.feature.search.SearchRoute
 @Composable
 fun PostUI(
     state: PostState,
-    onImageGenerateClick : () -> Unit,
+    onImageGenerateClick: () -> Unit,
     startCameraAction: (CameraType) -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageClick: () -> Unit,

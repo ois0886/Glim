@@ -218,7 +218,7 @@ class ScreenCaptureManager @Inject constructor(
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             }
             true
-        } ?: false
+        } == true
     }
 
     /**
