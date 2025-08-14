@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "817552678081",
+    "project_id": "glim-4e05d",
+    "storage_bucket": "glim-4e05d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817552678081:android:08d53482bba4f37bcd8840",
+        "android_client_info": {
+          "package_name": "com.ssafy.glim"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcREeBvpxT9wCOeyz0HDOly9npDE81KNo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

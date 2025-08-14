@@ -5,10 +5,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ssafy.glim.app.searchHistoryDataStore
+import com.ssafy.glim.core.data.api.AuthApi
 import com.ssafy.glim.core.data.authmanager.AuthDataStore
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.data.authmanager.TokenAuthenticator
-import com.ssafy.glim.core.data.service.AuthService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,6 +53,6 @@ object AuthModule {
     @Singleton
     fun provideAuthenticator(
         authManager: AuthManager,
-        authService: AuthService
-    ): Authenticator = TokenAuthenticator(authManager, authService)
+        authApi: AuthApi
+    ): Authenticator = TokenAuthenticator(authManager, authApi)
 }

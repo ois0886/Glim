@@ -16,5 +16,9 @@ val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(
     name = "settings",
 )
 
+val Context.deviceDataStore: DataStore<Preferences> by preferencesDataStore(
+    name = "device",
+)
+
 @HiltAndroidApp
 class GlimApplication : Application()

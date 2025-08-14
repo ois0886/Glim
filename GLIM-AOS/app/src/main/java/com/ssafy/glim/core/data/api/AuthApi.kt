@@ -1,4 +1,4 @@
-package com.ssafy.glim.core.data.service
+package com.ssafy.glim.core.data.api
 
 import com.ssafy.glim.core.data.dto.request.LoginRequest
 import com.ssafy.glim.core.data.dto.request.SignUpRequest
@@ -11,7 +11,7 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-interface AuthService {
+interface AuthApi {
 
     // 회원가입
     @POST("api/v1/members")

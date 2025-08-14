@@ -2,7 +2,7 @@ package com.ssafy.glim.core.data.authmanager
 
 import android.util.Log
 import com.ssafy.glim.core.data.dto.token.AuthToken
-import com.ssafy.glim.core.data.service.AuthService
+import com.ssafy.glim.core.data.api.AuthApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class TokenAuthenticator @Inject constructor(
     private val authManager: AuthManager,
-    private val authService: AuthService
+    private val authApi: AuthApi
 ) : Authenticator {
 
     private val retryCount = AtomicInteger(0)
@@ -115,7 +115,7 @@ class TokenAuthenticator @Inject constructor(
     private suspend fun performTokenRefresh(refreshToken: String): RefreshResult {
         return try {
             val authHeader = "Bearer $refreshToken"
-            val response = authService.refreshToken(authHeader)
+            val response = authApi.refreshToken(authHeader)
 
             when {
                 response.isSuccessful -> {

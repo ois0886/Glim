@@ -1,4 +1,4 @@
-package com.ssafy.glim.core.data.service
+package com.ssafy.glim.core.data.api
 
 import com.ssafy.glim.core.data.dto.response.LikedQuoteResponse
 import com.ssafy.glim.core.data.dto.response.QuoteResponse
@@ -16,7 +16,7 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface QuoteService {
+interface QuoteApi {
 
     @GET("api/v1/quotes")
     suspend fun getQuotes(

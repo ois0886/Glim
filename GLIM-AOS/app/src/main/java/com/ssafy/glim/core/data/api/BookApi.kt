@@ -1,4 +1,4 @@
-package com.ssafy.glim.core.data.service
+package com.ssafy.glim.core.data.api
 
 import com.ssafy.glim.core.data.dto.response.BookDetailResponse
 import com.ssafy.glim.core.data.dto.response.BookResponse
@@ -7,7 +7,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface BookService {
+interface BookApi {
 
     @GET("api/v1/books")
     suspend fun getBooks(

@@ -3,8 +3,10 @@ package com.ssafy.glim.core.data.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.ssafy.glim.app.deviceDataStore
 import com.ssafy.glim.app.searchHistoryDataStore
 import com.ssafy.glim.app.settingsDataStore
+import com.ssafy.glim.core.data.datastore.DeviceDataStore
 import com.ssafy.glim.core.data.datastore.SearchQueryDataStore
 import com.ssafy.glim.core.data.datastore.SettingsDataStore
 import dagger.Module
@@ -50,5 +52,22 @@ object DataStoreModule {
         @Named("settings") dataStore: DataStore<Preferences>
     ): SettingsDataStore {
         return SettingsDataStore(dataStore)
+    }
+
+    @Provides
+    @Singleton
+    @Named("device")
+    fun provideDevicePreferencesDataStore(
+        @ApplicationContext context: Context,
+    ): DataStore<Preferences> {
+        return context.deviceDataStore
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeviceDataStore(
+        @Named("device") dataStore: DataStore<Preferences>
+    ): DeviceDataStore {
+        return DeviceDataStore(dataStore)
     }
 }

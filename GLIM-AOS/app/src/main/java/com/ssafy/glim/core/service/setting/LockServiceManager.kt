@@ -1,4 +1,4 @@
-package com.ssafy.glim.core.service
+package com.ssafy.glim.core.service.setting
 
 import android.content.Context
 import android.content.Intent

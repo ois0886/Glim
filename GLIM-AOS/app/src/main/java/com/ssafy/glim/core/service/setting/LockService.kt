@@ -1,4 +1,4 @@
-package com.ssafy.glim.core.service
+package com.ssafy.glim.core.service.setting
 
 import android.app.Notification
 import android.app.NotificationChannel

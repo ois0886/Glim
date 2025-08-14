@@ -1,11 +1,11 @@
 package com.ssafy.glim.core.data.datasource.remote
 
 import com.ssafy.glim.core.data.dto.request.UpdateUserRequest
-import com.ssafy.glim.core.data.service.UserService
+import com.ssafy.glim.core.data.api.UserApi
 import javax.inject.Inject
 
 class UserRemoteDataSource @Inject constructor(
-    private val service: UserService,
+    private val service: UserApi,
 ) {
 
     suspend fun getUserById(memberId: String) = service.getUserById(memberId)
