@@ -43,6 +43,7 @@ lottieCompose = "6.6.6"
 firebase-bom = "34.1.0"
 firebase-messaging = "24.1.0"
 google-services = "4.4.3"
+browser = "1.6.0"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -103,6 +104,7 @@ lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", versio
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

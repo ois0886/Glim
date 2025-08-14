@@ -2,7 +2,9 @@ package com.ssafy.glim.feature.auth.signup
 
 import android.content.Context
 import android.util.Log
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.extensions.extractDigits
@@ -160,9 +162,63 @@ internal class SignUpViewModel @Inject constructor(
     fun onGenderSelected(gender: String) = intent {
         reduce { state.copy(gender = gender) }
     }
+    fun onToggleAll(checked: Boolean) = intent {
+        reduce {
+            state.copy(
+                allAgree = checked,
+                termsAgree = checked,
+                privacyAgree = checked,
+                marketingAgree = checked
+            )
+        }
+    }
+
+    fun onToggleTerms(checked: Boolean) = intent {
+        reduce {
+            val newAll = checked && state.privacyAgree && state.marketingAgree
+            state.copy(termsAgree = checked, allAgree = newAll)
+        }
+    }
+
+    fun onTogglePrivacy(checked: Boolean) = intent {
+        reduce {
+            val newAll = state.termsAgree && checked && state.marketingAgree
+            state.copy(privacyAgree = checked, allAgree = newAll)
+        }
+    }
+
+    fun onToggleMarketing(checked: Boolean) = intent {
+        reduce {
+            val newAll = state.termsAgree && state.privacyAgree && checked
+            state.copy(marketingAgree = checked, allAgree = newAll)
+        }
+    }
+
+    fun onOpenTerms(context: Context) = intent {
+
+    }
+
+    fun onOpenPrivacy(context: Context) = intent {
+        openInCustomTab(context, "https://www.notion.so/23384f7bc0bf802fba8dd62049fcd967")
+    }
+
+    private fun openInCustomTab(context: Context, url: String) {
+        try {
+            val intent = CustomTabsIntent.Builder().build()
+            intent.launchUrl(context, url.toUri())
+        } catch (_: Exception) { /* 무시 or 토스트 */
+        }
+    }
 
     fun onNextStep(context: Context) = intent {
         when (state.currentStep) {
+            SignUpStep.Terms -> {
+                if (!state.termsAgree || !state.privacyAgree) {
+                    postSideEffect(SignUpSideEffect.ShowToast(R.string.error_terms_required))
+                } else {
+                    moveToNextStep()
+                }
+            }
             SignUpStep.Email -> sendVerificationCode()
             SignUpStep.Code -> validateCodeStep()
             SignUpStep.Password -> validatePasswordStep()

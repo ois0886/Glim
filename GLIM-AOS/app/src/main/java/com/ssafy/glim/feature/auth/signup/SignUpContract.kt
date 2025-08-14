@@ -4,7 +4,11 @@ import androidx.annotation.StringRes
 import androidx.compose.ui.text.input.TextFieldValue
 
 data class SignUpUiState(
-    val currentStep: SignUpStep = SignUpStep.Email,
+    val currentStep: SignUpStep = SignUpStep.Terms,
+    val allAgree: Boolean = false,
+    val termsAgree: Boolean = false,
+    val privacyAgree: Boolean = false,
+    val marketingAgree: Boolean = false,
     val email: TextFieldValue = TextFieldValue(""),
     val code: TextFieldValue = TextFieldValue(""),
     val password: TextFieldValue = TextFieldValue(""),
@@ -24,6 +28,7 @@ data class SignUpUiState(
 ) {
     val isCurrentStepValid: Boolean
         get() = when (currentStep) {
+            SignUpStep.Terms -> termsAgree && privacyAgree
             SignUpStep.Email -> email.text.isNotBlank() && emailError == null
             SignUpStep.Code -> code.text.isNotBlank() && codeError == null
             SignUpStep.Password ->
@@ -46,24 +51,25 @@ sealed interface SignUpSideEffect {
 }
 
 enum class SignUpStep(val progress: Float) {
-    Email(0.25f),
-    Code(0.5f),
-    Password(0.75f),
+    Terms(0.2f),
+    Email(0.4f),
+    Code(0.6f),
+    Password(0.8f),
     Profile(1f);
 
-    fun next(): SignUpStep? =
-        when (this) {
-            Email -> Code
-            Code -> Password
-            Password -> Profile
-            Profile -> null
-        }
+    fun next(): SignUpStep? = when (this) {
+        Terms -> Email
+        Email -> Code
+        Code -> Password
+        Password -> Profile
+        Profile -> null
+    }
 
-    fun prev(): SignUpStep? =
-        when (this) {
-            Profile -> Password
-            Password -> Code
-            Code -> Email
-            Email -> null
-        }
+    fun prev(): SignUpStep? = when (this) {
+        Profile -> Password
+        Password -> Code
+        Code -> Email
+        Email -> Terms
+        Terms -> null
+    }
 }
