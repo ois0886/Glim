@@ -53,11 +53,11 @@ public class FcmPushServiceTest {
 
         FcmTokens fcmToken = createFcmToken(quoteOwner, deviceToken, deviceType);
 
-        FcmMessageDto messageDto = FcmMessageDto.createLikedNotification(fcmToken, quote, quoteOwner.getNickname());
+        FcmMessageDto message = FcmMessageDto.createLikedNotification(fcmToken, quote, quoteOwner.getNickname());
 
-        assertThat(messageDto.getTo()).isEqualTo(deviceToken);
-        assertThat(messageDto.getData().getScreen().toString()).isEqualTo(NotificationType.LIKE.toString());
-        assertThat(messageDto.getData().getBookId()).isEqualTo(String.valueOf(book.getBookId()));
+        assertThat(message.getTo()).isEqualTo(deviceToken);
+        assertThat(message.getData().getScreen().toString()).isEqualTo(NotificationType.LIKE.toString());
+        assertThat(message.getData().getBookId()).isEqualTo(String.valueOf(book.getBookId()));
     }
 
     @DisplayName("단일 디바이스로 좋아요 알림 메시지를 발송 한다.")
