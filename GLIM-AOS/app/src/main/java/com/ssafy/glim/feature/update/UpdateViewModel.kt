@@ -7,7 +7,6 @@ import android.net.Uri
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.common.extensions.formatBirthDate
 import com.ssafy.glim.core.common.extensions.formatBirthDateToISO
 import com.ssafy.glim.core.common.extensions.formatGender
 import com.ssafy.glim.core.common.extensions.formatGenderToString
@@ -33,15 +32,6 @@ internal class UpdateViewModel @Inject constructor(
     override val container = container<UpdateInfoUiState, UpdateInfoSideEffect>(
         initialState = UpdateInfoUiState(),
     )
-
-    private fun formatBirthDateToISO(birthDate: String): String {
-        return try {
-            // "1999-01-01" 형식을 "1999-01-07T00:00:00" 형식으로 변환
-            "${birthDate}T00:00:00"
-        } catch (e: Exception) {
-            birthDate // 변환 실패 시 원본 반환
-        }
-    }
 
     fun getUseCurrentInfo() = intent {
         reduce { state.copy(isLoading = true) }
