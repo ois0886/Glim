@@ -140,12 +140,12 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+                    AppEventsHandler(
+                        authManager = authManager,
+                        backStack = navBackStack
+                    )
                 }
 
-                AppEventsHandler(
-                    authManager = authManager,
-                    backStack = navBackStack
-                )
 
                 if (showNotificationPermissionDialog) {
                     AlertDialog(

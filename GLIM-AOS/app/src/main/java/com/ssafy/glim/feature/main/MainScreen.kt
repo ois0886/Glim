@@ -179,6 +179,9 @@ internal fun MainScreen(
                         UpdateRoute(
                             updateType = UpdateType.PERSONAL,
                             padding = innerPadding,
+                            popBackStack = {
+                                backStack.removeLastOrNull()
+                            }
                         )
                     }
 
