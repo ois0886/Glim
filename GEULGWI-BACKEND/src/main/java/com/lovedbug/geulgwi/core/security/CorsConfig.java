@@ -16,7 +16,8 @@ public class CorsConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:3000",
             "http://localhost:8080",
-            "http://192.168.100.164:3000"
+            "http://192.168.100.164:3000",
+            "https://glim-main.netlify.app"
         ));
         configuration.setAllowedMethods(Arrays.asList(
             "GET", "POST", "PUT", "DELETE", "OPTIONS"
