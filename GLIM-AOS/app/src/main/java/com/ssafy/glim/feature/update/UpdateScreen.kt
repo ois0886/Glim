@@ -38,7 +38,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 internal fun UpdateRoute(
     updateType: UpdateType,
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     viewModel: UpdateViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.container.stateFlow.collectAsState()
