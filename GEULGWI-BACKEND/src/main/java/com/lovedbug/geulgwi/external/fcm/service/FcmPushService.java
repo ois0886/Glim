@@ -70,6 +70,7 @@ public class FcmPushService {
         data.put("page", fcmMessage.getData().getPage().toString());
         data.put("quoteText", fcmMessage.getData().getQuoteText());
         data.put("screen", fcmMessage.getData().getScreen().toString());
+        data.put("nickname", fcmMessage.getData().getNickName());
 
         return data;
     }
