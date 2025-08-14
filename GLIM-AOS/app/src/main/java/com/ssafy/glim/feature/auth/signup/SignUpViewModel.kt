@@ -167,25 +167,30 @@ internal class SignUpViewModel @Inject constructor(
     }
 
     fun onToggleAll(checked: Boolean) = intent {
-        reduce { state.copy(
-            allAgree = checked,
-            termsAgree = checked,
-            privacyAgree = checked,
-            marketingAgree = checked
-        )}
+        reduce {
+            state.copy(
+                allAgree = checked,
+                termsAgree = checked,
+                privacyAgree = checked,
+                marketingAgree = checked
+            )
+        }
     }
+
     fun onToggleTerms(checked: Boolean) = intent {
         reduce {
             val newAll = checked && state.privacyAgree && state.marketingAgree
             state.copy(termsAgree = checked, allAgree = newAll)
         }
     }
+
     fun onTogglePrivacy(checked: Boolean) = intent {
         reduce {
             val newAll = state.termsAgree && checked && state.marketingAgree
             state.copy(privacyAgree = checked, allAgree = newAll)
         }
     }
+
     fun onToggleMarketing(checked: Boolean) = intent {
         reduce {
             val newAll = state.termsAgree && state.privacyAgree && checked
@@ -196,14 +201,17 @@ internal class SignUpViewModel @Inject constructor(
     fun onOpenTerms(context: Context) = intent {
 
     }
+
     fun onOpenPrivacy(context: Context) = intent {
-        openInCustomTab(context, "https://www.freeprivacypolicy.com/live/4fff55de-eb58-4589-aa2c-47a1a7ae1c31")
+        openInCustomTab(context, "https://www.notion.so/23384f7bc0bf802fba8dd62049fcd967")
     }
+
     private fun openInCustomTab(context: Context, url: String) {
         try {
-            val intent =    CustomTabsIntent.Builder().build()
+            val intent = CustomTabsIntent.Builder().build()
             intent.launchUrl(context, url.toUri())
-        } catch (_: Exception) { /* 무시 or 토스트 */ }
+        } catch (_: Exception) { /* 무시 or 토스트 */
+        }
     }
 
     fun onNextStep() = intent {
@@ -215,6 +223,7 @@ internal class SignUpViewModel @Inject constructor(
                     moveToNextStep()
                 }
             }
+
             SignUpStep.Email -> sendVerificationCode()
             SignUpStep.Code -> validateCodeStep()
             SignUpStep.Password -> validatePasswordStep()
@@ -240,7 +249,12 @@ internal class SignUpViewModel @Inject constructor(
                     verifyEmailUseCase(state.email.text)
                 }.onSuccess { response ->
                     Log.d("SignUp", "Verification success: ${response.verificationCode}")
-                    reduce { state.copy(isLoading = false, actualVerificationCode = response.verificationCode) }
+                    reduce {
+                        state.copy(
+                            isLoading = false,
+                            actualVerificationCode = response.verificationCode
+                        )
+                    }
                     postSideEffect(SignUpSideEffect.ShowToast(R.string.verification_code_instruction))
                     moveToNextStep()
                 }.onFailure { exception ->
