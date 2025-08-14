@@ -34,6 +34,7 @@ import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.LaunchedNavigator
 import com.ssafy.glim.core.navigation.Route
+import com.ssafy.glim.core.service.setting.LockServiceManager
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -58,6 +59,9 @@ object PermissionUtil {
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+
+    @Inject
+    lateinit var lockServiceManager: LockServiceManager
 
     @Inject
     lateinit var authManager: AuthManager

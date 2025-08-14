@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.usecase.user.LogOutUseCase
@@ -82,6 +83,7 @@ class ProfileViewModel @Inject constructor(
                     val uploadQuotes = uploadQuotesResult.getOrThrow()
                     val likedQuotes = likedQuotesResult.getOrThrow()
 
+                    Log.d("ProfileViewModel", user.profileUrl.toString())
                     reduce {
                         state.copy(
                             userName = user.nickname,

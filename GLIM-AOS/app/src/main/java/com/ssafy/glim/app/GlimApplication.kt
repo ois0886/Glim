@@ -23,7 +23,4 @@ val Context.deviceDataStore: DataStore<Preferences> by preferencesDataStore(
 )
 
 @HiltAndroidApp
-class GlimApplication : Application(){
-    @Inject
-    lateinit var lockServiceManager: LockServiceManager
-}
+class GlimApplication : Application()
