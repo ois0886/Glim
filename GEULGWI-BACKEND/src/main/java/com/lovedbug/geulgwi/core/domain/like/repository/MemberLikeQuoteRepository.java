@@ -20,5 +20,5 @@ public interface MemberLikeQuoteRepository extends JpaRepository<MemberLikeQuote
     List<Object[]> countByQuoteIds(@Param("quoteIds")List<Long> quoteIds);
 
     @EntityGraph(attributePaths = {"quote"})
-    List<MemberLikeQuote> findAllByMemberId(Long memberId);
+    List<MemberLikeQuote> findAllByMemberIdOrderByCreatedAtDesc(Long memberId);
 }

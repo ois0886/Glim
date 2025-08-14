@@ -75,7 +75,7 @@ public class MemberLikeQuoteService {
     @Transactional(readOnly = true)
     public List<QuoteResponse> getLikedQuotesByMember(Long memberId) {
 
-        List<MemberLikeQuote> likeQuotes = memberLikeQuoteRepository.findAllByMemberId(memberId);
+        List<MemberLikeQuote> likeQuotes = memberLikeQuoteRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId);
 
         List<Long> quoteIds = likeQuotes.stream()
             .map(likeQuote -> likeQuote.getQuote().getQuoteId())
