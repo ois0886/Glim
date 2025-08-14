@@ -67,7 +67,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @PrePersist
     protected void onCreate(){
         this.status = MemberStatus.ACTIVE;
-        this.role = MemberRole.USER;
+
+        if (this.role == null) {
+            this.role = MemberRole.USER;
+        }
     }
 
     @Override

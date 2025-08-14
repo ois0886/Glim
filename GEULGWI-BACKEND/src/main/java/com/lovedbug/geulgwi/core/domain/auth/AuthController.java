@@ -48,6 +48,12 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
+    @PostMapping("/admin/login")
+    public ResponseEntity<JwtResponse> adminLogin(@RequestBody LoginRequest loginRequest) {
+
+        return ResponseEntity.ok(authService.adminLogin(loginRequest));
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<JwtResponse> refresh(HttpServletRequest request) {
 
