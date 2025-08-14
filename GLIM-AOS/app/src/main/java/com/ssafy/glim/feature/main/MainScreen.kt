@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
@@ -62,9 +63,7 @@ internal fun MainScreen(
         bottomBar = {
             if (
                 currentRoute !is BottomTabRoute.Post &&
-                currentRoute !is Route.BookDetail &&
-                currentRoute !is Route.Login &&
-                currentRoute !is Route.SignUp
+                currentRoute !is Route
             ) {
                 MainBottomBar(
                     tabs = MainTab.entries.toImmutableList(),
@@ -80,8 +79,7 @@ internal fun MainScreen(
                 // Add the default decorators for managing scenes and saving state
                 rememberSceneSetupNavEntryDecorator(),
                 rememberSavedStateNavEntryDecorator(),
-                // Then add the view model store decorator
-//                            rememberViewModelStoreNavEntryDecorator()
+                rememberViewModelStoreNavEntryDecorator()
             ),
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() },

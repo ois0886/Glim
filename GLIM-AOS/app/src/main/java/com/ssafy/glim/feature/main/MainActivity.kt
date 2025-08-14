@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.glim.R
@@ -100,7 +101,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
 
-                var startDestination: Route? by remember { mutableStateOf(null) }
+                var startDestination: NavKey? by remember { mutableStateOf(null) }
 
                 LaunchedEffect(Unit) {
                     startDestination = if (authManager.canAutoLogin()) {
