@@ -82,7 +82,7 @@ internal fun LoginScreen(
             .padding(padding)
             .imePadding()
             .navigationBarsPadding()
-            .verticalScroll(rememberScrollState()) // 스크롤 추가
+            .verticalScroll(rememberScrollState())
     ) {
         CenterAlignedTopAppBar(
             title = {

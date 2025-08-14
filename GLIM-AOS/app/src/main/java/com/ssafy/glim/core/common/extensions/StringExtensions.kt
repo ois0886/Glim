@@ -180,7 +180,7 @@ fun String.formatBirthDateToISO(): String {
         val year = this.substring(0, 4)
         val month = this.substring(4, 6)
         val day = this.substring(6, 8)
-        "${year}-${month}-${day}T00:00:00"
+        "$year-$month-${day}T00:00:00"
     } else {
         "1999-01-01T00:00:00"
     }

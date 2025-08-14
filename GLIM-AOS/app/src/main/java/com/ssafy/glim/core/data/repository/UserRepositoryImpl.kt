@@ -66,7 +66,6 @@ class UserRepositoryImpl @Inject constructor(
         }.onSuccess {
             deviceDataStore.clearFcmToken()
             authManager.logout(LogoutReason.UserLogout)
-
         }.onFailure { error ->
             Log.e("AuthRepositoryImpl", "로그아웃 실패: ${error.message}")
             throw error

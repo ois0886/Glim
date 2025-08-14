@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavKey
 import com.ssafy.glim.R
 import com.ssafy.glim.core.navigation.BottomTabRoute
-import com.ssafy.glim.core.navigation.Route
 
 internal enum class MainTab(
     val iconResId: Int,

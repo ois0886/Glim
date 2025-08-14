@@ -100,7 +100,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-
                 var startDestination: NavKey? by remember { mutableStateOf(null) }
 
                 LaunchedEffect(Unit) {
@@ -115,7 +114,6 @@ class MainActivity : ComponentActivity() {
                     val navBackStack = rememberNavBackStack(destination)
 
                     LaunchedNavigator(navBackStack)
-
 
                     val initialRoute = intent.getStringExtra("nav_route")
 
@@ -146,7 +144,6 @@ class MainActivity : ComponentActivity() {
                         backStack = navBackStack
                     )
                 }
-
 
                 if (showNotificationPermissionDialog) {
                     AlertDialog(

@@ -6,8 +6,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
 import androidx.navigation3.runtime.NavBackStack
 import com.ssafy.glim.core.navigation.internal.viewmodel.NavigatorViewModel
 import com.ssafy.glim.core.navigation.internal.viewmodel.RouteSideEffect

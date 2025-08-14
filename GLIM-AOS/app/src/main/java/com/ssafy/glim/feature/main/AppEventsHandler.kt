@@ -11,7 +11,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
 import androidx.navigation3.runtime.NavBackStack
 import com.ssafy.glim.R
 import com.ssafy.glim.core.data.authmanager.AuthManager

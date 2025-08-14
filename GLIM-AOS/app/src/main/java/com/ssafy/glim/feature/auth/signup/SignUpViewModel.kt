@@ -195,7 +195,6 @@ internal class SignUpViewModel @Inject constructor(
     }
 
     fun onOpenTerms(context: Context) = intent {
-
     }
 
     fun onOpenPrivacy(context: Context) = intent {
@@ -206,7 +205,8 @@ internal class SignUpViewModel @Inject constructor(
         try {
             val intent = CustomTabsIntent.Builder().build()
             intent.launchUrl(context, url.toUri())
-        } catch (_: Exception) { /* 무시 or 토스트 */
+        } catch (_: Exception) {
+            /* 무시 or 토스트 */
         }
     }
 

@@ -78,9 +78,11 @@ private fun GlimCheckRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(checked = checked, onCheckedChange = onCheckedChange)
-            Column(Modifier
-                .weight(1f)
-                .padding(start = 8.dp)) {
+            Column(
+                Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
+            ) {
                 Text(
                     text = text,
                     style = MaterialTheme.typography.bodyLarge.copy(

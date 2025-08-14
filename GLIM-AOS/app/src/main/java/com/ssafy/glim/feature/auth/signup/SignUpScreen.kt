@@ -66,8 +66,7 @@ internal fun SignUpRoute(
         onToggleMarketing = viewModel::onToggleMarketing,
         onOpenTerms = { viewModel.onOpenTerms(context) },
         onOpenPrivacy = { viewModel.onOpenPrivacy(context) },
-
-        )
+    )
 }
 
 @Composable

@@ -2,7 +2,6 @@ package com.ssafy.glim.core.navigation.internal.navigator
 
 import androidx.navigation3.runtime.NavKey
 import com.ssafy.glim.core.navigation.Navigator
-import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel

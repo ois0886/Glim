@@ -2,7 +2,6 @@ package com.ssafy.glim.core.data.api
 
 import com.ssafy.glim.core.data.dto.request.DeleteUserRequest
 import com.ssafy.glim.core.data.dto.request.LogOutRequest
-import com.ssafy.glim.core.data.dto.request.UpdateUserRequest
 import com.ssafy.glim.core.data.dto.response.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

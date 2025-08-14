@@ -1,7 +1,6 @@
 package com.ssafy.glim.core.navigation.internal.navigator
 
 import androidx.navigation3.runtime.NavKey
-import com.ssafy.glim.core.navigation.Route
 
 sealed interface InternalRoute {
     data class Navigate(

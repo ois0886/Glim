@@ -27,7 +27,6 @@ class NotificationPermissionManager @Inject constructor(
             Log.d(TAG, "All notifications are disabled")
             return@runCatching false
         }
-
         true
     }.onFailure { e ->
         Log.e(TAG, "Error checking notification permission: ${e.message}", e)

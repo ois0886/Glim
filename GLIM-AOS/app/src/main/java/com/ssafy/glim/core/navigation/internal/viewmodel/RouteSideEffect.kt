@@ -1,7 +1,6 @@
 package com.ssafy.glim.core.navigation.internal.viewmodel
 
 import androidx.navigation3.runtime.NavKey
-import com.ssafy.glim.core.navigation.Route
 
 sealed interface RouteSideEffect {
     data class Navigate(

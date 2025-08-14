@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.update
 
-import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.ui.text.input.TextFieldValue
 

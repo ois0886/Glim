@@ -1,8 +1,6 @@
 package com.ssafy.glim.core.data.api
 
-import com.ssafy.glim.core.data.dto.request.LogOutRequest
 import com.ssafy.glim.core.data.dto.request.LoginRequest
-import com.ssafy.glim.core.data.dto.request.SignUpRequest
 import com.ssafy.glim.core.data.dto.request.VerifyEmailRequest
 import com.ssafy.glim.core.data.dto.response.SignUpResponse
 import com.ssafy.glim.core.data.dto.response.VerifyEmailResponse

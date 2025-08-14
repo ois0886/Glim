@@ -39,14 +39,18 @@ object DefaultImageUtils {
                     if (rotation != 0f) {
                         val matrix = Matrix().apply { postRotate(rotation) }
                         Bitmap.createBitmap(original, 0, 0, original.width, original.height, matrix, true)
-                    } else original
+                    } else {
+                        original
+                    }
                 } ?: original
 
                 // 3. 압축 (크기 + 품질)
                 val resized = if (rotated.width > 800 || rotated.height > 800) {
                     val ratio = minOf(800f / rotated.width, 800f / rotated.height)
                     rotated.scale((rotated.width * ratio).toInt(), (rotated.height * ratio).toInt())
-                } else rotated
+                } else {
+                    rotated
+                }
 
                 // 4. 품질 압축
                 var quality = 80
