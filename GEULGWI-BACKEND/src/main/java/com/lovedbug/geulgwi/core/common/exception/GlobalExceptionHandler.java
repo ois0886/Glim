@@ -1,9 +1,10 @@
 package com.lovedbug.geulgwi.core.common.exception;
 
 import com.lovedbug.geulgwi.core.common.exception.constant.CommonErrorCode;
+import com.lovedbug.geulgwi.core.domain.auth.exception.AuthException;
 import com.lovedbug.geulgwi.core.domain.member.exception.MemberException;
+import com.lovedbug.geulgwi.external.email.exception.EmailException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,13 +21,21 @@ public class GlobalExceptionHandler {
 
         log.warn("MemberException: code={}, detail={}", e.getErrorCode().name(), e.getDetail());
 
-        return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-            .body(GeulgwiErrorResponse.builder()
-                .status(e.getErrorCode().getHttpStatus().value())
-                .code(e.getErrorCode().name())
-                .message(e.getErrorCode().getMessage())
-                .detail(e.getDetail())
-                .build());
+        return buildErrorResponse(e.getErrorCode(), e.getDetail());
+    }
+
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<GeulgwiErrorResponse> handleAuthException(AuthException e) {
+
+        log.warn("AuthException: code={}, detail={}", e.getErrorCode().name(), e.getDetail());
+
+        return buildErrorResponse(e.getErrorCode(), e.getDetail());
+    }
+
+    @ExceptionHandler(EmailException.class)
+    public ResponseEntity<GeulgwiErrorResponse> handleEmailException(EmailException e) {
+
+        return buildErrorResponse(e.getErrorCode(), e.getDetail());
     }
 
     @ExceptionHandler({
@@ -38,25 +47,24 @@ public class GlobalExceptionHandler {
 
         log.warn("Bad request: {}", e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(GeulgwiErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .code(CommonErrorCode.INVALID_PARAMETER.name())
-                .message(CommonErrorCode.INVALID_PARAMETER.getMessage())
-                .detail(e.getMessage())
-                .build());
+        return buildErrorResponse(CommonErrorCode.INVALID_PARAMETER, e.getMessage());
     }
-
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GeulgwiErrorResponse> handleException(Exception e) {
         log.error("Unhandled exception occurred", e);
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return buildErrorResponse(CommonErrorCode.INTERNAL_SERVER_ERROR, null);
+    }
+
+    private ResponseEntity<GeulgwiErrorResponse> buildErrorResponse(ErrorCode errorCode, String detail) {
+
+        return ResponseEntity.status(errorCode.getHttpStatus())
             .body(GeulgwiErrorResponse.builder()
-                .status(CommonErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus().value())
-                .code(CommonErrorCode.INTERNAL_SERVER_ERROR.name())
-                .message(CommonErrorCode.INTERNAL_SERVER_ERROR.getMessage())
+                .status(errorCode.getHttpStatus().value())
+                .code(errorCode.name())
+                .message(errorCode.getMessage())
+                .detail(detail)
                 .build());
     }
 }

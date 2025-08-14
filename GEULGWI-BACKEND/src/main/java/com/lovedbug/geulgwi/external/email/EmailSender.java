@@ -1,5 +1,7 @@
 package com.lovedbug.geulgwi.external.email;
 
+import com.lovedbug.geulgwi.external.email.constant.EmailErrorCode;
+import com.lovedbug.geulgwi.external.email.exception.EmailException;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import jakarta.mail.internet.MimeMessage;
@@ -57,7 +59,7 @@ public class EmailSender {
 
         }catch (Exception e){
             log.error("이메일 발송 실패: {}", toEmail, e);
-            throw new RuntimeException("이메일 발송에 실패했습니다.", e);
+            throw new EmailException(EmailErrorCode.EMAIL_SEND_FAILED, "to=" + toEmail);
         }
     }
 
@@ -99,7 +101,7 @@ public class EmailSender {
             }
         }catch (IOException e){
             log.error("템플릿 렌더링 실패: {}", templateName, e);
-            throw new RuntimeException("이메일 템플릿 처리에 실패 했습니다.",e);
+            throw new EmailException(EmailErrorCode.EMAIL_TEMPLATE_ERROR, "template=" + templateName);
         }
     }
 }

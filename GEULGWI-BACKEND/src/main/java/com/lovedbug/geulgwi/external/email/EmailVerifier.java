@@ -1,7 +1,8 @@
 package com.lovedbug.geulgwi.external.email;
 
 import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
-import com.lovedbug.geulgwi.core.domain.member.exception.EmailAlreadyVerifiedException;
+import com.lovedbug.geulgwi.external.email.constant.EmailErrorCode;
+import com.lovedbug.geulgwi.external.email.exception.EmailException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.Random;
@@ -16,7 +17,7 @@ public class EmailVerifier {
     public String sendVerificationCode(String email) {
 
         if (memberRepository.existsByEmail(email)){
-            throw new EmailAlreadyVerifiedException("이미 가입된 이메일입니다.");
+            throw new EmailException(EmailErrorCode.EMAIL_ALREADY_EXISTS, "email=" + email);
         }
 
         String verificationCode = generateVerificationCode();
