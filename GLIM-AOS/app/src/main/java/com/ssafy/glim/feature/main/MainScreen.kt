@@ -34,6 +34,7 @@ import com.ssafy.glim.feature.celebrations.CelebrationsRoute
 import com.ssafy.glim.feature.home.HomeRoute
 import com.ssafy.glim.feature.main.component.MainBottomBar
 import com.ssafy.glim.feature.myglims.MyGlimsRoute
+import com.ssafy.glim.feature.myglims.MyGlimsType
 import com.ssafy.glim.feature.post.PostRoute
 import com.ssafy.glim.feature.profile.ProfileRoute
 import com.ssafy.glim.feature.search.SearchRoute
@@ -129,9 +130,17 @@ internal fun MainScreen(
                         )
                     }
 
-                    is MyGlimsRoute -> NavEntry(key) {
+                    is MyGlimsRoute.Liked -> NavEntry(key) {
                         MyGlimsRoute(
                             padding = innerPadding,
+                            listType = MyGlimsType.LIKED
+                        )
+                    }
+
+                    is MyGlimsRoute.Upload -> NavEntry(key) {
+                        MyGlimsRoute(
+                            padding = innerPadding,
+                            listType = MyGlimsType.UPLOADED
                         )
                     }
 
