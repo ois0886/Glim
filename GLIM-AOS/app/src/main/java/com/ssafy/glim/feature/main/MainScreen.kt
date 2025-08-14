@@ -27,6 +27,7 @@ import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.navigation.UpdateInfoRoute
 import com.ssafy.glim.feature.auth.login.LoginRoute
+import com.ssafy.glim.feature.auth.signup.SignUpRoute
 import com.ssafy.glim.feature.bookdetail.BookDetailScreen
 import com.ssafy.glim.feature.celebrations.CelebrationsRoute
 import com.ssafy.glim.feature.home.HomeRoute
@@ -48,7 +49,7 @@ internal fun MainScreen(
 ) {
     // 현재 라우트와 탭 계산
     val currentRoute = backStack.lastOrNull()
-    val currentTab = when(currentRoute) {
+    val currentTab = when (currentRoute) {
         is BottomTabRoute.Home -> MainTab.HOME
         is BottomTabRoute.Post -> MainTab.POST
         is BottomTabRoute.Search -> MainTab.LIBRARY
@@ -59,7 +60,12 @@ internal fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            if (currentRoute !is BottomTabRoute.Post && currentRoute !is Route.BookDetail) {
+            if (
+                currentRoute !is BottomTabRoute.Post &&
+                currentRoute !is Route.BookDetail &&
+                currentRoute !is Route.Login &&
+                currentRoute !is Route.SignUp
+            ) {
                 MainBottomBar(
                     tabs = MainTab.entries.toImmutableList(),
                     currentTab = currentTab,
@@ -93,7 +99,7 @@ internal fun MainScreen(
             },
             modifier = Modifier.background(Color.White),
             entryProvider = { key ->
-                when(key) {
+                when (key) {
                     is BottomTabRoute.Home -> NavEntry(key) {
                         HomeRoute(
                             padding = innerPadding,
@@ -141,6 +147,12 @@ internal fun MainScreen(
                     is Route.Login -> NavEntry(key) {
                         LoginRoute(
                             padding = innerPadding,
+                        )
+                    }
+
+                    is Route.SignUp -> NavEntry(key) {
+                        SignUpRoute(
+                            padding = innerPadding
                         )
                     }
 
