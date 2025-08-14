@@ -60,7 +60,7 @@ fun BookDetailScreen(
     isbn: String?,
     bookId: Long?,
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     viewModel: BookDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
@@ -112,7 +112,7 @@ fun BookDetailContent(
     toggleBookDescriptionExpanded: () -> Unit,
     toggleAuthorDescriptionExpanded: () -> Unit,
     clickPostGlim: () -> Unit,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
 ) {
     val listState = rememberLazyListState()
     val pagerState = rememberPagerState(pageCount = { quotes.size })
@@ -125,7 +125,7 @@ fun BookDetailContent(
         label = "titleAlpha"
     )
 
-    Column(modifier = modifier.navigationBarsPadding()) {
+    Column(modifier = modifier) {
         BookDetailTopBar(
             title = book.title,
             alpha = titleAlpha,

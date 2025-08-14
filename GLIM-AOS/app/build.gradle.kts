@@ -18,7 +18,7 @@ plugins {
 
 android {
     namespace = "com.ssafy.glim"
-    compileSdk = 35
+    compileSdk = 36
     buildFeatures {
         buildConfig = true
     }
@@ -176,6 +176,9 @@ dependencies {
 
     // Lottie
     implementation(libs.lottie.compose)
+
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
 }
 
 tasks.register("codeQualityCheck") {

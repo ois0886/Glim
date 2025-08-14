@@ -41,7 +41,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 internal fun MyGlimsRoute(
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     listType: MyGlimsType = MyGlimsType.LIKED,
     viewModel: MyGlimsViewModel = hiltViewModel()
 ) {

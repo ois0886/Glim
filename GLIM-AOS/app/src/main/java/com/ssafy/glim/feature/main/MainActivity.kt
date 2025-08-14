@@ -16,7 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.rememberNavBackStack
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.LaunchedNavigator
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                val navController = rememberNavController()
+
                 var startDestination: Route? by remember { mutableStateOf(null) }
 
                 LaunchedEffect(Unit) {
@@ -82,16 +82,14 @@ class MainActivity : ComponentActivity() {
                 }
 
                 startDestination?.let { destination ->
-                    val navigator: MainNavController = rememberMainNavController(
-                        navController = navController,
-                        startDestination = destination
-                    )
-                    LaunchedNavigator(navigator.navController)
+                    val navBackStack = rememberNavBackStack(destination)
+
+                    LaunchedNavigator(navBackStack)
                     val initialRoute = intent.getStringExtra("nav_route")
 
                     if (!isLoading) {
                         MainScreen(
-                            navigator = navigator,
+                            backStack = navBackStack,
                             onTabSelected = {
                                 when (it.route) {
                                     BottomTabRoute.Home -> viewModel.navigateHome()
@@ -106,16 +104,17 @@ class MainActivity : ComponentActivity() {
                         LaunchedEffect(initialRoute) {
                             if (destination == BottomTabRoute.Home && initialRoute == "glim") {
                                 val quoteId = intent.getLongExtra("quote_id", -1L)
-                                navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
+                                navBackStack.clear()
+                                navBackStack.add(BottomTabRoute.Shorts(quoteId))
                             }
                         }
                     }
-                }
 
-                AppEventsHandler(
-                    authManager = authManager,
-                    navController = navController
-                )
+                    AppEventsHandler(
+                        authManager = authManager,
+                        backStack = navBackStack
+                    )
+                }
             }
         }
     }
