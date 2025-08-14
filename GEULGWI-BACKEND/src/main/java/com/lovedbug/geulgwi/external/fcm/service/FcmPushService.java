@@ -35,7 +35,7 @@ public class FcmPushService {
 
         activeTokens.forEach(token -> {
             try {
-                FcmMessageDto fcmMessage = FcmMessageDto.createLikedNotification(token, quote);
+                FcmMessageDto fcmMessage = FcmMessageDto.createLikedNotification(token, quote, member.getNickname());
                 sendPushMessage(fcmMessage);
 
             } catch(Exception e) {
@@ -51,12 +51,7 @@ public class FcmPushService {
 
         try{
             Message.Builder messageBuilder = Message.builder()
-                .setToken(fcmMessage.getTo())
-                .setNotification(Notification.builder()
-                    .setTitle(fcmMessage.getNotification().getTitle())
-                    .setBody(fcmMessage.getNotification().getBody())
-                    .setImage(fcmMessage.getNotification().getImage())
-                    .build());
+                .setToken(fcmMessage.getTo());
 
             firebaseMessaging.send(messageBuilder.putAllData(likeFcmMessageData(fcmMessage)).build());
 

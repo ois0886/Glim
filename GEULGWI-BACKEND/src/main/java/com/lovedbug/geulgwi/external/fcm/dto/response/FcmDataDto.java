@@ -19,9 +19,10 @@ public class FcmDataDto {
     private String bookTitle;
     private Integer page;
     private String quoteText;
+    private String nickName;
     private NotificationType screen;
 
-    public static FcmDataDto toFcmData(Book book, Quote quote){
+    public static FcmDataDto toFcmData(Book book, Quote quote, String nickName){
 
         return FcmDataDto.builder()
             .bookId(book.getBookId().toString())
@@ -29,6 +30,7 @@ public class FcmDataDto {
             .bookTitle(book.getTitle())
             .page(quote.getPage())
             .quoteText(quote.getContent())
+            .nickName(nickName)
             .screen(NotificationType.LIKE)
             .build();
     }

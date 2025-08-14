@@ -53,14 +53,9 @@ public class FcmPushServiceTest {
 
         FcmTokens fcmToken = createFcmToken(quoteOwner, deviceToken, deviceType);
 
-        FcmMessageDto messageDto = FcmMessageDto.createLikedNotification(fcmToken, quote);
-
-        String bookTitle = book.getTitle();
-        String body = quote.getContent();
+        FcmMessageDto messageDto = FcmMessageDto.createLikedNotification(fcmToken, quote, quoteOwner.getNickname());
 
         assertThat(messageDto.getTo()).isEqualTo(deviceToken);
-        assertThat(messageDto.getNotification().getTitle()).contains(bookTitle);
-        assertThat(messageDto.getNotification().getBody()).contains(body);
         assertThat(messageDto.getData().getScreen().toString()).isEqualTo(NotificationType.LIKE.toString());
         assertThat(messageDto.getData().getBookId()).isEqualTo(String.valueOf(book.getBookId()));
     }
