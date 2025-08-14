@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,9 +97,9 @@ private fun SignUpScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding.excludeSystemBars())
+            .systemBarsPadding()
             .imePadding()
-            .navigationBarsPadding()
+
     ) {
         GlimTopBar(
             title = stringResource(R.string.login_signup),

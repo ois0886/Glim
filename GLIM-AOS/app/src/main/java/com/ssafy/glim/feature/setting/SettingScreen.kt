@@ -76,7 +76,6 @@ internal fun SettingScreen(
             .fillMaxSize()
             .padding(padding.excludeSystemBars())
             .imePadding()
-            .navigationBarsPadding()
     ) {
         GlimTopBar(
             title = stringResource(R.string.setting_title),
