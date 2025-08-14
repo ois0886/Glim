@@ -203,13 +203,10 @@ internal class UpdateViewModel @Inject constructor(
                 getDefaultProfileBitmap(context)
             }
         } else {
-            // 이미지가 변경되지 않은 경우: 기존 프로필 이미지 사용
             val currentProfileUrl = currentState.profileImageUri
             if (!currentProfileUrl.isNullOrEmpty() && currentProfileUrl.startsWith("http")) {
-                // 서버에서 받은 URL이 있는 경우 다운로드해서 Bitmap으로 변환
                 downloadImageFromUrl(currentProfileUrl) ?: getDefaultProfileBitmap(context)
             } else {
-                // URL이 없거나 유효하지 않은 경우 기본 이미지 사용
                 getDefaultProfileBitmap(context)
             }
         }
