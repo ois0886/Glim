@@ -27,13 +27,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.rememberNavBackStack
 import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.glim.R
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.LaunchedNavigator
 import com.ssafy.glim.core.navigation.Route
+import com.ssafy.glim.core.service.LockServiceManager
 import com.ssafy.glim.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -58,6 +59,9 @@ object PermissionUtil {
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+
+    @Inject
+    lateinit var lockServiceManager: LockServiceManager
 
     @Inject
     lateinit var authManager: AuthManager
@@ -95,7 +99,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                val navController = rememberNavController()
+
                 var startDestination: Route? by remember { mutableStateOf(null) }
 
                 LaunchedEffect(Unit) {
@@ -107,16 +111,14 @@ class MainActivity : ComponentActivity() {
                 }
 
                 startDestination?.let { destination ->
-                    val navigator: MainNavController = rememberMainNavController(
-                        navController = navController,
-                        startDestination = destination
-                    )
-                    LaunchedNavigator(navigator.navController)
+                    val navBackStack = rememberNavBackStack(destination)
+
+                    LaunchedNavigator(navBackStack)
                     val initialRoute = intent.getStringExtra("nav_route")
 
                     if (!isLoading) {
                         MainScreen(
-                            navigator = navigator,
+                            backStack = navBackStack,
                             onTabSelected = {
                                 when (it.route) {
                                     BottomTabRoute.Home -> viewModel.navigateHome()
@@ -131,7 +133,8 @@ class MainActivity : ComponentActivity() {
                         LaunchedEffect(initialRoute) {
                             if (destination == BottomTabRoute.Home && initialRoute == "glim") {
                                 val quoteId = intent.getLongExtra("quote_id", -1L)
-                                navigator.clearBackStackAndNavigate(BottomTabRoute.Shorts(quoteId))
+                                navBackStack.clear()
+                                navBackStack.add(BottomTabRoute.Shorts(quoteId))
                             }
                         }
                     }
@@ -139,7 +142,7 @@ class MainActivity : ComponentActivity() {
 
                 AppEventsHandler(
                     authManager = authManager,
-                    navController = navController
+                    backStack = navBackStack
                 )
 
                 if (showNotificationPermissionDialog) {

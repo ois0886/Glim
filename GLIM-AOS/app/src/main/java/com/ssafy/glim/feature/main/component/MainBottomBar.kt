@@ -33,7 +33,6 @@ import kotlinx.collections.immutable.ImmutableList
 // }
 @Composable
 internal fun MainBottomBar(
-    visible: Boolean,
     tabs: ImmutableList<MainTab>,
     currentTab: MainTab?,
     onTabSelected: (MainTab) -> Unit,
@@ -48,7 +47,7 @@ internal fun MainBottomBar(
     Box(modifier = Modifier.background(backgroundColor)) {
         Column {
             AnimatedVisibility(
-                visible = visible
+                visible = true
             ) {
                 Row(
                     modifier =

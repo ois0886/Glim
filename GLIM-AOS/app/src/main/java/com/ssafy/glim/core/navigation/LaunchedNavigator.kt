@@ -8,19 +8,20 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation3.runtime.NavBackStack
 import com.ssafy.glim.core.navigation.internal.viewmodel.NavigatorViewModel
 import com.ssafy.glim.core.navigation.internal.viewmodel.RouteSideEffect
 import kotlinx.coroutines.flow.collectLatest
 @Composable
-fun LaunchedNavigator(navHostController: NavHostController) {
+fun LaunchedNavigator(navBackStack: NavBackStack) {
     InternalLaunchedNavigator(
-        navHostController = navHostController,
+        navBackStack = navBackStack,
     )
 }
 
 @Composable
 private fun InternalLaunchedNavigator(
-    navHostController: NavHostController,
+    navBackStack: NavBackStack,
     routerViewModel: NavigatorViewModel = hiltViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -29,29 +30,17 @@ private fun InternalLaunchedNavigator(
             routerViewModel.sideEffect.collectLatest { sideEffect ->
                 when (sideEffect) {
                     is RouteSideEffect.NavigateBack -> {
-                        navHostController.popBackStack()
+                        navBackStack.removeLastOrNull()
                     }
 
                     is RouteSideEffect.Navigate -> {
-                        navHostController.navigate(sideEffect.route) {
-                            if (sideEffect.saveState) {
-                                navHostController.graph.findStartDestination().route?.let {
-                                    popUpTo(it) {
-                                        saveState = true
-                                    }
-                                }
-                                restoreState = true
-                            }
-                            launchSingleTop = sideEffect.launchSingleTop
-                        }
+                        navBackStack.remove(sideEffect.route)
+                        navBackStack.add(sideEffect.route)
                     }
 
                     is RouteSideEffect.NavigateAndClearBackStack -> {
-                        navHostController.navigate(sideEffect.route) {
-                            popUpTo(0) {
-                                inclusive = true
-                            }
-                        }
+                        navBackStack.clear()
+                        navBackStack.add(sideEffect.route)
                     }
                 }
             }

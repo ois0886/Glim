@@ -45,7 +45,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun SearchRoute(
     modifier: Modifier = Modifier,
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     onBookSelected: ((Book) -> Unit)? = null,
     viewModel: SearchViewModel = hiltViewModel(),
 ) {

@@ -41,7 +41,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 internal fun PostRoute(
     bookId: Long,
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     viewModel: PostViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
