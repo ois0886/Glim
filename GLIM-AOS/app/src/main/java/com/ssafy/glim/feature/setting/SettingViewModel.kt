@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val getSettingsUseCase: GetSettingsUseCase,
+    getSettingsUseCase: GetSettingsUseCase,
     private val updateSettingsUseCase: UpdateSettingsUseCase,
     private val navigator: Navigator,
 ) : ViewModel(), ContainerHost<SettingUiState, SettingSideEffect> {
@@ -33,36 +33,6 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun onDoNotDisturbModeToggle(enabled: Boolean) = intent {
-        reduce {
-            state.copy(
-                settings = state.settings.copy(
-                    doNotDisturbEnabled = enabled
-                )
-            )
-        }
-    }
-
-    fun onDoNotDisturbTimeToggle(enabled: Boolean) = intent {
-        reduce {
-            state.copy(
-                settings = state.settings.copy(
-                    doNotDisturbTimeEnabled = enabled
-                )
-            )
-        }
-    }
-
-    fun onWeeklyScheduleToggle(enabled: Boolean) = intent {
-        reduce {
-            state.copy(
-                settings = state.settings.copy(
-                    weeklyNotificationsEnabled = enabled
-                )
-            )
-        }
-    }
-
     fun onLockScreenGlimToggle(enabled: Boolean) = intent {
         reduce {
             state.copy(
@@ -71,10 +41,6 @@ class SettingViewModel @Inject constructor(
                 )
             )
         }
-    }
-
-    fun onTimeRangeClick() = intent {
-        // 구현 필요
     }
 
     fun onSaveClicked() = intent {

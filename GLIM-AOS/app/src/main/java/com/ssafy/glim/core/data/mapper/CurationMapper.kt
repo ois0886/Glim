@@ -1,6 +1,5 @@
 package com.ssafy.glim.core.data.mapper
 
-import android.util.Log
 import com.ssafy.glim.core.common.extensions.parseHtmlString
 import com.ssafy.glim.core.data.dto.response.CurationContentResponse
 import com.ssafy.glim.core.data.dto.response.CurationItemResponse

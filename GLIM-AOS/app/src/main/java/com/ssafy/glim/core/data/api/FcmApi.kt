@@ -12,5 +12,4 @@ interface FcmApi {
 
     @POST("/api/v1/fcm/token/{deviceId}/status")
     suspend fun deleteToken(@Path("deviceId") deviceId: String)
-
 }

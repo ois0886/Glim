@@ -355,8 +355,7 @@ private fun PreviewGlimGrassWithUpload(days: Int) {
         Box(Modifier.padding(16.dp)) {
             GlimGrassGrid(
                 uploadQuotes = mockUploadQuotes,
-
-                )
+            )
         }
     }
 }

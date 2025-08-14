@@ -150,10 +150,10 @@ class PostViewModel @Inject constructor(
         reduce {
             state.copy(
                 textPosition =
-                    currentPosition.copy(
-                        offsetX = currentPosition.offsetX + deltaX,
-                        offsetY = currentPosition.offsetY + deltaY,
-                    ),
+                currentPosition.copy(
+                    offsetX = currentPosition.offsetX + deltaX,
+                    offsetY = currentPosition.offsetY + deltaY,
+                ),
             )
         }
     }

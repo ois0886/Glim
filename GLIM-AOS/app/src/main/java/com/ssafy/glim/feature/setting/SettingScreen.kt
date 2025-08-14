@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.domain.model.Settings
 import com.ssafy.glim.core.ui.GlimTopBar
 import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.GlimButton
@@ -56,12 +55,8 @@ internal fun SettingRoute(
         state = state,
         padding = padding,
         onBackClick = popBackStack,
-        onTimeRangeClick = { viewModel.onTimeRangeClick() },
         onSaveClicked = { viewModel.onSaveClicked() },
         onAllNotificationsToggle = { viewModel.onAllNotificationsToggle(it) },
-        onDoNotDisturbModeToggle = { viewModel.onDoNotDisturbModeToggle(it) },
-        onDoNotDisturbTimeToggle = { viewModel.onDoNotDisturbTimeToggle(it) },
-        onWeeklyScheduleToggle = { viewModel.onWeeklyScheduleToggle(it) },
         onLockScreenGlimToggle = { viewModel.onLockScreenGlimToggle(it) },
     )
 }
@@ -73,11 +68,7 @@ internal fun SettingScreen(
     padding: PaddingValues,
     onBackClick: () -> Unit,
     onSaveClicked: () -> Unit,
-    onTimeRangeClick: () -> Unit,
     onAllNotificationsToggle: (Boolean) -> Unit,
-    onDoNotDisturbModeToggle: (Boolean) -> Unit,
-    onDoNotDisturbTimeToggle: (Boolean) -> Unit,
-    onWeeklyScheduleToggle: (Boolean) -> Unit,
     onLockScreenGlimToggle: (Boolean) -> Unit,
 ) {
     Column(
@@ -103,11 +94,7 @@ internal fun SettingScreen(
         ) {
             NotificationSettingSection(
                 settings = state.settings,
-                onAllNotificationsToggle = onAllNotificationsToggle,
-                onDoNotDisturbModeToggle = onDoNotDisturbModeToggle,
-                onDoNotDisturbTimeToggle = onDoNotDisturbTimeToggle,
-                onWeeklyScheduleToggle = onWeeklyScheduleToggle,
-                onTimeRangeClick = onTimeRangeClick
+                onAllNotificationsToggle = onAllNotificationsToggle
             )
 
             Spacer(modifier = Modifier.height(36.dp))
@@ -139,35 +126,7 @@ private fun PreviewSettingScreen() {
         SettingScreen(
             state = SettingUiState(),
             onBackClick = {},
-            onTimeRangeClick = {},
             onAllNotificationsToggle = {},
-            onDoNotDisturbModeToggle = {},
-            onDoNotDisturbTimeToggle = {},
-            onWeeklyScheduleToggle = {},
-            padding = PaddingValues(0.dp),
-            onSaveClicked = {},
-            onLockScreenGlimToggle = {}
-        )
-    }
-}
-
-@Preview(name = "Setting Screen - Options Enabled", showBackground = true)
-@Composable
-private fun PreviewSettingScreenEnabled() {
-    MaterialTheme {
-        SettingScreen(
-            state = SettingUiState(
-                settings = Settings(
-                    doNotDisturbTimeEnabled = true,
-                    weeklyNotificationsEnabled = true
-                )
-            ),
-            onBackClick = {},
-            onTimeRangeClick = {},
-            onAllNotificationsToggle = {},
-            onDoNotDisturbModeToggle = {},
-            onDoNotDisturbTimeToggle = {},
-            onWeeklyScheduleToggle = {},
             padding = PaddingValues(0.dp),
             onSaveClicked = {},
             onLockScreenGlimToggle = {}

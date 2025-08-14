@@ -43,7 +43,7 @@ fun PostContent(
     onToggleBold: () -> Unit,
     onToggleItalic: () -> Unit,
     startCameraAction: (CameraType) -> Unit,
-    onImageGenerateClick : () -> Unit,
+    onImageGenerateClick: () -> Unit,
     onTextExtractionClick: () -> Unit,
     onBackgroundImageClick: () -> Unit,
     onCompleteClick: (CaptureActions) -> Unit,
