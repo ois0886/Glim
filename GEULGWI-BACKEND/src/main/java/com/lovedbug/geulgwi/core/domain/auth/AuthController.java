@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -46,6 +44,12 @@ public class AuthController {
     public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest){
 
         return ResponseEntity.ok(authService.login(loginRequest));
+    }
+
+    @PostMapping("/admin/login")
+    public ResponseEntity<JwtResponse> adminLogin(@RequestBody LoginRequest loginRequest) {
+
+        return ResponseEntity.ok(authService.adminLogin(loginRequest));
     }
 
     @PostMapping("/refresh")

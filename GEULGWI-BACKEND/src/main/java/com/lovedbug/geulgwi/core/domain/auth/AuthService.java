@@ -7,6 +7,7 @@ import com.lovedbug.geulgwi.core.domain.auth.exception.AuthException;
 import com.lovedbug.geulgwi.core.domain.member.Member;
 import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberErrorCode;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
 import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
 import com.lovedbug.geulgwi.core.domain.member.exception.MemberException;
 import com.lovedbug.geulgwi.core.security.JwtUtil;
@@ -42,6 +43,33 @@ public class AuthService {
         String refreshToken = jwtUtil.generateRefreshToken(member.getEmail(), member.getMemberId());
 
         return toJwtResponse(accessToken, refreshToken, member.getEmail(), member.getMemberId());
+    }
+
+    public JwtResponse adminLogin(LoginRequest loginRequest){
+        try{
+            Member member = memberRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+            if (!passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "패스워드가 올바르지 않습니다.");
+            }
+
+            if (member.getStatus() != MemberStatus.ACTIVE) {
+                throw new MemberException(MemberErrorCode.MEMBER_INACTIVE, "memberId = " + member.getMemberId());
+            }
+
+            if (member.getRole() != MemberRole.ADMIN) {
+                throw new MemberException(MemberErrorCode.ADMIN_ROLE_REQUIRED, "memberId = " + member.getMemberId());
+            }
+
+            String accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getMemberId());
+            String refreshToken = jwtUtil.generateRefreshToken(member.getEmail(), member.getMemberId());
+
+            return toJwtResponse(accessToken, refreshToken, member.getEmail(), member.getMemberId());
+
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다.");
+        }
     }
 
     public JwtResponse refresh(String authHeader) {

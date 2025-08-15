@@ -86,6 +86,49 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
             .statusCode(200);
     }
 
+    @DisplayName("관리자가_관리자_로그인을_진행한다.")
+    @Test
+    void admin_login_success_test(){
+
+        Member admin = Member.builder()
+            .email("admin_" + System.currentTimeMillis() + "@example.com")
+            .password(passwordEncoder.encode("pwd1234"))
+            .nickname("adminUser")
+            .birthDate(LocalDateTime.of(1990, 1, 1, 0, 0, 0))
+            .gender(MemberGender.MALE)
+            .status(MemberStatus.ACTIVE)
+            .role(MemberRole.ADMIN)
+            .build();
+
+        Member savedAdmin = memberRepository.save(admin);
+
+        LoginRequest loginRequest = LoginRequest.builder()
+            .email(savedAdmin.getEmail())
+            .password("pwd1234")
+            .build();
+
+        given(this.spec)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(loginRequest)
+            .filter(document("{class_name}/{method_name}",
+                requestFields(
+                    fieldWithPath("email").description("관리자 로그인할 이메일 (필수)"),
+                    fieldWithPath("password").description("관리자 로그인할 비밀번호 (필수)")
+                ),
+                responseFields(
+                    fieldWithPath("accessToken").description("API 요청에 사용할 액세스 토큰"),
+                    fieldWithPath("refreshToken").description("API 요청에 사용할 리프레쉬 토큰"),
+                    fieldWithPath("memberEmail").description("로그인한 관리자 이메일"),
+                    fieldWithPath("memberId").description("로그인한 관리자 ID")
+                )
+            ))
+            .when()
+            .post("/api/v1/auth/admin/login")
+            .then()
+            .log().all()
+            .statusCode(200);
+    }
+
     @DisplayName("사용자가_로그인을_진행한다.")
     @Test
     void login_test(){
@@ -119,6 +162,8 @@ public class AuthApiDocsTest extends RestDocsTestSupport{
             .log().all()
             .statusCode(200);
     }
+
+
 
     @DisplayName("사용자가_로그아웃을_진행한다.")
     @Test

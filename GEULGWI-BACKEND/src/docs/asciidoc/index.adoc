@@ -291,6 +291,20 @@ include::{snippets}/auth_api_docs_test/logout_test/http-response.adoc[]
 
 include::{snippets}/auth_api_docs_test/logout_test/response-body.adoc[]
 
+=== 관리자 로그인
+
+==== 응답
+
+include::{snippets}/auth_api_docs_test/admin_login_success_test/http-request.adoc[]
+
+include::{snippets}/auth_api_docs_test/admin_login_success_test/request-fields.adoc[]
+
+==== 요청
+
+include::{snippets}/auth_api_docs_test/admin_login_success_test/http-response.adoc[]
+
+include::{snippets}/auth_api_docs_test/admin_login_success_test/response-fields.adoc[]
+
 === 토큰 갱신
 
 ==== 요청
