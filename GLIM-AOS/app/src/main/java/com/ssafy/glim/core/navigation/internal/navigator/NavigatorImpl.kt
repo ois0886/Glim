@@ -1,7 +1,7 @@
 package com.ssafy.glim.core.navigation.internal.navigator
 
+import androidx.navigation3.runtime.NavKey
 import com.ssafy.glim.core.navigation.Navigator
-import com.ssafy.glim.core.navigation.Route
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel
@@ -11,7 +11,7 @@ class NavigatorImpl @Inject constructor() : Navigator, InternalNavigator {
     override val channel = Channel<InternalRoute>(Channel.BUFFERED)
 
     override suspend fun navigate(
-        route: Route,
+        route: NavKey,
         saveState: Boolean,
         launchSingleTop: Boolean
     ) {
@@ -28,7 +28,7 @@ class NavigatorImpl @Inject constructor() : Navigator, InternalNavigator {
         channel.send(InternalRoute.NavigateBack)
     }
 
-    override suspend fun navigateAndClearBackStack(route: Route) {
+    override suspend fun navigateAndClearBackStack(route: NavKey) {
         channel.send(
             InternalRoute.NavigateAndClearBackStack(route = route)
         )

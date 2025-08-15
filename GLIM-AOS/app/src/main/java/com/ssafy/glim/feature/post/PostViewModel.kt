@@ -8,6 +8,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.domain.model.Book
+import com.ssafy.glim.core.domain.usecase.image.ImageGenerateUseCase
 import com.ssafy.glim.core.domain.usecase.book.GetCachedBookDetail
 import com.ssafy.glim.core.domain.usecase.quote.CreateQuoteUseCase
 import com.ssafy.glim.core.util.CaptureActions
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class PostViewModel @Inject constructor(
     private val createQuoteUseCase: CreateQuoteUseCase,
     private val getCachedBookDetail: GetCachedBookDetail,
+    private val imageGenerateUseCase: ImageGenerateUseCase,
     private val imageProcessor: ImageProcessor,
 ) : ViewModel(), ContainerHost<PostState, PostSideEffect> {
     override val container: Container<PostState, PostSideEffect> = container(PostState())
@@ -83,6 +85,35 @@ class PostViewModel @Inject constructor(
                     textPosition = state.originalTextPosition
                 )
             }
+        }
+    }
+
+    fun onImageGenerateClick() = intent {
+        if (state.recognizedText.text.isNotBlank()) {
+            runCatching {
+                reduce {
+                    state.copy(
+                        isLoading = true
+                    )
+                }
+                imageGenerateUseCase.invoke(state.recognizedText.text)
+            }
+                .onSuccess {
+                    reduce {
+                        state.copy(
+                            isLoading = false
+                        )
+                    }
+                    postSideEffect(PostSideEffect.SaveGeneratedToCache(it.bitmap))
+                }
+                .onFailure {
+                    reduce {
+                        state.copy(
+                            isLoading = false
+                        )
+                    }
+                    postSideEffect(PostSideEffect.ShowToast(it.message ?: "에러가 발생했습니다."))
+                }
         }
     }
 

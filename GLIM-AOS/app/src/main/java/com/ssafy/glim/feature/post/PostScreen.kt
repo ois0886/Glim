@@ -4,23 +4,34 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.wear.compose.material.CircularProgressIndicator
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.CameraType
 import com.ssafy.glim.core.common.utils.rememberCameraWithPermission
 import com.ssafy.glim.core.ui.DarkThemeScreen
+import com.ssafy.glim.core.util.toCacheImageUri
 import com.ssafy.glim.feature.post.component.PostContent
 import com.ssafy.glim.feature.post.component.imageoverlay.TextExtractionImageOverlay
 import org.orbitmvi.orbit.compose.collectAsState
@@ -30,7 +41,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 internal fun PostRoute(
     bookId: Long,
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     viewModel: PostViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
@@ -83,6 +94,11 @@ internal fun PostRoute(
             is PostSideEffect.ShowToast -> {
                 Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
             }
+
+            is PostSideEffect.SaveGeneratedToCache -> {
+                val uri = sideEffect.bitmap.toCacheImageUri(context)
+                viewModel.backgroundImageSelected(uri)
+            }
         }
     }
 
@@ -112,6 +128,7 @@ internal fun PostRoute(
                     onToggleBold = viewModel::toggleBold,
                     onToggleItalic = viewModel::toggleItalic,
                     startCameraAction = viewModel::startCameraAction,
+                    onImageGenerateClick = viewModel::onImageGenerateClick,
                     onTextExtractionClick = viewModel::textExtractionClick,
                     onBackgroundImageClick = viewModel::backgroundImageClick,
                     onCompleteClick = viewModel::completeClick,
@@ -128,11 +145,28 @@ internal fun PostRoute(
             }
 
             if (state.isLoading) {
-                CircularProgressIndicator(
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.triangle_loading))
+
+                Box(
                     modifier = Modifier
-                        .size(52.dp)
-                        .align(Alignment.Center)
-                )
+                        .fillMaxSize()
+                        .clickable(indication = null, interactionSource = remember { MutableInteractionSource() }) { }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Spacer(modifier = Modifier.height(32.dp))
+                        LottieAnimation(
+                            modifier = Modifier.size(250.dp),
+                            composition = composition,
+                            iterations = Int.MAX_VALUE
+                        )
+                    }
+                }
             }
         }
     }

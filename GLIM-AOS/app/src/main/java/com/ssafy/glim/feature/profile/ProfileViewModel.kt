@@ -1,9 +1,9 @@
 package com.ssafy.glim.feature.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.data.authmanager.AuthManager
-import com.ssafy.glim.core.data.authmanager.LogoutReason
+import com.ssafy.glim.core.domain.usecase.user.LogOutUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetMyLikedQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetMyUploadQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
@@ -25,11 +25,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val authManager: AuthManager,
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
     private val getMyUploadQuoteUseCase: GetMyUploadQuoteUseCase,
-    private val getMyLikedQuoteUseCase: GetMyLikedQuoteUseCase
+    private val getMyLikedQuoteUseCase: GetMyLikedQuoteUseCase,
+    private val logOutUseCase: LogOutUseCase
 ) : ViewModel(), ContainerHost<ProfileUiState, ProfileSideEffect> {
 
     override val container: Container<ProfileUiState, ProfileSideEffect> =
@@ -83,16 +83,13 @@ class ProfileViewModel @Inject constructor(
                     val uploadQuotes = uploadQuotesResult.getOrThrow()
                     val likedQuotes = likedQuotesResult.getOrThrow()
 
-                    val firstUploadDate = uploadQuotes.minByOrNull { it.createdAt }?.createdAt
-                        ?.substringBefore('T') ?: ""
-
+                    Log.d("ProfileViewModel", user.profileUrl.toString())
                     reduce {
                         state.copy(
                             userName = user.nickname,
-                            profileImageUrl = null,
+                            profileImageUrl = user.profileUrl,
                             publishedGlimCount = uploadQuotes.size,
                             uploadQuotes = uploadQuotes,
-                            firstUploadDate = firstUploadDate,
                             likedGlimCount = likedQuotes.size,
                             isRefreshing = false,
                             error = false
@@ -106,7 +103,6 @@ class ProfileViewModel @Inject constructor(
                             publishedGlimCount = 0,
                             likedGlimCount = 0,
                             uploadQuotes = emptyList(),
-                            firstUploadDate = "",
                             isRefreshing = false,
                             error = true
                         )
@@ -120,7 +116,6 @@ class ProfileViewModel @Inject constructor(
                         publishedGlimCount = 0,
                         likedGlimCount = 0,
                         uploadQuotes = emptyList(),
-                        firstUploadDate = "",
                         isRefreshing = false,
                         error = true
                     )
@@ -136,8 +131,14 @@ class ProfileViewModel @Inject constructor(
 
     fun onLogoutConfirm() = intent {
         reduce { state.copy(logoutDialogState = LogoutDialogState.Processing) }
-        authManager.logout(LogoutReason.UserLogout)
-        postSideEffect(ProfileSideEffect.ShowError(R.string.logout_success))
+        runCatching { logOutUseCase() }
+            .onSuccess {
+                postSideEffect(ProfileSideEffect.ShowError(R.string.logout_success))
+                reduce { state.copy(logoutDialogState = LogoutDialogState.Hidden) }
+            }.onFailure {
+                postSideEffect(ProfileSideEffect.ShowError(R.string.logout_failed))
+                reduce { state.copy(logoutDialogState = LogoutDialogState.Hidden) }
+            }
     }
 
     fun onLogoutCancel() = intent {
@@ -197,7 +198,6 @@ class ProfileViewModel @Inject constructor(
                 isWithdrawalLoading = true
             )
         }
-
         runCatching { deleteUserUseCase() }
             .onSuccess {
                 reduce {

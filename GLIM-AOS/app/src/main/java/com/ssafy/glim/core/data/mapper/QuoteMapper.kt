@@ -30,7 +30,8 @@ fun UploadQuoteResponse.toDomain() = QuoteSummary(
     views = views,
     likes = likeCount,
     isLiked = liked,
-    createdAt = createdAt
+    createdAt = createdAt,
+    bookTitle = bookTitle
 )
 
 fun LikedQuoteResponse.toDomain() = QuoteSummary(
@@ -39,7 +40,8 @@ fun LikedQuoteResponse.toDomain() = QuoteSummary(
     quoteId = quoteId,
     views = views,
     likes = likeCount,
-    isLiked = liked
+    isLiked = liked,
+    bookTitle = bookTitle
 )
 
 fun QuoteSummaryResponse.toDomain() =

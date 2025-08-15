@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -38,7 +39,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 internal fun UpdateRoute(
     updateType: UpdateType,
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     viewModel: UpdateViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.container.stateFlow.collectAsState()
@@ -99,7 +100,7 @@ internal fun UpdateRoute(
         onCurrentPasswordChanged = viewModel::onCurrentPasswordChanged,
         onNewPasswordChanged = viewModel::onNewPasswordChanged,
         onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
-        onSaveClicked = viewModel::onSaveClicked,
+        onSaveClicked = { viewModel.onSaveClicked(context) },
         onBackClick = { popBackStack() },
     )
 }
@@ -119,9 +120,8 @@ internal fun UpdateScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding.excludeSystemBars())
+            .systemBarsPadding()
             .imePadding()
-            .navigationBarsPadding()
     ) {
         GlimTopBar(
             title = when (state.updateType) {

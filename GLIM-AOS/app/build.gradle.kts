@@ -14,11 +14,12 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.google.services)
 }
 
 android {
     namespace = "com.ssafy.glim"
-    compileSdk = 35
+    compileSdk = 36
     buildFeatures {
         buildConfig = true
     }
@@ -134,6 +135,7 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.androidx.browser)
     testImplementation(libs.orbit.test)
 
     // Kotlin Serialization & Immutable Collections
@@ -173,6 +175,18 @@ dependencies {
     // MockK
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.android)
+
+    // Lottie
+    implementation(libs.lottie.compose)
+
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3.android)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics)
 }
 
 tasks.register("codeQualityCheck") {

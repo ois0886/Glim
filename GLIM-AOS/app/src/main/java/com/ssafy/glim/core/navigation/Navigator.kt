@@ -1,13 +1,15 @@
 package com.ssafy.glim.core.navigation
 
+import androidx.navigation3.runtime.NavKey
+
 interface Navigator {
     suspend fun navigate(
-        route: Route,
+        route: NavKey,
         saveState: Boolean = false,
         launchSingleTop: Boolean = true
     )
 
     suspend fun navigateBack()
 
-    suspend fun navigateAndClearBackStack(route: Route)
+    suspend fun navigateAndClearBackStack(route: NavKey)
 }

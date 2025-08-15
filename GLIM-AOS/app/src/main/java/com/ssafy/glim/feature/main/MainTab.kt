@@ -1,9 +1,9 @@
 package com.ssafy.glim.feature.main
 
 import androidx.compose.runtime.Composable
+import androidx.navigation3.runtime.NavKey
 import com.ssafy.glim.R
 import com.ssafy.glim.core.navigation.BottomTabRoute
-import com.ssafy.glim.core.navigation.Route
 
 internal enum class MainTab(
     val iconResId: Int,
@@ -50,7 +50,7 @@ internal enum class MainTab(
         }
 
         @Composable
-        fun contains(predicate: @Composable (Route) -> Boolean): Boolean {
+        fun contains(predicate: @Composable (NavKey) -> Boolean): Boolean {
             return entries.map { it.route }.any { predicate(it) }
         }
     }

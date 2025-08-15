@@ -11,4 +11,5 @@ data class UserResponse(
     val birthDate: String,
     val gender: String,
     val status: String,
+    val profileUrl: String?
 )

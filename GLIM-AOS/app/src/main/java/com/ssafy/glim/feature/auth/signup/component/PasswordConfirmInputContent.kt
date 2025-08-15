@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,21 +30,13 @@ fun PasswordConfirmInputContent(
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.auth_greeting),
-            style =
-            MaterialTheme.typography.bodySmall.copy(
-                color = Color.Gray,
-                fontSize = 14.sp,
-            ),
+            style = MaterialTheme.typography.labelMedium,
         )
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
             text = stringResource(R.string.password_instruction),
-            style =
-            MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-            ),
+            style = MaterialTheme.typography.labelLarge,
         )
         Spacer(modifier = Modifier.height(12.dp))
         PasswordInputTextField(

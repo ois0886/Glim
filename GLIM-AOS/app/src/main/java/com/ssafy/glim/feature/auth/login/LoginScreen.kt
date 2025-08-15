@@ -3,7 +3,6 @@ package com.ssafy.glim.feature.auth.login
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,28 +10,35 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.ui.GlimTopBar
-import com.ssafy.glim.core.ui.TitleAlignment
 import com.ssafy.glim.feature.auth.login.component.EmailInputTextField
 import com.ssafy.glim.feature.auth.login.component.GlimButton
 import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
+import com.ssafy.glim.ui.theme.caveatFont
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
@@ -57,11 +63,11 @@ internal fun LoginRoute(
         onEmailChanged = viewModel::onEmailChanged,
         onPasswordChanged = viewModel::onPasswordChanged,
         onLoginClicked = viewModel::onLoginClicked,
-        navigateToSignUp = viewModel::navigateToSignUp,
-        navigateToForgotPassword = viewModel::navigateToForgotPassword
+        navigateToSignUp = viewModel::navigateToSignUp
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LoginScreen(
     state: LoginUiState,
@@ -69,32 +75,42 @@ internal fun LoginScreen(
     onEmailChanged: (TextFieldValue) -> Unit,
     onPasswordChanged: (TextFieldValue) -> Unit,
     onLoginClicked: () -> Unit,
-    navigateToSignUp: () -> Unit,
-    navigateToForgotPassword: () -> Unit
+    navigateToSignUp: () -> Unit
 ) {
     Column(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(padding)
             .imePadding()
-            .navigationBarsPadding()
+            .verticalScroll(rememberScrollState())
     ) {
-        GlimTopBar(
-            title = stringResource(id = R.string.login_title),
-            showBack = false,
-            alignment = TitleAlignment.Center
+        CenterAlignedTopAppBar(
+            title = {
+                Text(
+                    text = stringResource(R.string.app_name_english),
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = caveatFont
+                    ),
+                )
+            },
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = Color.Transparent,
+            ),
         )
+
+        Spacer(Modifier.height(20.dp))
+
         Column(
-            modifier =
-            Modifier
-                .fillMaxSize()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(id = R.string.login_subtitle),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Start,
             )
@@ -118,8 +134,7 @@ internal fun LoginScreen(
             Spacer(Modifier.height(24.dp))
 
             GlimButton(
-                text =
-                if (state.isLoading) {
+                text = if (state.isLoading) {
                     stringResource(R.string.login_loading)
                 } else {
                     stringResource(R.string.login_button)
@@ -130,17 +145,12 @@ internal fun LoginScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            Row {
-                TextButton(onClick = navigateToSignUp) {
-                    Text(stringResource(id = R.string.login_signup))
-                }
-                Spacer(Modifier.width(8.dp))
-                TextButton(onClick = navigateToForgotPassword) {
-                    Text(stringResource(id = R.string.login_forgot_password))
-                }
+            TextButton(onClick = navigateToSignUp) {
+                Text(stringResource(id = R.string.login_signup), color = Color.Black)
             }
 
-            Spacer(Modifier.height(24.dp))
+            // 키보드가 올라올 때를 위한 추가 여백
+            Spacer(Modifier.height(80.dp))
         }
     }
 }
@@ -154,8 +164,7 @@ fun PreviewLoginScreen_Empty() {
         onEmailChanged = {},
         onPasswordChanged = {},
         onLoginClicked = {},
-        navigateToSignUp = {},
-        navigateToForgotPassword = {}
+        navigateToSignUp = {}
     )
 }
 
@@ -163,8 +172,7 @@ fun PreviewLoginScreen_Empty() {
 @Composable
 fun PreviewLoginScreen_Errors() {
     LoginScreen(
-        state =
-        LoginUiState(
+        state = LoginUiState(
             email = TextFieldValue("invalid-email"),
             password = TextFieldValue("short"),
             emailError = R.string.error_email_invalid,
@@ -174,8 +182,7 @@ fun PreviewLoginScreen_Errors() {
         onEmailChanged = {},
         onPasswordChanged = {},
         onLoginClicked = {},
-        navigateToSignUp = {},
-        navigateToForgotPassword = {}
+        navigateToSignUp = {}
     )
 }
 
@@ -183,8 +190,7 @@ fun PreviewLoginScreen_Errors() {
 @Composable
 fun PreviewLoginScreen_Valid() {
     LoginScreen(
-        state =
-        LoginUiState(
+        state = LoginUiState(
             email = TextFieldValue("user@example.com"),
             password = TextFieldValue("Aa1!abcd"),
         ),
@@ -192,8 +198,7 @@ fun PreviewLoginScreen_Valid() {
         onEmailChanged = {},
         onPasswordChanged = {},
         onLoginClicked = {},
-        navigateToSignUp = {},
-        navigateToForgotPassword = {}
+        navigateToSignUp = {}
     )
 }
 
@@ -201,8 +206,7 @@ fun PreviewLoginScreen_Valid() {
 @Composable
 fun PreviewLoginScreen_Loading() {
     LoginScreen(
-        state =
-        LoginUiState(
+        state = LoginUiState(
             email = TextFieldValue("user@example.com"),
             password = TextFieldValue("Aa1!abcd"),
             isLoading = true,
@@ -211,7 +215,6 @@ fun PreviewLoginScreen_Loading() {
         onEmailChanged = {},
         onPasswordChanged = {},
         onLoginClicked = {},
-        navigateToSignUp = {},
-        navigateToForgotPassword = {}
+        navigateToSignUp = {}
     )
 }

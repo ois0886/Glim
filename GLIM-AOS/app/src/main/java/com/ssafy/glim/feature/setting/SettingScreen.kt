@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,15 +35,11 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 internal fun SettingRoute(
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     viewModel: SettingViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
     val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        viewModel.loadSettings()
-    }
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
@@ -60,12 +55,8 @@ internal fun SettingRoute(
         state = state,
         padding = padding,
         onBackClick = popBackStack,
-        onTimeRangeClick = { viewModel.onTimeRangeClick() },
         onSaveClicked = { viewModel.onSaveClicked() },
         onAllNotificationsToggle = { viewModel.onAllNotificationsToggle(it) },
-        onDoNotDisturbModeToggle = { viewModel.onDoNotDisturbModeToggle(it) },
-        onDoNotDisturbTimeToggle = { viewModel.onDoNotDisturbTimeToggle(it) },
-        onWeeklyScheduleToggle = { viewModel.onWeeklyScheduleToggle(it) },
         onLockScreenGlimToggle = { viewModel.onLockScreenGlimToggle(it) },
     )
 }
@@ -77,11 +68,7 @@ internal fun SettingScreen(
     padding: PaddingValues,
     onBackClick: () -> Unit,
     onSaveClicked: () -> Unit,
-    onTimeRangeClick: () -> Unit,
     onAllNotificationsToggle: (Boolean) -> Unit,
-    onDoNotDisturbModeToggle: (Boolean) -> Unit,
-    onDoNotDisturbTimeToggle: (Boolean) -> Unit,
-    onWeeklyScheduleToggle: (Boolean) -> Unit,
     onLockScreenGlimToggle: (Boolean) -> Unit,
 ) {
     Column(
@@ -89,7 +76,6 @@ internal fun SettingScreen(
             .fillMaxSize()
             .padding(padding.excludeSystemBars())
             .imePadding()
-            .navigationBarsPadding()
     ) {
         GlimTopBar(
             title = stringResource(R.string.setting_title),
@@ -106,18 +92,14 @@ internal fun SettingScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             NotificationSettingSection(
-                settings = state.notificationSettings,
-                onAllNotificationsToggle = onAllNotificationsToggle,
-                onDoNotDisturbModeToggle = onDoNotDisturbModeToggle,
-                onDoNotDisturbTimeToggle = onDoNotDisturbTimeToggle,
-                onWeeklyScheduleToggle = onWeeklyScheduleToggle,
-                onTimeRangeClick = onTimeRangeClick
+                settings = state.settings,
+                onAllNotificationsToggle = onAllNotificationsToggle
             )
 
             Spacer(modifier = Modifier.height(36.dp))
 
             LockSettingSection(
-                settings = state.lockSettings,
+                settings = state.settings,
                 onLockScreenGlimToggle = onLockScreenGlimToggle
             )
 
@@ -143,35 +125,7 @@ private fun PreviewSettingScreen() {
         SettingScreen(
             state = SettingUiState(),
             onBackClick = {},
-            onTimeRangeClick = {},
             onAllNotificationsToggle = {},
-            onDoNotDisturbModeToggle = {},
-            onDoNotDisturbTimeToggle = {},
-            onWeeklyScheduleToggle = {},
-            padding = PaddingValues(0.dp),
-            onSaveClicked = {},
-            onLockScreenGlimToggle = {}
-        )
-    }
-}
-
-@Preview(name = "Setting Screen - Options Enabled", showBackground = true)
-@Composable
-private fun PreviewSettingScreenEnabled() {
-    MaterialTheme {
-        SettingScreen(
-            state = SettingUiState(
-                notificationSettings = NotificationSettings(
-                    doNotDisturbTimeEnabled = true,
-                    weeklyNotificationsEnabled = true
-                )
-            ),
-            onBackClick = {},
-            onTimeRangeClick = {},
-            onAllNotificationsToggle = {},
-            onDoNotDisturbModeToggle = {},
-            onDoNotDisturbTimeToggle = {},
-            onWeeklyScheduleToggle = {},
             padding = PaddingValues(0.dp),
             onSaveClicked = {},
             onLockScreenGlimToggle = {}

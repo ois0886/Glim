@@ -1,6 +1,5 @@
 package com.ssafy.glim.core.data.mapper
 
-import android.util.Log
 import com.ssafy.glim.core.common.extensions.parseHtmlString
 import com.ssafy.glim.core.data.dto.response.CurationContentResponse
 import com.ssafy.glim.core.data.dto.response.CurationItemResponse
@@ -13,18 +12,15 @@ import com.ssafy.glim.core.domain.model.Quote
 fun CurationItemResponse.toDomain(): Curation {
     val typeEnum = CurationType.valueOf(this.curationType)
     val books = if (typeEnum == CurationType.BOOK) {
-        Log.d("CurationMapper", "Curation type is BOOK, converting contents to Book ${contents.get(0)}")
         this.contents.map { it.toBook() }
     } else {
         emptyList()
     }
-
     val glims = if (typeEnum == CurationType.QUOTE) {
         this.contents.map { it.toQuote() }
     } else {
         emptyList()
     }
-
     return Curation(
         id = this.curationItemId,
         title = this.title,

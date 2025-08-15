@@ -11,7 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
+import androidx.navigation3.runtime.NavBackStack
 import com.ssafy.glim.R
 import com.ssafy.glim.core.data.authmanager.AuthManager
 import com.ssafy.glim.core.navigation.Route
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun AppEventsHandler(
     authManager: AuthManager,
-    navController: NavHostController
+    backStack: NavBackStack
 ) {
     val context = LocalContext.current
 
@@ -36,9 +36,8 @@ fun AppEventsHandler(
 
     if (showLogoutDialog) {
         LaunchedEffect(Unit) {
-            navController.navigate(Route.Login) {
-                popUpTo(0) { inclusive = true }
-            }
+            backStack.clear()
+            backStack.add(Route.Login)
         }
 
         AlertDialog(

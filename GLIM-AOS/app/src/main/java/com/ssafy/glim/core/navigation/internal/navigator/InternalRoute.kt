@@ -1,10 +1,10 @@
 package com.ssafy.glim.core.navigation.internal.navigator
 
-import com.ssafy.glim.core.navigation.Route
+import androidx.navigation3.runtime.NavKey
 
 sealed interface InternalRoute {
     data class Navigate(
-        val route: Route,
+        val route: NavKey,
         val saveState: Boolean,
         val launchSingleTop: Boolean
     ) : InternalRoute
@@ -12,6 +12,6 @@ sealed interface InternalRoute {
     data object NavigateBack : InternalRoute
 
     data class NavigateAndClearBackStack(
-        val route: Route
+        val route: NavKey
     ) : InternalRoute
 }

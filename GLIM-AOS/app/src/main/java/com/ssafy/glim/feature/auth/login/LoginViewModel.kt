@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class LoginViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val loginUseCase: LoginUseCase,
+    private val loginUseCase: LoginUseCase
 ) : ViewModel(), ContainerHost<LoginUiState, LoginSideEffect> {
     override val container = container<LoginUiState, LoginSideEffect>(initialState = LoginUiState())
 
@@ -99,7 +99,6 @@ internal class LoginViewModel @Inject constructor(
             )
         }.onSuccess {
             reduce { state.copy(isLoading = false) }
-            Log.d("LoginViewModel", "Manual login success")
             navigateToHome()
         }.onFailure { exception ->
             reduce { state.copy(isLoading = false) }
@@ -116,11 +115,5 @@ internal class LoginViewModel @Inject constructor(
     fun navigateToHome() =
         intent {
             navigator.navigateAndClearBackStack(BottomTabRoute.Home)
-        }
-
-    fun navigateToForgotPassword() =
-        intent {
-            // TODO: 비밀번호 찾기 기능 구현
-            postSideEffect(LoginSideEffect.ShowError(R.string.not_ready_function))
         }
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
@@ -80,15 +81,19 @@ fun MyGlimsItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 책 정보
-                Column {
+                // 책 정보 - 가중치를 주어 공간 확보
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(
                         text = quote.bookTitle.ifEmpty {
                             stringResource(R.string.unknown_book_title)
                         },
                         fontSize = 14.sp,
                         color = Color.Black,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     if (quote.page.toLong() > 0) {
                         Text(
@@ -98,6 +103,9 @@ fun MyGlimsItem(
                         )
                     }
                 }
+
+                // 책 정보와 통계 사이 여백 추가
+                Spacer(modifier = Modifier.width(16.dp))
 
                 // 조회수와 좋아요 수
                 Row(

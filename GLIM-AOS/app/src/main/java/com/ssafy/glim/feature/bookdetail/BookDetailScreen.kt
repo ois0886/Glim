@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -60,7 +59,7 @@ fun BookDetailScreen(
     isbn: String?,
     bookId: Long?,
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     viewModel: BookDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
@@ -112,7 +111,7 @@ fun BookDetailContent(
     toggleBookDescriptionExpanded: () -> Unit,
     toggleAuthorDescriptionExpanded: () -> Unit,
     clickPostGlim: () -> Unit,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
 ) {
     val listState = rememberLazyListState()
     val pagerState = rememberPagerState(pageCount = { quotes.size })
@@ -125,7 +124,7 @@ fun BookDetailContent(
         label = "titleAlpha"
     )
 
-    Column(modifier = modifier.navigationBarsPadding()) {
+    Column(modifier = modifier) {
         BookDetailTopBar(
             title = book.title,
             alpha = titleAlpha,
@@ -280,7 +279,7 @@ fun BookDetailContent(
 
                 Button(
                     onClick = clickPostGlim,
-                    modifier = Modifier.weight(1f), // 더 넓게
+                    modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = LightBrown,
                         contentColor = Color.White

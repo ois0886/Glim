@@ -1,8 +1,9 @@
 package com.ssafy.glim.core.navigation
 
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
-sealed interface Route {
+sealed interface Route : NavKey {
     @Serializable
     data object Login : Route
 
@@ -28,15 +29,15 @@ sealed interface MyGlimsRoute : Route {
     data object Upload : MyGlimsRoute
 }
 
-sealed class UpdateInfoRoute : Route {
+sealed interface UpdateInfoRoute : Route {
     @Serializable
-    data object Personal : Route
+    data object Personal : UpdateInfoRoute
 
     @Serializable
-    data object Password : Route
+    data object Password : UpdateInfoRoute
 }
 
-sealed interface BottomTabRoute : Route {
+sealed interface BottomTabRoute : NavKey {
     @Serializable
     data object Home : BottomTabRoute
 

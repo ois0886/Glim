@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +43,7 @@ fun UserProfileInputContent(
         if (!isUpdate) {
             Text(
                 text = stringResource(id = R.string.profile_title),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = Color.Gray,
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -63,6 +64,12 @@ fun UserProfileInputContent(
             onValueChange = onNameChange,
             label = { Text(stringResource(id = R.string.profile_hint_name)) },
             isError = nameError != null,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent
+            ),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
         )
@@ -97,6 +104,12 @@ fun UserProfileInputContent(
             label = { Text(stringResource(id = R.string.profile_hint_birth)) },
             isError = birthYearError != null,
             modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent
+            ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             enabled = !isUpdate,

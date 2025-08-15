@@ -8,11 +8,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,20 +30,12 @@ fun EmailVerificationCodeInputContent(
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.auth_greeting),
-            style =
-            MaterialTheme.typography.bodySmall.copy(
-                color = Color.Gray,
-                fontSize = 14.sp,
-            ),
+            style = MaterialTheme.typography.labelMedium
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(R.string.verification_code_instruction),
-            style =
-            MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-            ),
+            style = MaterialTheme.typography.labelLarge
         )
         Spacer(modifier = Modifier.height(12.dp))
         TextField(
@@ -55,6 +47,12 @@ fun EmailVerificationCodeInputContent(
                 }
             },
             modifier = modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent
+            ),
             isError = error != null,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             label = {

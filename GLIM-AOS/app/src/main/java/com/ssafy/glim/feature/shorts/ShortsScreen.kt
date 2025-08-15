@@ -62,7 +62,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 internal fun ShortsRoute(
     quoteId: Long,
     padding: PaddingValues,
-    popBackStack: () -> Unit,
+    popBackStack: () -> Unit = {},
     viewModel: ShortsViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current

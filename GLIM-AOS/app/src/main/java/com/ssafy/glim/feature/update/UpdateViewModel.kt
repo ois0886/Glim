@@ -1,19 +1,26 @@
 package com.ssafy.glim.feature.update
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.common.extensions.formatBirthDate
+import com.ssafy.glim.core.common.extensions.formatBirthDateToISO
 import com.ssafy.glim.core.common.extensions.formatGender
 import com.ssafy.glim.core.common.extensions.formatGenderToString
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
 import com.ssafy.glim.core.domain.usecase.user.UpdateUserUseCase
+import com.ssafy.glim.core.util.DefaultImageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
+import java.net.URL
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,11 +42,11 @@ internal class UpdateViewModel @Inject constructor(
             reduce {
                 state.copy(
                     isLoading = false,
-                    userId = user.id,
                     name = user.nickname,
                     email = user.email,
                     gender = user.gender.formatGenderToString(),
                     birthDate = user.birthDate,
+                    profileImageUri = user.profileUrl,
                     newName = TextFieldValue(user.nickname)
                 )
             }
@@ -158,14 +165,54 @@ internal class UpdateViewModel @Inject constructor(
         reduce { state.copy(confirmPassword = confirmPassword, confirmPasswordError = error) }
     }
 
-    fun onSaveClicked() = intent {
+    fun onSaveClicked(context: Context) = intent {
         when (state.updateType) {
-            UpdateType.PERSONAL -> updatePersonalInfo()
-            UpdateType.PASSWORD -> updatePassword()
+            UpdateType.PERSONAL -> updatePersonalInfo(context)
+            UpdateType.PASSWORD -> updatePassword(context)
         }
     }
 
-    private fun updatePersonalInfo() = intent {
+    // 기본 프로필 이미지를 Bitmap으로 변환
+    private fun getDefaultProfileBitmap(context: Context): Bitmap {
+        return BitmapFactory.decodeResource(context.resources, R.drawable.base_profile)
+    }
+
+    // URL에서 Bitmap을 다운로드하는 함수
+    private suspend fun downloadImageFromUrl(url: String): Bitmap? = withContext(Dispatchers.IO) {
+        try {
+            val connection = URL(url).openConnection()
+            connection.doInput = true
+            connection.connect()
+            val inputStream = connection.getInputStream()
+            BitmapFactory.decodeStream(inputStream)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    // 프로필 이미지를 Bitmap으로 변환하는 통합 함수
+    private suspend fun getProfileBitmap(context: Context, currentState: UpdateInfoUiState): Bitmap {
+        return if (currentState.isImageSelected) {
+            // 새 이미지가 선택된 경우: URI에서 Bitmap 변환
+            val imageUri = currentState.profileImageUri
+            if (imageUri != null) {
+                DefaultImageUtils.uriToBitmap(context, imageUri)
+                    ?: getDefaultProfileBitmap(context)
+            } else {
+                getDefaultProfileBitmap(context)
+            }
+        } else {
+            val currentProfileUrl = currentState.profileImageUri
+            if (!currentProfileUrl.isNullOrEmpty() && currentProfileUrl.startsWith("http")) {
+                downloadImageFromUrl(currentProfileUrl) ?: getDefaultProfileBitmap(context)
+            } else {
+                getDefaultProfileBitmap(context)
+            }
+        }
+    }
+
+    private fun updatePersonalInfo(context: Context) = intent {
         val nameValidation = ValidationUtils.validateName(
             name = state.newName.text,
             emptyErrorRes = R.string.error_name_empty,
@@ -186,20 +233,28 @@ internal class UpdateViewModel @Inject constructor(
 
         reduce { state.copy(isLoading = true) }
 
+        // 현재 state를 캡처해서 사용
+        val currentState = state
+
+        // 프로필 이미지 Bitmap 가져오기 (새 이미지 또는 기존 이미지)
+        val profileBitmap = getProfileBitmap(context, currentState)
+
         runCatching {
             updateUserUseCase(
-                memberId = state.userId,
-                password = state.password.text,
-                nickname = state.newName.text,
-                gender = state.gender.formatGender(),
-                birthDate = state.birthDate.formatBirthDate()
+                password = currentState.password.text,
+                nickname = currentState.newName.text,
+                gender = currentState.gender.formatGender(),
+                birthDate = currentState.birthDate.formatBirthDateToISO(),
+                profileImage = profileBitmap
             )
         }.onSuccess { updatedUser ->
             reduce {
                 state.copy(
                     isLoading = false,
                     name = updatedUser.nickname,
-                    newName = TextFieldValue(updatedUser.nickname)
+                    profileImageUri = updatedUser.profileUrl,
+                    newName = TextFieldValue(updatedUser.nickname),
+                    isImageSelected = false
                 )
             }
             postSideEffect(UpdateInfoSideEffect.ProfileUpdated)
@@ -209,7 +264,7 @@ internal class UpdateViewModel @Inject constructor(
         }
     }
 
-    private fun updatePassword() = intent {
+    private fun updatePassword(context: Context) = intent {
         val currentPasswordValidation = ValidationUtils.validatePassword(
             password = state.password.text,
             emptyErrorRes = R.string.error_current_password_empty,
@@ -259,13 +314,19 @@ internal class UpdateViewModel @Inject constructor(
 
         reduce { state.copy(isLoading = true) }
 
+        // 현재 state를 캡처해서 사용
+        val currentState = state
+
+        // 비밀번호 변경 시에도 프로필 이미지는 기존 것을 유지
+        val profileBitmap = getProfileBitmap(context, currentState)
+
         runCatching {
             updateUserUseCase(
-                memberId = state.userId,
-                password = state.newPassword.text,
-                nickname = state.name,
-                gender = state.gender.formatGender(),
-                birthDate = state.birthDate.formatBirthDate()
+                password = currentState.newPassword.text,
+                nickname = currentState.name,
+                gender = currentState.gender.formatGender(),
+                birthDate = currentState.birthDate.formatBirthDateToISO(),
+                profileImage = profileBitmap
             )
         }.onSuccess { updatedUser ->
             reduce {
@@ -276,7 +337,9 @@ internal class UpdateViewModel @Inject constructor(
                     confirmPassword = TextFieldValue(""),
                     currentPasswordError = null,
                     newPasswordError = null,
-                    confirmPasswordError = null
+                    confirmPasswordError = null,
+                    profileImageUri = updatedUser.profileUrl,
+                    isImageSelected = false
                 )
             }
             postSideEffect(UpdateInfoSideEffect.PasswordUpdated)

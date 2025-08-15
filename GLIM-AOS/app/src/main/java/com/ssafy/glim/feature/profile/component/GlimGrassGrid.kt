@@ -45,27 +45,26 @@ import java.time.format.DateTimeFormatter
 fun GlimGrassGrid(
     modifier: Modifier = Modifier,
     uploadQuotes: List<QuoteSummary>,
-    firstUploadDateStr: String,
     error: Boolean = false
 ) {
     // 1. parse first upload date & today
-    val firstUploadDate = parseFirstUploadDate(firstUploadDateStr)
     val today = todayKst()
+    val sixMonthsBefore = sixMonthsBeforeKst()
 
     // 2. uploadQuotes를 날짜별로 그룹화
     val glimRecord = groupUploadQuotesByDate(uploadQuotes)
 
     // 3. days, grid, labels
-    val days = generateDayList(firstUploadDate, today)
+    val days = generateDayList(sixMonthsBefore, today)
     val grid = buildGlimGrid(days)
     val monthLabels = createMonthLabels(grid)
-    val yearLabel = formatYearLabel(firstUploadDate, today)
+    val yearLabel = formatYearLabel(sixMonthsBefore, today)
     val weekLabels = weekLabelStrings()
 
     // 4. streaks
     val (maxStreak, currentStreak) = calculateGlimStreak(
         record = glimRecord,
-        start = firstUploadDate,
+        start = sixMonthsBefore,
         end = today
     )
 
@@ -101,7 +100,7 @@ fun GlimGrassGrid(
             MonthRow(monthLabels, scrollState)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
                 WeekLabelColumn(weekLabels)
-                GlimGrassGridContent(grid, scrollState, glimRecord, firstUploadDate, today)
+                GlimGrassGridContent(grid, scrollState, glimRecord, sixMonthsBefore, today)
             }
             Box(
                 modifier = Modifier
@@ -198,13 +197,8 @@ private fun GlimGrassGridContent(
 @Composable
 private fun GlimGrassCell(count: Int) {
     val color = getGlimGrassColor(count)
-    val border = if (count == 0) {
-        Modifier.border(1.dp, GrassEmpty, RoundedCornerShape(3.dp))
-    } else {
-        Modifier
-    }
     Box(
-        border
+        Modifier
             .then(Modifier.size(18.dp))
             .background(color, RoundedCornerShape(3.dp))
     )
@@ -253,22 +247,11 @@ fun groupUploadQuotesByDate(uploadQuotes: List<QuoteSummary>): Map<String, Int> 
 }
 
 /**
- * 첫 업로드 날짜 파싱
- */
-fun parseFirstUploadDate(firstUploadDateStr: String): LocalDate {
-    return try {
-        LocalDate.parse(firstUploadDateStr.substringBefore('T'))
-    } catch (_: Exception) {
-        LocalDate.now(ZoneId.of("Asia/Seoul"))
-    }
-}
-
-/**
  * Glim 잔디 색상 결정 (업로드 개수 기준)
  * 0개: 흰색, 1-2개: 연한 초록, 3-5개: 중간 초록, 6개 이상: 진한 초록
  */
 fun getGlimGrassColor(count: Int): Color = when {
-    count == 0 -> Color.White
+    count == 0 -> GrassEmpty
     count in 1..2 -> GrassLevel1
     count in 3..5 -> GrassLevel2
     count >= 6 -> GrassLevel3
@@ -324,7 +307,6 @@ fun PreviewEmptyUpload() {
         Box(Modifier.padding(16.dp)) {
             GlimGrassGrid(
                 uploadQuotes = emptyList(),
-                firstUploadDateStr = ""
             )
         }
     }
@@ -373,7 +355,6 @@ private fun PreviewGlimGrassWithUpload(days: Int) {
         Box(Modifier.padding(16.dp)) {
             GlimGrassGrid(
                 uploadQuotes = mockUploadQuotes,
-                firstUploadDateStr = start.format(fmt)
             )
         }
     }
