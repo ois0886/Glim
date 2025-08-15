@@ -67,8 +67,7 @@ class LockViewModel @Inject constructor(
     fun saveGlim() =
         intent {
             state.quotes.getOrNull(state.currentIndex)?.let { quote ->
-                val url = "${BuildConfig.BASE_URL}/images/${quote.quoteImageName}"
-                postSideEffect(LockSideEffect.SaveImage(url))
+                postSideEffect(LockSideEffect.SaveImage(quote.quoteImageUrl))
             }
         }
 

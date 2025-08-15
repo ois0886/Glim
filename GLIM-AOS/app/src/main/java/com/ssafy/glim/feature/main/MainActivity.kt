@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -70,6 +71,8 @@ class MainActivity : ComponentActivity() {
     private var isLoading by mutableStateOf(true)
     private var showNotificationPermissionDialog by mutableStateOf(false)
 
+    private var deepLinkQuoteId by mutableLongStateOf(-1L)
+
     // 알림 권한 요청 런처
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -92,7 +95,7 @@ class MainActivity : ComponentActivity() {
         }
         enableEdgeToEdge()
 
-        // 딥링크 처리 추가
+        // 딥링크 처리
         handleDeepLink(intent)
         // 알림 권한 확인
         checkNotificationPermission()
@@ -118,7 +121,7 @@ class MainActivity : ComponentActivity() {
                     LaunchedNavigator(navBackStack)
 
                     val initialRoute = intent.getStringExtra("nav_route")
-                    val deepLinkQuoteId = intent.getLongExtra("quote_id", -1L)
+                    deepLinkQuoteId = intent.getLongExtra("quote_id", -1L)
 
                     if (!isLoading) {
                         MainScreen(
@@ -139,9 +142,7 @@ class MainActivity : ComponentActivity() {
                                 navBackStack.clear()
                                 navBackStack.add(BottomTabRoute.Shorts(deepLinkQuoteId))
                             } else if (destination == BottomTabRoute.Home && initialRoute == "glim") {
-                                val quoteId = intent.getLongExtra("quote_id", -1L)
-                                navBackStack.clear()
-                                navBackStack.add(BottomTabRoute.Shorts(quoteId))
+                                deepLinkQuoteId = -1L // 처리 완료
                             }
                         }
                     }
@@ -150,7 +151,6 @@ class MainActivity : ComponentActivity() {
                         backStack = navBackStack
                     )
                 }
-
             }
 
             if (showNotificationPermissionDialog) {
@@ -182,7 +182,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // 새 Intent 처리 (앱이 이미 실행 중일 때)
+    // 새 Intent 처리 (백그라운드에서 딥링크로 진입)
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -192,27 +192,17 @@ class MainActivity : ComponentActivity() {
     private fun handleDeepLink(intent: Intent?) {
         val data = intent?.data ?: return
 
-        if (data.scheme == "glim") {
-            when (data.host) {
-                "quote" -> {
-                    val pathSegments = data.pathSegments
-                    if (!pathSegments.isNullOrEmpty()) {
-                        val quoteId = pathSegments[0].toLongOrNull()
-
-                        if (quoteId != null && quoteId > 0) {
-                            intent.putExtra("nav_route", "deeplink_quote")
-                            intent.putExtra("quote_id", quoteId)
-                        }
-                    }
-                }
-
-                "home" -> {
-                    intent.putExtra("nav_route", "deeplink_home")
+        if (data.scheme == "glim" && data.host == "quote") {
+            val pathSegments = data.pathSegments
+            if (!pathSegments.isNullOrEmpty()) {
+                val quoteId = pathSegments[0].toLongOrNull()
+                if (quoteId != null && quoteId > 0) {
+                    Log.d("DeepLink", "딥링크 Quote ID: $quoteId")
+                    deepLinkQuoteId = quoteId
                 }
             }
         }
     }
-
 
     private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -259,7 +249,6 @@ class MainActivity : ComponentActivity() {
                 return@addOnCompleteListener
             }
 
-            // 토큰 획득
             val token = task.result
             Log.d("FCM", "FCM 토큰: $token")
         }

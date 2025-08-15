@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.FileProvider
+import com.ssafy.glim.core.util.toBitmap
 import java.io.File
 import java.io.FileOutputStream
 
@@ -24,6 +25,11 @@ fun Bitmap.toUri(context: Context): Uri? {
         Log.e("ImageOverlay", "URI 변환 실패", e)
         null
     }
+}
+
+suspend fun String.toUri(context: Context): Uri? {
+    return this.toBitmap(context)?.toUri(context)
+
 }
 
 private fun createCacheDirectory(context: Context): File {

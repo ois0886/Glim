@@ -1,15 +1,20 @@
 package com.ssafy.glim.feature.shorts
 
+import android.content.Context
+import com.ssafy.glim.core.util.ShareManager
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssafy.glim.core.common.extensions.toUri
 import com.ssafy.glim.core.domain.usecase.quote.GetQuoteByIdUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
 import com.ssafy.glim.core.domain.usecase.quote.LikeQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.quote.UnLikeQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.quote.UpdateQuoteViewCountUseCase
+import com.ssafy.glim.core.domain.usecase.shortlink.ShortenUrlUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
+import com.ssafy.glim.core.util.toBitmap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -26,6 +31,8 @@ constructor(
     private val getQuoteByIdUseCase: GetQuoteByIdUseCase,
     private val likeQuoteUseCase: LikeQuoteUseCase,
     private val unLikeQuoteUseCase: UnLikeQuoteUseCase,
+    private val shortLinkUseCase: ShortenUrlUseCase,
+    private val shareManager: ShareManager,
     private val navigator: Navigator
 ) : ViewModel(), ContainerHost<ShortsState, ShortsSideEffect> {
     override val container: Container<ShortsState, ShortsSideEffect> = container(ShortsState())
@@ -99,12 +106,23 @@ constructor(
             }
         }
 
-//    fun onShareClick(shareManager: ShareWithImageManager) =
-//        intent {
-//            val quote = state.currentQuote ?: return@intent
-//            shareManager.shareWithBitmap(quote.quoteId, quote.bookTitle, quote.author)
-//            postSideEffect(ShortsSideEffect.ShowToast("개발 중 입니다!"))
-//        }
+    fun onShareClick() = intent {
+        val originalUrl = shareManager.buildDeepLink(state.currentQuote ?: return@intent)
+        runCatching { shortLinkUseCase(originalUrl) }
+            .onSuccess {
+                postSideEffect(ShortsSideEffect.ShareQuote(it))
+            }
+            .onFailure {
+                Log.d("ShortsViewModel", "Shorten URL failed: ${it.message}")
+                postSideEffect(ShortsSideEffect.ShareQuote(originalUrl))
+            }
+    }
+
+    fun onInstagramShareClick(context: Context) = intent {
+        val currentQuote = state.currentQuote ?: return@intent
+        val uri = currentQuote.quoteImageUrl.toUri(context)
+        postSideEffect(ShortsSideEffect.ShareQuoteInstagram(uri ?: return@intent))
+    }
 
     fun loadQuote(quoteId: Long) = intent {
         runCatching { getQuoteByIdUseCase(quoteId) }

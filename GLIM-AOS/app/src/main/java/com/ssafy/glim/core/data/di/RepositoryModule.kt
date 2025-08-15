@@ -7,6 +7,7 @@ import com.ssafy.glim.core.data.repository.ImageRepositoryImpl
 import com.ssafy.glim.core.data.repository.QuoteRepositoryImpl
 import com.ssafy.glim.core.data.repository.SearchQueryRepositoryImpl
 import com.ssafy.glim.core.data.repository.SettingsRepositoryImpl
+import com.ssafy.glim.core.data.repository.ShortLinkRepositoryImpl
 import com.ssafy.glim.core.data.repository.UserRepositoryImpl
 import com.ssafy.glim.core.domain.repository.AuthRepository
 import com.ssafy.glim.core.domain.repository.BookRepository
@@ -15,6 +16,7 @@ import com.ssafy.glim.core.domain.repository.ImageRepository
 import com.ssafy.glim.core.domain.repository.QuoteRepository
 import com.ssafy.glim.core.domain.repository.SearchQueryRepository
 import com.ssafy.glim.core.domain.repository.SettingsRepository
+import com.ssafy.glim.core.domain.repository.ShortLinkRepository
 import com.ssafy.glim.core.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -57,4 +59,7 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindImageRepository(imageRepositoryImpl: ImageRepositoryImpl): ImageRepository
+
+    @Binds
+    fun bindShortLinkRepository(shortLinkRepositoryImpl: ShortLinkRepositoryImpl): ShortLinkRepository
 }

@@ -7,20 +7,13 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.provider.MediaStore
 import android.widget.Toast
+import coil.Coil
 import coil.Coil.imageLoader
 import coil.request.ImageRequest
 import com.ssafy.glim.R
 
 suspend fun saveImageToGallery(context: Context, imageUrl: String) {
-    val request = ImageRequest.Builder(context)
-        .data(imageUrl)
-        .allowHardware(false)
-        .build()
-    val result = imageLoader(context).execute(request)
-    val bitmap = (result.drawable as? BitmapDrawable)?.bitmap
-    if (bitmap == null) {
-        return
-    }
+    val bitmap = imageUrl.toBitmap(context) ?: return
 
     // MediaStore 에 저장
     val filename = "glim_${System.currentTimeMillis()}.jpg"
@@ -47,4 +40,13 @@ suspend fun saveImageToGallery(context: Context, imageUrl: String) {
     }
 
     Toast.makeText(context, context.getString(R.string.saved), Toast.LENGTH_SHORT).show()
+}
+
+suspend fun String.toBitmap(context: Context): Bitmap? {
+    val request = ImageRequest.Builder(context)
+        .data(this)
+        .allowHardware(false)
+        .build()
+    val result = imageLoader(context).execute(request)
+    return (result.drawable as? BitmapDrawable)?.bitmap
 }

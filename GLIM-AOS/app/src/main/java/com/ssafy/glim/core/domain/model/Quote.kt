@@ -1,5 +1,7 @@
 package com.ssafy.glim.core.domain.model
 
+import com.ssafy.glim.BuildConfig
+
 data class Quote(
     val content: String = "",
     val author: String,
@@ -13,4 +15,6 @@ data class Quote(
     val quoteViews: Long,
     val isLike: Boolean = false,
     val likes: Long = 0L,
-)
+) {
+    val quoteImageUrl get() = "${BuildConfig.BASE_URL}/images/$quoteImageName"
+}
