@@ -121,7 +121,9 @@ class MainActivity : ComponentActivity() {
                     LaunchedNavigator(navBackStack)
 
                     val initialRoute = intent.getStringExtra("nav_route")
-                    deepLinkQuoteId = intent.getLongExtra("quote_id", -1L)
+                    if(deepLinkQuoteId == -1L){
+                        deepLinkQuoteId = intent.getLongExtra("quote_id", -1L)
+                    }
 
                     if (!isLoading) {
                         MainScreen(
@@ -141,8 +143,7 @@ class MainActivity : ComponentActivity() {
                             if (deepLinkQuoteId > 0) {
                                 navBackStack.clear()
                                 navBackStack.add(BottomTabRoute.Shorts(deepLinkQuoteId))
-                            } else if (destination == BottomTabRoute.Home && initialRoute == "glim") {
-                                deepLinkQuoteId = -1L // 처리 완료
+                                deepLinkQuoteId = -1L
                             }
                         }
                     }
