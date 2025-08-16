@@ -1,0 +1,45 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# build outputs
+/build
+/dist
+
+# misc
+.DS_Store
+*.pem
+*.log
+*.tmp
+*.bak
+API 명세서.html # Assuming this is a generated document
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log* # Add pnpm debug logs
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Package manager specific ignores
+package-lock.json # Ignore npm's lock file when using pnpm
