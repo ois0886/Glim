@@ -17,6 +17,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { getQuotes, deleteQuote } from '@/lib/api/quotes';
 
+// 배포(Netlify)에서는 NEXT_PUBLIC_IMAGE_BASE = https://glim-admin.netlify.app 로 잡고,
+// 로컬/기타 환경에선 기본값(백엔드 HTTP)로 떨어지게 함.
+const IMG_BASE =
+  process.env.NEXT_PUBLIC_IMAGE_BASE ?? 'http://i13d202.p.ssafy.io:8080';
+
+const imgUrl = (fileName?: string) =>
+  fileName ? `${IMG_BASE}/images/${fileName}` : '/placeholder.svg';
+
+
 interface Quote {
   quoteId: number;
   content: string;
@@ -201,7 +210,7 @@ export function PostManagement() {
                     <TableCell>
                       {/* [수정됨] 이미지 URL에서 /api 경로를 제거하여 올바른 주소 생성 */}
                       <img
-                        src={API_BASE_URL ? `${API_BASE_URL.replace('/api', '')}/images/${quote.quoteImageName}` : '/placeholder.svg'}
+                        src={imgUrl(quote.quoteImageName)} 
                         alt={`글귀 ${quote.quoteId}`}
                         className="w-full h-auto object-cover rounded-md bg-gray-200"
                         onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }}

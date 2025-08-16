@@ -1,22 +1,34 @@
 # Netlify 설정 파일: API 요청을 백엔드 서버로 전달(proxy)합니다.
 
 [build]
-  # Next.js 프로젝트 빌드 명령어
-  command = "next build"
-  # 빌드 결과물이 생성되는 폴더
-  publish = ".next"
+  command   = "next build"
+  publish   = ".next"
   functions = "netlify/functions"
 
-# API 요청을 위한 리다이렉트(프록시) 규칙
+[functions]
+  node_bundler = "esbuild"  # TypeScript 함수 번들
+
+# 프론트에서 호출하는 /api/* 을 함수로 라우팅
 [[redirects]]
-  # /api/ 로 시작하는 모든 경로의 요청을 가로챕니다.
-  from = "/api/*"
-  # 가로챈 요청을 실제 백엔드 서버 주소로 보냅니다.
-  # :splat은 * 부분에 해당하는 나머지 경로를 그대로 유지해줍니다.
-  to = "/.netlify/functions/proxy"
-  # 200 상태 코드를 반환하여, 페이지 이동(redirect)이 아닌 내용만 가져오는 프록시로 작동하게 합니다.
+  from   = "/api/*"
+  to     = "/.netlify/functions/proxy/:splat"
   status = 200
-  # 만약 동일한 경로에 정적 파일이 있더라도 이 규칙을 우선 적용합니다.
-  force = true
+  force  = true
 
+# (옵션) 혹시 /v1/*로 직접 부르면 => 함수에 'api/' 접두 붙여서 넘김
+#   /v1/xxx 요청 → /.netlify/functions/proxy/api/xxx → 최종 /api/v1/xxx 백엔드 호출
 
+[[redirects]]
+  from   = "/v1/*"
+  to     = "/.netlify/functions/proxy/api/:splat"
+  status = 200
+  force  = true
+
+[[redirects]]
+from   = "/images/*"
+to     = "http://i13d202.p.ssafy.io:8080/images/:splat"
+status = 200
+force  = true
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

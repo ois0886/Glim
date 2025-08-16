@@ -1,60 +1,18 @@
-Request URL
-http://i13d202.p.ssafy.io:8080/api/v1/admin/members
-Request Method
-GET
-Status Code
-401 Unauthorized
-Remote Address
-54.180.233.45:8080
-Referrer Policy
-strict-origin-when-cross-origin
-access-control-allow-credentials
-true
-access-control-allow-origin
-http://localhost:3000
-cache-control
-no-cache, no-store, max-age=0, must-revalidate
-connection
-keep-alive
-content-length
-58
-content-type
-application/json;charset=UTF-8
-date
-Sat, 16 Aug 2025 09:18:11 GMT
-expires
-0
-keep-alive
-timeout=60
-pragma
-no-cache
-vary
-Origin
-vary
-Access-Control-Request-Method
-vary
-Access-Control-Request-Headers
-x-content-type-options
-nosniff
-x-frame-options
-DENY
-x-xss-protection
-0
-accept
-application/json, text/plain, */*
-accept-encoding
-gzip, deflate
-accept-language
-ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
-authorization
-Bearer fake-jwt-token-from-smart-msw-67890
-connection
-keep-alive
-host
-i13d202.p.ssafy.io:8080
-origin
-http://localhost:3000
-referer
-http://localhost:3000/
-user-agent
-Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36
+AxiosError: Request failed with status code 401
+
+components\admin\user-management.tsx (96:26) @ async UserManagement.useEffect.fetchUsers
+
+
+  94 |     const fetchUsers = async () => {
+  95 |       try {
+> 96 |         const response = await axiosInstance.get('/api/v1/admin/members');
+     |                          ^
+  97 |         
+  98 |         // response.data가 이미 사용자 배열이므로, .data를 한번만 사용합니다.
+  99 |         const sortedUsers = (response.data || []).sort((a: any, b: any) => a.memberId - b.memberId);
+Call Stack
+4
+
+Show 3 ignore-listed frame(s)
+async UserManagement.useEffect.fetchUsers
+components\admin\user-management.tsx (96:26)

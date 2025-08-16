@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Package manager specific ignores
 package-lock.json # Ignore npm's lock file when using pnpm
+
+# Local Netlify folder
+.netlify
