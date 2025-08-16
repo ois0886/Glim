@@ -83,6 +83,18 @@ class GlimNotificationService : FirebaseMessagingService() {
                 }
             }
 
+            "QUOTE" -> {
+                val quoteId = data["quoteId"]?.toLongOrNull()
+                if (quoteId != null && quoteId > 0) {
+                    val intent = Intent(this, MainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        putExtra("nav_route", "glim")
+                        putExtra("quote_id", quoteId)
+                    }
+                    showNotification(quoteId.toInt(), title, body, intent)
+                }
+            }
+
             else -> {
                 Log.w(TAG, "Unknown screen type: $screen")
             }

@@ -191,6 +191,27 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleDeepLink(intent: Intent?) {
+        val extras = intent?.extras
+        Log.d("intent test", "${intent?.extras}")
+        if(extras != null) {
+            val screen = extras.getString("screen")
+            if(screen == "QUOTE") {
+                Log.d("MainActivity", "=== 모든 extras 정보 ===")
+                extras.keySet().forEach { key ->
+                    val value = extras.get(key)
+                    Log.d("MainActivity", "$key: $value")
+                }
+                Log.d("MainActivity", "========================")
+
+
+                val quoteId = extras.get("quoteId")?.toString()?.toLongOrNull() ?: -1L
+                Log.d("DeepLink", "딥링크 Quote ID: $quoteId")
+                if (quoteId > 0) {
+                    deepLinkQuoteId = quoteId
+                }
+            }
+        }
+
         val data = intent?.data ?: return
 
         if (data.scheme == "glim" && data.host == "quote") {

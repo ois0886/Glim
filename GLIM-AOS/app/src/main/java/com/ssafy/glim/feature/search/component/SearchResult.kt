@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,9 +49,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Book
 import com.ssafy.glim.core.domain.model.QuoteSummary
+import com.ssafy.glim.core.ui.GlimLoader
 import com.ssafy.glim.feature.search.SearchFilter
 
 enum class SearchTab(val displayName: String) {
@@ -352,16 +357,18 @@ private fun BookCard(
             modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+
             // 책 아이콘/이미지
-            AsyncImage(
+            SubcomposeAsyncImage (
                 model = book.cover,
                 contentDescription = null,
                 modifier = Modifier
-                    .height(140.dp)
-                    .shadow(
-                        elevation = 8.dp
-                    )
-                    .clip(RoundedCornerShape(4.dp))
+                    .size(width = 80.dp, height = 120.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                contentScale = ContentScale.Crop,
+                loading = {
+                    GlimLoader(Modifier)
+                },
             )
 
             // 책 정보
