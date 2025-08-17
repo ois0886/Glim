@@ -1,3 +1,25 @@
+/**
+ * src/hooks/useQuoteList.ts
+ *
+ * 이 훅은 명언(quote) 목록 데이터를 API로부터 가져오는 역할을 합니다.
+ * `useApiData.ts`와 유사하지만, 특정 API 엔드포인트와 데이터 변환 로직에 특화되어 있습니다.
+ *
+ * 주요 기능:
+ * 1. 명언 목록 Fetching:
+ *    - `/api/v1/quotes` 엔드포인트로 GET 요청을 보내 명언 목록을 가져옵니다.
+ *    - 페이지네이션(`page`, `size`) 및 정렬(`sort`) 파라미터를 포함하여 요청합니다.
+ *
+ * 2. 데이터 변환:
+ *    - API 응답(`QuoteListApiResponse[]`)을 앱 내부에서 사용하는 `Content[]` 타입으로 변환합니다.
+ *    - 이 과정에서 `quoteImageName` 필드를 `quoteImage` 필드로 매핑하는 등,
+ *      API와 앱 간의 데이터 구조 차이를 해결합니다.
+ *
+ * 3. 상태 관리 및 반환:
+ *    - `quotes`: 가져온 명언 목록 데이터 배열.
+ *    - `loading`: 데이터 로딩 중인지 여부.
+ *    - `error`: 로딩 중 발생한 에러 객체.
+ *    - 이들을 객체로 묶어 반환하여 컴포넌트에서 명언 목록을 쉽게 사용할 수 있게 합니다.
+ */
 // src/hooks/useQuoteList.ts
 
 import { useState, useEffect } from 'react';
@@ -39,7 +61,7 @@ const useQuoteList = (): UseQuoteListReturn => {
         const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/quotes?page=0&size=200&sort=views%2Cdesc`;
         
         // axios를 사용하고, 응답 타입을 위에서 정의한 것으로 지정합니다.
-        const response = await axios.get<QuoteListApiResponse[]>(apiUrl);
+        const response = await axios.get<QuoteListApiResponse>(apiUrl);
 
         // API 응답 데이터를 프론트엔드용 Content 타입으로 변환합니다.
         const transformedQuotes: Content[] = response.data.map(item => ({

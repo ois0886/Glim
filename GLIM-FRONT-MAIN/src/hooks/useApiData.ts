@@ -1,3 +1,30 @@
+/**
+ * src/hooks/useApiData.ts
+ *
+ * 이 훅은 외부 API로부터 명언(quote) 데이터를 가져와 처리하는 커스텀 훅입니다.
+ * 컴포넌트에서 데이터 로딩, 상태 관리, 에러 처리 로직을 분리하여 재사용성을 높입니다.
+ *
+ * 주요 기능:
+ * 1. 비동기 데이터 Fetching:
+ *    - `useEffect` 훅을 사용하여 컴포넌트가 마운트될 때 한 번만 데이터를 가져옵니다.
+ *    - `axios`를 사용하여 지정된 API 엔드포인트에 GET 요청을 보냅니다.
+ *
+ * 2. 데이터 변환 (Transformation):
+ *    - API로부터 받은 원본 데이터(`AdminQuoteSearchResult`)의 구조와
+ *      프로젝트 내부에서 사용하는 데이터 구조(`Content`)가 다를 수 있습니다.
+ *    - `.map()` 메소드를 사용하여 원본 데이터를 `Content` 타입 배열로 일관성 있게 변환합니다.
+ *    - 이 과정에서 API 응답에 없는 필드(예: `author`, `bookId`)에 기본값을 채워 넣어,
+ *      데이터 구조 차이로 인한 오류를 방지합니다.
+ *
+ * 3. 상태 관리:
+ *    - `useState`를 사용하여 세 가지 상태를 관리합니다.
+ *      - `data`: 성공적으로 가져와 변환된 데이터 배열
+ *      - `loading`: 데이터 로딩 중인지 여부 (true/false)
+ *      - `error`: 데이터 로딩 중 발생한 에러 객체
+ *
+ * 4. 반환 값:
+ *    - 컴포넌트에서 현재 상태를 쉽게 사용할 수 있도록 `{ data, loading, error }` 객체를 반환합니다.
+ */
 import { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 import { Content } from '../types/api';
@@ -27,7 +54,7 @@ const useApiData = (): UseApiDataReturn => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const apiUrl = `/api/v1/admin/search-keywords/quotes?keyword=&page=0&size=100&sort=views%2Cdesc`;
+        const apiUrl = `https://glim-main.netlify.app/api/v1/admin/search-keywords/quotes?keyword=&page=0&size=300&sort=views%2Cdesc`;
         
         // 2. API 응답 타입을 위에서 정의한 AdminQuoteSearchResult[]로 지정합니다.
         const response = await axios.get<AdminQuoteSearchResult[]>(apiUrl);

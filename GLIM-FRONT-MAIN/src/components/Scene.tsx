@@ -1,230 +1,338 @@
-"use client";
+// 파일 경로: src/components/Scene.tsx
+
+'use client';
 
 import React, { Suspense, useRef, useState, useEffect, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, useTexture } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
-// 아래 Content 타입은 사용자 프로젝트에 정의되어 있다고 가정합니다.
-// 예: export interface Content { quoteId: number; quoteImage: string; }
-import { Content } from '../types/api';
-// 'gsap' 모듈을 찾지 못하는 오류를 해결하기 위해 CDN에서 직접 가져옵니다.
-import { gsap } from 'gsap';
+import { a, useSpring } from '@react-spring/three';
+import gsap from 'gsap';
 
-// --- Stardust 컴포넌트 ---
-const Stardust = () => {
-    const pointsRef = useRef<THREE.Points>(null!);
+// --- 데이터 타입 및 API 훅 ---
+import { Content } from '../types/api';
+import useApiData from '../hooks/useApiData';
+
+// ------------------------------
+// 별 배경 컴포넌트
+// ------------------------------
+const Stardust: React.FC = () => {
+    const pointsRef = useRef<THREE.Points>(null);
+    useFrame((_, delta) => {
+        if (pointsRef.current) pointsRef.current.rotation.y += delta * 0.02;
+    });
 
     const particles = useMemo(() => {
         const geometry = new THREE.BufferGeometry();
-        const count = 20000;
-        const positions = new Float32Array(count * 3);
-
-        for (let i = 0; i < count * 3; i++) {
-            positions[i] = (Math.random() - 0.5) * 200;
-        }
-
+        const positions = new Float32Array(5000 * 3).map(() => (Math.random() - 0.5) * 100);
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         return geometry;
     }, []);
 
-    useFrame((state, delta) => {
-        if (pointsRef.current) {
-            pointsRef.current.rotation.y += delta * 0.02;
-        }
-    });
-
     return (
-        <points ref={pointsRef}>
-            <primitive object={particles} attach="geometry" />
-            <pointsMaterial
-                attach="material"
-                size={0.04}
-                color="#ffffff"
-                transparent
-                opacity={0.6}
-                sizeAttenuation
-            />
+        <points ref={pointsRef} geometry={particles}>
+            <pointsMaterial size={0.05} color="#ffffff" transparent opacity={0.6} />
         </points>
     );
 };
 
+// ------------------------------
+// 개별 책(이미지) 컴포넌트
+// ------------------------------
+const Book: React.FC<{
+    item: Content;
+    position: [number, number, number];
+    rotation: [number, number, number];
+    onClick: () => void;
+    isOutOfFocus: boolean;
+}> = ({ item, position, rotation, onClick, isOutOfFocus }) => {
+    const [hovered, setHovered] = useState(false);
 
-// --- Book 컴포넌트 ---
-const Book: React.FC<{ item: Content; onClick: (mesh: THREE.Mesh) => void }> = ({ item, onClick }) => {
-    const meshRef = useRef<THREE.Mesh>(null!);
-    // public/images/ 폴더에 이미지가 있다고 가정합니다.
-    const imageUrl = `/images/${item.quoteImage}`;
-    const texture = useMemo(() => new THREE.TextureLoader().load(imageUrl), [imageUrl]);
+    const imageUrl = useMemo(() => {
+        const imageName = item.quoteImage?.split('/').pop() || item.quoteImage;
+        if (!imageName) return '/images/books/placeholder.png';
+        return `/images/books/${imageName}`;
+    }, [item.quoteImage, item.quoteImage]);
 
-    const position = useMemo(() => {
-        const radius = 12;
-        const phi = Math.acos(2 * Math.random() - 1);
-        const theta = Math.random() * 2 * Math.PI;
-        const r = Math.cbrt(Math.random()) * radius;
+    const texture = useTexture(imageUrl);
+    const { gl } = useThree();
 
-        const x = r * Math.sin(phi) * Math.cos(theta);
-        const y = r * Math.sin(phi) * Math.sin(theta);
-        const z = r * Math.cos(phi);
+    // 텍스처 품질 및 좌우 반전 방지
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.repeat.x = 1;
 
-        return [x, y, z];
-    }, []);
+    // 색공간 (three r154+ / r153- 모두 안전)
+    const anyTex = texture as any;
+    const anyTHREE = THREE as any;
+    if ('colorSpace' in anyTex && anyTHREE.SRGBColorSpace !== undefined) {
+        anyTex.colorSpace = anyTHREE.SRGBColorSpace; // r154+
+    } else if ('encoding' in anyTex && anyTHREE.sRGBEncoding !== undefined) {
+        anyTex.encoding = anyTHREE.sRGBEncoding;     // r153-
+    }
+    // 품질
+    texture.anisotropy = gl?.capabilities?.getMaxAnisotropy?.() ?? 1;
 
-    const rotation = useMemo(() => [
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-    ], []);
+    const { scale, opacity } = useSpring({
+        scale: hovered && !isOutOfFocus ? 1.2 : 1,
+        opacity: isOutOfFocus ? 0.15 : 1,
+        config: { tension: 300, friction: 20 },
+    });
+
+    useEffect(() => {
+        document.body.style.cursor = hovered ? 'pointer' : 'auto';
+        return () => {
+            document.body.style.cursor = 'auto';
+        };
+    }, [hovered]);
 
     return (
-        <mesh
-            ref={meshRef}
-            position={position as [number, number, number]}
-            rotation={rotation as [number, number, number]}
+        <a.mesh
+            position={position}
+            rotation={rotation}
+            scale={scale}
             onClick={(e) => {
-                // 이벤트 버블링을 막아 배경 클릭으로 인식되지 않게 합니다.
                 e.stopPropagation();
-                onClick(meshRef.current);
+                onClick();
             }}
+            onPointerOver={(e) => {
+                e.stopPropagation();
+                setHovered(true);
+            }}
+            onPointerOut={() => setHovered(false)}
         >
-            <planeGeometry args={[1.2, 1.8]} />
-            <meshBasicMaterial map={texture} side={THREE.FrontSide} transparent />
-        </mesh>
+            <boxGeometry args={[1, 1.5, 0.1]} />
+            {/* 옆면/뒷면 색 */}
+            <a.meshBasicMaterial attach="material-0" color="#f0e6d6" transparent opacity={opacity} />
+            <a.meshBasicMaterial attach="material-1" color="#f0e6d6" transparent opacity={opacity} />
+            <a.meshBasicMaterial attach="material-2" color="#f0e6d6" transparent opacity={opacity} />
+            <a.meshBasicMaterial attach="material-3" color="#f0e6d6" transparent opacity={opacity} />
+            {/* 앞/뒤 표지 텍스처 */}
+            <a.meshBasicMaterial attach="material-4" map={texture} transparent opacity={opacity} toneMapped={false} />
+            <a.meshBasicMaterial attach="material-5" map={texture} transparent opacity={opacity} toneMapped={false} />
+        </a.mesh>
     );
 };
 
-
-const SceneContent: React.FC<SceneContentProps> = ({ data }) => {
-    const { camera } = useThree();
-    const cameraGroupRef = useRef<THREE.Group>(null!);
-    const controlsRef = useRef<OrbitControlsImpl>(null!);
-
-    const [isZoomedIn, setIsZoomedIn] = useState(false);
-    const [targetObject, setTargetObject] = useState<THREE.Mesh | null>(null);
-    const originalRotation = useRef(new THREE.Quaternion());
-    const defaultCameraPosition = useMemo(() => new THREE.Vector3(0, 0, 25), []);
-
-    // 'react-hooks/exhaustive-deps' 경고를 해결하기 위해 의존성 배열에 defaultCameraPosition을 추가했습니다.
+// ------------------------------
+// 3D 씬의 핵심 로직
+// ------------------------------
+const SceneContent: React.FC<{ data: Content[] }> = ({ data }) => {
+    // 전환 관리용 ref
     useEffect(() => {
-        camera.position.copy(defaultCameraPosition);
-        if (cameraGroupRef.current) {
-            cameraGroupRef.current.add(camera);
+        const heroContent = document.querySelector('.hero-content');
+        if (heroContent) {
+            gsap.set(heroContent, { opacity: 1, pointerEvents: 'all' });
+            gsap.to(heroContent, { duration: 1.0, opacity: 0, pointerEvents: 'none', delay: 3.0 });
         }
-    }, [camera, defaultCameraPosition]);
+    }, []);
 
-    useFrame(({ mouse: fiberMouse }) => {
-        if (!isZoomedIn) {
-            const parallaxX = fiberMouse.x * 0.5;
-            const parallaxY = -fiberMouse.y * 0.5;
-            if (cameraGroupRef.current) {
-                cameraGroupRef.current.position.x += (parallaxX - cameraGroupRef.current.position.x) * 0.02;
-                cameraGroupRef.current.position.y += (parallaxY - cameraGroupRef.current.position.y) * 0.02;
-            }
-        }
-        
-        if (controlsRef.current) {
-            controlsRef.current.update();
-        }
-    });
+    const isTweeningRef = useRef(false);
+    const activeTlRef = useRef<gsap.core.Timeline | null>(null);
 
-    const handleBookClick = (mesh: THREE.Mesh | null) => {
-        if (controlsRef.current) {
-            gsap.killTweensOf(camera.position);
-            gsap.killTweensOf(controlsRef.current.target);
-        }
-        if(targetObject) gsap.killTweensOf(targetObject.quaternion);
+    // 클릭 연타 방지
+    const lastClickAtRef = useRef(0);
+    const CLICK_GAP = 180; // ms
 
-        if (mesh) { // Zoom in
-            setIsZoomedIn(true);
-            setTargetObject(mesh);
-            if (controlsRef.current) controlsRef.current.enabled = false;
+    const { camera, size } = useThree();
+    const controlsRef = useRef<OrbitControlsImpl | null>(null);
+    const booksGroupRef = useRef<THREE.Group | null>(null);
+    const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
 
-            const targetPosition = new THREE.Vector3();
-            mesh.getWorldPosition(targetPosition);
+    // 초기 카메라 포지션 (줌아웃 복귀점)
+    const initialCameraPosition = useMemo(() => new THREE.Vector3(0, 0, 10), []);
 
-            originalRotation.current.copy(mesh.quaternion);
-            
-            const cameraOffset = new THREE.Vector3(0, 0, 2.5);
-            const cameraPosition = cameraOffset.applyMatrix4(mesh.matrixWorld);
-            
-            const targetRotation = new THREE.Quaternion();
-            const tempCamera = new THREE.Object3D();
-            tempCamera.position.copy(cameraPosition);
-            tempCamera.lookAt(targetPosition);
-            targetRotation.copy(tempCamera.quaternion);
-
-            const flipRotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
-            targetRotation.multiply(flipRotation);
-
-            if (controlsRef.current) {
-                gsap.to(controlsRef.current.target, { duration: 1.5, x: targetPosition.x, y: targetPosition.y, z: targetPosition.z, ease: 'power3.inOut' });
-                gsap.to(camera.position, { duration: 1.5, x: cameraPosition.x, y: cameraPosition.y, z: cameraPosition.z, ease: 'power3.inOut', onComplete: () => { if (controlsRef.current) controlsRef.current.enabled = true; } });
-            }
-            gsap.to(mesh.quaternion, { duration: 1.5, x: targetRotation.x, y: targetRotation.y, z: targetRotation.z, w: targetRotation.w, ease: 'power3.inOut' });
-        
-        } else { // Zoom out
-            if (isZoomedIn) {
-                setIsZoomedIn(false);
-                if (controlsRef.current) controlsRef.current.enabled = false;
-
-                if (targetObject) {
-                    gsap.to(targetObject.quaternion, { duration: 1.5, x: originalRotation.current.x, y: originalRotation.current.y, z: originalRotation.current.z, w: originalRotation.current.w, ease: 'power3.inOut' });
-                }
-                setTargetObject(null);
-
-                if (controlsRef.current) {
-                    gsap.to(controlsRef.current.target, { duration: 1.5, x: 0, y: 0, z: 0, ease: 'power3.inOut' });
-                    gsap.to(camera.position, { duration: 1.5, x: defaultCameraPosition.x, y: defaultCameraPosition.y, z: defaultCameraPosition.z, ease: 'power3.inOut', onComplete: () => { if (controlsRef.current) controlsRef.current.enabled = true; } });
-                }
-            }
-        }
+    // 클릭 핸들러(디바운스 적용)
+    const handleBookClick = (index: number) => {
+        const now = performance.now();
+        if (now - lastClickAtRef.current < CLICK_GAP) return;
+        lastClickAtRef.current = now;
+        setFocusedIndex((prev) => (prev === index ? null : index));
     };
 
     const handleBackgroundClick = () => {
-        handleBookClick(null);
-    }
+        const now = performance.now();
+        if (now - lastClickAtRef.current < CLICK_GAP) return;
+        lastClickAtRef.current = now;
+        setFocusedIndex(null);
+    };
+
+    // 구체 표면에 고르게 배치 (사진이 적을수록 반지름을 줄여 밀도를 높임)
+    const bookTransforms = useMemo(() => {
+        const dynamicRadius = data.length < 50 ? 7 : 10;
+        return data.map((item, index) => {
+            const phi = Math.acos(-1 + (2 * index) / data.length);
+            const theta = Math.sqrt(data.length * Math.PI) * phi;
+            const posVec = new THREE.Vector3().setFromSpherical(
+                new THREE.Spherical(dynamicRadius + (Math.random() - 0.5) * 8, phi, theta)
+            );
+            const tempObject = new THREE.Object3D();
+            tempObject.position.copy(posVec);
+            tempObject.lookAt(0, 0, 0);
+            return {
+                id: `${item.quoteId ?? 'item'}-${index}`,
+                position: posVec.toArray() as [number, number, number],
+                rotation: [tempObject.rotation.x, tempObject.rotation.y, tempObject.rotation.z] as [
+                    number,
+                    number,
+                    number
+                ],
+            };
+        });
+    }, [data]);
+
+    // 포커스 이동/복귀 애니메이션 (항상 "타임라인 1개"만 운용)
+    useEffect(() => {
+        const controls = controlsRef.current;
+        const group = booksGroupRef.current;
+        if (!controls || !group) return;
+
+        // 이전 타임라인/트윈 제거
+        if (activeTlRef.current) {
+            activeTlRef.current.kill();
+            activeTlRef.current = null;
+        }
+        gsap.killTweensOf([camera.position, controls.target]);
+
+        controls.enabled = false;
+        isTweeningRef.current = true;
+
+        // 목표 지점 계산
+        let camTarget = initialCameraPosition.clone();
+        let lookTarget = new THREE.Vector3(0, 0, 0);
+
+        if (focusedIndex !== null && group.children[focusedIndex]) {
+            const focusedObject = group.children[focusedIndex];
+            const bookWorld = new THREE.Vector3();
+            focusedObject.getWorldPosition(bookWorld);
+
+            // 책(1 x 1.5)을 화면에 꽉 차게 맞추기 위한 거리 계산
+            const planeHeight = 1.5;
+            const planeWidth = 1;
+            const vfov = THREE.MathUtils.degToRad(camera.fov);
+            const aspect = size.width / size.height;
+            const hfov = 2 * Math.atan(Math.tan(vfov / 2) * aspect);
+
+            const distForH = (planeHeight / 2) / Math.tan(vfov / 2);
+            const distForW = (planeWidth / 2) / Math.tan(hfov / 2);
+            const distance = Math.min(distForH, distForW);
+
+            const offset = bookWorld.clone().sub(lookTarget).normalize().multiplyScalar(distance);
+            camTarget = bookWorld.clone().add(offset);
+            lookTarget = bookWorld.clone();
+        }
+
+        // 타임라인 1개만 생성 (새 전환 오면 위에서 즉시 교체)
+        const tl = gsap.timeline({
+            defaults: { duration: 1.6, ease: 'expo.inOut', overwrite: 'auto' },
+            smoothChildTiming: true,
+            onUpdate: () => {
+                controls.update();
+            },
+            onComplete: () => {
+                controls.enabled = true;
+                isTweeningRef.current = false;
+                activeTlRef.current = null;
+            },
+        });
+
+        tl.to(camera.position, { x: camTarget.x, y: camTarget.y, z: camTarget.z }, 0).to(
+            controls.target,
+            { x: lookTarget.x, y: lookTarget.y, z: lookTarget.z },
+            0
+        );
+
+        activeTlRef.current = tl;
+    }, [focusedIndex, camera, size, initialCameraPosition]);
+
+    // 회전(포커스 없을 때만 느리게 배경 회전)
+    useFrame((_, delta) => {
+        if (focusedIndex === null && booksGroupRef.current) {
+            booksGroupRef.current.rotation.y += delta * 0.01;
+        }
+    });
 
     return (
         <>
-            <group ref={cameraGroupRef} />
             <color attach="background" args={['#000000']} />
-            <fog attach="fog" args={['#000000', 10, 40]} />
+            <fog attach="fog" args={['#000000', 15, 40]} />
             <ambientLight intensity={1.5} />
-            
             <Stardust />
 
-            <group>
+            <group ref={booksGroupRef}>
                 {data.map((item, i) => (
-                    <Book key={item.quoteId || i} item={item} onClick={handleBookClick} />
+                    <Book
+                        key={bookTransforms[i].id}
+                        item={item}
+                        onClick={() => handleBookClick(i)}
+                        position={bookTransforms[i].position}
+                        rotation={bookTransforms[i].rotation}
+                        isOutOfFocus={focusedIndex !== null && focusedIndex !== i}
+                    />
                 ))}
             </group>
 
-            <OrbitControls ref={controlsRef} />
-            
-            {/* 배경 클릭을 감지하기 위한 투명한 평면 */}
-            <mesh position={[0,0,-50]} onPointerDown={handleBackgroundClick}>
-                <planeGeometry args={[500, 500]} />
-                <meshBasicMaterial transparent opacity={0} />
+            <OrbitControls
+                ref={controlsRef}
+                enableDamping
+                dampingFactor={0.04}
+                enablePan={false}
+                minDistance={1.0}
+                maxDistance={30}
+            />
+
+            {/* 배경 클릭 캡처용 투명 판 */}
+            <mesh position={[0, 0, -5]} onClick={handleBackgroundClick} renderOrder={-1}>
+                <planeGeometry args={[200, 200]} />
+                <meshBasicMaterial visible={false} />
             </mesh>
         </>
     );
 };
 
-interface SceneContentProps {
-    data: Content[];
-}
+// ------------------------------
+// 최종 렌더링 컴포넌트
+// ------------------------------
+const Scene: React.FC = () => {
+    const { data, loading, error } = useApiData();
 
-interface SceneProps {
-    data: Content[];
-}
+    const displayData = useMemo(() => {
+        if (!data || data.length === 0) return [];
+        // 랜덤 셔플
+        return [...data].sort(() => Math.random() - 0.5);
+    }, [data]);
 
-const Scene: React.FC<SceneProps> = ({ data }) => {
+    const MessageOverlay: React.FC<{ color: string; children: React.ReactNode }> = ({
+        color,
+        children,
+    }) => (
+        <div
+            style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                color,
+                textAlign: 'center',
+                zIndex: 100,
+            }}
+        >
+            {children}
+        </div>
+    );
+
+    if (loading) return <MessageOverlay color="white">Loading Cosmos...</MessageOverlay>;
+    if (error) return <MessageOverlay color="red">Error: {error.message}</MessageOverlay>;
+    if (displayData.length === 0) return <MessageOverlay color="orange">표시할 데이터가 없습니다.</MessageOverlay>;
+
     return (
-        <Canvas camera={{ position: [0, 0, 25], fov: 75 }} flat>
-            <Suspense fallback={null}>
-                <SceneContent data={data} />
-            </Suspense>
-        </Canvas>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#000' }}>
+            <Canvas camera={{ position: [0, 0, 18], fov: 75 }} flat>
+                <Suspense fallback={null}>
+                    <SceneContent data={displayData} />
+                </Suspense>
+            </Canvas>
+        </div>
     );
 };
 
