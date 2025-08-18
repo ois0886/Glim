@@ -1,0 +1,250 @@
+package com.lovedbug.geulgwi.docs;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.lovedbug.geulgwi.core.domain.member.Member;
+import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
+import com.lovedbug.geulgwi.core.domain.member.dto.request.SignUpRequest;
+import com.lovedbug.geulgwi.core.domain.member.dto.request.UpdateRequest;
+import com.lovedbug.geulgwi.core.security.JwtUtil;
+import com.lovedbug.geulgwi.external.email.EmailSender;
+import com.lovedbug.geulgwi.external.fcm.dto.request.FcmTokenInActiveRequestDto;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.FieldDescriptor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import java.time.LocalDateTime;
+import java.util.List;
+import static io.restassured.RestAssured.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
+import static org.mockito.ArgumentMatchers.any;
+
+@ActiveProfiles("test")
+public class MemberApiDocsTest extends RestDocsTestSupport{
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
+
+    @BeforeEach
+    void clearDatabase() {
+
+        memberRepository.deleteAllInBatch();
+    }
+
+    @MockitoBean
+    private EmailSender emailSender;
+
+    @DisplayName("사용자가_사용할_계정을_생성한다")
+    @Test
+    void create_member() throws Exception{
+
+        doNothing().when(emailSender).sendWelcomeEmail(any(String.class), any(String.class));
+
+        Member member = TestMemberFactory.createGetTestMember(passwordEncoder);
+
+        SignUpRequest signUpRequest = SignUpRequest.builder()
+            .email(member.getEmail())
+            .password("pwd1234")
+            .nickname("testNickname1")
+            .birthDate(LocalDateTime.of(1999, 1, 7, 0,0,0))
+            .gender(MemberGender.MALE)
+            .build();
+
+        given(this.spec)
+            .multiPart("signUpRequest", "sign-up.json", objectMapper.writeValueAsBytes(signUpRequest), "application/json")
+            .multiPart("profileImage", "profile.jpg", "fake-image-content".getBytes(), "image/jpeg")
+            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+            .filter(document("{class_name}/{method_name}",
+                requestParts(
+                    partWithName("signUpRequest").description("회원가입 정보(JSON)"),
+                    partWithName("profileImage").description("프로필 이미지 파일")
+                ),
+                responseFields(
+                    fieldWithPath("email").description("가입한 사용자 이메일"),
+                    fieldWithPath("nickname").description("가입한 사용자 닉네임"),
+                    fieldWithPath("message").description("회원가입 처리 결과 메시지")
+                )
+            ))
+            .when()
+            .post("/api/v1/members")
+            .then().log().all()
+            .statusCode(201);
+    }
+
+    @DisplayName("사용자_id를_통해_조회한다.")
+    @Test
+    void get_member_by_id(){
+
+        Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
+        Member savedMember = memberRepository.save(testMember);
+
+        given(this.spec)
+            .filter(document("{class_name}/{method_name}",
+                pathParameters(
+                    parameterWithName("memberId").description("조회할 사용자 id(필수)")
+                ),
+                responseFields(memberItemFields())
+            ))
+            .when()
+            .get("/api/v1/members/{memberId}",savedMember.getMemberId())
+            .then().log().all()
+            .statusCode(200);
+    }
+
+    @DisplayName("사용자_정보를_수정한다")
+    @Test
+    void update_member() throws Exception {
+
+        Member testMember = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
+        Member savedMember = memberRepository.save(testMember);
+        String accessToken = jwtUtil.generateAccessToken(savedMember.getEmail(), savedMember.getMemberId());
+
+        UpdateRequest updateRequest = UpdateRequest.builder()
+            .password("updatePwd123")
+            .nickname("updatedNickname")
+            .birthDate(LocalDateTime.of(1999, 1, 7, 0,0,0))
+            .gender(MemberGender.MALE)
+            .build();
+
+        given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
+            .multiPart("updateRequest", "sign-up.json", objectMapper.writeValueAsBytes(updateRequest), "application/json")
+            .multiPart("profileImage", "profile.jpg", "fake-image-content".getBytes(), "image/jpeg")
+            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+            .filter(document("{class_name}/{method_name}",
+                requestHeaders(
+                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 엑세스 토큰")
+                ),
+                requestParts(
+                    partWithName("updateRequest").description("수정할 회원정보(JSON)"),
+                    partWithName("profileImage").description("수정할 프로필 이미지 파일")
+                ),
+                responseFields(memberItemFields())
+            ))
+            .when()
+            .put("/api/v1/members/me")
+            .then().log().all()
+            .statusCode(200);
+    }
+
+    @DisplayName("회원을_삭제한다(논리삭제)")
+    @Test
+    void soft_delete_member() throws Exception {
+
+        Member member = TestMemberFactory.createVerifiedTestMember(passwordEncoder);
+        Member savedMember = memberRepository.save(member);
+        String accessToken = jwtUtil.generateAccessToken(savedMember.getEmail(), savedMember.getMemberId());
+
+        FcmTokenInActiveRequestDto fcmTokenInActiveRequest = FcmTokenInActiveRequestDto.builder()
+            .deviceId("test_device-id")
+            .build();
+
+        given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(objectMapper.writeValueAsBytes(fcmTokenInActiveRequest))
+            .filter(document("{class_name}/{method_name}",
+                requestHeaders(
+                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 엑세스 토큰")
+                ),
+                requestFields(
+                    fieldWithPath("deviceId").description("디바이스 식별자")
+                ),
+                responseFields(softDeleteResponseFields())
+            ))
+            .when()
+            .patch("/api/v1/members/me/status")
+            .then().log().all()
+            .statusCode(200);
+    }
+
+    public static List<FieldDescriptor> memberItemFields() {
+
+        return List.of(
+            fieldWithPath("memberId").description("사용자 고유 ID"),
+            fieldWithPath("email").description("사용자 이메일"),
+            fieldWithPath("nickname").description("사용자 닉네임"),
+            fieldWithPath("status").description("회원 상태 (ACTIVE, INACTIVE)"),
+            fieldWithPath("birthDate").description("사용자 생년월일"),
+            fieldWithPath("gender").description("사용자 성별 (MALE, FEMALE)"),
+            fieldWithPath("profileUrl").description("사용자 프로필 사진")
+        );
+    }
+
+    public static List<FieldDescriptor> softDeleteResponseFields() {
+
+        return List.of(
+            fieldWithPath("memberId").description("회원 고유 ID"),
+            fieldWithPath("email").description("회원 이메일"),
+            fieldWithPath("nickname").description("회원 닉네임"),
+            fieldWithPath("status").description("회원 상태 (INACTIVE로 변경됨)"),
+            fieldWithPath("birthDate").description("회원 생년월일"),
+            fieldWithPath("gender").description("회원 성별"),
+            fieldWithPath("profileUrl").description("사용자 프로필 사진")
+        );
+    }
+
+    public static class TestMemberFactory {
+
+        public static Member.MemberBuilder memberBuilder(PasswordEncoder passwordEncoder) {
+
+            return Member.builder()
+                .password(passwordEncoder.encode("pwd1234"))
+                .nickname("testNickname")
+                .birthDate(LocalDateTime.of(1999, 1, 7, 0,0,0))
+                .gender(MemberGender.MALE)
+                .profileUrl("http://test.com/profile.jpg");
+        }
+
+        public static Member createMember(String emailPrefix, PasswordEncoder passwordEncoder) {
+
+            String uniqueEmail = emailPrefix + "_" + System.currentTimeMillis() + "@example.com";
+
+            return memberBuilder(passwordEncoder)
+                .email(uniqueEmail)
+                .build();
+        }
+
+        public static Member createVerifiedMember(String emailPrefix, PasswordEncoder passwordEncoder) {
+
+            String uniqueEmail = emailPrefix + "_" + System.currentTimeMillis() + "@example.com";
+
+            return memberBuilder(passwordEncoder)
+                .email(uniqueEmail)
+                .build();
+        }
+
+        public static Member createGetTestMember(PasswordEncoder passwordEncoder) {
+
+            return createMember("test_get", passwordEncoder);
+        }
+
+        public static Member createVerifiedTestMember(PasswordEncoder passwordEncoder) {
+
+            return createVerifiedMember("test_verified", passwordEncoder);
+        }
+    }
+}
