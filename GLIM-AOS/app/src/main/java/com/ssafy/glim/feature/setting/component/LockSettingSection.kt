@@ -1,0 +1,28 @@
+package com.ssafy.glim.feature.setting.component
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.ssafy.glim.R
+import com.ssafy.glim.core.domain.model.Settings
+
+@Composable
+fun LockSettingSection(
+    settings: Settings,
+    onLockScreenGlimToggle: (Boolean) -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        SectionTitle(text = stringResource(R.string.lockscreen_section_title))
+
+        SettingsToggleItem(
+            title = stringResource(R.string.lockscreen_glim_title),
+            description = stringResource(R.string.lockscreen_glim_description),
+            checked = settings.isShowGlimEnabled,
+            onCheckedChange = onLockScreenGlimToggle
+        )
+    }
+}

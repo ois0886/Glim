@@ -1,0 +1,413 @@
+package com.lovedbug.geulgwi.docs;
+
+import static io.restassured.RestAssured.given;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.lovedbug.geulgwi.config.TestRedisConfig;
+import com.lovedbug.geulgwi.core.domain.member.Member;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberGender;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberRole;
+import com.lovedbug.geulgwi.core.domain.member.constant.MemberStatus;
+import com.lovedbug.geulgwi.core.domain.member.MemberRepository;
+import com.lovedbug.geulgwi.core.domain.quote.entity.MemberQuote;
+import com.lovedbug.geulgwi.core.domain.quote.repository.MemberQuoteRepository;
+import com.lovedbug.geulgwi.core.security.JwtUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
+import java.time.LocalDate;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lovedbug.geulgwi.external.image.ImageMetaData;
+import com.lovedbug.geulgwi.core.domain.book.dto.BookCreateRequest;
+import com.lovedbug.geulgwi.core.domain.quote.dto.request.QuoteCreateRequest;
+import com.lovedbug.geulgwi.core.domain.book.entity.Book;
+import com.lovedbug.geulgwi.core.domain.quote.entity.Quote;
+import com.lovedbug.geulgwi.external.image.handler.ImageHandler;
+import com.lovedbug.geulgwi.core.domain.book.BookRepository;
+import com.lovedbug.geulgwi.core.domain.quote.repository.QuoteRepository;
+
+@ActiveProfiles("test")
+class QuoteApiDocsTest extends RestDocsTestSupport {
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @MockitoBean
+    private ImageHandler imageHandler;
+
+    @Autowired
+    private QuoteRepository quoteRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private MemberQuoteRepository memberQuoteRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @MockitoBean
+    private FirebaseMessaging firebaseMessaging;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @DynamicPropertySource
+    static void setRedisProps(DynamicPropertyRegistry registry) {
+        TestRedisConfig.overrideRedisProps(registry);
+    }
+
+    @BeforeEach
+    void clearDatabase() {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("TRUNCATE TABLE quote");
+        jdbcTemplate.execute("TRUNCATE TABLE book");
+        jdbcTemplate.execute("TRUNCATE TABLE member");
+        jdbcTemplate.execute("TRUNCATE TABLE member_like_quote");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+
+        entityManager.clear();
+    }
+
+    @DisplayName("특정 도서의 isbn으로 관련있는 글귀 목록을 조회한다")
+    @Test
+    void get_public_quotes_by_isbn() {
+        Book book = createBook();
+        bookRepository.save(book);
+
+        Quote quote1 = createQuote(book);
+        Quote quote2 = createQuote(book);
+
+        quoteRepository.saveAll(List.of(quote1, quote2));
+
+        given(this.spec)
+            .filter(document("{class_name}/{method_name}",
+                pathParameters(
+                    parameterWithName("isbn").description("조회할 도서의 isbn")
+                ),
+                responseFields(
+                    fieldWithPath("[].quoteId").description("글귀 ID"),
+                    fieldWithPath("[].content").description("글귀 내용"),
+                    fieldWithPath("[].views").description("조회수"),
+                    fieldWithPath("[].page").description("도서 내 페이지 번호"),
+                    fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
+                    fieldWithPath("[].liked").description("사용자 좋아요 여부")
+                )
+            ))
+            .when()
+            .get("/api/v1/quotes/book/{isbn}", book.getIsbn())
+            .then()
+            .statusCode(200);
+    }
+
+    @DisplayName("글귀 목록을 조회한다")
+    @Test
+    void get_quotes() {
+        Book book = createBook();
+        bookRepository.save(book);
+
+        Quote quote = createQuote(book);
+        quoteRepository.save(quote);
+
+        given(this.spec)
+            .param("page", 0)
+            .param("size", 10)
+            .param("sort", "views,desc")
+            .filter(document("{class_name}/{method_name}",
+                queryParameters(
+                    parameterWithName("page").description("페이지 번호 (0부터 시작, 기본값 0)"),
+                    parameterWithName("size").description("페이지 크기 (기본값 10)"),
+                    parameterWithName("sort").description("정렬 기준, ex) views,desc 또는 createdDate,asc")
+                ),
+                responseFields(
+                    fieldWithPath("[]").description("글귀 목록"),
+                    fieldWithPath("[].quoteId").description("글귀 ID"),
+                    fieldWithPath("[].quoteImageName").description("글귀 이미지 이름"),
+                    fieldWithPath("[].quoteViews").description("글귀 조회수"),
+                    fieldWithPath("[].page").description("글귀에 해당하는 페이지"),
+                    fieldWithPath("[].bookId").description("책 ID"),
+                    fieldWithPath("[].bookTitle").description("책 제목"),
+                    fieldWithPath("[].author").description("책 저자"),
+                    fieldWithPath("[].content").description("글귀 내용"),
+                    fieldWithPath("[].publisher").description("출판사"),
+                    fieldWithPath("[].bookCoverUrl").description("책 표지 URL"),
+                    fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
+                    fieldWithPath("[].liked").description("사용자 글귀 좋아요 여부")
+
+                )
+            ))
+            .when()
+            .get("/api/v1/quotes")
+            .then().log().all()
+            .statusCode(200);
+    }
+
+    @DisplayName("글귀를 생성한다")
+    @Test
+    void create_quote() throws Exception {
+
+        Member member = createMember();
+        member = memberRepository.save(member);
+
+        String accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getMemberId());
+
+        when(imageHandler.saveImage(any()))
+            .thenReturn(new ImageMetaData("/upload/images", "imageName.jpg"));
+
+        given(this.spec)
+            .header("Authorization", "Bearer " + accessToken)
+            .multiPart("quoteData", "quoteData.json", objectMapper.writeValueAsBytes(createQuoteCreateDto(member.getMemberId())), "application/json")
+            .multiPart("quoteImage", "quote.jpg", "fake-image-content".getBytes(), "image/jpeg")
+            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+            .filter(document("{class_name}/{method_name}",
+                requestParts(
+                    partWithName("quoteData").description("글귀 생성 정보(JSON)"),
+                    partWithName("quoteImage").description("글귀 이미지 파일")
+                )
+            ))
+            .when()
+            .post("/api/v1/quotes")
+            .then().log().all()
+            .statusCode(200);
+    }
+
+    @DisplayName("글귀_조회수를_1_증가시킨다")
+    @Test
+    void increase_quote_view_count() {
+        Book book = createBook();
+        bookRepository.save(book);
+
+        Quote quote = createQuote(book);
+        quote = quoteRepository.save(quote);
+
+        given(this.spec)
+            .filter(document("{class_name}/{method_name}",
+                pathParameters(
+                    parameterWithName("id").description("조회수를 증가시킬 글귀의 ID")
+                )
+            ))
+            .when()
+            .patch("/api/v1/quotes/{id}/views", quote.getQuoteId())
+            .then().log().all()
+            .statusCode(204);
+    }
+
+    @DisplayName("내용으로 글귀를 검색한다")
+    @Test
+    void search_quotes_by_content() {
+        Book book = createBook();
+        bookRepository.save(book);
+
+        Quote quote = createQuote(book);
+        quoteRepository.save(quote);
+
+        String contentKeyword = "글귀";
+
+        given(this.spec)
+            .param("content", contentKeyword)
+            .param("page", 0)
+            .param("size", 10)
+            .filter(document("{class_name}/{method_name}",
+                queryParameters(
+                    parameterWithName("content").description("검색할 글귀 내용 키워드"),
+                    parameterWithName("page").description("페이지 번호 (0부터 시작)").optional(),
+                    parameterWithName("size").description("페이지 크기").optional()
+                ),
+                responseFields(
+                    fieldWithPath("currentPage").description("현재 페이지 번호"),
+                    fieldWithPath("totalPages").description("총 페이지 수"),
+                    fieldWithPath("totalResults").description("검색된 전체 결과 수"),
+                    fieldWithPath("contents[].quoteId").description("글귀 ID"),
+                    fieldWithPath("contents[].bookTitle").description("책 제목"),
+                    fieldWithPath("contents[].content").description("글귀 내용"),
+                    fieldWithPath("contents[].views").description("글귀 조회수"),
+                    fieldWithPath("contents[].page").description("글귀가 등장하는 책 페이지"),
+                    fieldWithPath("contents[].likes").description("글귀 좋아요 수"),
+                    fieldWithPath("contents[].isliked").description("현재 로그인한 사용자가 좋아요를 눌렀는지 여부")
+                )
+            ))
+            .when()
+            .get("/api/v1/quotes/by-content")
+            .then().log().all()
+            .statusCode(200);
+    }
+
+    @DisplayName("ID로 특정 글귀를 조회한다")
+    @Test
+    void get_quote_by_id() {
+
+        Book book = createBook();
+        bookRepository.save(book);
+
+        Quote quote = createQuote(book);
+        quoteRepository.save(quote);
+
+        given(this.spec)
+            .filter(document("{class_name}/{method_name}",
+                pathParameters(
+                    parameterWithName("id").description("조회할 글귀 ID")
+                ),
+                responseFields(
+                    fieldWithPath("quoteId").description("글귀 ID"),
+                    fieldWithPath("quoteImageName").description("글귀 이미지 파일 이름"),
+                    fieldWithPath("quoteViews").description("글귀 조회수"),
+                    fieldWithPath("page").description("글귀가 포함된 도서 페이지 번호"),
+                    fieldWithPath("bookId").description("도서 ID"),
+                    fieldWithPath("content").description("글귀 내용"),
+                    fieldWithPath("bookTitle").description("도서 제목"),
+                    fieldWithPath("author").description("도서 저자"),
+                    fieldWithPath("publisher").description("도서 출판사"),
+                    fieldWithPath("bookCoverUrl").description("도서 커버 이미지 URL"),
+                    fieldWithPath("liked").description("사용자의 좋아요 여부"),
+                    fieldWithPath("likeCount").description("글귀 좋아요 수")
+                )
+            ))
+            .when()
+            .get("/api/v1/quotes/{id}", quote.getQuoteId())
+            .then()
+            .statusCode(200);
+    }
+
+    @DisplayName("사용자 본인이 업로드한 글귀를 조회한다.")
+    @Test
+    void get_uploaded_quotes(){
+
+        Member member = memberRepository.save(createMember());
+        Book book = bookRepository.save(createBook());
+
+        Quote quote1 = quoteRepository.save(Quote.builder()
+            .content("테스트 quote1 입니다. 아주 감명 깊어요.")
+            .bookTitle(book.getTitle())
+            .page(100)
+            .book(book)
+            .memberId(member.getMemberId())
+            .build());
+
+        Quote quote2 = quoteRepository.save(Quote.builder()
+            .content("테스트 quote2 입니다. 아주 감명 깊어요.")
+            .bookTitle(book.getTitle())
+            .page(250)
+            .book(book)
+            .memberId(member.getMemberId())
+            .build());
+
+         memberQuoteRepository.save(MemberQuote.builder()
+                .memberId(member.getMemberId())
+                .quote(quote1)
+                .build());
+
+        memberQuoteRepository.save(MemberQuote.builder()
+            .memberId(member.getMemberId())
+            .quote(quote2)
+            .build());
+
+        String accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getMemberId());
+
+        given(this.spec)
+            .header(JwtUtil.HEADER_AUTH, JwtUtil.TOKEN_PREFIX + accessToken)
+            .filter(document("{class_name}/{method_name}",
+                requestHeaders(
+                    headerWithName(JwtUtil.HEADER_AUTH).description("Bearer 액세스 토큰")
+                ),
+                responseFields(
+                    fieldWithPath("[].quoteId").description("글귀 ID"),
+                    fieldWithPath("[].content").description("글귀 내용"),
+                    fieldWithPath("[].bookTitle").description("책 제목"),
+                    fieldWithPath("[].views").description("글귀 조회수"),
+                    fieldWithPath("[].page").description("글귀가 등장하는 페이지"),
+                    fieldWithPath("[].likeCount").description("글귀 좋아요 수"),
+                    fieldWithPath("[].createdAt").description("글귀 생성 시기"),
+                    fieldWithPath("[].liked").description("사용자 좋아요 여부")
+                )
+            ))
+            .when()
+            .get("/api/v1/quotes/me")
+            .then()
+            .log().all()
+            .statusCode(200);
+    }
+
+
+    static BookCreateRequest createBookCreateDto() {
+        return BookCreateRequest.builder()
+            .title("테스트 제목")
+            .author("테스트 저자")
+            .translator("테스트 번역가")
+            .category("테스트 카테고리")
+            .categoryId(1)
+            .publisher("테스트 출판사")
+            .description("테스트 설명")
+            .isbn("1234567890")
+            .isbn13("123-1234567890")
+            .publishedDate(LocalDate.of(2023, 1, 1))
+            .coverUrl("http://example.com/cover.jpg")
+            .linkUrl("http://example.com/book")
+            .build();
+    }
+
+    static QuoteCreateRequest createQuoteCreateDto(Long memberId) {
+        return QuoteCreateRequest.builder()
+            .memberId(memberId)
+            .visibility("PUBLIC")
+            .content("테스트용 글귀 내용입니다.")
+            .isbn("1234567890")
+            .bookCreateData(createBookCreateDto())
+            .build();
+    }
+
+    static Book createBook() {
+        return Book.builder()
+            .title("test_title")
+            .author("작가 : 김작가")
+            .isbn("1234567890")
+            .coverUrl("/aladdin/image.jpg")
+            .build();
+    }
+
+    static Quote createQuote(Book book) {
+        return Quote.builder()
+            .imagePath("/root")
+            .imageName("image.jpg")
+            .content("너무 좋은 글귀에용")
+            .views(10)
+            .page(12)
+            .memberId(1L)
+            .book(book)
+            .build();
+    }
+
+    static Member createMember() {
+        return Member.builder()
+            .email("hong@naver.com")
+            .nickname("홍홍홍")
+            .password("pass")
+            .status(MemberStatus.ACTIVE)
+            .role(MemberRole.USER)
+            .gender(MemberGender.MALE)
+            .build();
+    }
+}

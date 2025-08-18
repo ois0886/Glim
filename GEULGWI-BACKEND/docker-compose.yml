@@ -1,0 +1,104 @@
+services:
+  nginxproxymanager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+  postgres:
+    image: postgres:15.3
+    container_name: geulgwi_postgres
+    environment:
+      POSTGRES_DB: geulgwi
+      POSTGRES_USER: geulgwi_user
+      POSTGRES_PASSWORD: geulgwi_pw
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "geulgwi_user" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - geulgwi-net
+
+  redis:
+    image: redis:7.2.4
+    container_name: geulgwi_redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - ./redis-data:/data
+    networks:
+      - geulgwi-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
+    container_name: geulgwi_backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./upload-images:/uploads/images
+      - ./backend-logs:/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - geulgwi-net
+
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: loki
+    ports:
+      - "127.0.0.1:3100:3100"
+    command: ["-config.file=/etc/loki/local-config.yaml"]
+    networks:
+      - geulgwi-net
+
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: promtail
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/promtail-config.yml
+      - ./backend-logs:/logs
+    command: ["-config.file=/etc/promtail/promtail-config.yml"]
+    networks:
+      - geulgwi-net
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    depends_on:
+      - loki
+    networks:
+      - geulgwi-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - geulgwi-net
+
+networks:
+  geulgwi-net:
+    driver: bridge

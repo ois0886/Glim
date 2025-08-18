@@ -1,0 +1,92 @@
+package com.ssafy.glim.feature.auth.signup.component
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.ssafy.glim.R
+
+@Composable
+fun EmailVerificationCodeInputContent(
+    modifier: Modifier = Modifier,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    error: String? = null,
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.auth_greeting),
+            style = MaterialTheme.typography.labelMedium
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = stringResource(R.string.verification_code_instruction),
+            style = MaterialTheme.typography.labelLarge
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        TextField(
+            value = value,
+            onValueChange = { input ->
+
+                if (input.text.all { it.isDigit() }) {
+                    onValueChange(input)
+                }
+            },
+            modifier = modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent
+            ),
+            isError = error != null,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            label = {
+                Text(
+                    text = error ?: stringResource(id = R.string.verification_code_placeholder),
+                    color = if (error != null) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        Color.Gray
+                    },
+                    fontSize = 14.sp,
+                )
+            },
+            singleLine = true,
+        )
+    }
+}
+
+@Preview(name = "Verification Code - Empty", showBackground = true)
+@Composable
+fun PreviewEmailVerificationCodeInputContent_Empty() {
+    EmailVerificationCodeInputContent(
+        value = TextFieldValue(""),
+        onValueChange = {},
+        error = null,
+    )
+}
+
+@Preview(name = "Verification Code - With Error", showBackground = true)
+@Composable
+fun PreviewEmailVerificationCodeInputContent_WithError() {
+    EmailVerificationCodeInputContent(
+        value = TextFieldValue("123"),
+        onValueChange = {},
+        error = "인증번호가 올바르지 않아요",
+    )
+}
