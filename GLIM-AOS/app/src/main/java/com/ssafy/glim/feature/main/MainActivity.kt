@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -70,6 +71,8 @@ class MainActivity : ComponentActivity() {
     private var isLoading by mutableStateOf(true)
     private var showNotificationPermissionDialog by mutableStateOf(false)
 
+    private var deepLinkQuoteId by mutableLongStateOf(-1L)
+
     // 알림 권한 요청 런처
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -92,6 +95,8 @@ class MainActivity : ComponentActivity() {
         }
         enableEdgeToEdge()
 
+        // 딥링크 처리
+        handleDeepLink(intent)
         // 알림 권한 확인
         checkNotificationPermission()
         performInitialization()
@@ -116,6 +121,9 @@ class MainActivity : ComponentActivity() {
                     LaunchedNavigator(navBackStack)
 
                     val initialRoute = intent.getStringExtra("nav_route")
+                    if(deepLinkQuoteId == -1L){
+                        deepLinkQuoteId = intent.getLongExtra("quote_id", -1L)
+                    }
 
                     if (!isLoading) {
                         MainScreen(
@@ -131,11 +139,11 @@ class MainActivity : ComponentActivity() {
                             },
                         )
 
-                        LaunchedEffect(initialRoute) {
-                            if (destination == BottomTabRoute.Home && initialRoute == "glim") {
-                                val quoteId = intent.getLongExtra("quote_id", -1L)
+                        LaunchedEffect(initialRoute, deepLinkQuoteId) {
+                            if (deepLinkQuoteId > 0) {
                                 navBackStack.clear()
-                                navBackStack.add(BottomTabRoute.Shorts(quoteId))
+                                navBackStack.add(BottomTabRoute.Shorts(deepLinkQuoteId))
+                                deepLinkQuoteId = -1L
                             }
                         }
                     }
@@ -144,32 +152,75 @@ class MainActivity : ComponentActivity() {
                         backStack = navBackStack
                     )
                 }
+            }
 
-                if (showNotificationPermissionDialog) {
-                    AlertDialog(
-                        onDismissRequest = { showNotificationPermissionDialog = false },
-                        title = { Text(stringResource(R.string.notification_permission_title)) },
-                        text = {
-                            Text(stringResource(R.string.notification_permission_message))
-                        },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    openAppSettings()
-                                    showNotificationPermissionDialog = false
-                                }
-                            ) {
-                                Text(stringResource(R.string.go_to_settings))
+            if (showNotificationPermissionDialog) {
+                AlertDialog(
+                    onDismissRequest = { showNotificationPermissionDialog = false },
+                    title = { Text(stringResource(R.string.notification_permission_title)) },
+                    text = {
+                        Text(stringResource(R.string.notification_permission_message))
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                openAppSettings()
+                                showNotificationPermissionDialog = false
                             }
-                        },
-                        dismissButton = {
-                            TextButton(
-                                onClick = { showNotificationPermissionDialog = false }
-                            ) {
-                                Text(stringResource(R.string.cancel))
-                            }
+                        ) {
+                            Text(stringResource(R.string.go_to_settings))
                         }
-                    )
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = { showNotificationPermissionDialog = false }
+                        ) {
+                            Text(stringResource(R.string.cancel))
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    // 새 Intent 처리 (백그라운드에서 딥링크로 진입)
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleDeepLink(intent)
+    }
+
+    private fun handleDeepLink(intent: Intent?) {
+        val extras = intent?.extras
+        Log.d("intent test", "${intent?.extras}")
+        if(extras != null) {
+            val screen = extras.getString("screen")
+            if(screen == "QUOTE") {
+                Log.d("MainActivity", "=== 모든 extras 정보 ===")
+                extras.keySet().forEach { key ->
+                    val value = extras.get(key)
+                    Log.d("MainActivity", "$key: $value")
+                }
+                Log.d("MainActivity", "========================")
+
+
+                val quoteId = extras.get("quoteId")?.toString()?.toLongOrNull() ?: -1L
+                Log.d("DeepLink", "딥링크 Quote ID: $quoteId")
+                if (quoteId > 0) {
+                    deepLinkQuoteId = quoteId
+                }
+            }
+        }
+
+        val data = intent?.data ?: return
+
+        if (data.scheme == "glim" && data.host == "quote") {
+            val pathSegments = data.pathSegments
+            if (!pathSegments.isNullOrEmpty()) {
+                val quoteId = pathSegments[0].toLongOrNull()
+                if (quoteId != null && quoteId > 0) {
+                    Log.d("DeepLink", "딥링크 Quote ID: $quoteId")
+                    deepLinkQuoteId = quoteId
                 }
             }
         }
@@ -220,7 +271,6 @@ class MainActivity : ComponentActivity() {
                 return@addOnCompleteListener
             }
 
-            // 토큰 획득
             val token = task.result
             Log.d("FCM", "FCM 토큰: $token")
         }

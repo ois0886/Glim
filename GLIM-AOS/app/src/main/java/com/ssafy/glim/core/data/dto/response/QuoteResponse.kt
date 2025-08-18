@@ -15,4 +15,5 @@ data class QuoteResponse(
     val liked: Boolean,
     val quoteImageName: String,
     val quoteViews: Long,
+    val content: String,
 )

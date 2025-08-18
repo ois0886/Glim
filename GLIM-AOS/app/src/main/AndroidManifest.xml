@@ -19,6 +19,12 @@
         android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
         android:minSdkVersion="34" />
 
+    <queries>
+        <package android:name="com.instagram.android" />
+        <intent>
+            <action android:name="com.instagram.share.ADD_TO_STORY" />
+        </intent>
+    </queries>
 
     <application
         android:name=".app.GlimApplication"
@@ -42,6 +48,10 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="glim_notifications" />
+
         <activity
             android:name=".feature.main.MainActivity"
             android:exported="true"
@@ -51,6 +61,12 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="glim" />
             </intent-filter>
         </activity>
         <activity

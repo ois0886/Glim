@@ -1,5 +1,6 @@
 package com.ssafy.glim.feature.shorts
 
+import android.net.Uri
 import com.ssafy.glim.core.domain.model.Quote
 
 // ShortsContract.kt
@@ -23,7 +24,9 @@ data class ShortsState(
 sealed class ShortsSideEffect {
     data class ShowToast(val message: String) : ShortsSideEffect()
 
-    data class ShareQuote(val quote: Quote) : ShortsSideEffect()
+    data class ShareQuote(val url: String) : ShortsSideEffect()
+
+    data class ShareQuoteInstagram(val imageUri: Uri) : ShortsSideEffect()
 
     data class ShowMoreOptions(val quote: Quote) : ShortsSideEffect()
 

@@ -34,6 +34,9 @@ android {
 
         val url: String = props.getProperty("BASE_URL")
         buildConfigField("String", "BASE_URL", "\"$url\"")
+
+        val bitlyToken: String = props.getProperty("BITLY_TOKEN")
+        buildConfigField("String", "BITLY_TOKEN", "\"$bitlyToken\"")
     }
 
     buildTypes {

@@ -219,7 +219,7 @@ fun QuoteCarousel(
                 ) {
                     GlimSubcomposeAsyncImage(
                         context = context,
-                        imageUrl = "${BuildConfig.BASE_URL}/images/${quote.quoteImageName}",
+                        imageUrl = quote.quoteImageUrl,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
