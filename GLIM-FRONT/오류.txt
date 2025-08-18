@@ -1,0 +1,18 @@
+AxiosError: Request failed with status code 401
+
+components\admin\user-management.tsx (96:26) @ async UserManagement.useEffect.fetchUsers
+
+
+  94 |     const fetchUsers = async () => {
+  95 |       try {
+> 96 |         const response = await axiosInstance.get('/api/v1/admin/members');
+     |                          ^
+  97 |         
+  98 |         // response.data가 이미 사용자 배열이므로, .data를 한번만 사용합니다.
+  99 |         const sortedUsers = (response.data || []).sort((a: any, b: any) => a.memberId - b.memberId);
+Call Stack
+4
+
+Show 3 ignore-listed frame(s)
+async UserManagement.useEffect.fetchUsers
+components\admin\user-management.tsx (96:26)
