@@ -1,49 +1,98 @@
-HELP.md
-.gradle
+# ------------------------
+# 공통/빌드 산출물
+# ------------------------
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+*.log
+*.war
+*.ear
+
+bin/
+gen/
+out/
 build/
+.gradle
+.gradle/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
-
-### 이미지 폴더 ###
-/upload-images
-
-### 디비 데이터
-/postgres-data
-
-## 로그
-/backend-logs
-/logs
-*.log
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
-### NetBeans ###
+# ------------------------
+# IDE 관련
+# ------------------------
+# Android Studio / IntelliJ
+.idea/
+*.ipr
+*.iws
+*.iml
+.navigation/
+captures/
+.idea_modules/
+.idea/mongoSettings.xml
+
+# VS Code
+.vscode/
+
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
+# Eclipse / STS
+.classpath
+.project
+.cproject
+.settings/
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
+
+# ------------------------
+# 보안/환경 파일
+# ------------------------
+local.properties
+.env
+*.jks
+*.keystore
+.signing/
+
+# ------------------------
+# Android/Gradle 관련
+# ------------------------
+proguard/
+.externalNativeBuild
+obj/
+gen-external-apklibs
+
+# ------------------------
+# Crash / 로그
+# ------------------------
+hs_err_pid*
+backend-logs/
+logs/
+
+# ------------------------
+# DB / Cache / Storage
+# ------------------------
+postgres-data/
+redis-data/
+upload-images/
+
+# ------------------------
+# Plugin-specific files
+# ------------------------
+atlassian-ide-plugin.xml
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
