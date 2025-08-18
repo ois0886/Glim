@@ -1,0 +1,305 @@
+
+<resources>
+    <string name="app_name">글:림</string>
+
+    <string name="app_name_english">Glim</string>
+
+    <!-- 로그인/인증 관련 -->
+    <string name="login_title">로그인</string>
+    <string name="login_failed">로그인 실패</string>
+    <string name="login_subtitle">로그인하고\n풍부하게 감성을 채워보세요.</string>
+    <string name="login_loading">로딩 중</string>
+    <string name="login_button">로그인</string>
+    <string name="login_signup">회원가입</string>
+    <string name="login_forgot_password">비밀번호를 잊어버렸나요?</string>
+    <string name="login_sns_title">SNS 간편 로그인</string>
+    <string name="login_guest">비회원으로 둘러보기</string>
+    <string name="login_email_placeholder">이메일을 입력해주세요.</string>
+    <string name="login_password_placeholder">비밀번호를 입력해주세요.</string>
+
+    <!-- 공통 메시지 -->
+    <string name="social_login_message">소셜 로그인은 준비 중입니다.</string>
+    <string name="not_ready_function">준비 중인 기능입니다.</string>
+    <string name="loading">로딩 중…</string>
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
+    <string name="error_number">-</string>
+    <string name="exit">나가기</string>
+    <string name="exit_dialog_title">종료하시겠습니까?</string>
+    <string name="exit_dialog_description">화면 이탈 시 생성중인 글림 이미지는\n저장되지 않습니다.</string>
+    <string name="update">변경</string>
+    <string name="save">저장</string>
+
+    <!-- 회원가입 관련 -->
+    <string name="auth_greeting">반가워요!</string>
+    <string name="email_auth_instruction">사용하실 이메일을 입력해주세요.</string>
+    <string name="verification_code_placeholder">인증번호 입력</string>
+    <string name="verification_code_instruction">이메일로 인증번호를 보냈어요!</string>
+    <string name="verification_code_failed">해당 이메일로 인증번호 요청이 실패하였어요!</string>
+    <string name="signup_send_verification_code">인증번호 발송</string>
+    <string name="signup_verify_code">인증완료</string>
+    <string name="signup_success">회원가입이 완료되었습니다.</string>
+    <string name="signup_failed">회원가입에 실패했습니다.</string>
+
+    <!-- 비밀번호 관련 -->
+    <string name="password_confirm">비밀번호 확인</string>
+    <string name="password_instruction">사용하실 비밀번호를 입력해주세요.</string>
+    <string name="password_hint">대소문자, 영문, 숫자, 특수문자를 포함해 8~16자를 입력해주세요.</string>
+
+    <!-- 프로필 관련 -->
+    <string name="profile_title">반가워요!</string>
+    <string name="profile_subtitle">회원님을 더 알고 싶어요.</string>
+
+    <string name="profile_label_name">이름</string>
+    <string name="profile_hint_name">2~16글자를 입력해주세요.</string>
+    <string name="profile_note_name">사람들에게 보여지는 이름으로,\n불쾌감을 줄 수 있는 이름은 경고없이 변경돼요.</string>
+    <string name="profile_label_birth">출생년도</string>
+    <string name="profile_hint_birth">YYYYMMDD</string>
+    <string name="profile_label_gender">성별</string>
+    <string name="profile_label_email">이메일</string>
+    <string name="profile_gender_male">남자</string>
+    <string name="profile_gender_female">여자</string>
+    <string name="profile_liked_articles">좋아요한 글림</string>
+    <string name="profile_recent_articles">업로드한 글림</string>
+    <string name="profile_view_all">전체보기</string>
+    <string name="edit_profile_title">프로필 변경</string>
+    <string name="update_profile">프로필 저장</string>
+    <string name="updating_profile">프로필 저장 중…</string>
+    <string name="profile_update_success">프로필이 변경되었습니다.</string>
+    <string name="profile_update_failed">프로필 변경이 실패되었습니다.</string>
+
+    <!-- 비밀번호 변경 관련 -->
+    <string name="change_password_title">비밀번호 변경</string>
+    <string name="current_password_label">현재 비밀번호</string>
+    <string name="current_password_hint">현재 비밀번호를 입력하세요</string>
+    <string name="new_password_label">새 비밀번호</string>
+    <string name="new_password_instruction">새로운 비밀번호를 입력해주세요</string>
+    <string name="change_password_info">새로운 비밀번호를 입력해주세요.</string>
+    <string name="update_password">비밀번호 변경</string>
+    <string name="updating_password">비밀번호 변경 중…</string>
+    <string name="success_update_password">비밀번호가 변경되었습니다</string>
+
+    <!-- 유효성 검사 메시지 -->
+    <string name="error_email_empty">이메일을 입력해주세요.</string>
+    <string name="error_email_invalid">유효한 이메일을 입력해주세요.</string>
+    <string name="error_code_empty">인증 코드를 입력해주세요.</string>
+    <string name="error_code_invalid">6자리 숫자를 입력해주세요.</string>
+    <string name="error_code_incorrect">인증 코드가 올바르지 않습니다.</string>
+    <string name="error_password_empty">비밀번호를 입력해주세요.</string>
+    <string name="error_password_invalid">대소문자·숫자·특수문자 포함 8~16자</string>
+    <string name="error_password_mismatch">비밀번호가 일치하지 않습니다.</string>
+    <string name="error_current_password_empty">현재 비밀번호를 입력해주세요</string>
+    <string name="error_current_password_invalid">현재 비밀번호가 올바르지 않습니다</string>
+    <string name="error_name_empty">이름을 입력해주세요.</string>
+    <string name="error_name_invalid">이름은 2~16자로 입력해주세요.</string>
+    <string name="error_birth_empty">생년월일을 입력해주세요</string>
+    <string name="error_birth_format">생년월일은 8자리 숫자로 입력해주세요 (YYYYMMDD)</string>
+    <string name="error_birth_year">올바른 연도를 입력해주세요 (1900~현재년도)</string>
+    <string name="error_birth_month">올바른 월을 입력해주세요 (01~12)</string>
+    <string name="error_birth_day">올바른 일을 입력해주세요</string>
+    <string name="error_birth_future">미래 날짜는 입력할 수 없습니다</string>
+    <string name="error_birth_invalid">8자리 숫자로 입력해주세요.</string>
+    <string name="error_gender_empty">성별을 선택해주세요.</string>
+    <string name="error_load_profile_failed">프로필 정보를 불러오는데 실패했습니다.</string>
+    <string name="error_update_password_failed">비밀번호 변경에 실패했습니다</string>
+    <string name="error_update_profile_failed">개인정보 변경에 실패했습니다</string>
+
+    <!-- 설정 메뉴 -->
+    <string name="settings_personal_info_password">개인정보 &amp; 비밀번호 변경</string>
+    <string name="settings_account">잠금화면 설정</string>
+    <string name="settings_logout">로그아웃</string>
+    <string name="settings_withdrawal">회원 탈퇴하기</string>
+
+    <!-- 검색 관련 -->
+    <string name="search_book_title">도서 검색</string>
+    <string name="search_description">글림, 책제목, 작가이름으로 찾아보세요.</string>
+    <string name="search_hint_description">도서명, 작가, 글림 검색어를 입력해 주세요.</string>
+    <string name="popular_search_query">인기 검색어</string>
+    <string name="no_search_result">검색 결과가 없습니다.</string>
+
+    <!-- 글림/도서 관련 -->
+    <string name="today_glim">오늘의 글림</string>
+    <string name="glim_home_description">마음에 울림을 주는 글귀를 발견하세요.</string>
+    <string name="text_size_down">텍스트 크기 줄이기</string>
+    <string name="bold">굵게</string>
+    <string name="italic">기울이기</string>
+    <string name="recognize_text">텍스트 인식</string>
+    <string name="background_image">배경 이미지</string>
+    <string name="add_book_info">책 정보 추가</string>
+    <string name="download">다운로드</string>
+    <string name="like">좋아요</string>
+    <string name="share">공유</string>
+    <string name="more">더보기</string>
+    <string name="relative_quote">관련 글귀</string>
+    <string name="book_summary">도서 개요</string>
+    <string name="author_intro">작가 소개</string>
+    <string name="book_cover">Book Cover</string>
+    <string name="publication_date">발행일</string>
+    <string name="price">정가</string>
+    <string name="read_book">도서 보기</string>
+    <string name="read_glim">글림 보기</string>
+    <string name="views">조회수</string>
+    <string name="saved">저장했습니다!</string>
+    <string name="i_love_it">좋아요!</string>
+    <string name="like_error_message">좋아요에서 에러 발생</string>
+    <string name="like_added_message">좋아요를 눌렀습니다.</string>
+    <string name="like_removed_message">좋아요를 취소했습니다.</string>
+    <string name="time_format_date">(%1$s)</string>
+
+    <!-- 로그아웃 다이얼로그 -->
+    <string name="logout_title">로그아웃</string>
+    <string name="logout_message">정말 로그아웃하시겠습니까?</string>
+    <string name="logout_info_message">언제든지 다시 로그인하실 수 있습니다.</string>
+    <string name="logout_confirm">로그아웃</string>
+    <string name="logout_processing_title">로그아웃 중</string>
+    <string name="logout_processing_message">잠시만 기다려주세요…</string>
+    <string name="logout_success">로그아웃되었습니다.</string>
+    <string name="logout_failed">로그아웃에 실패하였습니다.</string>
+    <string name="logout_network_error">네트워크 오류로 인해 자동 로그아웃되었습니다.</string>
+    <string name="logout_auth_info_missing">인증 정보가 없어 로그아웃되었습니다.</string>
+    <string name="logout_session_expired">세션이 만료되어 로그아웃되었습니다.</string>
+    <string name="logout_unknown_error">오류가 발생하여 로그아웃되었습니다.</string>
+    <string name="logout_user_logout">로그아웃되었습니다.</string>
+    <string name="logout_user_withdrawl">회원 탈퇴하였습니다.</string>
+
+    <!-- 회원탈퇴 관련 -->
+    <string name="withdrawal_title">회원탈퇴</string>
+    <string name="withdrawal_warning_description">회원탈퇴하셔도 다음과 같은 정보는 남아있습니다:</string>
+    <string name="withdrawal_retained_glims">작성한 모든 글림(Glim)</string>
+    <string name="withdrawal_retained_likes">좋아요 및 활동 기록</string>
+    <string name="withdrawal_retained_profile">프로필 정보</string>
+    <string name="withdrawal_warning_caution">그 외 삭제된 데이터는 복구할 수 없습니다.</string>
+    <string name="withdrawal_continue">계속 진행</string>
+    <string name="withdrawal_confirmation_title">회원탈퇴 확인</string>
+    <string name="withdrawal_confirmation_question">회원탈퇴를 진행하시겠습니까?</string>
+    <string name="withdrawal_rejoin_info">탈퇴 후에도 동일한 이메일로 재가입하실 수 있습니다.</string>
+    <string name="withdrawal_input_instruction">아래에 \'탈퇴하겠습니다\'를 정확히 입력해주세요:</string>
+    <string name="withdrawal_confirmation_text">탈퇴하겠습니다</string>
+    <string name="withdrawal_countdown">%d초 후 확인 가능</string>
+    <string name="withdrawal_ready">✓ 탈퇴 준비 완료</string>
+    <string name="withdrawal_confirm">탈퇴하기</string>
+    <string name="withdrawal_processing_title">회원탈퇴 처리중</string>
+    <string name="withdrawal_processing_message">잠시만 기다려주세요…</string>
+    <string name="withdrawal_success">성공적으로 회원 탈퇴하였습니다.</string>
+    <string name="withdrawal_failed">회원 탈퇴 실패하였습니다.</string>
+
+    <!-- 잠금화면 관련 -->
+    <string name="lock_screen_slide_description"><![CDATA[밀어서 잠금 해제 >>]]></string>
+
+    <!-- 환영 메시지 -->
+    <string name="welcome_message">%1$s님\n환영합니다!</string>
+
+    <!-- 접근성 관련 -->
+    <string name="content_description_profile_image">프로필 이미지</string>
+    <string name="content_description_edit_profile">프로필 편집</string>
+    <string name="content_description_like">좋아요</string>
+    <string name="content_description_unlike">좋아요 취소</string>
+    <string name="content_description_navigate">이동</string>
+    <string name="welcome_image_description">환영 이미지</string>
+    <string name="celebration_image_description">축하 이미지</string>
+    <string name="open_url">open url</string>
+    <string name="back">Back</string>
+
+    <!-- 메시지 -->
+    <string name="success_update_profile">프로필 정보를 수정하였습니다.</string>
+    <string name="finish">완료</string>
+    <string name="reset">초기화</string>
+    <string name="undo">실행 취소</string>
+    <string name="shot_background_image">배경 이미지 촬영</string>
+    <string name="shot_text_image">텍스트 인식 이미지 촬영</string>
+    <string name="camera_permission_deny_message">카메라 권한이 필요합니다.</string>
+    <string name="select_area">영역을 선택해 주세요.</string>
+
+    <!-- 설정 화면 관련 -->
+    <string name="setting_title">설정</string>
+
+    <!-- 알림 설정 섹션 -->
+    <string name="notification_section_title">알림을 개인 취향에 맞게 설정해보세요</string>
+    <string name="all_push_notifications_title">모든 푸시 알림</string>
+    <string name="all_push_notifications_description">Glim의 모든 알림을 받을지 설정합니다</string>
+
+    <string name="do_not_disturb_mode_title">방해금지 모드 연동</string>
+    <string name="do_not_disturb_mode_description">기기의 방해금지 모드와 자동으로 연동됩니다</string>
+
+    <string name="do_not_disturb_time_title">방해금지 시간대 설정</string>
+    <string name="do_not_disturb_time_description">설정한 시간대에는 알림을 받지 않습니다</string>
+
+    <string name="weekly_schedule_title">주말/평일 구분 설정</string>
+    <string name="weekly_schedule_description">주말과 평일에 다른 알림 시간대를 적용합니다</string>
+
+    <!-- 시간 설정 관련 -->
+    <string name="time_setting_label">시간 설정</string>
+    <string name="default_time_range">22:00 – 08:00</string>
+    <string name="weekday_label">평일 (월~금)</string>
+    <string name="weekday_time_range">22:00 – 07:00</string>
+    <string name="weekend_label">주말 (토~일)</string>
+    <string name="weekend_time_range">23:00 – 09:00</string>
+
+    <!-- 잠금화면 설정 섹션 -->
+    <string name="lockscreen_section_title">잠금화면을 개인 취향에 맞게 설정해보세요</string>
+    <string name="lockscreen_glim_title">잠금화면에서 Glim 바로보기</string>
+    <string name="lockscreen_glim_description">잠금화면에서 스와이프하여 글림 쇼츠를 바로 볼 수 있습니다. 앱을 열지 않고도 영감을 받아보세요</string>
+    <string name="settings_saved">설정이 저장되었습니다</string>
+    <string name="color_palette">컬러 팔레트</string>
+    <string name="post_font_example_text">가나다라</string>
+    <string name="new_text">새 텍스트</string>
+    <string name="settings_failed">설정 저장에 실패했습니다</string>
+    <string name="error_load_settings_failed">설정을 불러오는데 실패했습니다.</string>
+
+    <!-- Glim 잔디밭 관련 -->
+    <string name="glim_record_title">나의 글림 업로드 기록</string>
+    <string name="glim_record_empty_title">"아직 업로드한 글림이 없습니다! \n글림을 업로드하고 나만의 잔디밭을 만들어요!"</string>
+    <string name="glim_record_max_streak">최대 연속 업로드: %d일</string>
+    <string name="glim_record_current_streak">현재 연속 업로드: %d일</string>
+
+    <string name="error_load_quotes_failed">글림 목록을 불러오는데 실패했습니다</string>
+    <string name="error_load_quotes_for_grass">잔디밭을 표시할 수 없습니다</string>
+    <string name="pull_to_refresh_hint">아래로 당겨서 새로고침</string>
+
+    <!-- 요일 라벨 -->
+    <string name="week_mon">월</string>
+    <string name="week_tue">화</string>
+    <string name="week_wed">수</string>
+    <string name="week_thu">목</string>
+    <string name="week_fri">금</string>
+    <string name="week_sat">토</string>
+    <string name="week_sun">일</string>
+
+    <!-- MyGlims 화면 관련 -->
+    <string name="empty_liked_quotes">좋아요한 글귀가 없습니다</string>
+    <string name="empty_my_quotes">작성한 글귀가 없습니다</string>
+    <string name="empty_quotes">글귀가 없습니다</string>
+    <string name="empty_quotes_description">새로운 글귀를 추가해보세요!</string>
+
+    <!-- 글림 아이템 관련 -->
+    <string name="no_quote_content">글림 내용이 없습니다</string>
+    <string name="unknown_book_title">제목 없는 책</string>
+    <string name="page_format">%d페이지</string>
+
+    <!-- 아이콘 설명 -->
+    <string name="likes">좋아요</string>
+
+    <!-- 일반적인 텍스트 -->
+    <string name="error_occurred">오류가 발생했습니다</string>
+    <string name="retry">다시 시도</string>
+    <string name="quote_count_tag_text">글귀 %1$s개</string>
+    <string name="no_relative_quote">등록된 글귀가 없습니다.</string>
+
+    <string name="profile_edit_title">프로필 편집</string>
+    <string name="profile_edit_question">어떤 정보를 수정하시겠습니까?</string>
+    <string name="profile_edit_personal_info">개인정보 변경하기</string>
+    <string name="profile_edit_password">비밀번호 변경하기</string>
+    <string name="image_generate">이미지 생성</string>
+    <string name="image_generation_btn_description">AI를 통해\n텍스트에 어울리는\n이미지를 만들어 보세요</string>
+
+    <string name="notification_permission_title">알림 권한 필요</string>
+    <string name="notification_permission_message">알림을 통해 좋은 소식을 전달해드리고 싶어요. 설정에서 알림 권한을 허용해주시겠어요?</string>
+    <string name="notification_permission_granted">알림 권한이 허용되었습니다</string>
+    <string name="go_to_settings">설정으로 이동</string>
+
+    <string name="edit_profile">프로필 편집</string>
+    <string name="edit_profile_message">어떤 정보를 수정하시겠습니까?</string>
+    <string name="change_personal_info">개인정보 변경하기</string>
+    <string name="change_password">비밀번호 변경하기</string>
+    <string name="error_terms_required">약관 동의가 필요합니다</string>
+</resources>
