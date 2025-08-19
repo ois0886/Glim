@@ -121,7 +121,7 @@ class MainActivity : ComponentActivity() {
                     LaunchedNavigator(navBackStack)
 
                     val initialRoute = intent.getStringExtra("nav_route")
-                    if(deepLinkQuoteId == -1L){
+                    if (deepLinkQuoteId == -1L) {
                         deepLinkQuoteId = intent.getLongExtra("quote_id", -1L)
                     }
 
@@ -193,16 +193,15 @@ class MainActivity : ComponentActivity() {
     private fun handleDeepLink(intent: Intent?) {
         val extras = intent?.extras
         Log.d("intent test", "${intent?.extras}")
-        if(extras != null) {
+        if (extras != null) {
             val screen = extras.getString("screen")
-            if(screen == "QUOTE") {
+            if (screen == "QUOTE") {
                 Log.d("MainActivity", "=== 모든 extras 정보 ===")
                 extras.keySet().forEach { key ->
                     val value = extras.get(key)
                     Log.d("MainActivity", "$key: $value")
                 }
                 Log.d("MainActivity", "========================")
-
 
                 val quoteId = extras.get("quoteId")?.toString()?.toLongOrNull() ?: -1L
                 Log.d("DeepLink", "딥링크 Quote ID: $quoteId")

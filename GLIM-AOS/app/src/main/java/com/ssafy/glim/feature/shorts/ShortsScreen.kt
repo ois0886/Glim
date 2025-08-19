@@ -94,9 +94,9 @@ internal fun ShortsRoute(
         VerticalPager(
             state = pagerState,
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding.excludeSystemBars())
+            Modifier
+                .fillMaxSize()
+                .padding(padding.excludeSystemBars())
         ) { page ->
             val quote = state.quotes[page]
 

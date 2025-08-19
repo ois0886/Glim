@@ -38,5 +38,4 @@ object ShortLinkModule {
     @Provides
     @Singleton
     fun provideShareManger(): ShareManager = ShareManager()
-
 }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ import com.ssafy.glim.feature.auth.signup.component.PasswordConfirmInputContent
 import com.ssafy.glim.feature.auth.signup.component.ProgressIndicatorBar
 import com.ssafy.glim.feature.auth.signup.component.TermsConsentContent
 import com.ssafy.glim.feature.auth.signup.component.UserProfileInputContent
-import com.ssafy.glim.feature.main.excludeSystemBars
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -99,7 +97,6 @@ private fun SignUpScreen(
             .fillMaxSize()
             .systemBarsPadding()
             .imePadding()
-
     ) {
         GlimTopBar(
             title = stringResource(R.string.login_signup),
