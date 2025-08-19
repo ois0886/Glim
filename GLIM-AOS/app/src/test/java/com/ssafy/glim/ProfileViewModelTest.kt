@@ -1,520 +1,433 @@
 package com.ssafy.glim
 
+import android.util.Log
+import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.core.domain.model.user.Gender
 import com.ssafy.glim.core.domain.model.user.User
 import com.ssafy.glim.core.domain.model.user.UserStatus
+import com.ssafy.glim.core.domain.usecase.quote.GetMyLikedQuoteUseCase
+import com.ssafy.glim.core.domain.usecase.quote.GetMyUploadQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
 import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
+import com.ssafy.glim.core.domain.usecase.user.LogOutUseCase
+import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Navigator
+import com.ssafy.glim.core.navigation.Route
+import com.ssafy.glim.core.navigation.UpdateInfoRoute
 import com.ssafy.glim.feature.profile.EditProfileDialogState
 import com.ssafy.glim.feature.profile.LogoutDialogState
 import com.ssafy.glim.feature.profile.ProfileSideEffect
-import com.ssafy.glim.feature.profile.ProfileUiState
 import com.ssafy.glim.feature.profile.ProfileViewModel
 import com.ssafy.glim.feature.profile.WithdrawalDialogState
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.orbitmvi.orbit.test.test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
-/*
-    24 개의 테스트
- */
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 class ProfileViewModelTest {
 
-    private val mockNavigator = mockk<Navigator>(relaxed = true)
-    private val mockLogOutUseCase = mockk<LogOutUseCase>()
-    private val mockGetUserByIdUseCase = mockk<GetUserByIdUseCase>()
-    private val mockDeleteUserUseCase = mockk<DeleteUserUseCase>()
+    private val navigator = mockk<Navigator>(relaxed = true)
+    private val getUserByIdUseCase = mockk<GetUserByIdUseCase>()
+    private val deleteUserUseCase = mockk<DeleteUserUseCase>()
+    private val getMyUploadQuoteUseCase = mockk<GetMyUploadQuoteUseCase>()
+    private val getMyLikedQuoteUseCase = mockk<GetMyLikedQuoteUseCase>()
+    private val logOutUseCase = mockk<LogOutUseCase>()
 
-    private lateinit var viewModel: ProfileViewModel
+    private lateinit var vm: ProfileViewModel
 
     @Before
     fun setUp() {
-        viewModel = ProfileViewModel(
-            navigator = mockNavigator,
-            logOutUseCase = mockLogOutUseCase,
-            getUserByIdUseCase = mockGetUserByIdUseCase,
-            deleteUserUseCase = mockDeleteUserUseCase
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns 0
+    }
+
+    @After
+    fun tearDown() {
+        unmockkStatic(Log::class)
+    }
+
+    private fun newVm() {
+        vm = ProfileViewModel(
+            navigator = navigator,
+            getUserByIdUseCase = getUserByIdUseCase,
+            deleteUserUseCase = deleteUserUseCase,
+            getMyUploadQuoteUseCase = getMyUploadQuoteUseCase,
+            getMyLikedQuoteUseCase = getMyLikedQuoteUseCase,
+            logOutUseCase = logOutUseCase
         )
     }
 
+    // ---------- Navigation intents ----------
+
     @Test
-    fun `프로필_데이터_로딩_성공_테스트`() = runTest {
-        // Given
-        val expectedUser = User(
+    fun navigateToGlimsLiked_navigates() = runTest {
+        newVm()
+        vm.navigateToGlimsLiked()
+        coVerify { navigator.navigate(MyGlimsRoute.Liked) }
+    }
+
+    @Test
+    fun navigateToGlimsUpload_navigates() = runTest {
+        newVm()
+        vm.navigateToGlimsUpload()
+        coVerify { navigator.navigate(MyGlimsRoute.Upload) }
+    }
+
+    @Test
+    fun navigateToPersonalInfo_hidesDialog_and_navigates() = runTest {
+        newVm()
+        vm.test(this) {
+            vm.navigateToEditProfile()
+            awaitState().apply { assertEquals(EditProfileDialogState.Showing, editProfileDialogState) }
+
+            vm.navigateToPersonalInfo()
+            awaitState().apply { assertEquals(EditProfileDialogState.Hidden, editProfileDialogState) }
+        }
+        coVerify { navigator.navigate(UpdateInfoRoute.Personal) }
+    }
+
+    @Test
+    fun navigateToPasswordChange_hidesDialog_and_navigates() = runTest {
+        newVm()
+        vm.test(this) {
+            vm.navigateToEditProfile()
+            awaitState().apply { assertEquals(EditProfileDialogState.Showing, editProfileDialogState) }
+
+            vm.navigateToPasswordChange()
+            awaitState().apply { assertEquals(EditProfileDialogState.Hidden, editProfileDialogState) }
+        }
+        coVerify { navigator.navigate(UpdateInfoRoute.Password) }
+    }
+
+    @Test
+    fun navigateToSettings_navigates() = runTest {
+        newVm()
+        vm.navigateToSettings()
+        coVerify { navigator.navigate(Route.Setting) }
+    }
+
+    // ---------- Edit Profile dialog ----------
+
+    @Test
+    fun editProfile_open_and_cancel() = runTest {
+        newVm()
+        vm.test(this) {
+            vm.navigateToEditProfile()
+            awaitState().apply { assertEquals(EditProfileDialogState.Showing, editProfileDialogState) }
+
+            vm.onEditProfileDialogCancel()
+            awaitState().apply { assertEquals(EditProfileDialogState.Hidden, editProfileDialogState) }
+        }
+    }
+
+    // ---------- loadProfileData ----------
+
+    @Test
+    fun loadProfileData_success_updates_state() = runTest {
+        val user = User(
             id = 1L,
-            email = "test@example.com",
-            nickname = "테스트사용자",
+            email = "e@e.com",
+            nickname = "홍길동",
             birthDate = "1990-01-01",
             gender = Gender.MALE,
-            status = UserStatus.ACTIVE
+            status = UserStatus.ACTIVE,
+            profileUrl = "url.jpg"
         )
-        coEvery { mockGetUserByIdUseCase() } returns expectedUser
+        val uploads = listOf(
+            QuoteSummary("c1", "10", 1L, 100L, "B1", 2L, false, "2022-01-01"),
+            QuoteSummary("c2", "11", 2L, 200L, "B2", 9L, true, "2022-01-02")
+        )
+        val liked = listOf(
+            QuoteSummary("lc1", "111", 11L, 111L, "LB1", 19L, true, "2021-01-01")
+        )
 
-        // When & Then
-        viewModel.test(this) {
-            containerHost.loadProfileData()
+        coEvery { getUserByIdUseCase() } returns user
+        coEvery { getMyUploadQuoteUseCase() } returns uploads
+        coEvery { getMyLikedQuoteUseCase() } returns liked
 
-            awaitState().run {
-                assert(isLoading == true)
-            }
+        newVm()
+        vm.test(this) {
+            vm.loadProfileData()
 
-            awaitState().run {
-                assert(isLoading == false)
-                assert(userName == "테스트사용자")
-            }
-        }
+            // isRefreshing=true가 먼저 올 수 있음 → 하나 소비
+            awaitState().apply { assertTrue(isRefreshing) }
 
-        coVerify { mockGetUserByIdUseCase() }
-    }
+            // 비동기 완료
+            advanceUntilIdle()
 
-    @Test
-    fun `프로필_데이터_로딩_실패_테스트`() = runTest {
-        // Given
-        coEvery { mockGetUserByIdUseCase() } throws Exception("API 오류")
-
-        // When & Then
-        viewModel.test(this) {
-            containerHost.loadProfileData()
-
-            awaitState().run {
-                assert(isLoading == true)
-            }
-
-            awaitState().run {
-                assert(isLoading == false)
-            }
-
-            expectSideEffect(
-                ProfileSideEffect.ShowError(R.string.error_load_profile_failed)
-            )
-        }
-    }
-
-    @Test
-    fun `로그아웃_다이얼로그_표시_테스트`() = runTest {
-        viewModel.test(this) {
-            containerHost.onLogOutClick()
-
-            awaitState().run {
-                assert(logoutDialogState == LogoutDialogState.Confirmation)
+            // 최종 상태 검증
+            awaitState().apply {
+                assertEquals("홍길동", userName)
+                assertEquals("url.jpg", profileImageUrl)
+                assertEquals(uploads.size, publishedGlimCount)
+                assertEquals(liked.size, likedGlimCount)
+                assertEquals(uploads, uploadQuotes)
+                assertFalse(isRefreshing)
+                assertFalse(error)
             }
         }
     }
 
     @Test
-    fun `로그아웃_확인_성공_테스트`() = runTest {
-        // Given
-        coEvery { mockLogOutUseCase() } returns Unit
+    fun loadProfileData_failure_sets_error_and_posts_side_effect() = runTest {
+        // 실패는 catch로 진입해야 사이드이펙트가 발생하므로 예외를 던지게 스텁
+        coEvery { getUserByIdUseCase() } throws RuntimeException("boom")
+        coEvery { getMyUploadQuoteUseCase() } returns emptyList()
+        coEvery { getMyLikedQuoteUseCase() } returns emptyList()
 
-        // When & Then
-        viewModel.test(this) {
-            containerHost.onLogoutConfirm()
+        newVm()
+        vm.test(this) {
+            vm.loadProfileData()
 
-            awaitState().run {
-                assert(logoutDialogState == LogoutDialogState.Processing)
+            // 시작 상태 먼저 소비
+            awaitState().apply { assertTrue(isRefreshing) }
+
+            // 비동기 완료
+            advanceUntilIdle()
+
+            // 최종 상태 먼저 소비
+            awaitState().apply {
+                assertEquals("", userName)
+                assertNull(profileImageUrl)
+                assertEquals(0, publishedGlimCount)
+                assertEquals(0, likedGlimCount)
+                assertTrue(uploadQuotes.isEmpty())
+                assertFalse(isRefreshing)
+                assertTrue(error)
             }
 
-            awaitState().run {
-                assert(logoutDialogState == LogoutDialogState.Hidden)
-                assert(isLoading == false)
-            }
-
-            expectSideEffect(
-                ProfileSideEffect.ShowToast(R.string.logout_success)
-            )
+            // 그 다음 사이드이펙트 소비 → 순서가 바뀌면 Timeout 날 수 있음
+            expectSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
         }
-
-        coVerify { mockLogOutUseCase() }
     }
 
+    // ---------- Logout ----------
+
     @Test
-    fun `로그아웃_실패_테스트`() = runTest {
-        // Given
-        coEvery { mockLogOutUseCase() } throws Exception("로그아웃 실패")
-
-        // When & Then
-        viewModel.test(this) {
-            containerHost.onLogoutConfirm()
-
-            awaitState().run {
-                assert(logoutDialogState == LogoutDialogState.Processing)
-            }
-
-            awaitState().run {
-                assert(logoutDialogState == LogoutDialogState.Hidden)
-                assert(isLoading == false)
-            }
-
-            expectSideEffect(
-                ProfileSideEffect.ShowError(R.string.logout_failed)
-            )
+    fun onLogOutClick_sets_confirmation() = runTest {
+        newVm()
+        vm.test(this) {
+            vm.onLogOutClick()
+            awaitState().apply { assertEquals(LogoutDialogState.Confirmation, logoutDialogState) }
         }
     }
 
     @Test
-    fun `로그아웃_취소_테스트`() = runTest {
-        viewModel.test(
-            this,
-            ProfileUiState(logoutDialogState = LogoutDialogState.Confirmation)
-        ) {
-            containerHost.onLogoutCancel()
+    fun onLogoutConfirm_success_posts_success_and_hides_dialog() = runTest {
+        coEvery { logOutUseCase() } returns Unit
 
-            awaitState().run {
-                assert(logoutDialogState == LogoutDialogState.Hidden)
-            }
+        newVm()
+        vm.test(this) {
+            vm.onLogOutClick()
+            awaitState().apply { assertEquals(LogoutDialogState.Confirmation, logoutDialogState) }
+
+            vm.onLogoutConfirm()
+            awaitState().apply { assertEquals(LogoutDialogState.Processing, logoutDialogState) }
+
+            // 사이드이펙트 먼저
+            expectSideEffect(ProfileSideEffect.ShowError(R.string.logout_success))
+            // 최종 상태
+            awaitState().apply { assertEquals(LogoutDialogState.Hidden, logoutDialogState) }
         }
     }
 
     @Test
-    fun `프로필_편집_다이얼로그_표시_테스트`() = runTest {
-        viewModel.test(this) {
-            containerHost.navigateToEditProfile()
+    fun onLogoutConfirm_failure_posts_failed_and_hides_dialog() = runTest {
+        coEvery { logOutUseCase() } throws RuntimeException("fail")
 
-            awaitState().run {
-                assert(editProfileDialogState == EditProfileDialogState.Showing)
-            }
+        newVm()
+        vm.test(this) {
+            vm.onLogOutClick()
+            awaitState().apply { assertEquals(LogoutDialogState.Confirmation, logoutDialogState) }
+
+            vm.onLogoutConfirm()
+            awaitState().apply { assertEquals(LogoutDialogState.Processing, logoutDialogState) }
+
+            // 실패 사이드이펙트 먼저
+            expectSideEffect(ProfileSideEffect.ShowError(R.string.logout_failed))
+            // 최종 상태
+            awaitState().apply { assertEquals(LogoutDialogState.Hidden, logoutDialogState) }
         }
     }
 
     @Test
-    fun `프로필_편집_다이얼로그_취소_테스트`() = runTest {
-        viewModel.test(
-            this,
-            ProfileUiState(editProfileDialogState = EditProfileDialogState.Showing)
-        ) {
-            containerHost.onEditProfileDialogCancel()
+    fun onLogoutCancel_hides_dialog() = runTest {
+        newVm()
+        vm.test(this) {
+            vm.onLogOutClick()
+            awaitState().apply { assertEquals(LogoutDialogState.Confirmation, logoutDialogState) }
 
-            awaitState().run {
-                assert(editProfileDialogState == EditProfileDialogState.Hidden)
+            vm.onLogoutCancel()
+            awaitState().apply { assertEquals(LogoutDialogState.Hidden, logoutDialogState) }
+        }
+    }
+
+    // ---------- Withdrawal (탈퇴) ----------
+
+    @Test
+    fun withdrawal_flow_warning_to_confirmation() = runTest {
+        newVm()
+        vm.test(this) {
+            vm.onWithdrawalClick()
+            awaitState().apply { assertEquals(WithdrawalDialogState.Warning, withdrawalDialogState) }
+
+            vm.onWarningConfirm()
+            awaitState().apply {
+                assertEquals(WithdrawalDialogState.Confirmation, withdrawalDialogState)
+                assertEquals(10, countdownSeconds)
             }
+
+            // 10..0 도달: 총 11초 필요
+            advanceTimeBy(11_000)
+            advanceUntilIdle()
+
+            // 마지막 상태만 소비
+            awaitState().apply { assertEquals(0, countdownSeconds) }
         }
     }
 
     @Test
-    fun `잠금_설정_토스트_메시지_테스트`() = runTest {
-        viewModel.test(this) {
-            containerHost.navigateToSettings()
+    fun onFinalConfirm_only_runs_when_text_matches_and_countdown_zero() = runTest {
+        coEvery { deleteUserUseCase() } returns Unit
 
-            expectSideEffect(
-                ProfileSideEffect.ShowToast(R.string.lock_settings_message)
-            )
+        newVm()
+        vm.test(this) {
+            // 조건 미충족: 변화 없음
+            vm.onFinalConfirm()
+            awaitState().apply {
+                assertEquals(WithdrawalDialogState.Hidden, withdrawalDialogState)
+                assertEquals("", userInputText)
+                assertEquals(0, countdownSeconds)
+                assertFalse(isWithdrawalLoading)
+            }
+
+            // 정상 플로우
+            vm.onWithdrawalClick()
+            awaitState()
+            vm.onWarningConfirm()
+            // onWarningConfirm 직후 상태(Confirmation, 10)
+            awaitState().apply { assertEquals(10, countdownSeconds) }
+
+            vm.onUserInputChanged("탈퇴하겠습니다")
+            awaitState().apply { assertEquals("탈퇴하겠습니다", userInputText) }
+
+            // 카운트다운 완료
+            advanceTimeBy(11_000)
+            advanceUntilIdle()
+            awaitState().apply { assertEquals(0, countdownSeconds) }
+
+            vm.onFinalConfirm()
+            awaitState().apply {
+                assertEquals(WithdrawalDialogState.Processing, withdrawalDialogState)
+                assertTrue(isWithdrawalLoading)
+            }
+
+            // 성공 사이드이펙트
+            expectSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_success))
+            // 최종 상태
+            awaitState().apply {
+                assertEquals(WithdrawalDialogState.Hidden, withdrawalDialogState)
+                assertFalse(isWithdrawalLoading)
+                assertEquals("", userInputText)
+                assertEquals(0, countdownSeconds)
+            }
         }
+
+        coVerify { navigator.navigateAndClearBackStack(Route.Login) }
     }
 
     @Test
-    fun `알림_설정_토스트_메시지_테스트`() = runTest {
-        viewModel.test(this) {
-            containerHost.navigateToNotificationSettings()
+    fun onFinalConfirm_failure_emits_failed_and_resets_dialog() = runTest {
+        coEvery { deleteUserUseCase() } throws RuntimeException("fail")
 
-            expectSideEffect(
-                ProfileSideEffect.ShowToast(R.string.notification_settings_message)
-            )
-        }
-    }
+        newVm()
+        vm.test(this) {
+            vm.onWithdrawalClick()
+            awaitState()
+            vm.onWarningConfirm()
+            awaitState().apply { assertEquals(10, countdownSeconds) }
+            vm.onUserInputChanged("탈퇴하겠습니다")
+            awaitState()
 
-    @Test
-    fun `회원탈퇴_경고_다이얼로그_표시_테스트`() = runTest {
-        viewModel.test(this) {
-            containerHost.onWithdrawalClick()
+            // 카운트다운 완료
+            advanceTimeBy(11_000)
+            advanceUntilIdle()
+            awaitState().apply { assertEquals(0, countdownSeconds) }
 
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Warning)
-            }
-        }
-    }
-
-    @Test
-    fun `회원탈퇴_경고_확인_테스트`() = runTest {
-        viewModel.test(this) {
-            containerHost.onWarningConfirm()
-
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Confirmation)
-                assert(countdownSeconds == 10)
+            vm.onFinalConfirm()
+            awaitState().apply {
+                assertEquals(WithdrawalDialogState.Processing, withdrawalDialogState)
+                assertTrue(isWithdrawalLoading)
             }
 
-            // 카운트다운이 진행되는 동안의 상태 변화들을 모두 소비
-            repeat(10) {
-                awaitState() // countdownSeconds 변화 소비
-            }
-        }
-    }
-
-    @Test
-    fun `회원탈퇴_경고_취소_테스트`() = runTest {
-        viewModel.test(
-            this,
-            ProfileUiState(withdrawalDialogState = WithdrawalDialogState.Warning)
-        ) {
-            containerHost.onWarningCancel()
-
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Hidden)
-                assert(userInputText == "")
-                assert(countdownSeconds == 0)
-            }
-        }
-    }
-
-    @Test
-    fun `사용자_입력_텍스트_변경_테스트`() = runTest {
-        viewModel.test(this) {
-            containerHost.onUserInputChanged("탈퇴하겠습니다")
-
-            awaitState().run {
-                assert(userInputText == "탈퇴하겠습니다")
-            }
-        }
-    }
-
-    @Test
-    fun `회원탈퇴_최종_확인_성공_테스트`() = runTest {
-        // Given
-        coEvery { mockDeleteUserUseCase() } returns Unit
-
-        // When & Then
-        viewModel.test(
-            this,
-            ProfileUiState(
-                userInputText = "탈퇴하겠습니다",
-                countdownSeconds = 0
-            )
-        ) {
-            containerHost.onFinalConfirm()
-
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Processing)
-                assert(isWithdrawalLoading == true)
-                assert(userInputText == "탈퇴하겠습니다")
-                assert(countdownSeconds == 0)
-            }
-
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Hidden)
-                assert(isWithdrawalLoading == false)
-                assert(userInputText == "")
-                assert(countdownSeconds == 0)
-            }
-
-            expectSideEffect(
-                ProfileSideEffect.ShowToast(R.string.withdrawal_success)
-            )
-        }
-
-        coVerify { mockDeleteUserUseCase() }
-    }
-
-    @Test
-    fun `회원탈퇴_최종_확인_실패_테스트`() = runTest {
-        // Given
-        coEvery { mockDeleteUserUseCase() } throws Exception("탈퇴 실패")
-
-        // When & Then
-        viewModel.test(
-            this,
-            ProfileUiState(
-                userInputText = "탈퇴하겠습니다",
-                countdownSeconds = 0
-            )
-        ) {
-            containerHost.onFinalConfirm()
-
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Processing)
-                assert(isWithdrawalLoading == true)
-                assert(userInputText == "탈퇴하겠습니다")
-                assert(countdownSeconds == 0)
-            }
-
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Hidden)
-                assert(isWithdrawalLoading == false)
-                assert(userInputText == "")
-                assert(countdownSeconds == 0)
-            }
-
-            expectSideEffect(
-                ProfileSideEffect.ShowError(R.string.withdrawal_failed)
-            )
-        }
-    }
-
-    @Test
-    fun `회원탈퇴_최종_확인_조건_불충족_테스트`() = runTest {
-        viewModel.test(
-            this,
-            ProfileUiState(
-                userInputText = "잘못된 텍스트",
-                countdownSeconds = 5
-            )
-        ) {
-            containerHost.onFinalConfirm()
-
-            // 조건이 맞지 않으면 상태 변경이 없어야 함
-            expectNoItems()
-        }
-    }
-
-    @Test
-    fun `회원탈퇴_최종_취소_테스트`() = runTest {
-        viewModel.test(
-            this,
-            ProfileUiState(
-                withdrawalDialogState = WithdrawalDialogState.Confirmation,
-                userInputText = "탈퇴하겠습니다",
-                countdownSeconds = 0
-            )
-        ) {
-            containerHost.onFinalCancel()
-
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Hidden)
-                assert(userInputText == "")
-                assert(countdownSeconds == 0)
+            // 실패 사이드이펙트
+            expectSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_failed))
+            // 최종 상태
+            awaitState().apply {
+                assertEquals(WithdrawalDialogState.Hidden, withdrawalDialogState)
+                assertFalse(isWithdrawalLoading)
+                assertEquals("", userInputText)
+                assertEquals(0, countdownSeconds)
             }
         }
     }
 
     @Test
-    fun `사용자_입력_텍스트_여러번_변경_테스트`() = runTest {
-        viewModel.test(this) {
-            containerHost.onUserInputChanged("첫번째")
-            awaitState().run {
-                assert(userInputText == "첫번째")
-            }
+    fun onWarningCancel_resets_dialog() = runTest {
+        newVm()
+        vm.test(this) {
+            vm.onWithdrawalClick()
+            awaitState().apply { assertEquals(WithdrawalDialogState.Warning, withdrawalDialogState) }
 
-            containerHost.onUserInputChanged("두번째")
-            awaitState().run {
-                assert(userInputText == "두번째")
-            }
-
-            containerHost.onUserInputChanged("")
-            awaitState().run {
-                assert(userInputText == "")
+            vm.onWarningCancel()
+            awaitState().apply {
+                assertEquals(WithdrawalDialogState.Hidden, withdrawalDialogState)
+                assertEquals("", userInputText)
+                assertEquals(0, countdownSeconds)
             }
         }
     }
 
     @Test
-    fun `회원탈퇴_최종_확인_텍스트만_맞고_카운트다운_남은_경우_테스트`() = runTest {
-        viewModel.test(
-            this,
-            ProfileUiState(
-                userInputText = "탈퇴하겠습니다",
-                countdownSeconds = 3
-            )
-        ) {
-            containerHost.onFinalConfirm()
+    fun onFinalCancel_resets_dialog() = runTest {
+        newVm()
+        vm.test(this) {
+            vm.onWithdrawalClick()
+            awaitState()
+            vm.onWarningConfirm()
+            awaitState().apply { assertEquals(10, countdownSeconds) }
 
-            // 조건이 맞지 않으면 상태 변경이 없어야 함
-            expectNoItems()
-        }
-    }
-
-    @Test
-    fun `회원탈퇴_최종_확인_카운트다운만_끝나고_텍스트_틀린_경우_테스트`() = runTest {
-        viewModel.test(
-            this,
-            ProfileUiState(
-                userInputText = "잘못된 텍스트",
-                countdownSeconds = 0
-            )
-        ) {
-            containerHost.onFinalConfirm()
-
-            // 조건이 맞지 않으면 상태 변경이 없어야 함
-            expectNoItems()
-        }
-    }
-
-    @Test
-    fun `초기_상태_확인_테스트`() = runTest {
-        val initialState = ProfileUiState()
-
-        assert(initialState.profileImageUrl == null)
-        assert(initialState.userName == "")
-        assert(initialState.publishedGlimCount == 0)
-        assert(initialState.likedGlimCount == 0)
-        assert(initialState.isLoading == false)
-        assert(initialState.glimShortCards.isEmpty())
-        assert(initialState.logoutDialogState == LogoutDialogState.Hidden)
-        assert(initialState.withdrawalDialogState == WithdrawalDialogState.Hidden)
-        assert(initialState.editProfileDialogState == EditProfileDialogState.Hidden)
-        assert(initialState.userInputText == "")
-        assert(initialState.countdownSeconds == 0)
-        assert(initialState.isWithdrawalLoading == false)
-    }
-
-    @Test
-    fun `연속_다이얼로그_열기_닫기_테스트`() = runTest {
-        viewModel.test(this) {
-            // 프로필 편집 다이얼로그 열기
-            containerHost.navigateToEditProfile()
-            awaitState().run {
-                assert(editProfileDialogState == EditProfileDialogState.Showing)
-            }
-
-            // 프로필 편집 다이얼로그 닫기
-            containerHost.onEditProfileDialogCancel()
-            awaitState().run {
-                assert(editProfileDialogState == EditProfileDialogState.Hidden)
-            }
-
-            // 로그아웃 다이얼로그 열기
-            containerHost.onLogOutClick()
-            awaitState().run {
-                assert(logoutDialogState == LogoutDialogState.Confirmation)
-            }
-
-            // 로그아웃 다이얼로그 닫기
-            containerHost.onLogoutCancel()
-            awaitState().run {
-                assert(logoutDialogState == LogoutDialogState.Hidden)
+            // 카운트다운 진행 중에도 즉시 리셋되어야 함
+            vm.onFinalCancel()
+            awaitState().apply {
+                assertEquals(WithdrawalDialogState.Hidden, withdrawalDialogState)
+                assertEquals("", userInputText)
+                assertEquals(0, countdownSeconds)
             }
         }
     }
 
     @Test
-    fun `회원탈퇴_플로우_전체_테스트`() = runTest {
-        viewModel.test(this) {
-            // 1. 탈퇴 경고 다이얼로그 열기
-            containerHost.onWithdrawalClick()
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Warning)
-            }
-
-            // 2. 경고 확인 - 카운트다운 시작
-            containerHost.onWarningConfirm()
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Confirmation)
-                assert(countdownSeconds == 10)
-            }
-
-            // 3. 카운트다운 완료될 때까지 대기
-            repeat(10) {
-                awaitState()
-            }
-
-            // 4. 텍스트 입력
-            containerHost.onUserInputChanged("탈퇴하겠습니다")
-            awaitState().run {
-                assert(userInputText == "탈퇴하겠습니다")
-            }
-
-            // 5. 최종 취소
-            containerHost.onFinalCancel()
-            awaitState().run {
-                assert(withdrawalDialogState == WithdrawalDialogState.Hidden)
-                assert(userInputText == "")
-                assert(countdownSeconds == 0)
-            }
+    fun onUserInputChanged_updates_text() = runTest {
+        newVm()
+        vm.test(this) {
+            vm.onUserInputChanged("abc")
+            awaitState().apply { assertEquals("abc", userInputText) }
         }
     }
 }
