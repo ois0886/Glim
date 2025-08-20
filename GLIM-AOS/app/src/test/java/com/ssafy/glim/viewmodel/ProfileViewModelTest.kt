@@ -1,6 +1,7 @@
-package com.ssafy.glim
+package com.ssafy.glim.viewmodel
 
 import android.util.Log
+import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.QuoteSummary
 import com.ssafy.glim.core.domain.model.user.Gender
 import com.ssafy.glim.core.domain.model.user.User
@@ -14,16 +15,34 @@ import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.navigation.UpdateInfoRoute
-import com.ssafy.glim.feature.profile.*
-import io.mockk.*
+import com.ssafy.glim.feature.profile.EditProfileDialogState
+import com.ssafy.glim.feature.profile.LogoutDialogState
+import com.ssafy.glim.feature.profile.ProfileSideEffect
+import com.ssafy.glim.feature.profile.ProfileViewModel
+import com.ssafy.glim.feature.profile.WithdrawalDialogState
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.orbitmvi.orbit.test.test
-import kotlin.test.*
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProfileViewModelTest {
@@ -86,10 +105,20 @@ class ProfileViewModelTest {
         createViewModel()
         viewModel.test(this) {
             viewModel.navigateToEditProfile()
-            awaitState().apply { assertEquals(EditProfileDialogState.Showing, editProfileDialogState) }
+            awaitState().apply {
+                assertEquals(
+                    EditProfileDialogState.Showing,
+                    editProfileDialogState
+                )
+            }
 
             viewModel.navigateToPersonalInfo()
-            awaitState().apply { assertEquals(EditProfileDialogState.Hidden, editProfileDialogState) }
+            awaitState().apply {
+                assertEquals(
+                    EditProfileDialogState.Hidden,
+                    editProfileDialogState
+                )
+            }
         }
         coVerify { navigator.navigate(UpdateInfoRoute.Personal) }
     }
@@ -99,10 +128,20 @@ class ProfileViewModelTest {
         createViewModel()
         viewModel.test(this) {
             viewModel.navigateToEditProfile()
-            awaitState().apply { assertEquals(EditProfileDialogState.Showing, editProfileDialogState) }
+            awaitState().apply {
+                assertEquals(
+                    EditProfileDialogState.Showing,
+                    editProfileDialogState
+                )
+            }
 
             viewModel.navigateToPasswordChange()
-            awaitState().apply { assertEquals(EditProfileDialogState.Hidden, editProfileDialogState) }
+            awaitState().apply {
+                assertEquals(
+                    EditProfileDialogState.Hidden,
+                    editProfileDialogState
+                )
+            }
         }
         coVerify { navigator.navigate(UpdateInfoRoute.Password) }
     }
@@ -220,7 +259,12 @@ class ProfileViewModelTest {
         createViewModel()
         viewModel.test(this) {
             viewModel.onWithdrawalClick()
-            awaitState().apply { assertEquals(WithdrawalDialogState.Warning, withdrawalDialogState) }
+            awaitState().apply {
+                assertEquals(
+                    WithdrawalDialogState.Warning,
+                    withdrawalDialogState
+                )
+            }
 
             viewModel.onWarningConfirm()
             awaitState().apply { assertEquals(10, countdownSeconds) }

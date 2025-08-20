@@ -1,7 +1,8 @@
-package com.ssafy.glim
+package com.ssafy.glim.viewmodel
 
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
+import com.ssafy.glim.R
 import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.domain.usecase.auth.LoginUseCase
@@ -54,7 +55,13 @@ class LoginViewModelTest {
 
     @Test
     fun `이메일_입력_유효`() = runTest {
-        every { ValidationUtils.validateEmail(any<String>(), any<Int>(), any<Int>()) } returns ValidationResult.Valid
+        every {
+            ValidationUtils.validateEmail(
+                any<String>(),
+                any<Int>(),
+                any<Int>()
+            )
+        } returns ValidationResult.Valid
         createViewModel()
         viewModel.test(this) {
             viewModel.onEmailChanged(TextFieldValue("user@email.com"))
@@ -67,7 +74,13 @@ class LoginViewModelTest {
 
     @Test
     fun `이메일_형식_에러`() = runTest {
-        every { ValidationUtils.validateEmail(eq("xx"), any<Int>(), any<Int>()) } returns ValidationResult.Invalid(R.string.error_email_invalid)
+        every {
+            ValidationUtils.validateEmail(
+                eq("xx"),
+                any<Int>(),
+                any<Int>()
+            )
+        } returns ValidationResult.Invalid(R.string.error_email_invalid)
         createViewModel()
         viewModel.test(this) {
             viewModel.onEmailChanged(TextFieldValue("xx"))
@@ -77,7 +90,13 @@ class LoginViewModelTest {
 
     @Test
     fun `비밀번호_입력_유효`() = runTest {
-        every { ValidationUtils.validatePassword(any<String>(), any<Int>(), any<Int>()) } returns ValidationResult.Valid
+        every {
+            ValidationUtils.validatePassword(
+                any<String>(),
+                any<Int>(),
+                any<Int>()
+            )
+        } returns ValidationResult.Valid
         createViewModel()
         viewModel.test(this) {
             viewModel.onPasswordChanged(TextFieldValue("pw123456!"))
@@ -87,7 +106,13 @@ class LoginViewModelTest {
 
     @Test
     fun `비밀번호_형식_에러`() = runTest {
-        every { ValidationUtils.validatePassword(eq("a"), any<Int>(), any<Int>()) } returns ValidationResult.Invalid(R.string.error_password_invalid)
+        every {
+            ValidationUtils.validatePassword(
+                eq("a"),
+                any<Int>(),
+                any<Int>()
+            )
+        } returns ValidationResult.Invalid(R.string.error_password_invalid)
         createViewModel()
         viewModel.test(this) {
             viewModel.onPasswordChanged(TextFieldValue("a"))
@@ -97,8 +122,20 @@ class LoginViewModelTest {
 
     @Test
     fun `로그인 성공`() = runTest {
-        every { ValidationUtils.validateEmail(any<String>(), any(), any()) } returns ValidationResult.Valid
-        every { ValidationUtils.validatePassword(any<String>(), any(), any()) } returns ValidationResult.Valid
+        every {
+            ValidationUtils.validateEmail(
+                any<String>(),
+                any(),
+                any()
+            )
+        } returns ValidationResult.Valid
+        every {
+            ValidationUtils.validatePassword(
+                any<String>(),
+                any(),
+                any()
+            )
+        } returns ValidationResult.Valid
         coEvery { mockLoginUseCase("user@email.com", "pw123!") } returns Unit
 
         createViewModel()
@@ -118,8 +155,20 @@ class LoginViewModelTest {
 
     @Test
     fun `로그인 실패 - 유효성`() = runTest {
-        every { ValidationUtils.validateEmail(any<String>(), any(), any()) } returns ValidationResult.Invalid(R.string.error_email_invalid)
-        every { ValidationUtils.validatePassword(any<String>(), any(), any()) } returns ValidationResult.Valid
+        every {
+            ValidationUtils.validateEmail(
+                any<String>(),
+                any(),
+                any()
+            )
+        } returns ValidationResult.Invalid(R.string.error_email_invalid)
+        every {
+            ValidationUtils.validatePassword(
+                any<String>(),
+                any(),
+                any()
+            )
+        } returns ValidationResult.Valid
         createViewModel()
         viewModel.test(
             this,
@@ -137,8 +186,20 @@ class LoginViewModelTest {
 
     @Test
     fun `로그인 Exception 실패시 사이드이펙트`() = runTest {
-        every { ValidationUtils.validateEmail(any<String>(), any(), any()) } returns ValidationResult.Valid
-        every { ValidationUtils.validatePassword(any<String>(), any(), any()) } returns ValidationResult.Valid
+        every {
+            ValidationUtils.validateEmail(
+                any<String>(),
+                any(),
+                any()
+            )
+        } returns ValidationResult.Valid
+        every {
+            ValidationUtils.validatePassword(
+                any<String>(),
+                any(),
+                any()
+            )
+        } returns ValidationResult.Valid
         coEvery { mockLoginUseCase("x@x.com", "pw!") } throws Exception("fail")
         createViewModel()
         viewModel.test(
