@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.auth.signup
+package com.ssafy.glim.feature.signup
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -21,13 +21,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.ui.GlimTopBar
 import com.ssafy.glim.core.ui.TitleAlignment
-import com.ssafy.glim.feature.auth.login.component.GlimButton
-import com.ssafy.glim.feature.auth.signup.component.EmailAuthInputContent
-import com.ssafy.glim.feature.auth.signup.component.EmailVerificationCodeInputContent
-import com.ssafy.glim.feature.auth.signup.component.PasswordConfirmInputContent
-import com.ssafy.glim.feature.auth.signup.component.ProgressIndicatorBar
-import com.ssafy.glim.feature.auth.signup.component.TermsConsentContent
-import com.ssafy.glim.feature.auth.signup.component.UserProfileInputContent
+import com.ssafy.glim.feature.login.component.GlimButton
+import com.ssafy.glim.feature.signup.component.EmailAuthInputContent
+import com.ssafy.glim.feature.signup.component.EmailVerificationCodeInputContent
+import com.ssafy.glim.feature.signup.component.PasswordConfirmInputContent
+import com.ssafy.glim.feature.signup.component.ProgressIndicatorBar
+import com.ssafy.glim.feature.signup.component.TermsConsentContent
+import com.ssafy.glim.feature.signup.component.UserProfileInputContent
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 

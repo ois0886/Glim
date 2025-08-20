@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
-import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
+import com.ssafy.glim.feature.login.component.PasswordInputTextField
 import com.ssafy.glim.feature.update.UpdateInfoUiState
 
 @Composable

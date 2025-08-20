@@ -8,9 +8,9 @@ import com.ssafy.glim.core.domain.model.VerifyEmail
 import com.ssafy.glim.core.domain.usecase.auth.SignUpUseCase
 import com.ssafy.glim.core.domain.usecase.auth.VerifyEmailUseCase
 import com.ssafy.glim.core.navigation.Navigator
-import com.ssafy.glim.feature.auth.signup.SignUpSideEffect
-import com.ssafy.glim.feature.auth.signup.SignUpStep
-import com.ssafy.glim.feature.auth.signup.SignUpViewModel
+import com.ssafy.glim.feature.signup.SignUpSideEffect
+import com.ssafy.glim.feature.signup.SignUpStep
+import com.ssafy.glim.feature.signup.SignUpViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

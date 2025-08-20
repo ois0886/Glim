@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.auth.login
+package com.ssafy.glim.feature.login
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.feature.auth.login.component.EmailInputTextField
-import com.ssafy.glim.feature.auth.login.component.GlimButton
-import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
+import com.ssafy.glim.feature.login.component.EmailInputTextField
+import com.ssafy.glim.feature.login.component.GlimButton
+import com.ssafy.glim.feature.login.component.PasswordInputTextField
 import com.ssafy.glim.ui.theme.caveatFont
 import org.orbitmvi.orbit.compose.collectSideEffect
 

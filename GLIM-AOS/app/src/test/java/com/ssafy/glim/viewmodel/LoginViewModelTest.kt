@@ -7,9 +7,9 @@ import com.ssafy.glim.core.common.utils.ValidationResult
 import com.ssafy.glim.core.common.utils.ValidationUtils
 import com.ssafy.glim.core.domain.usecase.auth.LoginUseCase
 import com.ssafy.glim.core.navigation.Navigator
-import com.ssafy.glim.feature.auth.login.LoginSideEffect
-import com.ssafy.glim.feature.auth.login.LoginUiState
-import com.ssafy.glim.feature.auth.login.LoginViewModel
+import com.ssafy.glim.feature.login.LoginSideEffect
+import com.ssafy.glim.feature.login.LoginUiState
+import com.ssafy.glim.feature.login.LoginViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

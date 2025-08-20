@@ -24,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.ui.GlimTopBar
 import com.ssafy.glim.core.ui.TitleAlignment
-import com.ssafy.glim.feature.auth.login.component.GlimButton
+import com.ssafy.glim.feature.login.component.GlimButton
 import com.ssafy.glim.feature.main.excludeSystemBars
 import com.ssafy.glim.feature.setting.component.LockSettingSection
 import com.ssafy.glim.feature.setting.component.NotificationSettingSection
