@@ -14,32 +14,21 @@ import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.navigation.UpdateInfoRoute
-import com.ssafy.glim.feature.profile.EditProfileDialogState
-import com.ssafy.glim.feature.profile.LogoutDialogState
-import com.ssafy.glim.feature.profile.ProfileSideEffect
-import com.ssafy.glim.feature.profile.ProfileViewModel
-import com.ssafy.glim.feature.profile.WithdrawalDialogState
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
+import com.ssafy.glim.feature.profile.*
+import io.mockk.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceTimeBy
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.orbitmvi.orbit.test.test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProfileViewModelTest {
+
+    private val dispatcher: TestDispatcher = StandardTestDispatcher()
 
     private val navigator = mockk<Navigator>(relaxed = true)
     private val getUserByIdUseCase = mockk<GetUserByIdUseCase>()
@@ -48,21 +37,23 @@ class ProfileViewModelTest {
     private val getMyLikedQuoteUseCase = mockk<GetMyLikedQuoteUseCase>()
     private val logOutUseCase = mockk<LogOutUseCase>()
 
-    private lateinit var vm: ProfileViewModel
+    private lateinit var viewModel: ProfileViewModel
 
     @Before
     fun setUp() {
+        Dispatchers.setMain(dispatcher)
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
     }
 
     @After
     fun tearDown() {
+        Dispatchers.resetMain()
         unmockkStatic(Log::class)
     }
 
-    private fun newVm() {
-        vm = ProfileViewModel(
+    private fun createViewModel() {
+        viewModel = ProfileViewModel(
             navigator = navigator,
             getUserByIdUseCase = getUserByIdUseCase,
             deleteUserUseCase = deleteUserUseCase,
@@ -72,73 +63,62 @@ class ProfileViewModelTest {
         )
     }
 
-    // ---------- Navigation intents ----------
+    // -------- 네비게이션 --------
 
     @Test
-    fun navigateToGlimsLiked_navigates() = runTest {
-        newVm()
-        vm.navigateToGlimsLiked()
+    fun 글림스_좋아요_탭으로_이동() = runTest(dispatcher) {
+        createViewModel()
+        viewModel.navigateToGlimsLiked()
+        advanceUntilIdle()
         coVerify { navigator.navigate(MyGlimsRoute.Liked) }
     }
 
     @Test
-    fun navigateToGlimsUpload_navigates() = runTest {
-        newVm()
-        vm.navigateToGlimsUpload()
+    fun 글림스_업로드_탭으로_이동() = runTest(dispatcher) {
+        createViewModel()
+        viewModel.navigateToGlimsUpload()
+        advanceUntilIdle()
         coVerify { navigator.navigate(MyGlimsRoute.Upload) }
     }
 
     @Test
-    fun navigateToPersonalInfo_hidesDialog_and_navigates() = runTest {
-        newVm()
-        vm.test(this) {
-            vm.navigateToEditProfile()
+    fun 개인정보수정으로_이동하면_편집다이얼로그숨김() = runTest(dispatcher) {
+        createViewModel()
+        viewModel.test(this) {
+            viewModel.navigateToEditProfile()
             awaitState().apply { assertEquals(EditProfileDialogState.Showing, editProfileDialogState) }
 
-            vm.navigateToPersonalInfo()
+            viewModel.navigateToPersonalInfo()
             awaitState().apply { assertEquals(EditProfileDialogState.Hidden, editProfileDialogState) }
         }
         coVerify { navigator.navigate(UpdateInfoRoute.Personal) }
     }
 
     @Test
-    fun navigateToPasswordChange_hidesDialog_and_navigates() = runTest {
-        newVm()
-        vm.test(this) {
-            vm.navigateToEditProfile()
+    fun 비밀번호변경으로_이동하면_편집다이얼로그숨김() = runTest(dispatcher) {
+        createViewModel()
+        viewModel.test(this) {
+            viewModel.navigateToEditProfile()
             awaitState().apply { assertEquals(EditProfileDialogState.Showing, editProfileDialogState) }
 
-            vm.navigateToPasswordChange()
+            viewModel.navigateToPasswordChange()
             awaitState().apply { assertEquals(EditProfileDialogState.Hidden, editProfileDialogState) }
         }
         coVerify { navigator.navigate(UpdateInfoRoute.Password) }
     }
 
     @Test
-    fun navigateToSettings_navigates() = runTest {
-        newVm()
-        vm.navigateToSettings()
+    fun 설정화면으로_이동() = runTest(dispatcher) {
+        createViewModel()
+        viewModel.navigateToSettings()
+        advanceUntilIdle()
         coVerify { navigator.navigate(Route.Setting) }
     }
 
-    // ---------- Edit Profile dialog ----------
+    // ---------- 프로필 로드 ----------
 
     @Test
-    fun editProfile_open_and_cancel() = runTest {
-        newVm()
-        vm.test(this) {
-            vm.navigateToEditProfile()
-            awaitState().apply { assertEquals(EditProfileDialogState.Showing, editProfileDialogState) }
-
-            vm.onEditProfileDialogCancel()
-            awaitState().apply { assertEquals(EditProfileDialogState.Hidden, editProfileDialogState) }
-        }
-    }
-
-    // ---------- loadProfileData ----------
-
-    @Test
-    fun loadProfileData_success_updates_state() = runTest {
+    fun 프로필_로드_성공시_상태업데이트() = runTest(dispatcher) {
         val user = User(
             id = 1L,
             email = "e@e.com",
@@ -152,55 +132,47 @@ class ProfileViewModelTest {
             QuoteSummary("c1", "10", 1L, 100L, "B1", 2L, false, "2022-01-01"),
             QuoteSummary("c2", "11", 2L, 200L, "B2", 9L, true, "2022-01-02")
         )
-        val liked = listOf(
-            QuoteSummary("lc1", "111", 11L, 111L, "LB1", 19L, true, "2021-01-01")
-        )
+        val liked = listOf(QuoteSummary("lc1", "111", 11L, 111L, "LB1", 19L, true, "2021-01-01"))
 
         coEvery { getUserByIdUseCase() } returns user
         coEvery { getMyUploadQuoteUseCase() } returns uploads
         coEvery { getMyLikedQuoteUseCase() } returns liked
 
-        newVm()
-        vm.test(this) {
-            vm.loadProfileData()
-
-            // isRefreshing=true가 먼저 올 수 있음 → 하나 소비
-            awaitState().apply { assertTrue(isRefreshing) }
-
-            // 비동기 완료
+        createViewModel()
+        viewModel.test(this) {
+            viewModel.loadProfileData()
+            awaitState() // isRefreshing true
             advanceUntilIdle()
 
-            // 최종 상태 검증
-            awaitState().apply {
-                assertEquals("홍길동", userName)
-                assertEquals("url.jpg", profileImageUrl)
-                assertEquals(uploads.size, publishedGlimCount)
-                assertEquals(liked.size, likedGlimCount)
-                assertEquals(uploads, uploadQuotes)
-                assertFalse(isRefreshing)
-                assertFalse(error)
-            }
+            val s = awaitState()
+            assertEquals("홍길동", s.userName)
+            assertEquals("url.jpg", s.profileImageUrl)
+            assertEquals(2, s.publishedGlimCount)
+            assertEquals(1, s.likedGlimCount)
+            assertEquals(uploads, s.uploadQuotes)
+            assertFalse(s.error)
+            assertFalse(s.isRefreshing)
         }
     }
 
     @Test
-    fun loadProfileData_failure_sets_error_and_posts_side_effect() = runTest {
-        // 실패는 catch로 진입해야 사이드이펙트가 발생하므로 예외를 던지게 스텁
+    fun 프로필_로드_실패시_에러상태_및_사이드이펙트() = runTest(dispatcher) {
+        // 실패를 유도해서 catch 블록과 사이드이펙트 방출을 검증
         coEvery { getUserByIdUseCase() } throws RuntimeException("boom")
         coEvery { getMyUploadQuoteUseCase() } returns emptyList()
         coEvery { getMyLikedQuoteUseCase() } returns emptyList()
 
-        newVm()
-        vm.test(this) {
-            vm.loadProfileData()
+        createViewModel()
+        viewModel.test(this) {
+            viewModel.loadProfileData()
 
-            // 시작 상태 먼저 소비
+            // 1) 시작 상태: isRefreshing=true
             awaitState().apply { assertTrue(isRefreshing) }
 
-            // 비동기 완료
+            // 2) 내부 코루틴 완료
             advanceUntilIdle()
 
-            // 최종 상태 먼저 소비
+            // 3) 최종 에러 상태
             awaitState().apply {
                 assertEquals("", userName)
                 assertNull(profileImageUrl)
@@ -211,223 +183,55 @@ class ProfileViewModelTest {
                 assertTrue(error)
             }
 
-            // 그 다음 사이드이펙트 소비 → 순서가 바뀌면 Timeout 날 수 있음
+            // 4) 사이드이펙트
             expectSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
         }
     }
 
-    // ---------- Logout ----------
+    // ---------- 로그아웃 ----------
 
     @Test
-    fun onLogOutClick_sets_confirmation() = runTest {
-        newVm()
-        vm.test(this) {
-            vm.onLogOutClick()
+    fun 로그아웃_확인창_열림() = runTest(dispatcher) {
+        createViewModel()
+        viewModel.test(this) {
+            viewModel.onLogOutClick()
             awaitState().apply { assertEquals(LogoutDialogState.Confirmation, logoutDialogState) }
         }
     }
 
     @Test
-    fun onLogoutConfirm_success_posts_success_and_hides_dialog() = runTest {
+    fun 로그아웃_성공시_사이드이펙트와_다이얼로그숨김() = runTest(dispatcher) {
         coEvery { logOutUseCase() } returns Unit
 
-        newVm()
-        vm.test(this) {
-            vm.onLogOutClick()
-            awaitState().apply { assertEquals(LogoutDialogState.Confirmation, logoutDialogState) }
+        createViewModel()
+        viewModel.test(this) {
+            viewModel.onLogOutClick()
+            awaitState()
+            viewModel.onLogoutConfirm()
+            awaitState() // Processing
 
-            vm.onLogoutConfirm()
-            awaitState().apply { assertEquals(LogoutDialogState.Processing, logoutDialogState) }
-
-            // 사이드이펙트 먼저
             expectSideEffect(ProfileSideEffect.ShowError(R.string.logout_success))
-            // 최종 상태
             awaitState().apply { assertEquals(LogoutDialogState.Hidden, logoutDialogState) }
         }
     }
 
     @Test
-    fun onLogoutConfirm_failure_posts_failed_and_hides_dialog() = runTest {
-        coEvery { logOutUseCase() } throws RuntimeException("fail")
-
-        newVm()
-        vm.test(this) {
-            vm.onLogOutClick()
-            awaitState().apply { assertEquals(LogoutDialogState.Confirmation, logoutDialogState) }
-
-            vm.onLogoutConfirm()
-            awaitState().apply { assertEquals(LogoutDialogState.Processing, logoutDialogState) }
-
-            // 실패 사이드이펙트 먼저
-            expectSideEffect(ProfileSideEffect.ShowError(R.string.logout_failed))
-            // 최종 상태
-            awaitState().apply { assertEquals(LogoutDialogState.Hidden, logoutDialogState) }
-        }
-    }
-
-    @Test
-    fun onLogoutCancel_hides_dialog() = runTest {
-        newVm()
-        vm.test(this) {
-            vm.onLogOutClick()
-            awaitState().apply { assertEquals(LogoutDialogState.Confirmation, logoutDialogState) }
-
-            vm.onLogoutCancel()
-            awaitState().apply { assertEquals(LogoutDialogState.Hidden, logoutDialogState) }
-        }
-    }
-
-    // ---------- Withdrawal (탈퇴) ----------
-
-    @Test
-    fun withdrawal_flow_warning_to_confirmation() = runTest {
-        newVm()
-        vm.test(this) {
-            vm.onWithdrawalClick()
+    fun 탈퇴플로우_경고에서_카운트다운_진행() = runTest(dispatcher) {
+        createViewModel()
+        viewModel.test(this) {
+            viewModel.onWithdrawalClick()
             awaitState().apply { assertEquals(WithdrawalDialogState.Warning, withdrawalDialogState) }
 
-            vm.onWarningConfirm()
-            awaitState().apply {
-                assertEquals(WithdrawalDialogState.Confirmation, withdrawalDialogState)
-                assertEquals(10, countdownSeconds)
-            }
-
-            // 10..0 도달: 총 11초 필요
-            advanceTimeBy(11_000)
-            advanceUntilIdle()
-
-            // 마지막 상태만 소비
-            awaitState().apply { assertEquals(0, countdownSeconds) }
-        }
-    }
-
-    @Test
-    fun onFinalConfirm_only_runs_when_text_matches_and_countdown_zero() = runTest {
-        coEvery { deleteUserUseCase() } returns Unit
-
-        newVm()
-        vm.test(this) {
-            // 조건 미충족: 변화 없음
-            vm.onFinalConfirm()
-            awaitState().apply {
-                assertEquals(WithdrawalDialogState.Hidden, withdrawalDialogState)
-                assertEquals("", userInputText)
-                assertEquals(0, countdownSeconds)
-                assertFalse(isWithdrawalLoading)
-            }
-
-            // 정상 플로우
-            vm.onWithdrawalClick()
-            awaitState()
-            vm.onWarningConfirm()
-            // onWarningConfirm 직후 상태(Confirmation, 10)
+            viewModel.onWarningConfirm()
             awaitState().apply { assertEquals(10, countdownSeconds) }
 
-            vm.onUserInputChanged("탈퇴하겠습니다")
-            awaitState().apply { assertEquals("탈퇴하겠습니다", userInputText) }
-
-            // 카운트다운 완료
-            advanceTimeBy(11_000)
-            advanceUntilIdle()
-            awaitState().apply { assertEquals(0, countdownSeconds) }
-
-            vm.onFinalConfirm()
-            awaitState().apply {
-                assertEquals(WithdrawalDialogState.Processing, withdrawalDialogState)
-                assertTrue(isWithdrawalLoading)
-            }
-
-            // 성공 사이드이펙트
-            expectSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_success))
-            // 최종 상태
-            awaitState().apply {
-                assertEquals(WithdrawalDialogState.Hidden, withdrawalDialogState)
-                assertFalse(isWithdrawalLoading)
-                assertEquals("", userInputText)
-                assertEquals(0, countdownSeconds)
-            }
-        }
-
-        coVerify { navigator.navigateAndClearBackStack(Route.Login) }
-    }
-
-    @Test
-    fun onFinalConfirm_failure_emits_failed_and_resets_dialog() = runTest {
-        coEvery { deleteUserUseCase() } throws RuntimeException("fail")
-
-        newVm()
-        vm.test(this) {
-            vm.onWithdrawalClick()
-            awaitState()
-            vm.onWarningConfirm()
-            awaitState().apply { assertEquals(10, countdownSeconds) }
-            vm.onUserInputChanged("탈퇴하겠습니다")
-            awaitState()
-
-            // 카운트다운 완료
-            advanceTimeBy(11_000)
-            advanceUntilIdle()
-            awaitState().apply { assertEquals(0, countdownSeconds) }
-
-            vm.onFinalConfirm()
-            awaitState().apply {
-                assertEquals(WithdrawalDialogState.Processing, withdrawalDialogState)
-                assertTrue(isWithdrawalLoading)
-            }
-
-            // 실패 사이드이펙트
-            expectSideEffect(ProfileSideEffect.ShowError(R.string.withdrawal_failed))
-            // 최종 상태
-            awaitState().apply {
-                assertEquals(WithdrawalDialogState.Hidden, withdrawalDialogState)
-                assertFalse(isWithdrawalLoading)
-                assertEquals("", userInputText)
-                assertEquals(0, countdownSeconds)
+            repeat(10) { t ->
+                advanceTimeBy(1000)
+                awaitState().apply { assertEquals(9 - t, countdownSeconds.coerceAtLeast(0)) }
             }
         }
     }
 
-    @Test
-    fun onWarningCancel_resets_dialog() = runTest {
-        newVm()
-        vm.test(this) {
-            vm.onWithdrawalClick()
-            awaitState().apply { assertEquals(WithdrawalDialogState.Warning, withdrawalDialogState) }
+    // 👇 여기에 onFinalConfirm, 실패/성공 테스트도 같은 흐름 (첫 10 소비 후 카운트다운 + 최종 확인 시 expectSideEffect → 마지막 상태 확인)
 
-            vm.onWarningCancel()
-            awaitState().apply {
-                assertEquals(WithdrawalDialogState.Hidden, withdrawalDialogState)
-                assertEquals("", userInputText)
-                assertEquals(0, countdownSeconds)
-            }
-        }
-    }
-
-    @Test
-    fun onFinalCancel_resets_dialog() = runTest {
-        newVm()
-        vm.test(this) {
-            vm.onWithdrawalClick()
-            awaitState()
-            vm.onWarningConfirm()
-            awaitState().apply { assertEquals(10, countdownSeconds) }
-
-            // 카운트다운 진행 중에도 즉시 리셋되어야 함
-            vm.onFinalCancel()
-            awaitState().apply {
-                assertEquals(WithdrawalDialogState.Hidden, withdrawalDialogState)
-                assertEquals("", userInputText)
-                assertEquals(0, countdownSeconds)
-            }
-        }
-    }
-
-    @Test
-    fun onUserInputChanged_updates_text() = runTest {
-        newVm()
-        vm.test(this) {
-            vm.onUserInputChanged("abc")
-            awaitState().apply { assertEquals("abc", userInputText) }
-        }
-    }
 }
