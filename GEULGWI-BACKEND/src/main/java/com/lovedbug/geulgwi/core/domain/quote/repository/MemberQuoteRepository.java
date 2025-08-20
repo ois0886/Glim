@@ -10,5 +10,5 @@ import java.util.List;
 public interface MemberQuoteRepository extends JpaRepository<MemberQuote, Long> {
 
     @EntityGraph(attributePaths = {"quote"})
-    List<MemberQuote> findAllByMemberId(Long memberId);
+    List<MemberQuote> findAllByMemberIdOrderByCreatedAtDesc(Long memberId);
 }

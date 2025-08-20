@@ -139,7 +139,7 @@ public class QuoteService {
     @Transactional(readOnly = true)
     public List<QuoteResponse> getUploadedQuotesByMemberId(Long memberId) {
 
-        List<MemberQuote> memberQuotes = memberQuoteRepository.findAllByMemberId(memberId);
+        List<MemberQuote> memberQuotes = memberQuoteRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId);
 
         return memberQuotes.stream()
             .map(memberQuote -> {
