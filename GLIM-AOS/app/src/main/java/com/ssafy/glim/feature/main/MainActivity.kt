@@ -198,18 +198,19 @@ class MainActivity : ComponentActivity() {
             if (screen == "QUOTE") {
                 Log.d("MainActivity", "=== 모든 extras 정보 ===")
                 extras.keySet().forEach { key ->
-                    val value = extras.get(key)
+                    val value = extras.getString(key)
                     Log.d("MainActivity", "$key: $value")
                 }
                 Log.d("MainActivity", "========================")
 
-                val quoteId = extras.get("quoteId")?.toString()?.toLongOrNull() ?: -1L
+                val quoteId = extras.getString("quoteId")?.toLongOrNull() ?: -1L
                 Log.d("DeepLink", "딥링크 Quote ID: $quoteId")
                 if (quoteId > 0) {
                     deepLinkQuoteId = quoteId
                 }
             }
         }
+
 
         val data = intent?.data ?: return
 
