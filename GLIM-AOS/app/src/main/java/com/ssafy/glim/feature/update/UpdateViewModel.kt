@@ -178,7 +178,7 @@ internal class UpdateViewModel @Inject constructor(
     }
 
     // URL에서 Bitmap을 다운로드하는 함수
-    private suspend fun downloadImageFromUrl(url: String): Bitmap? = withContext(Dispatchers.IO) {
+    suspend fun downloadImageFromUrl(url: String): Bitmap? = withContext(Dispatchers.IO) {
         try {
             val connection = URL(url).openConnection()
             connection.doInput = true

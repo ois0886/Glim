@@ -68,7 +68,6 @@ constructor(
                         likeQuoteUseCase(currentQuote.quoteId)
                     }
                 }.onFailure {
-                    Log.d("ShortsViewModel", "${it.message}")
                     postSideEffect(ShortsSideEffect.ShowToast("좋아요 오류 발생"))
                 }
             }
@@ -78,15 +77,12 @@ constructor(
 
     fun onPageChanged(page: Int) =
         intent {
-            Log.d("ShortsViewModel", "$page / ${state.quotes.size} 페이지로 변경됨")
-            // 페이지가 변경될 때 currentQuote.quoteId도 업데이트
             if (page >= 0 && page < state.quotes.size) {
                 reduce {
                     state.copy(
                         currentIdx = page,
                     )
                 }
-                Log.d("ShortsViewModel", "현재 Quote Idx: ${state.currentIdx} / ${state.quotes.size}")
                 if (state.currentIdx >= state.quotes.size - 3) {
                     refresh()
                 }
@@ -112,7 +108,6 @@ constructor(
                 postSideEffect(ShortsSideEffect.ShareQuote(it))
             }
             .onFailure {
-                Log.d("ShortsViewModel", "Shorten URL failed: ${it.message}")
                 postSideEffect(ShortsSideEffect.ShareQuote(originalUrl))
             }
     }
@@ -126,7 +121,6 @@ constructor(
     fun loadQuote(quoteId: Long) = intent {
         runCatching { getQuoteByIdUseCase(quoteId) }
             .onSuccess {
-                Log.d("ShortsViewModel", "Loaded quote: $it")
                 reduce {
                     state.copy(
                         quotes = listOf(it),
@@ -138,7 +132,6 @@ constructor(
                 refresh()
             }
             .onFailure {
-                Log.d("ShortsViewModel", "Failed to load quote: ${it.message}")
                 reduce {
                     state.copy(
                         isLoading = false,
@@ -161,12 +154,9 @@ constructor(
                                 error = null
                             )
                         }
-                        Log.d("ShortsViewModel", "Loaded ${it.size} new quotes")
-                        Log.d("ShortsViewModel", "Total quotes: ${state.quotes.size}")
                     }
                 }
                 .onFailure {
-                    Log.d("ShortsViewModel", "Loaded failed: ${it.message}")
                     reduce { state.copy(isLoading = false, error = it.message) }
                 }
         }
