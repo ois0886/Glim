@@ -14,7 +14,8 @@ public enum MemberErrorCode implements ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER-003", "회원이 존재하지 않습니다."),
     MEMBER_INACTIVE(HttpStatus.FORBIDDEN, "MEMBER-004", "비활성화 된 회원입니다."),
     PROFILE_IMAGE_SAVE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "MEMBER-005", "프로필 이미지 저장에 실패했습니다."),
-    ADMIN_ROLE_REQUIRED(HttpStatus.FORBIDDEN, "MEMBER-006", "관리자 권한이 필요합니다.");
+    PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER-006", "프로필 이미지가 존재하지 않습니다."),
+    ADMIN_ROLE_REQUIRED(HttpStatus.FORBIDDEN, "MEMBER-007", "관리자 권한이 필요합니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

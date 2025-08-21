@@ -63,16 +63,11 @@ public class MemberService {
     public String savedProfileUrl(MultipartFile profileImage) {
 
         if (profileImage == null || profileImage.isEmpty()){
-            return null;
+            throw new MemberException(MemberErrorCode.PROFILE_IMAGE_NOT_FOUND, "프로필 이미지가 존재하지 않습니다.");
         }
 
-        try{
-            ImageMetaData imageMetaData = imageHandler.saveImage(profileImage);
-            return imageMetaData.imageName();
-        } catch (Exception e) {
-            throw new MemberException(MemberErrorCode.PROFILE_IMAGE_SAVE_FAILED, e.getMessage());
-        }
-
+        ImageMetaData imageMetaData = imageHandler.saveImage(profileImage);
+        return imageMetaData.imageName();
     }
 
     public MemberResponse findByMemberId(Long memberId){
