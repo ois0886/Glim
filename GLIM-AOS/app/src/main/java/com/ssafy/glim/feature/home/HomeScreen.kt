@@ -53,7 +53,6 @@ import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.GlimErrorLoader
 import com.ssafy.glim.core.ui.GlimLoader
 import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
-import com.ssafy.glim.feature.home.model.HomeSectionUiModel
 import com.ssafy.glim.ui.theme.GlimColor.LightGray600
 import com.ssafy.glim.ui.theme.GlimColor.LightGray700
 import com.ssafy.glim.ui.theme.GlimColor.LightGray900

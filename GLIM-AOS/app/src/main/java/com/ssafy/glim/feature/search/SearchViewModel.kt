@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.search
 
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.core.domain.model.Book
@@ -84,7 +83,6 @@ constructor(
     // 검색 실행
     fun onSearchExecuted() =
         intent {
-            Log.d("SearchViewModel", "Search executed with query: ${state.currentQuery}")
             val query = state.currentQuery.text.trim()
             if (query.isNotEmpty()) {
                 performSearch(query)
@@ -101,7 +99,6 @@ constructor(
         }
 
     fun loadMoreBooks() = intent {
-        Log.d("SearchViewModel", "Loading more books for query: ${state.searchQuery}, page: ${state.bookCurrentPage + 1}")
         reduce {
             state.copy(
                 bookCurrentPage = state.bookCurrentPage + 1,
@@ -119,13 +116,11 @@ constructor(
                 }
             }
             .onFailure {
-                Log.d("SearchViewModel", "Error searching books: ${it.message}")
                 postSideEffect(SearchSideEffect.ShowToast("검색 중 오류가 발생했습니다."))
             }
     }
 
     fun loadMoreQuotes() = intent {
-        Log.d("SearchViewModel", "Loading more quotes for query: ${state.searchQuery}, page: ${state.quoteCurrentPage + 1}")
         reduce {
             state.copy(
                 quoteCurrentPage = state.quoteCurrentPage + 1,
@@ -143,7 +138,6 @@ constructor(
                 }
             }
             .onFailure {
-                Log.d("SearchViewModel", "Error searching quotes: ${it.message}")
                 postSideEffect(SearchSideEffect.ShowToast("검색 중 오류가 발생했습니다."))
                 reduce {
                     state.copy(isRefreshing = false)
@@ -183,9 +177,9 @@ constructor(
             reduce {
                 state.copy(
                     recentSearchItems =
-                    state.recentSearchItems.filter {
-                        it != searchQuery
-                    },
+                        state.recentSearchItems.filter {
+                            it != searchQuery
+                        },
                     error = null,
                 )
             }
@@ -209,6 +203,7 @@ constructor(
             state.copy(selectedTab = tab)
         }
     }
+
     fun onSelectFilter(filter: SearchFilter) = intent {
         reduce {
             state.copy(selectedFilter = filter)
@@ -230,10 +225,9 @@ constructor(
                             error = null,
                         )
                     }
-                    Log.d("SearchViewModel", "Popular search items loaded: $it")
                 }
                 .onFailure {
-                    Log.d("SearchViewModel", "Error loading popular search items: ${it.message}")
+                    postSideEffect(SearchSideEffect.ShowToast("검색 중 오류가 발생했습니다."))
                 }
         }
 
@@ -265,7 +259,6 @@ constructor(
                     }
                 }
                 .onFailure {
-                    Log.d("SearchViewModel", "Error searching books: ${it.message}")
                     postSideEffect(SearchSideEffect.ShowToast("검색 중 오류가 발생했습니다."))
                 }
 
@@ -279,7 +272,6 @@ constructor(
                             error = null
                         )
                     }
-                    Log.d("SearchViewModel like", "${it.quoteSummaries.map{it.isLiked}}")
                 }
 
             reduce { state.copy(isLoading = false) }

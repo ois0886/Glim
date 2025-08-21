@@ -1,7 +1,6 @@
 package com.ssafy.glim.feature.shorts
 
 import android.content.Context
-import com.ssafy.glim.core.util.ShareManager
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +13,7 @@ import com.ssafy.glim.core.domain.usecase.quote.UpdateQuoteViewCountUseCase
 import com.ssafy.glim.core.domain.usecase.shortlink.ShortenUrlUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
+import com.ssafy.glim.core.util.ShareManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
