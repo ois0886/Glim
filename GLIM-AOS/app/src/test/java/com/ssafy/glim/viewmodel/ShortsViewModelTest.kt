@@ -2,11 +2,21 @@ package com.ssafy.glim.feature.shorts
 
 import android.util.Log
 import com.ssafy.glim.core.domain.model.Quote
-import com.ssafy.glim.core.domain.usecase.quote.*
+import com.ssafy.glim.core.domain.usecase.quote.GetQuoteByIdUseCase
+import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
+import com.ssafy.glim.core.domain.usecase.quote.LikeQuoteUseCase
+import com.ssafy.glim.core.domain.usecase.quote.UnLikeQuoteUseCase
+import com.ssafy.glim.core.domain.usecase.quote.UpdateQuoteViewCountUseCase
 import com.ssafy.glim.core.domain.usecase.shortlink.ShortenUrlUseCase
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.util.ShareManager
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test

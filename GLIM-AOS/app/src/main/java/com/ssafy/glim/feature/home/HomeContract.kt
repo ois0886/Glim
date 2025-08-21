@@ -29,4 +29,3 @@ sealed class HomeSectionUiModel {
         val books: List<Book>
     ) : HomeSectionUiModel()
 }
-

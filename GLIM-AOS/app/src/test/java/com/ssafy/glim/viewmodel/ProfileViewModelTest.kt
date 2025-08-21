@@ -277,5 +277,4 @@ class ProfileViewModelTest {
     }
 
     // 👇 여기에 onFinalConfirm, 실패/성공 테스트도 같은 흐름 (첫 10 소비 후 카운트다운 + 최종 확인 시 expectSideEffect → 마지막 상태 확인)
-
 }

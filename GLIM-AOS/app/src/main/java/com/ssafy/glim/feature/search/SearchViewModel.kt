@@ -177,9 +177,9 @@ constructor(
             reduce {
                 state.copy(
                     recentSearchItems =
-                        state.recentSearchItems.filter {
-                            it != searchQuery
-                        },
+                    state.recentSearchItems.filter {
+                        it != searchQuery
+                    },
                     error = null,
                 )
             }

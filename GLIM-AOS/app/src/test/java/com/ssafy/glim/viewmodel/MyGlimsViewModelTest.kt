@@ -263,8 +263,10 @@ class MyGlimsViewModelTest {
         val initialState = viewModel.container.stateFlow.value
         assertFalse("초기 로딩 상태가 false여야 합니다", initialState.isLoading)
         assertTrue("초기 myGlims가 비어있어야 합니다", initialState.myGlims.isEmpty())
-        assertTrue("초기 currentListType이 LIKED여야 합니다",
-            initialState.currentListType == MyGlimsType.LIKED)
+        assertTrue(
+            "초기 currentListType이 LIKED여야 합니다",
+            initialState.currentListType == MyGlimsType.LIKED
+        )
         assertTrue("초기 errorMessage가 null이어야 합니다", initialState.errorMessage == null)
     }
 }

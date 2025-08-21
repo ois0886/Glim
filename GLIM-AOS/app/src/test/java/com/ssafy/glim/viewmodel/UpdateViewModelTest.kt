@@ -47,7 +47,6 @@ class UpdateViewModelTest {
         profileUrl = "http://profile.img"
     )
 
-
     @Before
     fun setUp() {
         mockkObject(ValidationUtils)

@@ -211,7 +211,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-
         val data = intent?.data ?: return
 
         if (data.scheme == "glim" && data.host == "quote") {
