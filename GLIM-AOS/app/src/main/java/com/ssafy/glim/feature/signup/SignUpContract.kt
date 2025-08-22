@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.auth.signup
+package com.ssafy.glim.feature.signup
 
 import androidx.annotation.StringRes
 import androidx.compose.ui.text.input.TextFieldValue

@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.provider.MediaStore
 import android.widget.Toast
-import coil.Coil
 import coil.Coil.imageLoader
 import coil.request.ImageRequest
 import com.ssafy.glim.R

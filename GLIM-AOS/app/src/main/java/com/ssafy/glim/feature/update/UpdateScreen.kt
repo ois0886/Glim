@@ -1,6 +1,5 @@
 package com.ssafy.glim.feature.update
 
-import PersonalInfoContent
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -30,9 +28,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.glim.R
 import com.ssafy.glim.core.ui.GlimTopBar
 import com.ssafy.glim.core.ui.TitleAlignment
-import com.ssafy.glim.feature.auth.login.component.GlimButton
-import com.ssafy.glim.feature.main.excludeSystemBars
+import com.ssafy.glim.feature.login.component.GlimButton
 import com.ssafy.glim.feature.update.component.PasswordChangeContent
+import com.ssafy.glim.feature.update.component.PersonalInfoContent
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable

@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.auth.signup.component
+package com.ssafy.glim.feature.signup.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.ButtonDefaults

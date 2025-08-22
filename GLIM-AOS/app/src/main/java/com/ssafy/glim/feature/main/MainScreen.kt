@@ -27,8 +27,8 @@ import com.ssafy.glim.core.navigation.BottomTabRoute
 import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Route
 import com.ssafy.glim.core.navigation.UpdateInfoRoute
-import com.ssafy.glim.feature.auth.login.LoginRoute
-import com.ssafy.glim.feature.auth.signup.SignUpRoute
+import com.ssafy.glim.feature.login.LoginRoute
+import com.ssafy.glim.feature.signup.SignUpRoute
 import com.ssafy.glim.feature.bookdetail.BookDetailScreen
 import com.ssafy.glim.feature.celebrations.CelebrationsRoute
 import com.ssafy.glim.feature.home.HomeRoute

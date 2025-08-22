@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.auth.login.component
+package com.ssafy.glim.feature.login.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
