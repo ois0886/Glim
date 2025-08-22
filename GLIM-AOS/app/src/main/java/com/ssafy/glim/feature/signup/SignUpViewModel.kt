@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.auth.signup
+package com.ssafy.glim.feature.signup
 
 import android.content.Context
 import android.util.Log

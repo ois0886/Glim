@@ -11,14 +11,13 @@ import javax.inject.Singleton
 class ShortLinkRepositoryImpl @Inject constructor(
     private val shortLinkApi: ShortLinkApi
 ) : ShortLinkRepository {
-    
+
     companion object {
         private const val AUTHORIZATION_PREFIX = "Bearer "
     }
-    
-    override suspend fun shortenUrl(longUrl: String) = shortLinkApi.shortenUrl(
-                authorization = AUTHORIZATION_PREFIX + BuildConfig.BITLY_TOKEN,
-                request = ShortenUrlRequest(longUrl = longUrl)
-            ).link
 
+    override suspend fun shortenUrl(longUrl: String) = shortLinkApi.shortenUrl(
+        authorization = AUTHORIZATION_PREFIX + BuildConfig.BITLY_TOKEN,
+        request = ShortenUrlRequest(longUrl = longUrl)
+    ).link
 }

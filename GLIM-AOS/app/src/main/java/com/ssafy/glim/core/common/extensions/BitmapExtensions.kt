@@ -29,7 +29,6 @@ fun Bitmap.toUri(context: Context): Uri? {
 
 suspend fun String.toUri(context: Context): Uri? {
     return this.toBitmap(context)?.toUri(context)
-
 }
 
 private fun createCacheDirectory(context: Context): File {

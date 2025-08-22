@@ -1,3 +1,5 @@
+package com.ssafy.glim.feature.update.component
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,10 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.ssafy.glim.core.common.extensions.formatBirthDateToNumber
-import com.ssafy.glim.feature.auth.signup.component.UserProfileInputContent
+import com.ssafy.glim.feature.signup.component.UserProfileInputContent
 import com.ssafy.glim.feature.update.UpdateInfoUiState
-import com.ssafy.glim.feature.update.component.EmailSection
-import com.ssafy.glim.feature.update.component.ProfileImageSection
 
 @Composable
 fun PersonalInfoContent(

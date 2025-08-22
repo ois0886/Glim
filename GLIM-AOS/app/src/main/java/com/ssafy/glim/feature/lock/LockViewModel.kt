@@ -3,7 +3,6 @@ package com.ssafy.glim.feature.lock
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.usecase.quote.GetQuotesUseCase
 import com.ssafy.glim.core.domain.usecase.quote.LikeQuoteUseCase

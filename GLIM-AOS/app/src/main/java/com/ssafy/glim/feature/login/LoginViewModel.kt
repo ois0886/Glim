@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.auth.login
+package com.ssafy.glim.feature.login
 
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
