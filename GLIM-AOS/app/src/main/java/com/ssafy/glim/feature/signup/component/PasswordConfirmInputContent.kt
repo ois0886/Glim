@@ -1,4 +1,4 @@
-package com.ssafy.glim.feature.auth.signup.component
+package com.ssafy.glim.feature.signup.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.glim.R
 
-import com.ssafy.glim.feature.auth.login.component.PasswordInputTextField
+import com.ssafy.glim.feature.login.component.PasswordInputTextField
 
 @Composable
 fun PasswordConfirmInputContent(

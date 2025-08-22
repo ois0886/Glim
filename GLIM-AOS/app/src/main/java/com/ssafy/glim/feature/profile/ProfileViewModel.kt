@@ -3,11 +3,11 @@ package com.ssafy.glim.feature.profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.ssafy.glim.R
-import com.ssafy.glim.core.domain.usecase.user.LogOutUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetMyLikedQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.quote.GetMyUploadQuoteUseCase
 import com.ssafy.glim.core.domain.usecase.user.DeleteUserUseCase
 import com.ssafy.glim.core.domain.usecase.user.GetUserByIdUseCase
+import com.ssafy.glim.core.domain.usecase.user.LogOutUseCase
 import com.ssafy.glim.core.navigation.MyGlimsRoute
 import com.ssafy.glim.core.navigation.Navigator
 import com.ssafy.glim.core.navigation.Route
@@ -67,61 +67,44 @@ class ProfileViewModel @Inject constructor(
 
     fun loadProfileData() = intent {
         reduce { state.copy(isRefreshing = true, error = false) }
+        runCatching {
+            coroutineScope {
+                val userDeferred = async { getUserByIdUseCase() }
+                val uploadQuotesDeferred = async { getMyUploadQuoteUseCase() }
+                val likedQuotesDeferred = async { getMyLikedQuoteUseCase() }
 
-        coroutineScope {
-            try {
-                val userDeferred = async { runCatching { getUserByIdUseCase() } }
-                val uploadQuotesDeferred = async { runCatching { getMyUploadQuoteUseCase() } }
-                val likedQuotesDeferred = async { runCatching { getMyLikedQuoteUseCase() } }
+                val user = userDeferred.await()
+                val uploadQuotes = uploadQuotesDeferred.await()
+                val likedQuotes = likedQuotesDeferred.await()
 
-                val userResult = userDeferred.await()
-                val uploadQuotesResult = uploadQuotesDeferred.await()
-                val likedQuotesResult = likedQuotesDeferred.await()
-
-                if (userResult.isSuccess && uploadQuotesResult.isSuccess && likedQuotesResult.isSuccess) {
-                    val user = userResult.getOrThrow()
-                    val uploadQuotes = uploadQuotesResult.getOrThrow()
-                    val likedQuotes = likedQuotesResult.getOrThrow()
-
-                    Log.d("ProfileViewModel", user.profileUrl.toString())
-                    reduce {
-                        state.copy(
-                            userName = user.nickname,
-                            profileImageUrl = user.profileUrl,
-                            publishedGlimCount = uploadQuotes.size,
-                            uploadQuotes = uploadQuotes,
-                            likedGlimCount = likedQuotes.size,
-                            isRefreshing = false,
-                            error = false
-                        )
-                    }
-                } else {
-                    reduce {
-                        state.copy(
-                            profileImageUrl = null,
-                            userName = "",
-                            publishedGlimCount = 0,
-                            likedGlimCount = 0,
-                            uploadQuotes = emptyList(),
-                            isRefreshing = false,
-                            error = true
-                        )
-                    }
-                }
-            } catch (_: Exception) {
-                reduce {
-                    state.copy(
-                        profileImageUrl = null,
-                        userName = "",
-                        publishedGlimCount = 0,
-                        likedGlimCount = 0,
-                        uploadQuotes = emptyList(),
-                        isRefreshing = false,
-                        error = true
-                    )
-                }
-                postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
+                Triple(user, uploadQuotes, likedQuotes)
             }
+        }.onSuccess { (user, uploadQuotes, likedQuotes) ->
+            Log.d("ProfileViewModel", user.profileUrl.toString())
+            reduce {
+                state.copy(
+                    userName = user.nickname,
+                    profileImageUrl = user.profileUrl,
+                    publishedGlimCount = uploadQuotes.size,
+                    uploadQuotes = uploadQuotes,
+                    likedGlimCount = likedQuotes.size,
+                    isRefreshing = false,
+                    error = false
+                )
+            }
+        }.onFailure {
+            reduce {
+                state.copy(
+                    profileImageUrl = null,
+                    userName = "",
+                    publishedGlimCount = 0,
+                    likedGlimCount = 0,
+                    uploadQuotes = emptyList(),
+                    isRefreshing = false,
+                    error = true
+                )
+            }
+            postSideEffect(ProfileSideEffect.ShowError(R.string.error_load_profile_failed))
         }
     }
 

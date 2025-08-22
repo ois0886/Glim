@@ -1,7 +1,5 @@
 package com.ssafy.glim.feature.shorts
 
-import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +18,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -34,16 +31,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import coil.compose.AsyncImage
-import com.ssafy.glim.BuildConfig
 import com.ssafy.glim.R
 import com.ssafy.glim.core.domain.model.Quote
 import com.ssafy.glim.core.ui.GlimSubcomposeAsyncImage
 import com.ssafy.glim.core.util.rememberCaptureAction
 import com.ssafy.glim.feature.post.component.DarkGrayRoundedSurface
 import com.ssafy.glim.ui.theme.GlimColor.LightGray300
-
 
 @Composable
 fun QuoteItem(
@@ -81,8 +75,8 @@ fun QuoteItem(
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize(),
+            Modifier
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.End
         ) {
@@ -107,13 +101,13 @@ fun QuoteItem(
                 IconButton(onClick = onLikeClick) {
                     Icon(
                         painter =
-                            painterResource(
-                                if (quote.isLike) {
-                                    R.drawable.ic_favorite_fill
-                                } else {
-                                    R.drawable.ic_favorite
-                                },
-                            ),
+                        painterResource(
+                            if (quote.isLike) {
+                                R.drawable.ic_favorite_fill
+                            } else {
+                                R.drawable.ic_favorite
+                            },
+                        ),
                         contentDescription = stringResource(R.string.like),
                         tint = if (quote.isLike) Color.Red else Color.White,
                     )
@@ -150,7 +144,7 @@ fun QuoteItem(
 //                        context.startActivity(appStoreIntent)
 //                    }
 //                    else {
-                        onInstagramShareClick()
+                    onInstagramShareClick()
 //                    }
                 }
             ) {
@@ -190,9 +184,9 @@ fun QuoteBookContent(
     DarkGrayRoundedSurface(modifier = modifier) {
         Row(
             modifier =
-                Modifier
-                    .padding(16.dp)
-                    .clickable { onBookInfoClick(bookId) },
+            Modifier
+                .padding(16.dp)
+                .clickable { onBookInfoClick(bookId) },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
