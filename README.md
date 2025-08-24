@@ -36,61 +36,36 @@
 <br />
 
 ## 🚀 핵심 기능
-1. 글귀 발견 & 숏폼 제작
- 1.1 글귀 입력 (직접 입력/OCR)
- 1.2 글귀 기반 AI 배경 이미지 생성
- 1.3 감성 커스터마이징: 글의 폰트, 글자 크기, 글자 색, 글자 위치, 글자 방향
+1. 글림 제작<br>
+ 1.1 글귀 입력 (직접 입력/OCR)<br>
+ 1.2 글귀 기반 AI 배경 이미지 생성<br>
+ 1.3 감성 커스터마이징: 글의 폰트, 글자 크기, 글자 색, 글자 위치, 글자 방향<br>
 
-2.  책 탐색
- 2.1 글귀(글림), 도서, 작가 검색
- 2.2 관심사 기반 추천
- 2.3 키워드/테마별 큐레이션
+2. 책 탐색<br>
+ 2.1 글귀(글림), 도서, 작가 검색<br>
+ 2.2 관심사 기반 추천<br>
+ 2.3 키워드/테마별 큐레이션<br>
 
-3. 소셜 공유 & 커뮤니티
- 3.1 글귀 숏폼 공유(이미지)
- 3.2 좋아요/저장/댓글
+3. 소셜 공유 & 커뮤니티<br>
+ 3.1 글귀 숏폼 공유(이미지)<br>
+ 3.2 좋아요/저장<br>
 
-4. 도서 정보 & 구매 연결
- 4.1 도서 상세 정보 페이지 제공
- 4.2 알라딘 구매 페이지 연동
- 4.3 관련 글귀 미리보기
+4. 도서 정보 & 구매 연결<br>
+ 4.1 도서 상세 정보 페이지 제공<br>
+ 4.2 알라딘 페이지 연동<br>
+ 4.3 관련 글귀 보기<br>
 
-5. 개인화 서비스
- 5.1 마이페이지 (업로드/저장 글귀 관리)
- 5.2 잠금화면 글귀 설정
- 5.3 일정 시간 간격 글림 알람
+5. 개인화 서비스<br>
+ 5.1 마이페이지 (업로드/저장 글귀 관리)<br>
+ 5.2 잠금화면 글귀 설정<br>
+ 5.3 일정 시간 간격 글림 알람<br>
 
 ## ⚙️ 기술 스택
-Android Part
-- Kotlin 2.1.12
-- ComposeUi
-- MVI(Orbit)
-- Hilt
-- MLKit(OCR)
-- Datastore
-- Coroutine-Flow
-
-Backend Part
-- Java 21
-- Spring Boot
-- Spring Data JPA
-- Spring Web (REST API)
-- Spring Actuator
-- Flyway
-- OpenFeign
-- JWT
-- Mustache
-- Spring REST Docs
-- JaCoCo
-- JUnit 5
-- H2 Database
-
-AI Part
-- Stable Diffusion v1.5 Based DreamBooth Fine-Tuning Model
-
-Frontend Part
-- React
-- Redux
+| **파트** | **기술 스택** |
+|----------|---------------|
+| **Android** | Kotlin 2.1.12, ComposeUI, MVI(Orbit), Hilt, MLKit(OCR), Datastore, Coroutine-Flow |
+| **Backend** | Java 21, Spring Boot, Spring Data JPA, Spring Web (REST API), Spring Actuator, Flyway, OpenFeign, JWT, Mustache, Spring REST Docs, JaCoCo, JUnit 5, H2 Database |
+| **Frontend** | React, Redux, TypeScript |
 
 
 ## 🏛️ 시스템 아키텍처
