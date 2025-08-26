@@ -4,6 +4,7 @@ import com.lovedbug.geulgwi.core.common.exception.constant.CommonErrorCode;
 import com.lovedbug.geulgwi.core.domain.auth.exception.AuthException;
 import com.lovedbug.geulgwi.core.domain.member.exception.MemberException;
 import com.lovedbug.geulgwi.external.email.exception.EmailException;
+import com.lovedbug.geulgwi.external.image.exception.ImageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -48,6 +49,12 @@ public class GlobalExceptionHandler {
         log.warn("Bad request: {}", e.getMessage());
 
         return buildErrorResponse(CommonErrorCode.INVALID_PARAMETER, e.getMessage());
+    }
+
+    @ExceptionHandler(ImageException.class)
+    public ResponseEntity<GeulgwiErrorResponse> handleImageException(ImageException e) {
+        log.warn("ImageException: code={}, detail={}", e.getErrorCode().name(), e.getDetail());
+        return buildErrorResponse(e.getErrorCode(), e.getDetail());
     }
 
     @ExceptionHandler(Exception.class)
