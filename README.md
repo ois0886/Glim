@@ -69,3 +69,9 @@
 
 
 ## 🧡 팀원 소개
+다음은 요청하신 대로 **가로로 배열한 팀 멤버 표**입니다:
+
+| [윤문정](https://github.com/yuuuuuu32) | [박성준](https://github.com/park99999) | [홍지표](https://github.com/devMuscle) | [오인성](https://github.com/ois0886) | [박승준](https://github.com/ootr47) | [윤준석](https://github.com/JunSeok-Yun) |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| <img src="https://avatars.githubusercontent.com/u/207114587?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/111122515?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/91146369?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/58154638?v=4" alt="대체 텍스트" width="600"> | <img src="./ScreenShot/image.png" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/109099464?v=4" alt="대체 텍스트" width="600"> |
+| 웹프론트 | **팀장**<br/>안드로이드, 백엔드, 디자인 | 백엔드, 인프라 | 안드로이드, 디자인 | 안드로이드, 디자인 | 백엔드 |
