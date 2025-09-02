@@ -1,7 +1,5 @@
 <h1>Glim(글:림)</h1>
 
-> 배포 링크
-
 ## 📄 목차
 - [📄 목차](#-목차)
 - [✍🏻 프로젝트 개요](#✍🏻-프로젝트-개요)
@@ -32,70 +30,48 @@
 - 개발 기간: 25.07.07 ~ 25.08.18
 - 인원: 6명
 - 서비스 개요 : [도서 중개 웹/앱 플랫폼 서비스] 글:림, Glim
+- **SSAFY 공통프로젝트 우수상 수상**
 
 <br />
 
 ## 🚀 핵심 기능
-1. 글귀 발견 & 숏폼 제작
- 1.1 글귀 입력 (직접 입력/OCR)
- 1.2 글귀 기반 AI 배경 이미지 생성
- 1.3 감성 커스터마이징: 글의 폰트, 글자 크기, 글자 색, 글자 위치, 글자 방향
 
-2.  책 탐색
- 2.1 글귀(글림), 도서, 작가 검색
- 2.2 관심사 기반 추천
- 2.3 키워드/테마별 큐레이션
+| **1.1 글귀 입력(직접 입력/OCR)** | **1.2 글귀 기반**<br>**AI 배경 이미지 생성** | **1.3 글귀 확인** |
+|------|--------|------|
+| ![스크린샷](/ScreenShot/Screenshot_1755142991.png) | ![스크린샷](/ScreenShot/Screenshot_1755143017.png) | ![스크린샷](/ScreenShot/Screenshot_1755142934.png) | 
 
-3. 소셜 공유 & 커뮤니티
- 3.1 글귀 숏폼 공유(이미지)
- 3.2 좋아요/저장/댓글
+| **2.1 글귀(글림), 도서,**<br>**작가 검색** | **2.2 인기 글귀 조회** | **2.3 키워드/테마별**<br>**큐레이션** |
+|------|--------|------|
+| ![스크린샷](/ScreenShot/Screenshot_1755142916.png) | ![스크린샷](/ScreenShot/Screenshot_1755142903.png) | ![스크린샷](/ScreenShot/Screenshot_1755142911.png) | 
 
-4. 도서 정보 & 구매 연결
- 4.1 도서 상세 정보 페이지 제공
- 4.2 알라딘 구매 페이지 연동
- 4.3 관련 글귀 미리보기
+| **3.1 글귀 저장** | **3.2 글림 이미지저장** |
+|------|--------|
+| ![스크린샷](/ScreenShot/Screenshot_1755142936.png) | ![스크린샷](/ScreenShot/Screenshot_1755143029.png) |
 
-5. 개인화 서비스
- 5.1 마이페이지 (업로드/저장 글귀 관리)
- 5.2 잠금화면 글귀 설정
- 5.3 일정 시간 간격 글림 알람
+| **4.1 도서 상세 정보** | **4.2 관련 글귀 보기** |
+|-----|------|
+| ![스크린샷](/ScreenShot/Screenshot_1755142951.png)  | ![스크린샷](/ScreenShot/Screenshot_1755142956.png) | 
+
+| **5.1 마이페이지**| **5.2 잠금화면 글귀 설정** |
+|------|------|
+| ![스크린샷](/ScreenShot/Screenshot_1755143065.png) | ![스크린샷](/ScreenShot/Screenshot_1755143056.png) |
 
 ## ⚙️ 기술 스택
-Android Part
-- Kotlin 2.1.12
-- ComposeUi
-- MVI(Orbit)
-- Hilt
-- MLKit(OCR)
-- Datastore
-- Coroutine-Flow
-
-Backend Part
-- Java 21
-- Spring Boot
-- Spring Data JPA
-- Spring Web (REST API)
-- Spring Actuator
-- Flyway
-- OpenFeign
-- JWT
-- Mustache
-- Spring REST Docs
-- JaCoCo
-- JUnit 5
-- H2 Database
-
-AI Part
-- Stable Diffusion v1.5 Based DreamBooth Fine-Tuning Model
-
-Frontend Part
-- React
-- Redux
+| **파트** | **기술 스택** |
+|----------|---------------|
+| **Android** | Kotlin 2.1.12, ComposeUI, MVI(Orbit), Hilt, MLKit(OCR), Datastore, Coroutine-Flow |
+| **Backend** | Java 21, Spring Boot, Spring Data JPA, Spring Web (REST API), Spring Actuator, Flyway, OpenFeign, JWT, Mustache, Spring REST Docs, JaCoCo, JUnit 5, H2 Database |
+| **Frontend** | React, Redux, TypeScript |
 
 
 ## 🏛️ 시스템 아키텍처
+<img src="./ScreenShot/image.png" alt="대체 텍스트" width="600">
 
-## 🛠️ 기술적 도전
-각 팀원들에게 2 ~ 3가지
+
 ## 🧡 팀원 소개
-표와 깃허브 이미지
+다음은 요청하신 대로 **가로로 배열한 팀 멤버 표**입니다:
+
+| [윤문정](https://github.com/yuuuuuu32) | [박성준](https://github.com/park99999) | [홍지표](https://github.com/devMuscle) | [오인성](https://github.com/ois0886) | [박승준](https://github.com/ootr47) | [윤준석](https://github.com/JunSeok-Yun) |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| <img src="https://avatars.githubusercontent.com/u/207114587?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/111122515?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/91146369?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/58154638?v=4" alt="대체 텍스트" width="600"> | <img src="./ScreenShot/image.png" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/109099464?v=4" alt="대체 텍스트" width="600"> |
+| 웹프론트 | **팀장**<br/>안드로이드, 백엔드, 디자인 | 백엔드, 인프라 | 안드로이드, 디자인 | 안드로이드, 디자인 | 백엔드 |
