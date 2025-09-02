@@ -35,26 +35,35 @@
 <br />
 
 ## 🚀 핵심 기능
+### Android
 
-| **1.1 글귀 입력(직접 입력/OCR)** | **1.2 글귀 기반**<br>**AI 배경 이미지 생성** | **1.3 글귀 확인** |
+> **나만의 글귀 생성**
+![스크린샷](/ScreenShot/나만의글귀생성.gif) 
+
+| **나만의 글귀 생성** | **글림 둘러보기** | **글림 공유 & 저장** |
 |------|--------|------|
-| ![스크린샷](/ScreenShot/Screenshot_1755142991.png) | ![스크린샷](/ScreenShot/Screenshot_1755143017.png) | ![스크린샷](/ScreenShot/Screenshot_1755142934.png) | 
+| ![스크린샷](/ScreenShot/도서_글귀큐레이션.gif) | ![스크린샷](/ScreenShot/글귀둘러보기.gif)  | ![스크린샷](/ScreenShot/공유저장.gif)  | 
 
-| **2.1 글귀(글림), 도서,**<br>**작가 검색** | **2.2 인기 글귀 조회** | **2.3 키워드/테마별**<br>**큐레이션** |
-|------|--------|------|
-| ![스크린샷](/ScreenShot/Screenshot_1755142916.png) | ![스크린샷](/ScreenShot/Screenshot_1755142903.png) | ![스크린샷](/ScreenShot/Screenshot_1755142911.png) | 
 
-| **3.1 글귀 저장** | **3.2 글림 이미지저장** |
-|------|--------|
-| ![스크린샷](/ScreenShot/Screenshot_1755142936.png) | ![스크린샷](/ScreenShot/Screenshot_1755143029.png) |
+| **글귀 기반**<br>**AI 배경 이미지 생성** | **글귀 확인** | **마이페이지**| **잠금화면 글귀 설정** |
+|--------|------|------|------|
+| ![스크린샷](/ScreenShot/Screenshot_1755143017.png) | ![스크린샷](/ScreenShot/Screenshot_1755142934.png) |  ![스크린샷](/ScreenShot/Screenshot_1755143065.png) | ![스크린샷](/ScreenShot/Screenshot_1755143056.png) |
 
-| **4.1 도서 상세 정보** | **4.2 관련 글귀 보기** |
-|-----|------|
-| ![스크린샷](/ScreenShot/Screenshot_1755142951.png)  | ![스크린샷](/ScreenShot/Screenshot_1755142956.png) | 
 
-| **5.1 마이페이지**| **5.2 잠금화면 글귀 설정** |
-|------|------|
-| ![스크린샷](/ScreenShot/Screenshot_1755143065.png) | ![스크린샷](/ScreenShot/Screenshot_1755143056.png) |
+| **글귀(글림), 도서,**<br>**작가 검색** | **인기 글귀 조회** | **키워드/테마별**<br>**큐레이션** | **도서 상세 정보** | **관련 글귀 보기** |
+|------|--------|------|-----|------|
+| ![스크린샷](/ScreenShot/Screenshot_1755142916.png) | ![스크린샷](/ScreenShot/Screenshot_1755142903.png) | ![스크린샷](/ScreenShot/Screenshot_1755142911.png) |  ![스크린샷](/ScreenShot/Screenshot_1755142951.png)  | ![스크린샷](/ScreenShot/Screenshot_1755142956.png) | 
+
+### Web Front
+
+> **랜딩페이지**
+![스크린샷](/ScreenShot/랜딩페이지.gif) 
+
+| **사용자 정보 수정 및 삭제**| **글귀편집 관리 및 삭제** | **큐레이션 관리 및 편지** |
+|--------|------|------|
+| ![스크린샷](/ScreenShot/어드민페이지.png) | ![스크린샷](/ScreenShot/어드민페이지2.png) | ![스크린샷](/ScreenShot/어드민페이지.png) | 
+
+
 
 ## ⚙️ 기술 스택
 | **파트** | **기술 스택** |
@@ -69,9 +78,8 @@
 
 
 ## 🧡 팀원 소개
-다음은 요청하신 대로 **가로로 배열한 팀 멤버 표**입니다:
 
 | [윤문정](https://github.com/yuuuuuu32) | [박성준](https://github.com/park99999) | [홍지표](https://github.com/devMuscle) | [오인성](https://github.com/ois0886) | [박승준](https://github.com/ootr47) | [윤준석](https://github.com/JunSeok-Yun) |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| <img src="https://avatars.githubusercontent.com/u/207114587?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/111122515?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/91146369?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/58154638?v=4" alt="대체 텍스트" width="600"> | <img src="./ScreenShot/image.png" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/109099464?v=4" alt="대체 텍스트" width="600"> |
+| <img src="https://avatars.githubusercontent.com/u/207114587?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/111122515?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/91146369?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/58154638?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/83055885?v=4" alt="대체 텍스트" width="600"> | <img src="https://avatars.githubusercontent.com/u/109099464?v=4" alt="대체 텍스트" width="600"> |
 | 웹프론트 | **팀장**<br/>안드로이드, 백엔드, 디자인 | 백엔드, 인프라 | 안드로이드, 디자인 | 안드로이드, 디자인 | 백엔드 |
