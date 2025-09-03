@@ -45,6 +45,7 @@ firebase-messaging = "24.1.0"
 google-services = "4.4.3"
 lifecycleViewmodelNavigation3Android = "1.0.0-alpha04"
 browser = "1.6.0"
+leakcanaryAndroid = "2.14"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -107,6 +108,7 @@ firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 androidx-lifecycle-viewmodel-navigation3-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3-android", version.ref = "lifecycleViewmodelNavigation3Android" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+leakcanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanaryAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

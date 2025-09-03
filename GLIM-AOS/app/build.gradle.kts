@@ -190,6 +190,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.analytics)
+
+    // leak canary
+    implementation(libs.leakcanary.android)
 }
 
 tasks.register("codeQualityCheck") {

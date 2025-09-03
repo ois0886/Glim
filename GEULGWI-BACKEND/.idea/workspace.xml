@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d15f2b27-8361-4571-aab7-0a82d384e41f" name="Changes" comment="feat : 회원가입시 사용자 정보 동의 표시">
+      <change afterPath="$PROJECT_DIR$/../GLIM-AOS/app/src/main/res/raw/book.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GLIM-AOS/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/../GLIM-AOS/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GLIM-AOS/app/src/main/java/com/ssafy/glim/app/GlimApplication.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../GLIM-AOS/app/src/main/java/com/ssafy/glim/app/GlimApplication.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GLIM-AOS/app/src/main/java/com/ssafy/glim/feature/post/PostScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../GLIM-AOS/app/src/main/java/com/ssafy/glim/feature/post/PostScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GLIM-AOS/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../GLIM-AOS/gradle/libs.versions.toml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="geulgwi" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="geulgwi" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="geulgwi" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Class" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="backend/develop" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitLabMergeRequestFiltersHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPENED&quot;,
+    &quot;assignee&quot;: {
+      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,
+      &quot;username&quot;: &quot;sungung1026&quot;,
+      &quot;fullname&quot;: &quot;박성준&quot;
+    }
+  }
+}</component>
+  <component name="GitLabMergeRequestsSettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;first&quot;: &quot;https://lab.ssafy.com/s13-webmobile4-sub1/S13P11D202.git&quot;,
+    &quot;second&quot;: &quot;5109433b-2ced-47fd-a7c0-c6c0122bb4cc&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="30a0kW7XDJ5K4ivG8gJfDXo4TIF" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Gradle.AdminApiDocsTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AdminApiDocsTest.get_main_curation.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AdminMemberApiDocsTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AdminQuoteApiDocsTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AdminSearchApiDocsTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AdminSearchApiDocsTest.search_members.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build GEULGWI-BACKEND.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.GEULGWI-BACKEND [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.OpenAiControllerDocsTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.QuoteApiDocsTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.SearchKeywordApiDocsTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Tests in 'com.lovedbug.geulgwi.docs'.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Tests in 'geulgwi.test'.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.GeulgwiApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/SSAFY/Desktop/S13P11D202/GEULGWI-BACKEND/build.gradle&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ]
+  }
+}</component>
+  <component name="RunManager" selected="Gradle.GEULGWI-BACKEND [build]">
+    <configuration name="AdminMemberApiDocsTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.lovedbug.geulgwi.docs.AdminMemberApiDocsTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="AdminSearchApiDocsTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.lovedbug.geulgwi.docs.AdminSearchApiDocsTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="AdminSearchApiDocsTest.search_members" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.lovedbug.geulgwi.docs.AdminSearchApiDocsTest.search_members&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="GEULGWI-BACKEND [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="Tests in 'com.lovedbug.geulgwi.docs'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.lovedbug.geulgwi.docs.*&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="GeulgwiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ACTIVE_PROFILES" value="local" />
+      <envs>
+        <env name="FRONTEND_URL" value="http://localhost:3000" />
+        <env name="JWT_SECRET" value="3mUQmfXezNKncDhYTYi2vK85iaHp589H" />
+        <env name="MAIL_PASSWORD" value="&quot;gmus wgnp zfci cacp&quot;" />
+      </envs>
+      <module name="geulgwi.main" />
+      <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.lovedbug.geulgwi.GeulgwiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.AdminMemberApiDocsTest" />
+      <item itemvalue="Gradle.AdminSearchApiDocsTest" />
+      <item itemvalue="Gradle.AdminSearchApiDocsTest.search_members" />
+      <item itemvalue="Gradle.GEULGWI-BACKEND [build]" />
+      <item itemvalue="Gradle.Tests in 'com.lovedbug.geulgwi.docs'" />
+      <item itemvalue="Spring Boot.GeulgwiApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.Tests in 'com.lovedbug.geulgwi.docs'" />
+        <item itemvalue="Gradle.GEULGWI-BACKEND [build]" />
+        <item itemvalue="Gradle.AdminSearchApiDocsTest.search_members" />
+        <item itemvalue="Gradle.AdminSearchApiDocsTest" />
+        <item itemvalue="Gradle.AdminMemberApiDocsTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26927.53" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.26927.53" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d15f2b27-8361-4571-aab7-0a82d384e41f" name="Changes" comment="" />
+      <created>1753850520103</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1753850520103</updated>
+      <workItem from="1753850521209" duration="1247000" />
+      <workItem from="1753851880299" duration="39000" />
+      <workItem from="1753851933116" duration="35558000" />
+      <workItem from="1754355938910" duration="12732000" />
+      <workItem from="1754445430772" duration="3322000" />
+      <workItem from="1754452790477" duration="45516000" />
+      <workItem from="1755133677078" duration="4378000" />
+      <workItem from="1755483641855" duration="2062000" />
+      <workItem from="1756702559281" duration="24000" />
+      <workItem from="1756879837188" duration="93000" />
+    </task>
+    <task id="LOCAL-00001" summary="Feat : Admin 메인 큐레이션 조회 API">
+      <option name="closed" value="true" />
+      <created>1753860978804</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1753860978804</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Feat : Admin 메인 큐레이션 생성 API">
+      <option name="closed" value="true" />
+      <created>1754283603153</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1754283603153</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fix : admin 큐레이션 생성 API">
+      <option name="closed" value="true" />
+      <created>1754286799403</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1754286799403</updated>
+    </task>
+    <task id="LOCAL-00004" summary="fix : admin 큐레이션 생성 API">
+      <option name="closed" value="true" />
+      <created>1754286818881</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1754286818881</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix : admin 큐레이션 생성 API">
+      <option name="closed" value="true" />
+      <created>1754287449306</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1754287449306</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat : admin update &amp; delete api">
+      <option name="closed" value="true" />
+      <created>1754292753070</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1754292753070</updated>
+    </task>
+    <task id="LOCAL-00007" summary="feat : admin update &amp; delete api">
+      <option name="closed" value="true" />
+      <created>1754357415782</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1754357415782</updated>
+    </task>
+    <task id="LOCAL-00008" summary="fix : build.gradle 코틀린 의존성 빼기">
+      <option name="closed" value="true" />
+      <created>1754357515973</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1754357515973</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feat : book Search API 구현">
+      <option name="closed" value="true" />
+      <created>1754365586350</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1754365586350</updated>
+    </task>
+    <task id="LOCAL-00010" summary="feat : quote Search API 구현">
+      <option name="closed" value="true" />
+      <created>1754367240795</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1754367240795</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat : quote search, book search test 코드 작성">
+      <option name="closed" value="true" />
+      <created>1754369061192</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1754369061192</updated>
+    </task>
+    <task id="LOCAL-00012" summary="fix : conflict resolved">
+      <option name="closed" value="true" />
+      <created>1754445987263</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1754445987263</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fix : code review fixed">
+      <option name="closed" value="true" />
+      <created>1754453082372</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1754453082372</updated>
+    </task>
+    <task id="LOCAL-00014" summary="feat : admin member api(전부 조회, active 된 특정 사용자 조회, active 모든 사용자 조회, 수정, 삭제, 검색)">
+      <option name="closed" value="true" />
+      <created>1754457306480</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1754457306480</updated>
+    </task>
+    <task id="LOCAL-00015" summary="feat : admin member api(전부 조회, active 된 특정 사용자 조회, active 모든 사용자 조회, 수정, 삭제, 검색) 테스트 코드">
+      <option name="closed" value="true" />
+      <created>1754460052143</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1754460052143</updated>
+    </task>
+    <task id="LOCAL-00016" summary="feat : admin quote api(전부 조회,  삭제)">
+      <option name="closed" value="true" />
+      <created>1754530372242</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1754530372242</updated>
+    </task>
+    <task id="LOCAL-00017" summary="feat : admin quote api(전부 조회,  삭제)">
+      <option name="closed" value="true" />
+      <created>1754530919277</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1754530919277</updated>
+    </task>
+    <task id="LOCAL-00018" summary="feat : admin quote api(전부 조회,  삭제) 테스트 코드">
+      <option name="closed" value="true" />
+      <created>1754531840674</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1754531840674</updated>
+    </task>
+    <task id="LOCAL-00019" summary="feat : admin quote 삭제 api response 수정">
+      <option name="closed" value="true" />
+      <created>1754540837678</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1754540837678</updated>
+    </task>
+    <task id="LOCAL-00020" summary="feat : admin quote 삭제 api response 수정">
+      <option name="closed" value="true" />
+      <created>1754541423649</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1754541423649</updated>
+    </task>
+    <task id="LOCAL-00021" summary="feat : gpt 이미지 생성 API">
+      <option name="closed" value="true" />
+      <created>1754632069320</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1754632069320</updated>
+    </task>
+    <task id="LOCAL-00022" summary="feat : gpt 이미지 생성 API 테스트">
+      <option name="closed" value="true" />
+      <created>1754633514555</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1754633514555</updated>
+    </task>
+    <task id="LOCAL-00023" summary="fix : gpt 이미지 생성 API 코드리뷰 반영">
+      <option name="closed" value="true" />
+      <created>1754638824249</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1754638824249</updated>
+    </task>
+    <task id="LOCAL-00024" summary="docs : api 명세서 수정">
+      <option name="closed" value="true" />
+      <created>1754638984489</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1754638984489</updated>
+    </task>
+    <task id="LOCAL-00025" summary="fix : 생성 이미지 규격 수정">
+      <option name="closed" value="true" />
+      <created>1754884152965</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1754884152966</updated>
+    </task>
+    <task id="LOCAL-00026" summary="fix : 생성 이미지 규격 수정">
+      <option name="closed" value="true" />
+      <created>1754890616062</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1754890616062</updated>
+    </task>
+    <task id="LOCAL-00027" summary="chore : nginx proxy manager 이미지 추가">
+      <option name="closed" value="true" />
+      <created>1754978518353</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1754978518353</updated>
+    </task>
+    <task id="LOCAL-00028" summary="feat : 회원가입시 사용자 정보 동의 표시">
+      <option name="closed" value="true" />
+      <created>1755061774856</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1755061774856</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="backend/develop" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Feat : Admin 메인 큐레이션 조회 API" />
+    <MESSAGE value="Feat : Admin 메인 큐레이션 생성 API" />
+    <MESSAGE value="fix : admin 큐레이션 생성 API" />
+    <MESSAGE value="feat : admin update &amp; delete api" />
+    <MESSAGE value="fix : build.gradle 코틀린 의존성 빼기" />
+    <MESSAGE value="feat : book Search API 구현" />
+    <MESSAGE value="feat : quote Search API 구현" />
+    <MESSAGE value="feat : quote search, book search test 코드 작성" />
+    <MESSAGE value="fix : conflict resolved" />
+    <MESSAGE value="fix : code review fixed" />
+    <MESSAGE value="feat : admin member api(전부 조회, active 된 특정 사용자 조회, active 모든 사용자 조회, 수정, 삭제, 검색)" />
+    <MESSAGE value="feat : admin member api(전부 조회, active 된 특정 사용자 조회, active 모든 사용자 조회, 수정, 삭제, 검색) 테스트 코드" />
+    <MESSAGE value="feat : admin quote api(전부 조회,  삭제)" />
+    <MESSAGE value="feat : admin quote api(전부 조회,  삭제) 테스트 코드" />
+    <MESSAGE value="feat : admin quote 삭제 api response 수정" />
+    <MESSAGE value="feat : gpt 이미지 생성 API" />
+    <MESSAGE value="feat : gpt 이미지 생성 API 테스트" />
+    <MESSAGE value="fix : gpt 이미지 생성 API 코드리뷰 반영" />
+    <MESSAGE value="docs : api 명세서 수정" />
+    <MESSAGE value="fix : 생성 이미지 규격 수정" />
+    <MESSAGE value="chore : nginx proxy manager 이미지 추가" />
+    <MESSAGE value="feat : 회원가입시 사용자 정보 동의 표시" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat : 회원가입시 사용자 정보 동의 표시" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lovedbug/geulgwi/core/domain/admin/dto/request/CreateCurationRequest.java</url>
+          <line>4</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

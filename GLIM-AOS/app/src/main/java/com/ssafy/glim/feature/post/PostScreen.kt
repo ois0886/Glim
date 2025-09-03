@@ -145,7 +145,7 @@ internal fun PostRoute(
             }
 
             if (state.isLoading) {
-                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.triangle_loading))
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.book))
 
                 Box(
                     modifier = Modifier
