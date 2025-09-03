@@ -45,7 +45,3 @@ logging:
 
 log:
   path: /logs
-
-openai:
-  key: S13P11D202-5351d94c-0223-4f14-9467-2420945e6284
-  url: https://gms.ssafy.io/gmsapi/api.openai.com/v1
